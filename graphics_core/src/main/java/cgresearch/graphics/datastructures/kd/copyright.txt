@@ -1,0 +1,8 @@
+http://home.wlu.edu/~levys/software/kd/
+Licence: Gnu Lesser General Public License. 
+Simon D. Levy
+Associate Professor
+Computer Science Department
+Parmly Hall (Science Center )407B
+Washington and Lee University
+Lexington, Virginia 
