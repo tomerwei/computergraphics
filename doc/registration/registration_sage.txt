@@ -1,0 +1,35 @@
+alpha = var('alpha')
+beta = var('beta');
+gamma = var('gamma')
+tx = var('tx')
+ty = var('ty')
+tz = var('tz')
+bx = var('bx')
+by = var('by')
+bz = var('bz')
+rx = var('rx')
+ry = var('ry')
+rz = var('rz')
+
+R_combined = Matrix([[cos(alpha)*cos(beta)*cos(gamma)-sin(alpha)*sin(gamma), -cos(alpha)*cos(beta)*sin(gamma)*-sin(alpha)*cos(gamma), cos(alpha)*sin(beta) ],
+      [sin(alpha)*cos(beta)*cos(gamma) + cos(alpha)*sin(gamma), -sin(alpha)*cos(beta)*sin(gamma)+cos(alpha)*cos(gamma), sin(alpha)*sin(beta) ],
+        [-sin(beta)*cos(gamma), sin(beta)*sin(gamma), cos(beta)]])
+
+Rx = Matrix([[1,0,0],[0,cos(alpha), -sin(alpha)],[0,sin(alpha),cos(alpha)]])
+Ry = Matrix([[cos(beta),0,sin(beta)],[0, 1, 0],[-sin(beta),0, cos(beta)]])
+Rz = Matrix([[cos(gamma),-sin(gamma),0],[sin(gamma), cos(gamma), 0],[0,0,1]])
+R = Rx*Ry*Rz
+
+b = vector([bx,by,bz])
+r = vector([rx,ry,rz])
+t = vector([tx,ty,tz])
+
+E = (R * r + t - b)*(R * r + t - b)
+
+E
+E.diff(alpha)
+E.diff(beta)
+E.diff(gamma)
+E.diff(tx)
+E.diff(ty)
+E.diff(tz)

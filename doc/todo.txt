@@ -1,0 +1,91 @@
+TODO  
+- Kurven: GUI-An/Aus für Kontrollpunkte und Kontrollpolygon. 
+- Bug: keine Szene -> Absturz unter Windows 8
+- View frustum culling Visualisierung
+- Schnittfläche bei Marching Cubes - Fehler beim Erzeugen der Textur
+- Raytracer
+  - Lichtbrechnung
+  - Dreiecksnetze
+  - als Option in jedes GUI
+
+NICO-TO-HAVE 
+- Shader ausdünnen
+- Reflexionseigenschaften als Materialparameter 
+- SceneGraphEditor: ShaderIds -> ? Was ist das?
+- GUI für Ascii-Importer: Format der Punkte
+- [Simulation] Korrekte Kollsisionserkennung (und Reaktion) bei Clothsimulation
+- [Simulation] Dämpfung bei Textilsimulation -> Heun
+- zentraler Event-Service
+- 3D-Dragging Interface
+- Umstellung von Swing auf JavaFX
+- x/z-Ebene als Wireframe
+- Generischer Info/Edit-Dialog über Reflection 
+
+DONE
+- Raytracer
+  - Ebene als Schachbrettmuster
+  - Einstellung per GUI
+- Transformationen aus CgNode entfernen
+- Fix wireframe
+- Specular shininess an Shader übergeben
+- TriangleMeshImport liefert Liste statt CgNode
+- Shader verwenden alle Lighter
+- Doku für Lichter
+- Lichtquellen-Editor
+- Lichtquellen im Szenengraph-Wurzelknoten
+- Dokumentation aktualisieren
+- KD-Tree in Betrieb nehmen
+- Darstellung impliziter Funktionen
+- Free texture
+- ASCII-Reader flexibel
+- Curves: Renderfehler korrigieren
+- MoCap-Data
+- Phong-Shader Lichtquellen aus GL Szene
+- Gouraud-Shader: Material aus GL Szene
+- Quick-Icon-Bar (z.B. center)
+- Schiefer Wurf
+- Spotlight aus Textil
+- Movie-Export
+- GUI für Shader (Compile, Edit, ...)
+- Fehlermeldung beim Linken eines Shaders
+- Coordinatensystem als TriangleMesh-Objekte -> Farbwerte an Phong-Shader übergeben
+- Camera-Settings and OpenGL nur wenn notwendig
+- Reparieren: OBJ texture file import/export
+- Abspeichern eines Kamerapfades
+- korrekte BBox-Berechnung bei transformierten Objekten
+- Anzeigen des Kamera-Pfades
+- JoglFrame nicht an View übergeben
+- Animation Timer
+  - Timer Icon
+  - Timer Settings
+  - Einheitliches Design der Icons
+- Key-Commands wie Wireframe
+- Menubar funktioniert nicht unter Win7 + Java7 32bit
+- Ply-Importer
+- Visibility im Scenengraph aktualisieren
+- createRenderObjectsForNode(): Prüfen: Effizienz + Korrektheit
+- Szenengraph-Baum klappt nicht zusammen, wenn Knoten hinzugefügt oder entfernt werden.
+- PLY-Importer umsetzen
+- Zusatzinformationen zu curve implementieren (Tangente, Position, ...)
+- Sophisticated mesh implementieren
+- OBJWriter: Schreiben der Materialfarbe in MTL-Datei
+- Mesh, no lighting: fehlerhafte Farben
+- Editor verschwindet, wenn im Szenengraph ein anderer Knoten ausgewählt wird
+- Wireframe anzeigen
+- PointCloud Info/Edit
+- Materialinformationen im Szenengraph editierbar
+- Ignorieren von nicht sichtbaren Knoten beim Zentrieren
+- Transformationsknoten in Jogl umsetzen
+- Test-Projekt cg_pj
+- Materialien für Kugeln bei Curve
+- Icons im Szenengraph mit Strategy-Muster
+- Kurven
+- Texturen
+- Farben
+- Shader
+- Curves implementieren IBoundingBoxed
+- Scrollbar im Debug-Fenster
+- Koordinatensystem
+
+IGNORIERT
+- Nested Repositories: http://stackoverflow.com/questions/1871282/nested-git-repositories

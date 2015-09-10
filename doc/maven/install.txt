@@ -1,0 +1,20 @@
+*** Install local JMonkey repository ***
+
+-> not working yet
+
+<dependency>
+  			<groupId>cgresearch.rendering.jmonkey</groupId>
+  			<artifactId>jmonkey</artifactId>
+  			<version>1.0.0</version>
+		</dependency>    
+		
+		
+		<repositories>
+  		<repository>
+    		<id>jmonkey</id>
+    		<url>file://${basedir}/lib/jmonkey</url>
+  		</repository>
+	</repositories>
+	
+	
+mvn org.apache.maven.plugins:maven-install-plugin:install-file -Dfile=jmonkey.pom -DgroupId=cgresearch.rendering.jmonkey -DartifactId=jmonkey -Dversion=1.0.0 -Dpackaging=jar -DlocalRepositoryPath=lib/jmonkey

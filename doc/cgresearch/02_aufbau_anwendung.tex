@@ -1,0 +1,144 @@
+\section{Komponenten}
+\label{section:cganwendung}
+
+\subsection{Module}
+
+Das Framework besteht aus folgenden Modulen (Module weiter unten hängen jeweils nur von Modulen weiter oben ab):
+
+\begin{itemize}
+\item \textbf{core:} Mathematik (siehe Abschnitt \ref{sec:math}) und Logging (siehe Abschnitt \ref{sec:logging})
+\item \textbf{graphics:} Szenengraph (siehe Abschnitt \ref{sec:scene_graph}), Interfaces für die Bausteine (Anwendung, UI und Rendering), Picking-Funktionalität, Kamera, Datenstrukturen und Algorithmen, I/O, Material
+\item \textbf{projects:} ausgewählte Systeme: Simulation, Portal-Culling
+\item \textbf{ui:} Benutzerinterface(Fenster, Menüs, Szenengraph)
+\item \textbf{rendering:} gemeinsame Funktionalität, JOGL, jMonkey
+\item \textbf{apps:} Beispielanwendungen
+\end{itemize}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=8cm]{images/cgresearch.png}
+\label{fig:cgapplication.png}
+\caption{Screenshot einer Anwendung mit dem cgresearch Framework. Das Fenster besteht aus verschiedenen Blöcken: 3D-View (rechts), Debug-Konsole (unten), Szenengraph und Controller (oben links) Editor-Dialoge (Mitte) und Menü.}
+\end{figure} 
+
+\subsection{Anwendungsobjekt}
+
+In diesem Abschnitt wird beschrieben, wie mit dem cgresearch Framework eine Anwendung geschrieben werden kann. Als Rendering-System wird JOGL (siehe Abschnitte \ref{section:JOGL}) verwendet.
+
+Im Zentrum einer Anwendung steht ein \verb+CgApplication+-Objekt. Darin spielt sich die eigentliche Logik der Anwendung ab. Zur Darstellung wird (optional) eine Instanz eines Rendering-Frames erzeugt. Auch das Benutzerinterface ist eine optionale Komponente. Die Klasse \verb+JoglSwingUserInterface+ stellt beispielsweise ein Benutzerinterface für das JOGL-System mit Java Swing bereit.
+
+Die main-Methode der Anwendung könnte also lauten:
+\begin{verbatim}
+new ConsoleLogger(Logger.VerboseMode.DEBUG);
+ResourcesLocator.getInstance().parseIniFile("resources.ini");
+CgApplication app = new TriangleMeshFrame();
+new JoglFrame(app);
+new JoglSwingUserInterface(app);
+\end{verbatim}
+Zu dem Logger finden Sie Informationen im Abschnitt \ref{sec:logging}, der \verb+ResoucesLocator+ ist in Abschnitt \ref{section:ressourcen} dargestellt.
+
+\subsection{Rendering}
+
+Aktuell  stehen zwei Klassen (und damit Systeme) für das Rendering zur Verfügung:
+\begin{itemize}
+\item \verb+JoglFrame+ (JOGL)
+\item \verb+JMonkeyFrame+ (jMonkey)
+\end{itemize}
+
+Die Rendering-Systeme werden ausführlicher in Abschnitt \ref{sec:rendering} besprochen.
+
+\subsection{Grafische Benutzerschnittstelle}
+
+Aktuell  stehen zwei Klassen (und damit Systeme) für das Benutzerinterface (UI) zur Verfügung:
+\begin{itemize}
+\item \verb+SwingUserInterface+ (Java Swing)
+\item \verb+JoglSwingUserInterface+ (Java Swing mit Zusatzfunktionalität für JOGL)
+\end{itemize}
+
+Die meisten Anwendungen werden durch ein grafisches Benutzerinterface (GUI) gesteuert. In einer Anwendung können Sie eigene Benutzerinterfaces umsetzen und registrieren. Diese tauchen dann als zusätzlicher Tab im Fensterbereich \emph{Szenengraph und Controller} auf. Zum Schreiben eines solchen Controllers implementieren Sie eine eigene Klasse, die von der abstrakten Klasse \verb+IApplicationControllerGui+ erbt. Diese Klasse wiederum erbt von \verb+JPanel+. Sie müssen also das \verb+this+-Objekt mit Ihrem GUI befüllen. Anschliessend registrieren Sie das Objekt bei Ihrer Instanz für die Grafische Benutzeroberfäche über die Methode \verb+registerApplicationGUI()+. Hier eine einfache Beispiel-Implementirerung für ein GUI, das aus einem Button besteht, der einen Tetraeder erzeugt:
+
+\begin{verbatim}
+public class PJController extends IApplicationControllerGui 
+ 	 	 	implements ActionListener {
+ 	public PJController() {
+ 	 	JButton button = new JButton("PJ!");
+ 	 	button.addActionListener(this);
+ 	 	add(button);
+ 	}
+
+ 	@Override
+ 	public String getName() {
+ 	 	return "PJ";
+ 	 }
+
+ 	@Override
+ 	public void actionPerformed(ActionEvent e) {
+ 	 	CgNode node = new CgNode(TriangleMeshFactory.createTetrahedron(), "Tetra");
+ 	 	getRootNode().addChild(node);
+ 	}
+}
+\end{verbatim}
+
+\subsection{Menüs}
+
+Ihre GUI-Anwendung kann auch um benutzerdefinierte Menüs erweitert werden. Das Vorgehen ist sehr ähnlich zum Vorgehen beim Erstellen einer eigenen GUI-Komponente aus dem vorherigen Abschnitt. Zunächst muss eine Menüklasse implementiert werden, die von der abstrakten Klasse \verb+CgApplicationMenu+ abgeleitet ist. Diese Instanz registrieren Sie in Ihrer GUI-Instance: 
+\begin{verbatim}
+	registerApplicationMenu(new <Menüklasse>)); 
+\end{verbatim}
+
+Die Elternklasse der Menüklasse selber erbt von \verb+JMenu+. Daher müssen Sie einfach das \verb+this+-Objekt mit den gewünschten Menüeinträgen befüllen, um ein Menü zu erstellen. Eine Beispielumsetzung einer Menü-Klasse ist:	
+
+\begin{verbatim}
+public class PjMenu extends CgApplicationMenu {
+ 	public MyMenu() {
+ 	 	super("MyMenu");
+ 	 	JMenuItem itemPrintMessage = new JMenuItem("Print message");
+ 	 	itemPrintMessage.addActionListener(new ActionListener() {
+ 	 	 	public void actionPerformed(ActionEvent e) {
+ 	 	 	 	System.out.println("Message");
+ 	 	 	}
+ 	 	});
+ 	 	add(itemPrintMessage);
+ 	}
+}
+\end{verbatim}
+
+
+\subsection{Ressourcen}
+\label{section:ressourcen}
+
+An mehreren Stellen im cg-Framework wird auf Ressourcen aus dem Dateisystem zugegriffen (z.B. Icons, Bilder, Netze, Texturen, ...). Diese können sich in unterschiedlichen Pfaden befinden. Die Resourcenpfade werden zentral über eine Singleton-Klasse {\verb ResourcesLocator } verwaltet. In jedem Programm, das das Framework verwendet, muss daher der {\verb ResourcesLocator } mit den notwendigen Ressoucenpfaden gefüllt werden. Dazu stehen zwei Methoden zur Verfügung: 
+
+\begin{itemize}
+	\item {\verb addPath(String) } Hinzufügen eines Pfades
+	\item {\verb parseIniFile(String) } Lesen eine Liste von Pfaden (zeilenweise) aus einer INI-Datei
+\end{itemize}
+
+Alle Ressourcen, die intern geladen werden (z.B. Icons, Netze, Texturen), verwenden den {\verb ResourcesLocator }, um alle Resourcenpfade zu durchsuchen. Greift man in einem Anwendungsprogramm auch direkt auf Ressourcen zu, dann kann man die Methode {\verb getPathToResource(String) } verwenden. Diese liefert entweder einen gültigen Pfad für eine Resource oder null, falls die Ressource in keinem der Ressourcenpfade gefunden wurde.
+
+Die Ressourcen, die direkt mit dem Projekt cgresearch bereitgestellt werden, befinden sich im Projektverzeichnis im Unterverzeichnis \emph{assets}.
+
+\subsection{Logging}
+\label{sec:logging}
+
+Innerhalb des Frameworks wird ein konsistentes Logging-System verwendet. Der Logger ist als Singleton implementiert und kann folgendermassen erreicht werden:
+
+\begin{verbatim}
+Logger logger = Logger.getInstance();
+\end{verbatim}
+
+Dem Logger können folgende Nachrichten geschickt werden:
+
+\begin{itemize}
+\item \textbf{Nachricht:} Generelle Nachricht, wird normalerweise sofort ausgegeben
+\item \textbf{Debug-Nachricht:} Debugging-Nachricht, wird normalerweise nur ausgegeben, wenn Debugging aktiviert ist
+\item \textbf{Exception:} Auftritt einer Exception, wird normalerweise sofort ausgegeben.
+\item \textbf{Error:} Auftritt eines Fehlers, wird normalerweise sofort ausgegeben.
+\end{itemize}
+
+Aktuell sind folgende Logger umgesetzt:
+
+\begin{itemize}
+\item \verb+ConsoleLogger+ Ausgabe auf der Konsole
+\item \verb+LoggerPane+ Wird bei Verwendung der Swing-GUI angezeigt
+\end{itemize}

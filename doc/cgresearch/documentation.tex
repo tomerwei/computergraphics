@@ -1,0 +1,60 @@
+\title{Computer Graphics Lab, Prof. Dr. Philipp Jenke}
+
+\documentclass[a4letter,10pt]{scrartcl}
+\usepackage{a4wide}
+
+% deutsche Silbentrennung
+\usepackage[ngerman]{babel}
+
+% wegen deutschen Umlauten
+\usepackage[applemac]{inputenc}
+
+% Kein Einrücken zu Beginn eines Absatzes
+\setlength\parindent{0pt}
+
+% Java listings
+%\usepackage{listings}
+
+%% Special tabular version
+\usepackage{tabularx}
+
+% benötigt zum Setzen der Fußzeile
+\usepackage{scrpage2}
+
+% Benötigt, um auf LastPage zugreifen zu können
+\usepackage{lastpage}
+
+\usepackage{graphicx}
+\usepackage{subfigure}
+
+\pagestyle{scrheadings}    
+\renewcommand*{\headfont}{\normalfont}
+
+% Setzen der Kopfzeile
+\setlength{\headheight}{2.5cm}
+\clearscrheadfoot
+\chead{CgResearch - Architekturdokumentation, Komponenten und Konzepte}
+
+\begin{document}
+
+%-------------- Titel -------------
+
+\begin{titlepage}
+\author{Philipp Jenke\\Hochschule für Angewandte Wissenschaften (HAW), Hamburg} 
+\title{CgResearch - Architekturdokumentation, Komponenten und Konzepte} 
+\date{\today} 
+\maketitle
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\input{00_einleitung}
+\input{01_installation}
+\input{02_aufbau_anwendung}
+\input{03_konzepte}
+\input{04_beispielanwendungen}
+\input{05_projekte}
+\input{06_best_practises}
+
+\end{document}

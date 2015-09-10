@@ -1,0 +1,4 @@
+http://localhost:9000/
+mvn package
+mvn compile
+mvn test

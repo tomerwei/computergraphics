@@ -1,0 +1,68 @@
+\section{Best Practises}
+
+\subsection{Git}
+
+\subsubsection{Anlegen eines neuen lokalen Repositories}
+
+\begin{itemize}
+	\item mkdir $<$Verzeichnisname$>$
+	\item cd $<$Verzeichnisname$>$
+	\item git init
+\end{itemize}
+
+\subsubsection{Anlegen eines neuen Repositories auf dem Server}
+
+\begin{itemize}
+	\item mkdir $<$Verzeichnisname$>$
+	\item cd $<$Verzeichnisname$>$
+	\item git init --bare
+\end{itemize}
+
+Beispiel:
+
+\begin{itemize}
+	\item mkdir cg
+	\item cd cg
+	\item git init --bare
+\end{itemize}
+
+\subsubsection{Setzen eines Remote Repositories}
+
+\begin{itemize}
+	\item git remote add $<$Name des Remote Repositories$>$ $<$Pfad zum Repository$>$
+	\item Beispiel (gleicher Rechner): git remote add local /Users/abo781/repository/cg
+	\item Beispiel (Server): git remote add server ssh://abo781@git.informatik.haw-hamburg.de/srv/git/computergrafik/cg
+\end{itemize}
+
+\subsubsection{Lokale Änderungen an Server Repository senden}
+
+\begin{itemize}
+	\item git push $<$Name des Remote Repositories$>$ $<$Name des Branches$>$
+	\item Beispiel: git push server master
+\end{itemize}
+
+\subsubsection{Lokales Klon-Repository von Server holen}
+\label{section:clone}
+
+\begin{itemize}
+	\item git clone $<$Name des Remote Repositories$>$ 
+	\item Beispiel: git clone ssh://abo781@git.informatik.haw-hamburg.de/srv/git/computergrafik/cg
+\end{itemize}
+
+\subsection{Sonar}
+
+Starten von Sonar mit
+\begin{verbatim}
+cd <Sonar-Verzeichnis>/bin/<Betriebssystem>/
+./sonar.sh start
+\end{verbatim}
+
+Prüfen, ob der Sonar-Server läuft (Im Browser):
+\begin{verbatim}
+http://localhost:9000/
+\end{verbatim}
+
+Sonar-Analyse durchführen (benötigt Maven-Installation).
+\begin{verbatim}
+mvn sonar:sonar
+\end{verbatim}

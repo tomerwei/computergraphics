@@ -1,0 +1,177 @@
+\section{Konzepte}
+
+\subsection{Vektoren und Matrizen}
+\label{sec:math}
+
+\begin{verbatim} 
+cgresearch.core.math
+\end{verbatim}
+
+Um die Architektur möglichst flexibel zu halten, werden auf Vektoren und Matrizen nur über Interfaces zugegriffen (\verb+IVector3, IVector4, IMatrix3, IMatrix4+). Im Package gibt es außerdem eine Fabrik-Klasse (\verb+VectorMatrixFactory+) mit der Instanzen von Vektoren und Matrizen erzeugt werden können. Dazu gibt es Referenzimplementierungen für die Interfaces. Gegebenenfalls werden diese später noch durch performantere Implementierungen ersetzt.
+
+\subsection{Szenengraph}
+\label{sec:scene_graph}
+
+\begin{verbatim} 
+cgresearch.graphics.scenegraph
+\end{verbatim}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=6cm]{images/szenengraph.png}
+\label{fig:szenengraph.png}
+\caption{Der Szenengraph besteht aus Knoten vom Type CGNode. Jeder Knoten referenziert einen Inhalt (content). Dabei kann es sich z.B. um ein Dreiecksnetz (ITriangleMesh) handeln.}
+\end{figure} 
+
+Alle Daten werden in einem Szenengraph organisiert. Der Szenengraph besteht aus Knoten vom Type \verb+CgNode+. Ein Knoten kann unterschiedliche Daten repräsentieren. Auf die Daten wird mit der Methode 
+\begin{verbatim}
+public ICgNodeContent getContent();
+\end{verbatim}
+zugegriffen.
+
+\subsection{Rendering}
+\label{sec:rendering}
+
+\begin{verbatim} 
+cgresearch.rendering
+\end{verbatim}
+
+Es werden unterschiedliche Rendering-Systeme unterstützt. Aktuell gibt es Implementierungen von JOGL (Abschnitt \ref{section:JOGL}) und jMonkey (Abschnitt \ref{section:jMonkey}). Nicht alle Implementierungen unterstützen die vollständige Funktionalität. JOGL wird aktuell primär weiterentwickelt.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=6cm]{images/renderinggraph.png}
+\label{fig:renderinggraph.png}
+\caption{Zum Szenengraph wird dynamisch ein dualer Renderinggraph aufgebaut. Zu jedem Knoten des Szenengraphen wird ein Renderingknoten im Rendering-System erstellt. Die Renderingknoten übernehmen die Darstellung der Inhalte.}
+\end{figure} 
+
+Jedes Rendering-System stellt einen zentralen Frame zu Verfügung. Um ein Rendering-System zu verwenden, wir eine Instanz des Frames erzeugt. Für die Visualisierung von einzelnen Knoten im Szenengraphen gibt es ein Plugin-Konzept. Für die unterschiedlichen Daten in den Szenengraph-Knoten können Fabriken registriert werden, die jeweils die zugehörigen Renderknoten erzeugen. Es entsteht also ein dualer Szenengraph für das Rendering-System. Fabriken implementieren das Interface {\verb IRenderObjectsFactory<T> }. Sie können dem Rendering-System dann über die Methode 
+\begin{verbatim} 
+public void registerRenderObjectsFactory(IRenderObjectsFactory<T> factory);
+\end{verbatim}
+des zentralen Frames mitgeteilt werden. Standard-Fabriken werden direkt über die Rendering-Systeme registriert. Eigene Fabriken können auch in den Anwendungsprojekten registriert werden.
+
+\subsubsection{JOGL}
+\label{section:JOGL}
+
+\begin{verbatim} 
+cgresearch.rendering.jogl
+\end{verbatim}
+
+Das Rendering-System JOGL bietet die maximale Freiheit - es wird direkt auf die OpenGL-Ebene zugegriffen.
+
+\subsubsection{jMonkey}
+\label{section:jMonkey}
+
+\begin{verbatim} 
+cgresearch.rendering.jmonkey
+\end{verbatim}
+
+\subsection{Lichtquellen}
+\label{sec:lights}
+
+Lichtquellen in der Szene werden zentral über den Wurzelknoten verwaltet. Der Wurzelknoten hat dazu einen speziellen Typ, nämlich \verb+CgRootNode+ und kann aus der zentralen Anwendung, abgeleitet von \verb+CgApplication+, heraus erreicht werden: 
+\begin{verbatim}
+CgRootNode getCgRootNode()
+\end{verbatim}
+Der Wurzelknoten bietet Zugriff auf die Anzahl der Lichtquellen (\verb+int getNumberOfLights()+) und auf eine einzelne Lichtquelle (\verb+getLight(int index)+). Ändert sich die Beleuchtungssituation, so werden auch die verwendeten Renderer aktualisiert. Dazu muss die Methode \verb+lightingChanged()+ aufgerufen werden.
+
+Lichtquellen sind in der Klasse \verb+LightSource+ repräsentiert. Neben Position, Farbe und Richtung (falls benötigt) wird dort auch der Typ der Lichtquelle abgelegt. Aktuell sind folgende Typen umgesetzt:
+\begin{itemize}
+\item Punktlichtquelle (Position, Farbe)
+\item Richtungslichtquelle (Richtung, Farbe)
+\end{itemize}
+
+Im der Swing Benutzerschnittstelle lassen sich die Lichtquellen verwalten und dynamisch verändern. Den zugehörigen Editor findet man im Menü unter \emph{Rendering $\rightarrow$ Light}. Durch Doppelklick auf einen Wert kann dieser verändert werden.
+
+Die Standart-Lichtquellen sind direkt im Konstruktion der Klasse \verb+CgApplication+ gesetzt.
+
+\emph{Achtung: Aktuell sind noch nicht alle Shader umgestellt, um die Lichtquellen der Szene zu verwenden. Manche Shader haben die verwendeten Lichtquellen noch fest im Shadercode verdrahtet.}
+
+Shader, die die Beleuchtung auf Basis der Lichtquellen berechnen:
+\begin{itemize}
+\item \textbf{Material.SHADER\_PHONG\_SHADING:} Phong Beleuchtungsmodell, Phong Shading Verfahren 
+\begin{itemize}
+\item VS: \emph{shader/vertex\_shader\_phong\_shading.glsl}
+\item FS: \emph{shader/fragment\_shader\_phong\_shading.glsl}
+\end{itemize}
+\item \textbf{Material.SHADER\_TEXTURE\_PHONG:} Phone Beleuchtungsmodell auf Textur, Phone Shading Verfahren
+\begin{itemize}
+\item VS:\emph{ shader/vertex\_shader\_texture\_phong\_shading.glsl}
+\item FS: \emph{shader/fragment\_shader\_texture\_phong\_shading.glsl}
+\end{itemize}
+\end{itemize}
+
+\subsection{Texturen und Shader}
+
+Shader und Texturen werden je in einem zentralen Ressourcen-Manager verwaltet. Der Zugriff erfolgt so:
+\begin{verbatim}
+ResourceManager.getShaderManagerInstance();
+\end{verbatim}
+und 
+\begin{verbatim}
+ResourceManager.getTextureManagerInstance();
+\end{verbatim}
+
+\subsubsection{Texturen}
+
+Will man beispielsweise eine Textur verwenden, dann vergibt man dafür eine Id und registriert diese Id und die Textur im zugehörigen Ressourcen-Manager:
+\begin{verbatim}
+CgTexture myTexture = new CgTexture("textures/my_texture.png");
+String myTextureId = "myId";
+ResourceManager.getTextureManagerInstance().addResource(myTextureId,
+				myTexture);
+\end{verbatim}
+
+Alternativ kann eine Textur auch direkt aus einem \verb+BufferedImage+ erzeugt werden.
+
+Die Id verwendet man dann im Material, um die Textur zu verwenden, z.B.:
+\begin{verbatim}
+ITriangleMesh myMesh = new TriangleMesh();
+myMesh.getMaterial().setTextureId(myTextureId);
+\end{verbatim}
+
+\subsubsection{Shader}
+
+Das Verwenden von Shadern funktioniert analog. Shader werden durch die Klasse \verb+CgGlslShader+ repräsentiert. Zur Konstruktion eines \verb+CgGlslShader+-Objektes übergibt man die Dateinamen des Vertex- und des Fragmentshader-Codes.
+
+Es ist möglich, mehrere Renderdurchgänge hintereinander durchzuführen in denen unterschiedliche Shader verwendet werden. Dazu setzt man mit der Methode
+\begin{verbatim}
+getMaterial().addShaderId(String shaderId)
+\end{verbatim}
+einfach mehrere Shader in einem Material.
+
+\subsection{Picking}
+
+\emph{Achtung: Picking wird aktuell nur mit dem JOGL-Rendering-System unterstützt.}
+
+Das cg-Framework unterstützt ein System zum 'Picking' von Objekten (Punkten) im 3D-Fenster und zum Verschieben dieser Objekte. Es können allerdings nicht beliebige Szenenobjekte ausgewählt werden. Stattdessen werden Picking-Items explizit in die Szene eingefügt und mit diesen interagiert.
+
+\subsubsection{Erstellen von Picking-Items}
+
+Zum Arbeiten mit Picking-Items muss zunächst eine Klasse implementiert werden, die von der abstrakten Klasse \verb+CgApplicationPickable+ erbt. Außerdem müssen ein oder mehrere Picking-Items in die Szene eingefügt werden. Zur Repräsentation von Picking-Items gibt es die Klasse \verb+PickingItem+. Ein Picking-Item erzeugt mal also beispielsweise mit
+\begin{verbatim}
+PickingItem item = new PickingItem(VectorMatrixFactory.newIVector3(0,0,0));
+\end{verbatim}
+Der dem Konstruktor übergebene Vektor stellt die Position des Picking-Items dar. Um ein Picking-Item in die Szene einzufügen, verwendet man die Methode \verb+addPickingItem+ des Objektes, das von \verb+CgApplicationPickable+ erbt. In der 3D-Darstellung wird ein Picking-Item als eine (graue) Kugel dargestellt. Die Größe der Kugel muss natürlich der Dimension der Szene angepasst werden. Da diese Anpassung nicht automatisch vorgenommen werden kann, muss der Anwender die Einstellung selber vornehmen. Dies geschieht über ein Singleton-Objekt \emph{Picking}, dass das Picking verwaltet. Auf dieses Objekt greift man mit \emph{Picking.getInstance()} zu. Die Skalierung wird mit dem Aufruf
+\begin{verbatim}
+Picking.getInstance().setScaling(0.1);
+\end{verbatim}
+vorgenommen.
+
+\subsubsection{Interaktion mit Picking-Items}
+
+Picking-Items können ausgewählt und in $x$-, $y$- und $z$-Richtung verschoben werden. Um mit den Picking-Items interagieren zu können, muss zunächst in den Picking-Modus gewechselt werden. 
+
+\emph{Achtung: Im Picking-Modus kann die Kamera nicht mehr per Maus gesteuert werden!}
+
+In den Picking-Modus wechselt man, indem man auf das entsprechende Icon in der Schnellstarte-Toolbar auf der linken Seite geklickt wird.
+(\includegraphics[height=0.5cm]{../../assets/icons/picking.png}). Das Icon verfärbt sich dann in Orange. Befindet man sich im Picking-Modus, dann kann man ein Picking-Item auswählen und verschieben.
+
+\vspace{0.5cm}
+
+\emph{Selektion} Zum Auswählen eines Picking-Items klickt man in der 3D-Szene auf das Item. Ein Item wird dann ausgewählt, wenn man ausreichend genau darauf geklickt hat. Befinden sich mehrere Picking-Items in der gleichen Sichtbarkeitslinie, dann wird das ausgewählt, das der Kamera am nächsten liegt. Das ausgewählte Picking-Item erkennt man daran, dass es gelb eingefärbt ist und dass dafür ein Koordinatensystem gezeichnet wird. Im Koordinatensystem zeigt der rote Pfeil in die $x$-Richtung, der grüne Pfeil in die $y$-Richtung und der blaue Pfeil in die $z$-Richtung.
+
+\vspace{0.5cm}
+
+\emph{Verschieben} Das aktuell selektierte Picking-Item kann in $x$-, $y$- und $z$-Richtung verschoben werden. Die Richtungen sind durch die entsprechenden Pfeile angegeben. Zum Verschieben in eine Richtung drückt man die zugehörige Taste auf der Tastatur, hält die linke Maustaste gedrückt und bewegt die Maus nach links bzw. nach rechts. Eine Mausbewegung nach links bewegt das Picking-Item gegen die Pfeilrichtung, eine Mausbewegung nach rechts bewegt das Picking-Item in Pfeilrichtung. Zur Bewegung in die $x$-Richtung drückt man die $x$-Taste, analog $y$ und $z$.

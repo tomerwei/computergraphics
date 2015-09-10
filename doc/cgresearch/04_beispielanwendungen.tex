@@ -1,0 +1,149 @@
+\section{Verwendung}
+\label{section:verwendung_framework}
+
+In diesem Abschnitt werden einige Anwendungsfälle für das Framework vorgestellt. Es ist aber immer möglich, dass im Framework Funktionalität enthalten ist, die hier noch nicht beschrieben wird. Eine zweite Anlaufstation für Anwendungsfälle sind die Beispielanwendungen im Modul \verb+cgresearch.apps+.
+
+\subsection{Dreiecksnetze}
+
+Für Dreiecksnetze existiert das Interface \verb+ITriangleMesh+. Ein Dreiecksnetz (hier Kugel mit einer Tesselierung von 10x10 Flächen) kann so erzeugt und in den Szenengraphen eingefügt werden: 
+\begin{verbatim}
+ITriangleMesh mesh = TriangleMeshFactory.createSphere(10);
+CgNode meshNode = new CgNode(mesh, "mesh");
+getCgRootNode().addChild(meshNode);
+\end{verbatim}
+Alternativ können Dreiecksnetze auch 'von Hand' erzeugt werden:
+\begin{verbatim}
+ITriangleMesh mesh = new TriangleMesh();
+int a = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(1,0,0));
+int b = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(0,1,0));
+int c = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(0,0,1));
+mesh.addTriangle(new Triangle(a,b,c));
+\end{verbatim}
+Informationen zu den existierenden Importern für Dreiecksnetze finden sich im Abschnitt \ref{sec:import}.
+
+\subsection{Punktwolken}
+
+Für Punktwolken existiert das Interface \verb+IPointCloud+. Eine Punktwolke (hier Würfelvolumen) kann so erzeugt und in den Szenengraphen eingefügt werden: 
+\begin{verbatim}
+IPointCloud pointCloud = PointCloudFactory.createDummyPointCloud();
+CgNode pointCloudNode = new CgNode(pointCloud, "point cloud");
+getCgRootNode().addChild(pointCloudNode);
+\end{verbatim}
+Punkt wollen können außerdem aus Dreiecksnetzen erzeugt werden. Dazu werden zufallsverteilt Punkte (hier: 5000) auf der Oberfläche eines Dreiecksnetzes gesampled:
+\begin{verbatim}
+IPointCloud pointCloud = MeshSampler.sample(mesh, 5000);
+\end{verbatim}
+Informationen zu den existierenden Importern für Punktwolken finden sich im Abschnitt \ref{sec:import}.
+
+\subsection{Kurven}
+
+Es sind verschiedene Kurven implementiert, die als gemeinsames Interface \verb+ICurve+ verwenden. Für jede Kurve können dabei Kontrollpunkte definiert und ausgelesen werden und der Funktionswert und die Ableitung für beliebige Parameterwerte ausgewertet werden. Aktuell sind folgende Kurventypen implementiert:
+\begin{itemize}
+	\item Monom
+	\item Lagrange
+	\item Hermite
+	\item Bezier
+\end{itemize}
+
+\subsection{Animierte Daten}
+
+Zur Verwendung zeitlich veränderlicher Daten gibt es einen \verb+AnimationTimer+. Dieser ist als Singleton umgesetzt und kann folgendermaßen erreicht werden:
+\begin{verbatim}
+AnimationTimer animationTimer = AnimationTimer.getInstance();
+\end{verbatim}
+Der Timer verwaltet eine diskrete Zeitleiste mit Startwert (\verb+minValue+), Endwert (\verb+maxValue+) und aktuellem Wert (\verb+value+).
+
+Der Timer kann über verschiedene Wege gesteuert werden:
+\begin{itemize}
+	\item Zeitliste als Slider direkt im GUI
+	\item Einstellungen im Menü \verb+Timer+
+	\item direkt über die Singleton-Instanz
+\end{itemize}	
+Unterstützung für den Timer ist im Szenengraph mit dem Szenengraph-Inhalt \verb+Animation+ gegeben:
+\begin{verbatim}
+CgNode animationNode = new CgNode(new Animation(), "animation");
+\end{verbatim}
+Dieser Knoten sorgt dafür, dass von seinen Kindern nur das angezeigt wird, dessen Index mit dem aktuellen Wert des \verb+AnimationTimers+ übereinstimmt. Für dynamische Daten erzeugt man also je einen Szenengraph-Knoten pro Zeitschritt und fügt diese als Kinder einem Szenengraph-Knoten, der einen \verb+Animation+-Inhalt hat, zu.
+
+Der \verb+AnimationTimer+ kann auch dazu 'missbraucht' werden, um verschiedenen Datensätze schnell sichtbar und unsichtbar  zu schalten. Hat man mehrere Daten, von denen immer nur genau ein Datensatz angezeigt werden soll, dann kann man die Daten als Kinder eines Animationsknotens in den Szenengraph einfügen. Über den Zeitleisten-Slider kann immer genau ein Datensatz sichtbar geschaltet werden.
+
+\subsection{Kamera}
+
+Die virtuelle Kamera wird über einen Kamera-Controller gesteuert. Aktuell sind folgende Controller implementiert:
+\begin{itemize}
+\item \verb+InspectionCameraController+
+\item \verb+CameraPathController+
+\item \verb+FirstPersonCameraPathController+
+\item \verb+MovableInspectionCameraPathController+
+\end{itemize}
+
+Der Standard-Controller ist der \verb+InspectionCameraController+. 
+
+Der \verb+InspectionCameraController+ eignet sich besonders zum Betrachten eines Objektes oder einer Szene von allen Seiten. Die Steuerung erfolgt über die Maus. Bei gedrückter linker Maustasten und gleichzeitiger Bewegung der Maus wird die Kamera um den Referenzpunkt der Kamera herum gedreht. Mit gedrückter linker Maustaste kann an das Objekt heran- oder wieder herausgezoomt werden.
+
+Der \verb+CameraPathController+ dient dem Abspielen eines gespeicherten Kamerapfades. Der Kamerapfad wird mit Hilfe von Keypoints vorgegeben. Zwischen den Keypoints wird die Position interpoliert. Die Keypoints können über das Menu \emph{Jogl} $\rightarrow$ \emph{Camera} verwaltet werden (Hinzufügen und Entfernen von Keypoints). Ist der \verb+CameraPathController+ selektiert, dann wird der Kamerapfad über die Zeitleiste des \verb+AnimationTimers+ kontrolliert. Der vollständige Pfad läuft über die gesamte Länge der Zeitleiste - darüber kann also auch die Auflösung der Bewegung und die Geschwindigkeit der Kamerabewegung festgelegt werden.
+
+Alle Einstellungen zur Kamera sind im Camera-Singleton abgelegt. Darauf lässt sich mit 
+\begin{verbatim}
+	Camera.getInstance()
+\end{verbatim}
+zugreifen. In der Kamera kann auch der aktuelle Controller gesetzt werden. Alternativ lassen sich die meisten Kameraeinstellungen auch per GUI im Menu unter \emph{Jogl} $\rightarrow$ \emph{Camera} vornehmen.
+
+\subsection{Film-Export}
+
+Es ist möglich, die 3D-Darstellung zu exportierten. Konkret kann jeder Zeitschritt als ein Einzelbild exportiert werden. Die Einzelbilder können dann über externe Tools zu Videos zusammengestellt werden. Achtung: Der Export der Einzelbilder kostet einige Zeit. Es ist daher ggf. notwendig, den \verb+AnimationTimer+ mit einer geringeren Geschwindigkeit laufen zu lassen, damit auch wirklich von jedem Frame ein Bild exportiert wird. Das Exportieren der Einzelbilder kann über das Menu \emph{Jogl} $\rightarrow$ \emph{Movie Export} gestartet und wieder beendet werden. Dort lässt sich auch der Ausgabepfad festlegen.
+
+\subsection{Octree}
+
+Zur effizienten Bearbeitung von Szenen eignen sich oft hierarchische Datenstrukturen. Im Framework sind dazu bislang Octrees umgesetzt. Die Octrees sind generisch und wissen zunächst nicht, welche Daten sie verwalten. Zum Aufbauen eines Octrees benötigt man daher ein Objekt, dass mit den konkreten Daten umgeht. Hier ist dies mit den Strategy-Entwurfsmuster umgesetzt. Ein Strategie-Objekt wird verwendet, um eine Factory (Fabrik) zu erzeugen, die den Octree aufbaut. Es existieren aktuell Strategien für Dreickecksnetze und Punktwolken. Einen Octree für ein Dreiecksnetz erzeugt man so (maximale Tiefe des Baumes 7 und Teilungsgröße einer Zelle 20):
+\begin{verbatim}
+OctreeFactoryStrategyTriangleMesh octreeFactoryStrategyMesh = 
+ 	 	new OctreeFactoryStrategyTriangleMesh(mesh);
+OctreeFactory<Integer> octreeFactoryMesh = 
+ 	 	new OctreeFactory<Integer>(octreeFactoryStrategyMesh);
+OctreeNode<Integer> octreeMeshRoot = octreeFactoryMesh.create(7, 20);
+\end{verbatim}
+
+\subsection{Daten-Im- und Export}
+\label{sec:import}
+
+Für verschiedenen Datentypen wird der Im- und Export unterstützt:
+
+\subsubsection{Dreiecksnetze}
+
+\begin{itemize}
+	\item OBJ-Import: Klasse \verb+ObjFileReader+
+	\item OBJ-Export: Klasse \verb+ObjFileWriter+
+	\item PLY-Import: Klasse \verb+PlyFileReader+
+\end{itemize}
+
+Beispielhafter Import aus Obj-Datei:
+\begin{verbatim}
+ObjFileReader reader = new ObjFileReader();
+CgNode meshNode = reader.readFile("meshes/bunny.obj");
+\end{verbatim}
+Das Ergebnis ist eine \verb+CgNode+, die importierten Meshes aus der Obj-Datei sind als Kindknoten dieses Knotens abgelegt.
+
+ \subsubsection{Motion-Capture-Daten}
+
+\begin{itemize}
+	\item Daten aus dem HAW Wellefeldsynthese-Labor: Klasse \verb+MoCapImporter+
+\end{itemize}
+
+ \subsubsection{Punktwolken}
+
+\begin{itemize}
+	\item ASCII-Daten-Import: Klasse \verb+AsciiPointsReader+
+	\item ASCII-Daten-Export: Klasse \verb+AsciiPointsWriter+
+\end{itemize}
+
+Beim Import von ASCII-Daten gibt es verschiedene Formate in denen die Punktinformationen vorliegen können. Um diese mit einem Importer abdecken zu können, muss beim Import das Format mit angegeben werden. Das Format wird über ein Objekt der Klasse \verb+AsciiPointFormat+ repräsentiert. Es wird davon ausgegangen, dass die Ascii-Daten zeilenweise mit einem konstanten Trennungszeichen angegeben sind. Alle Zeilen, die das Format erfüllen, werden importiert. Um beispielsweise Daten im Format \newline
+$<$Position-X$>$ $<$Position-Y$>$ $<$Position-Z$>$ $<$Normale-X$>$ $<$Normale-Y$>$ $<$Normale-Z$>$ \newline
+mit einem Leerzeichen als Trennungszeichen einzulesen, wird folgendes Formatierungsobjekt erzeugt:
+\begin{verbatim}
+AsciiPointFormat format = new AsciiPointFormat()
+ 	 	.setPosition(0, 1, 2).setNormal(3, 4, 5).setSeparator("\\s+");
+\end{verbatim} 
+Die Parameter geben die Position des entsprechenden Wertes in der Datenzeile an. Der Konstruktor erzeugt ein Objekt und mit den Methoden wird das Objekt angepasst und jeweils wieder zurückgegeben (method chaining). Damit ist es möglich, das Objekt mit einem Ausdruck zu erzeugen. Außerdem können Farbinformation (RGB) und eine Skalierung der Farbwerte angegeben werden.
+
+Der Export arbeitet analog.

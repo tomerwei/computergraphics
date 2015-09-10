@@ -1,0 +1,2 @@
+- nosuchmethorexception: falsche .jar irgendwo im classpath
+- no default device: false .jar oder native libs verwendet
