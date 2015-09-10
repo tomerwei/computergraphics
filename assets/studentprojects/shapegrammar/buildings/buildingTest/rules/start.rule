@@ -1,0 +1,52 @@
+import("./basic rules/basicrule3.rule");
+
+Roof -->
+	texture("./building2/textures/roof.jpg");
+
+Facade -->
+	split(y) { 2 : Floor }*;
+	
+Right --> 
+	split(y) { ~ : D1 };
+
+D1 -->
+	extrude(4){ ~ : Facade | 4 : Ext1 | ~ : Facade };
+
+Ext1 -->
+	extrude(8) { left, back, right : Facade | front : Front| top : TopBot | bot : TopBot };
+
+TopBot -->
+	split(x) { ~ : Ext2 };
+	
+Ext2 -->
+	extrude(8) { left, back, right : Facade | front : Front| top : Roof };
+	
+Floor -->
+	split(x) { 2 : WindowFacade }*;
+
+Front -->
+	split(y) { 2 : FrontGround | ~ : Facade};
+	
+FrontGround -->
+	split(x) { 2 : WindowFacade | 2 : DoorWall[50%] | 2 : WindowFacade}*;
+	
+WindowFacade -->
+	split(y) { 0.70 : WindowRest | 1.2 : WindowPart | 0.10 : WindowRest};
+
+WindowPart -->
+	split(x) { 0.5 : WindowRest | 1 : Window | 0.5 : WindowRest };
+
+WindowRest -->
+	texture("./building2/textures/wall.jpg");	
+	
+Window -->
+	texture("./building2/textures/window.jpg");
+
+DoorWall --> 
+	split(x) { 0.2 : DoorRest | 1.6 : Door | 0.2 : DoorRest};
+
+DoorRest --> 
+	texture("./building2/textures/wall.jpg");
+
+Door --> 
+	texture("./building2/textures/door.jpg");

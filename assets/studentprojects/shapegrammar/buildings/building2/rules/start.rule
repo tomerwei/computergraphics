@@ -1,0 +1,38 @@
+import("./basic rules/basicrule.rule");
+
+Roof -->
+	texture("./building2/textures/roof.jpg");
+
+Facade -->
+	split(y) { 2 : Floor }*;
+
+Floor -->
+	split(x) { 2 : WindowFacade }*;
+
+Front -->
+	split(y) { 2 : FrontGround | ~ : Facade};
+	
+FrontGround -->
+	split(x) { 2 : WindowFacade | 2 : DoorWall | 2 : WindowFacade}*;
+	
+WindowFacade -->
+	split(y) { 0.70 : WindowRest | 1.2 : WindowPart | 0.10 : WindowRest};
+
+WindowPart -->
+	split(x) { 0.5 : WindowRest | 1 : Window | 0.5 : WindowRest };
+
+WindowRest -->
+	texture("./building2/textures/wall.jpg");	
+	
+Window -->
+	model3d("./building2/textures/window.obj", 20°)
+	texture("./building2/textures/window.jpg");
+
+DoorWall --> 
+	split(x) { 0.2 : DoorRest | 1.6 : Door | 0.2 : DoorRest};
+
+DoorRest --> 
+	texture("./building2/textures/wall.jpg");
+
+Door --> 
+	texture("./building2/textures/door.jpg");

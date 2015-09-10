@@ -1,0 +1,2 @@
+Building --> 
+	split(f) { left, right: Facade | back, front : Front| top : Roof };

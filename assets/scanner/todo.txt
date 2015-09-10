@@ -1,0 +1,13 @@
+** HARDWARE ***
+- Alternative Motoren austesten
+- Kabel ordentlich befestigen
+- größere Zahnscheibe am Plattenteller
+
+*** SOFTWARE ***
+
+
+*** DONE ***
+- Plattenteller versetzen
+- Laufräder für Plattenteller
+- Abdeckung für Tinkerforge-Stack
+- Einstellen von Beschleunigung und Geschwindigkeit per GUI
