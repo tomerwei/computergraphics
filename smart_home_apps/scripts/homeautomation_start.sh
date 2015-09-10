@@ -1,0 +1,1 @@
+java -cp /home/pi/homeautomation/*:/home/pi/homeautomation/mysql-connector-java-5.1.33-bin.jar:/home/pi/homeautomation/homeautomation.jar homeautomation.apps.HomeAutomation /home/pi/homeautomation/configs/raspiserver_raspberry.json

@@ -1,0 +1,11 @@
+{
+	"visclient": {
+		"database": {
+			"hostname":"127.0.0.1",
+			"username":"pj",
+			"password":"mysql", 
+			"databaseName":"homeautomation",
+			"tableName":"SENSOR_MEASUREMENTS"
+			}
+	}
+}

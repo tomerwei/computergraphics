@@ -1,0 +1,63 @@
+{
+	"raspiserver": {
+		"timerInterval": 600,
+		"exportTarget": "DATABASE",
+		"libraries":["/home/pi/homeautomation/dht22.so"],
+		"sensors":[
+			{
+				"model":"DHT22",
+				"type":"TEMPERATURE",
+				"identifier":"1",
+				"location":"Keller"
+			},
+			{
+				"model":"DHT22",
+				"type":"HUMIDITY",
+				"identifier":"1",
+				"location":"Keller"
+			},
+                        {
+                                "model":"DHT22",
+                                "type":"TEMPERATURE",
+                                "identifier":"3",
+                                "location":"Arbeitszimmer"
+                        },
+                        {
+                                "model":"DHT22",
+                                "type":"HUMIDITY",
+                                "identifier":"3",
+                                "location":"Arbeitszimmer"
+                        },
+			{
+				"model":"TinkerforgeTemperature",
+				"type":"TEMPERATURE",
+				"location":"Arbeitszimmer",
+				"identifier":"dGL"
+			},
+			{
+				"model":"TinkerforgeHumidity",
+				"type":"HUMIDITY",
+				"location":"Arbeitszimmer",
+				"identifier":"fNp"
+			},
+			{
+				"model":"DS18B20",
+				"type":"TEMPERATURE",
+				"location":"Arbeitszimmer",
+				"identifier":"28-000006098585"
+				
+			}
+		],	
+		"database": {
+			"hostname":"127.0.0.1",
+			"username":"pj",
+			"password":"mysql", 
+			"databaseName":"homeautomation",
+			"tableName": "SENSOR_MEASUREMENTS"
+			},
+		"webservice":{
+			"port":"8182",
+			"rootDir":"/home/pi/homeautomation"
+		}
+	}
+}

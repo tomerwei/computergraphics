@@ -1,0 +1,66 @@
+{
+	"raspiserver": {
+		"timerInterval": 10,
+		"exportTarget": "DATABASE",
+		"libraries":[
+			"/Users/abo781/abo781/code/homeautomation/lib/devices_dummy.so"	
+		],
+		"actors":[
+			{
+				"type":"RF_LINK_TRANSMITTER_DUMMY",
+				"pinNumber":"0"
+
+			},
+			{
+				"type":"ELECTRICAL_OUTLET_SWITCH",
+				"systemCode":"11111",
+				"unitCode":"1",
+				"location":"Wohnzimmer: Lampe Nähtisch"
+			},
+			{
+				"type":"ELECTRICAL_OUTLET_SWITCH",
+				"systemCode":"11111",
+				"unitCode":"2",
+				"location":"Wohnzimmer: Lampe Besta"
+			}
+		],
+		"sensors":[
+			{
+				"model":"DHT22Dummy",
+				"type":"TEMPERATURE",
+				"identifier":"7",
+				"location":"Arbeitszimmer"
+			},
+			{
+				"model":"DHT22Dummy",
+				"type":"HUMIDITY",
+				"identifier":"7",
+				"location":"Arbeitszimmer"
+			},
+			{
+				"model":"TinkerforgeTemperature",
+				"type":"TEMPERATURE",
+				"location":"Arbeitszimmer",
+				"identifier":"dGL"
+			},
+			{
+				"model":"TinkerforgeHumidity",
+				"type":"HUMIDITY",
+				"location":"Arbeitszimmer",
+				"identifier":"fNp"
+				
+			}
+		],
+		"database": {
+			"hostname":"127.0.0.1",
+			"username":"pj",
+			"password":"mysql", 
+			"databaseName":"homeautomation",
+			"tableName": "SENSOR_MEASUREMENTS"
+		},
+		"webservice":{
+			"port":"8182",
+			"rootDir":"/Users/abo781/abo781/code/homeautomation"
+		}
+	}
+}

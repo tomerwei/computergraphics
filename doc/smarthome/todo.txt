@@ -1,0 +1,15 @@
+*** TODO ***
+- Dummies für Tinkerforge bricklets
+- Compile target send in Makefile
+- Backup mxsql database
+- Document REST API
+
+*** DONE ***
+- nur aktuelle Sensoren anzeigen
+- Properties zum Konfigurieren der Tools
+- Konstanten-Interface
+- Anzeige von Sensor-Graphen
+- Demon-Info in /etc/init.d/homeautomation anpassen
+
+*** NICE-TO-HAVE ***
+- Sensor-Messung in eigenem Thread

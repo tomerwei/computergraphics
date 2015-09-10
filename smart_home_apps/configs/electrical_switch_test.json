@@ -1,0 +1,7 @@
+{
+	"electrical_switch_test": {
+		"libraries":[
+			"/home/pi/homeautomation/devices.so"
+		]
+	}
+}

@@ -1,0 +1,27 @@
+#!/bin/bash
+# Home-Automation
+#
+
+### BEGIN INIT INFO
+# Provides:          dovecot
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: dovecot
+# Description:       dovecot pop & imap daemon
+### END INIT INFO
+
+case $1 in
+    start)
+        /bin/bash /usr/local/bin/homeautomation_start.sh
+    ;;
+    stop)
+        /bin/bash /usr/local/bin/homeautomation_stop.sh
+    ;;
+    restart)
+        /bin/bash /usr/local/bin/homeautomation_stop.sh
+        /bin/bash /usr/local/bin/homeautomation_start.sh
+    ;;
+esac
+exit 0

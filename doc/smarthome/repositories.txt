@@ -1,0 +1,5 @@
+remote haw-server:
+ssh://abo781@git.informatik.haw-hamburg.de/srv/git/computergrafik/homeautomation/ 
+
+remote server:
+file:///Users/abo781/abo781/repositories/git/homeautomation/

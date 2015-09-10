@@ -1,0 +1,14 @@
+{
+	"sensorcontrolsled": {
+		"motionDetectionSensor":
+			{
+				"identifier":"0",
+				"mode":"REAL"
+			},
+		"ledActor":
+			{
+				"identifier":"1",
+				"mode":"REAL"
+			}
+	}
+}

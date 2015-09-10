@@ -1,0 +1,14 @@
+{
+	"sensortest": {
+		"libraries":["/home/pi/homeautomation/dht22.so"],
+		"sensors":[
+			{
+				"model":"DS18B20",
+				"type":"TEMPERATURE",
+				"location":"Arbeitszimmer",
+				"identifier":"28-0000060a06b2"
+				
+			}
+		]
+	}
+}

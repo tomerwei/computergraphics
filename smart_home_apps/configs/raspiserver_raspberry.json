@@ -1,0 +1,70 @@
+{
+	"raspiserver": {
+		"timerInterval": 600,
+		"exportTarget": "DATABASE",
+		"libraries":[
+			"/home/pi/homeautomation/devices.so"
+		],
+		"actors":[
+			{
+				"type":"RF_LINK_TRANSMITTER",
+				"pinNumber":"0"
+			}, 
+			{
+				"type":"ELECTRICAL_OUTLET_SWITCH",
+				"systemCode":"11111",
+				"unitCode":"1",
+				"location":"Schreibtisch"
+			},
+			{
+				"type":"ELECTRICAL_OUTLET_SWITCH",
+				"systemCode":"11111",
+				"unitCode":"2",
+				"location":"Schalter 2"
+			},
+			{
+				"type":"ELECTRICAL_OUTLET_SWITCH",
+				"systemCode":"11111",
+				"unitCode":"3",
+				"location":"Schalter 3"
+			}
+		],
+		"sensors":[
+			{
+				"model":"DHT22",
+				"type":"TEMPERATURE",
+				"identifier":"1",
+				"location":"Keller"
+			},
+			{
+				"model":"DHT22",
+				"type":"HUMIDITY",
+				"identifier":"1",
+				"location":"Keller"
+			},
+			{
+				"model":"DHT22",
+				"type":"TEMPERATURE",
+				"identifier":"3",
+				"location":"Arbeitszimmer"
+            },
+            {
+				"model":"DHT22",
+				"type":"HUMIDITY",
+				"identifier":"3",
+				"location":"Arbeitszimmer"
+			}
+		],	
+		"database": {
+			"hostname":"127.0.0.1",
+			"username":"pj",
+			"password":"mysql", 
+			"databaseName":"homeautomation",
+			"tableName": "SENSOR_MEASUREMENTS"
+			},
+		"webservice":{
+			"port":"8182",
+			"rootDir":"/home/pi/homeautomation"
+		}
+	}
+}

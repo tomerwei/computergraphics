@@ -1,0 +1,16 @@
+homeautomation.actors
+homeautomation.apps
+homeautomation.apps.todo
+homeautomation.data
+homeautomation.database
+homeautomation.factories
+homeautomation.foundation
+homeautomation.gui
+homeautomation.jsonparser
+homeautomation.modules
+homeautomation.platform
+homeautomation.sensors
+homeautomation.swig
+homeautomation.webservice
+homeautomation.webservice.dataaccess
+homeautomation.webservice.resources

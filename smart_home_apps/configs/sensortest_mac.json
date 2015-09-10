@@ -1,0 +1,32 @@
+{
+	"sensortest": {
+		"libraries":["/Users/abo781/abo781/code/homeautomation/lib/dht22dummy.so"],
+		"sensors":[
+			{
+				"model":"DHT22Dummy",
+				"type":"TEMPERATURE",
+				"identifier":"7",
+				"location":"Arbeitszimmer"
+			},
+			{
+				"model":"DHT22Dummy",
+				"type":"HUMIDITY",
+				"identifier":"7",
+				"location":"Arbeitszimmer"
+			},
+			{
+				"model":"TinkerforgeTemperature",
+				"type":"TEMPERATURE",
+				"location":"Arbeitszimmer",
+				"identifier":"dGL"
+			},
+			{
+				"model":"TinkerforgeHumidity",
+				"type":"HUMIDITY",
+				"location":"Arbeitszimmer",
+				"identifier":"fNp"
+				
+			}
+		]
+	}
+}
