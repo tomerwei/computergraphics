@@ -1,3 +1,9 @@
+allprojects {
+    apply plugin: 'java'
+    group = 'computer_graphics'
+    version = '1.0'
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
@@ -13,5 +19,12 @@ subprojects {
 
     jar {
         manifest.attributes provider: 'gradle'
+    }
+}
+
+task makedist(type: Copy) {
+    into "$buildDir/dist"
+    subprojects {
+        from tasks.withType(Jar)
     }
 }

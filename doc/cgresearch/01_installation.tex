@@ -1,86 +1,86 @@
-\section{Installation}
+\section{Getting Started}
 \label{section:cg}
+
+Wir beginnen mit dem Schnelleinstieg. Zunächst müssen auf dem Rechner die Voraussetzungen sichergestellt:
+\begin{itemize}
+\item Oracle Java 1.8 oder neuer \\ (\emph{http://www.oracle.com/technetwork/java/javase/overview/index.html})
+\item Gradle 2.6 oder neuer (\emph{https://gradle.org/})
+\item Git 2.3 oder neuer (unterschiedliche Quellen je nach OS)
+\item Eclipse 4.5 (Mars) oder neuer (\emph{https://eclipse.org/})
+\end{itemize}
+
+Folgende Schritte müssen durchgeführt werden, damit das Framework verwendet werden kann. 
+
+\begin{itemize}
+	\item \textbf{Auschecken des Repositories:} Das Repository mit allen notwendigen Sourcen und sonstigen Dateien finden sich unter folgendes URL: \\
+	\emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/computergraphics}.\\
+	Es muss auf den Entwicklungsrechner gecloned werden:\\
+	\verb+git clone ssh://<login>@git.informatik.haw-hamburg.de/+\\
+	\verb+     srv/git/computergrafik/computergraphics+
+	\item \textbf{Kompilieren mit Gradle:} Gradle bietet die Möglichkeit, das Projekt über die Kommandozeile zu kompilieren. Dazu muss im Projektverzeichnis (Elternverzeichnis der Unterprojekte wie \emph{graphics\_core}) folgender Befehl ausgeführt werden:\\
+	\verb+gradle build+
+	\item \textbf{Erstellen der Eclipse-Projekte:} Zum Erstellen der Eclipse-Projektdateien wird wieder Gradle verwendet:\\
+	\verb+gradle eclipse+\\
+	Nach erfolgreicher Ausführung dieses Befehls befinden sich Eclipse-Projektdateien (\emph{.project}, ...) in jedem der Unterprojekte.
+	\item \textbf{Import in Eclipse:} Je nachdem, was genau gemacht werden soll, benötigt man verschiedene Unterprojekte. Beispielhaft soll hier die Demo-Anwendung \verb+ObjTriangleMesh+ ausgeführt werden. Diese befinden sich in dem Unterprojekt \emph{apps}. Um das Projekt in Eclipse zu importieren sind die folgenden Schritte notwendig:
+	\begin{itemize}
+		\item File
+		\item Import
+		\item Existing Projects into Workspace
+		\item Select root directory: <Hier muss das Unterverzeichnis \emph{apps} ausgewählt werden>
+		\item Finish
+	\end{itemize}
+	Nun ist das Projekt in Eclipse imporiert und erscheint im Projekt-Exporer. 
+	\item \textbf{Asset-Pfad einrichten:} Viele Programme verwenden Daten (z.B. Icons oder Dreiecksnetze). Standarddaten finden sich im Projektverzeichnis im Unterverzeichnis \emph{assets}. Damit ausgeführte Programme diese Assets auch finden, muss der Pfad zu diesem Verzeichnis bekannt gegeben werde. Dazu wird der absolute Pfad in der Textdatei \emph{resources.txt} eingetragen.
+	\item \textbf{Demo-Programm starten:} Im Package \verb+cgresearch.apps.trianglemeshes+ kann nun die Klasse \verb+ObjTriangleMesh+ durch \emph{Rechtsklick} $\rightarrow$ \emph{Run As} $\rightarrow$ \emph{Java Application} ausgeführt werden. Hat alles geklappt, dann öffnet sich ein Fenster und ein 3D-Modell erscheint.
+\end{itemize}
 
 Zunächst muss das Git-Repository (\emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/cg}) gecloned werden (siehe Abschnitt \ref{section:clone}).
 
 Das Projekt wird durch Importieren in Eclipse eingerichtet: 
 Datei $\rightarrow$ Importieren $\rightarrow$ Vorhandene Projekte in den Arbeitsbereich.
 
-\subsection{Externe Bibliotheken (JARs)}
-
-Einige Komponenten und Projekte benötigen externe Bibliotheken in Form von JAR-Dateien. Es werden hier nicht unbedingt alle Abhängigkeiten vollständig beschrieben. Das generelle Vorgehen ist auch keine Besonderheit dieses Frameworks sondern wird genauso in allen anderen Java-Projekten vorgenommen. Dennoch sollen punktuell einige Vorgehensweisen aufgezeigt werden. Je nach Verwendung des Frameworks müssen nicht alle Abhängigkeiten erfüllt werden. Benötigt man Beispielsweise das jMonkey Rendering System nicht, dann müssen die zugehörigen Klassen und Packages auch nicht kompilieren.
-
-\subsubsection{JOGL (Version 2.3.1)}
-
-Nach dem Einrichten des Eclipse-Projektes muss zunächst eine Benutzerbibliothek für die JOGL-Libs eingerichtet werden. Dazu werden die Eigenschaften des Eclipse-Projektes geöffnet. Zunächst wird über Java-Erstellungspfad $\rightarrow$ Bibliotheken $\rightarrow$ Bibliothek hinzufügen $\rightarrow$  Benutzerbibliothek $\rightarrow$ das Dialogfenster für Benutzerbibliotheken geöffnet. Über den Button Benutzerbibliotheken gelangt man in ein Menü, in dem eine neue Bibliothek angelegt werden kann ("Neu"). Name der neuen Bibliothek ist JOGL. Der neuen Benutzerbibliothek werden die JOGL-JARs hinzugefügt (''Externe JARs hinzufügen''). Folgende JARs sind notwendig:
-\begin{itemize}
-	\item \emph{gluegen-rt.jar}
-	\item \emph{jogl-all.jar}
-	\item \emph{gluegen-rt-natives-$<$OS-abhängig$>$.jar}
-	\item \emph{jogl-all-natives-$<$OS-abhängig$>$.jar}
-\end{itemize}
-Unter Mac-OS sind die nativen Bibliotheken \emph{gluegen-rt-natives-macos-universal.jar} und \emph{jogl-all-natives-macos-universal.jar}. Die neusten Bibliotheken findet man im Archiv \emph{jogamp-all-platforms.7z} unter folgender URL: \emph{http://jogamp.org/deployment/jogamp-current/archive/}.
-
-Die aktuell verwendeten Bibliotheken finden Sie außerdem im Projektverzeichnis unter /\emph{lib/jogl/2.3.1}.
-
-Zusätzlich müssen für die nativen JARs auch noch die Runtime-Bibliotheken (werden per JNI eingebunden) verlinkt werden. Diese Bibliotheken befinden sich im Repository im gleichen Verzeichnis, wie die JARs. Der Pfad für im Dialogfenster für die Benutzerbibliotheken für jedes JAR einzeln angegeben. Dazu werden die Unterpunkte zu jedem JAR ausgeklappt. Der Punkt ''Speicherort der systemeigenen Bibliothek'' wird dann editiert und auf das Verzeichnis mit den nativen Bibliotheken gesetzt. Unter MacOS haben die nativen Bibliotheken die Endung \emph{.jnilib}.
-
-Die Jars befinden sich im Verzeichnis \emph{libs/jogl}.
-
-\subsubsection{libGDX}
-
-Zunächst muss die Entwicklungsumgebung für die Verwendung von libGDX angepasst werden. In dieser Anleitung wird zunächst davon ausgegangen, dass die Anwendung für Desktop (egal welches Betriebssystem) und für Android Mobil verwendet werden soll. Außerdem wird davon ausgegangen, dass Eclipse als Entwicklungsumgebung verwendet wird. Zum Einrichten folgt man am Besten der Anleitung zur Einrichtung von libGDX\footnote{http://libgdx.badlogicgames.com/documentation.html}. Prinzipiell müssen folgende Komponenten eingerichtet werden:
-\begin{itemize}
-\item JDK 7+
-\item Android SDK
-\item Eclipse Plugin zur Android-Entwicklung
-\item Eclipse Plugin zur Verwendung von Grade (wird für das Setup von libGDX benötigt)
-\end{itemize} 
-
-Dann wird das zugehörige Repository gecloned. Das Repository findet sich unter folgender URL: \emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/cg\_libgdx}.
-
-Schliesslich wird das Projekt in Eclipse importiert. Dazu wählt man
-\begin{itemize}
-\item File
-\item Import
-\item Gradle
-\item Gradle Project
-\item Verzeichnis mit dem Repository auswählen
-\item Build Model
-\end{itemize}
-
-In Eclipse werden damit mehrere neue Projekte eingerichtet, wir betrachten hier zunächst nur 
-\begin{itemize}
-\item \textbf{cg\_libgdx-core:} Hier ist die Anbindung zwischen dem cgresearch Framework und libGDX umgesetzt. Dieses Package muss nur verändert werden, wenn die Anbindung erweitert werden soll, z.B. wenn man eine neue RenderObjectFactory für libGDX hinzufügen will.
-\item \textbf{cg\_libgdx-desktop:} Dies ist das Startprojekt für Desktop-Anwendungen. Um eine Anwendung mit libGDX zu starten, muss man diese in der Klasse \verb+DesktopLauncher+ in den Konstruktor von LibGdxFrame als Parameter stecken. Dann kann man die Anwendung mit libGdx-Rendering auf dem Desktop starten.
-\item \textbf{cg\_libgdx-android:} Dies ist das Startprojekt für Android-Anwendungen. Um eine Anwendung mit libGDX zu starten, muss man diese in der Klasse \verb+AndroidLauncher+ in den Konstruktor von LibGdxFrame als Parameter stecken. Dann kann man die Anwendung mit libGdx-Rendering auf dem Desktop starten.
-\end{itemize}
-
-Damit die libGDX-Projekte die Funktionalität aus dem cgresearch Framework kennen, muss dieses in Form eines .jars inkludiert werden. Dazu geht man folgendermassen vor:
-
-\begin{itemize}
-\item \textbf{Erzeugen des Jars:} Um aus dem cgresearch Framework ein Har-Archiv zu erzeugen starten man in der Kommandozeile nacheinander die folgenden zwei Befehlen (setzen Maven voraus!):
-\begin{itemize}
-\item \verb+mvn clean+
-\item \verb+mvn package+
-\end{itemize}
-Das erzeugte Jar mit dem Namen cgreasearch.jar findet man dann im Unterverzeichnis \emph{target}
-\item \textbf{Jar in das libGdx-Projekt bewegen:} Die Jar-Datei muss an in das libGdx Projekt bewegt werden. Es soll in folgedem Verzeichnis liegen: \emph{core/build/libs}.
-\item \textbf{Bibliothek in Projekte einfügen} Zuletzt muss das Jar als externe Bibliothek in alle drei libGdx-Projekte integriert werden. Das geschieht über \emph{Rechtsklick auf das Projekt} $\rightarrow$ \emph{Properties} $\rightarrow$ \emph{Java Build Path} $\rightarrow$  \emph{Libraries} $\rightarrow$  \emph{Add External Jar}. 
-\end{itemize}
-
-\textbf{Resourcen/Assets} Ressourcen und Assets, die unter libGdx verwendet werden sollen müssen auch im \emph{assets}-Ordner libGdx-Projekt liegen. Der \emph{assets}-Ordner liegt im Unterordner \emph{android}. Für den Zugriff aus dem Desktop-Projekt muss der Ordner entweder kopiert werten oder es muss ein Symbolischer Link (\emph{ln -s}) erzeugt werden. Außerdem muss man in der Resourcen-Konfigurationsdatei \emph{resources.ini} den Pfad je nach Betriebssystem anpassen (siehe Abschnitt \ref{section:ressourcen}).
-
-\subsubsection{jMonkey}
-
-Für die Installation muss analog zur Installation der Bibliotheken für JOGL eine Benutzerbibliothek angelegt werden. Da jMonkey auf JOGL aufbaut, ist es normalerweise ausreichend, für beide Systeme nur die Jars aus dem jMonkey-Verzeichnis zu verwenden. Damit müssten auch alle JOGL-Projekte laufen.
-
-Die Jars befinden sich im Verzeichnis \emph{libs/jMonkey}.
-
-\subsubsection{JSON}
-
-Die Jars befinden sich im Verzeichnis \emph{libs/json}.
-
-\subsubsection{RabbitMQ}
-
-Die Jars befinden sich im Verzeichnis \emph{libs/rabbitmq}.
+%\subsubsection{libGDX}
+%
+%Zunächst muss die Entwicklungsumgebung für die Verwendung von libGDX angepasst werden. In dieser Anleitung wird zunächst davon ausgegangen, dass die Anwendung für Desktop (egal welches Betriebssystem) und für Android Mobil verwendet werden soll. Außerdem wird davon ausgegangen, dass Eclipse als Entwicklungsumgebung verwendet wird. Zum Einrichten folgt man am Besten der Anleitung zur Einrichtung von libGDX\footnote{http://libgdx.badlogicgames.com/documentation.html}. Prinzipiell müssen folgende Komponenten eingerichtet werden:
+%\begin{itemize}
+%\item JDK 7+
+%\item Android SDK
+%\item Eclipse Plugin zur Android-Entwicklung
+%\item Eclipse Plugin zur Verwendung von Grade (wird für das Setup von libGDX benötigt)
+%\end{itemize} 
+%
+%Dann wird das zugehörige Repository gecloned. Das Repository findet sich unter folgender URL: \emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/cg\_libgdx}.
+%
+%Schliesslich wird das Projekt in Eclipse importiert. Dazu wählt man
+%\begin{itemize}
+%\item File
+%\item Import
+%\item Gradle
+%\item Gradle Project
+%\item Verzeichnis mit dem Repository auswählen
+%\item Build Model
+%\end{itemize}
+%
+%In Eclipse werden damit mehrere neue Projekte eingerichtet, wir betrachten hier zunächst nur 
+%\begin{itemize}
+%\item \textbf{cg\_libgdx-core:} Hier ist die Anbindung zwischen dem cgresearch Framework und libGDX umgesetzt. Dieses Package muss nur verändert werden, wenn die Anbindung erweitert werden soll, z.B. wenn man eine neue RenderObjectFactory für libGDX hinzufügen will.
+%\item \textbf{cg\_libgdx-desktop:} Dies ist das Startprojekt für Desktop-Anwendungen. Um eine Anwendung mit libGDX zu starten, muss man diese in der Klasse \verb+DesktopLauncher+ in den Konstruktor von LibGdxFrame als Parameter stecken. Dann kann man die Anwendung mit libGdx-Rendering auf dem Desktop starten.
+%\item \textbf{cg\_libgdx-android:} Dies ist das Startprojekt für Android-Anwendungen. Um eine Anwendung mit libGDX zu starten, muss man diese in der Klasse \verb+AndroidLauncher+ in den Konstruktor von LibGdxFrame als Parameter stecken. Dann kann man die Anwendung mit libGdx-Rendering auf dem Desktop starten.
+%\end{itemize}
+%
+%Damit die libGDX-Projekte die Funktionalität aus dem cgresearch Framework kennen, muss dieses in Form eines .jars inkludiert werden. Dazu geht man folgendermassen vor:
+%
+%\begin{itemize}
+%\item \textbf{Erzeugen des Jars:} Um aus dem cgresearch Framework ein Har-Archiv zu erzeugen starten man in der Kommandozeile nacheinander die folgenden zwei Befehlen (setzen Maven voraus!):
+%\begin{itemize}
+%\item \verb+mvn clean+
+%\item \verb+mvn package+
+%\end{itemize}
+%Das erzeugte Jar mit dem Namen cgreasearch.jar findet man dann im Unterverzeichnis \emph{target}
+%\item \textbf{Jar in das libGdx-Projekt bewegen:} Die Jar-Datei muss an in das libGdx Projekt bewegt werden. Es soll in folgedem Verzeichnis liegen: \emph{core/build/libs}.
+%\item \textbf{Bibliothek in Projekte einfügen} Zuletzt muss das Jar als externe Bibliothek in alle drei libGdx-Projekte integriert werden. Das geschieht über \emph{Rechtsklick auf das Projekt} $\rightarrow$ \emph{Properties} $\rightarrow$ \emph{Java Build Path} $\rightarrow$  \emph{Libraries} $\rightarrow$  \emph{Add External Jar}. 
+%\end{itemize}
+%
+%\textbf{Resourcen/Assets} Ressourcen und Assets, die unter libGdx verwendet werden sollen müssen auch im \emph{assets}-Ordner libGdx-Projekt liegen. Der \emph{assets}-Ordner liegt im Unterordner \emph{android}. Für den Zugriff aus dem Desktop-Projekt muss der Ordner entweder kopiert werten oder es muss ein Symbolischer Link (\emph{ln -s}) erzeugt werden. Außerdem muss man in der Resourcen-Konfigurationsdatei \emph{resources.ini} den Pfad je nach Betriebssystem anpassen (siehe Abschnitt \ref{section:ressourcen}).
+%

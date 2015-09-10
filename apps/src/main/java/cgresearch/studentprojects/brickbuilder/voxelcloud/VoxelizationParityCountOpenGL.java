@@ -215,33 +215,33 @@ public class VoxelizationParityCountOpenGL implements
     gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
   }
 
-  /**
-   * Initialize OpenGL for the depth reading.
-   * 
-   * @param gl
-   */
-  private void initDepthReading(GL2 gl) {
-    gl.glEnable(GL2.GL_DEPTH_TEST);
-    gl.glDisable(GL2.GL_BLEND);
+//  /**
+//   * Initialize OpenGL for the depth reading.
+//   * 
+//   * @param gl
+//   */
+//  private void initDepthReading(GL2 gl) {
+//    gl.glEnable(GL2.GL_DEPTH_TEST);
+//    gl.glDisable(GL2.GL_BLEND);
+//
+//    gl.glLoadIdentity();
+//    gl.glOrtho(-0.5, 0.5, -0.5, 0.5, 0.0, 1.0);
+//  }
 
-    gl.glLoadIdentity();
-    gl.glOrtho(-0.5, 0.5, -0.5, 0.5, 0.0, 1.0);
-  }
-
-  /**
-   * Initialize OpenGL for the color reading.
-   * 
-   * @param gl
-   */
-  private void initColorReading(GL2 gl) {
-    gl.glDisable(GL2.GL_DEPTH_TEST);
-    gl.glEnable(GL2.GL_BLEND);
-    gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE);
-    gl.glDisable(GL2.GL_DITHER);
-    gl.glColor3ub((byte) 255, (byte) 128, (byte) 1);
-    gl.glDisable(GL2.GL_CULL_FACE);
-    gl.glPixelStorei(GL2.GL_PACK_ALIGNMENT, 1);
-  }
+//  /**
+//   * Initialize OpenGL for the color reading.
+//   * 
+//   * @param gl
+//   */
+//  private void initColorReading(GL2 gl) {
+//    gl.glDisable(GL2.GL_DEPTH_TEST);
+//    gl.glEnable(GL2.GL_BLEND);
+//    gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE);
+//    gl.glDisable(GL2.GL_DITHER);
+//    gl.glColor3ub((byte) 255, (byte) 128, (byte) 1);
+//    gl.glDisable(GL2.GL_CULL_FACE);
+//    gl.glPixelStorei(GL2.GL_PACK_ALIGNMENT, 1);
+//  }
 
   @Override
   public void reshape(GLAutoDrawable draw, int arg1,
