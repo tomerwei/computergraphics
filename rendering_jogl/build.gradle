@@ -1,0 +1,9 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':graphics_core')
+    compile group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.1'
+    compile group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.1'
+}

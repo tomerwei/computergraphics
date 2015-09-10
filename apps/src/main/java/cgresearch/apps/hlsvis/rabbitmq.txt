@@ -1,0 +1,11 @@
+*** Server installieren ***
+- Download http://www.rabbitmq.com/download.html
+- Enpacken: Macintosh HD/Benutzer/abo781/programs/rabbitmq
+- Starten <dir>/sbin/rabbitmq-server
+
+*** Client ***
+- Download: http://www.rabbitmq.com/download.html
+
+/*** User einrichten ***/
+rabbitmqctl add_user hls hls
+rabbitmqctl set_permissions hls ".*" ".*" ".*"
