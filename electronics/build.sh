@@ -14,7 +14,4 @@ cd src/cpp/devices/
 make clean
 make
 cd ../../../
-
 cd ..
-echo "*** Building Java code ***"
-gradle clean build makedist
