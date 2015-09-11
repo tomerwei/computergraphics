@@ -1,3 +1,5 @@
+apply plugin: 'java-library-distribution'
+
 allprojects {
     apply plugin: 'java'
     group = 'computer_graphics'
@@ -28,3 +30,12 @@ task makedist(type: Copy) {
         from tasks.withType(Jar)
     }
 }
+
+task copyRuntimeLibs(type: Copy) {
+    into "$buildDir/dist"
+    subprojects {
+        from configurations.runtime
+    }
+}
+
+makedist.dependsOn copyRuntimeLibs
