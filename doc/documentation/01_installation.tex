@@ -1,7 +1,7 @@
 \section{Getting Started}
 \label{section:cg}
 
-Wir beginnen mit dem Schnelleinstieg. Zunächst müssen auf dem Rechner die Voraussetzungen sichergestellt:
+Wir beginnen mit dem Schnelleinstieg. Zunächst müssen auf dem Rechner die Voraussetzungen sichergestellt werden:
 \begin{itemize}
 \item Oracle Java 1.8 oder neuer \\ (\emph{http://www.oracle.com/technetwork/java/javase/overview/index.html})
 \item Gradle 2.6 oder neuer (\emph{https://gradle.org/})
@@ -9,10 +9,10 @@ Wir beginnen mit dem Schnelleinstieg. Zunächst müssen auf dem Rechner die Voraus
 \item Eclipse 4.5 (Mars) oder neuer (\emph{https://eclipse.org/})
 \end{itemize}
 
-Folgende Schritte müssen durchgeführt werden, damit das Framework verwendet werden kann. 
+Folgende Schritte müssen durchgeführt werden, damit das Framework verwendet werden kann: 
 
 \begin{itemize}
-	\item \textbf{Auschecken des Repositories:} Das Repository mit allen notwendigen Sourcen und sonstigen Dateien finden sich unter folgendes URL: \\
+	\item \textbf{Auschecken des Repositories:} Das Repository mit allen notwendigen Sourcen und sonstigen Dateien finden sich unter folgender URL: \\
 	\emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/computergraphics}.\\
 	Es muss auf den Entwicklungsrechner gecloned werden:\\
 	\verb+git clone ssh://<login>@git.informatik.haw-hamburg.de/+\\
@@ -27,18 +27,13 @@ Folgende Schritte müssen durchgeführt werden, damit das Framework verwendet werd
 		\item File
 		\item Import
 		\item Existing Projects into Workspace
-		\item Select root directory: <Hier muss das Unterverzeichnis \emph{apps} ausgewählt werden>
+		\item Select root directory: $<$\emph{Hier muss das Unterverzeichnis \emph{apps} ausgewählt werden}$>$
 		\item Finish
 	\end{itemize}
 	Nun ist das Projekt in Eclipse imporiert und erscheint im Projekt-Exporer. 
 	\item \textbf{Asset-Pfad einrichten:} Viele Programme verwenden Daten (z.B. Icons oder Dreiecksnetze). Standarddaten finden sich im Projektverzeichnis im Unterverzeichnis \emph{assets}. Damit ausgeführte Programme diese Assets auch finden, muss der Pfad zu diesem Verzeichnis bekannt gegeben werde. Dazu wird der absolute Pfad in der Textdatei \emph{resources.txt} eingetragen.
 	\item \textbf{Demo-Programm starten:} Im Package \verb+cgresearch.apps.trianglemeshes+ kann nun die Klasse \verb+ObjTriangleMesh+ durch \emph{Rechtsklick} $\rightarrow$ \emph{Run As} $\rightarrow$ \emph{Java Application} ausgeführt werden. Hat alles geklappt, dann öffnet sich ein Fenster und ein 3D-Modell erscheint.
 \end{itemize}
-
-Zunächst muss das Git-Repository (\emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/cg}) gecloned werden (siehe Abschnitt \ref{section:clone}).
-
-Das Projekt wird durch Importieren in Eclipse eingerichtet: 
-Datei $\rightarrow$ Importieren $\rightarrow$ Vorhandene Projekte in den Arbeitsbereich.
 
 %\subsubsection{libGDX}
 %

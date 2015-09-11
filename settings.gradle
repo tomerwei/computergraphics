@@ -1,1 +1,1 @@
-include "graphics_core", "rendering_jogl", "apps", "electronics", "smart_home_apps", "rc_vehicles"
+include "graphics_core", "rendering_jogl", "apps", "electronics", "smart_home_apps", "rc_vehicles", "smart_home_visualization"

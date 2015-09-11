@@ -3,14 +3,17 @@
 
 \subsection{Module}
 
-Das Framework besteht aus folgenden Modulen (Module weiter unten hängen jeweils nur von Modulen weiter oben ab):
+Das Framework besteht aus folgenden Modulen
 
 \begin{itemize}
-\item \textbf{core:} Mathematik (siehe Abschnitt \ref{sec:math}) und Logging (siehe Abschnitt \ref{sec:logging})
-\item \textbf{graphics:} Szenengraph (siehe Abschnitt \ref{sec:scene_graph}), Interfaces für die Bausteine (Anwendung, UI und Rendering), Picking-Funktionalität, Kamera, Datenstrukturen und Algorithmen, I/O, Material
-\item \textbf{projects:} ausgewählte Systeme: Simulation, Portal-Culling
-\item \textbf{ui:} Benutzerinterface(Fenster, Menüs, Szenengraph)
-\item \textbf{rendering:} gemeinsame Funktionalität, JOGL, jMonkey
+\item \textbf{graphics_core:} Szenengraph (siehe Abschnitt \ref{sec:scene_graph}), Interfaces für die Bausteine (Anwendung, UI und Rendering), Picking-Funktionalität, Kamera, Datenstrukturen und Algorithmen, I/O, Material
+\item \textbf{rendering_jogl:} Rendering mit OpenGL (hier JOGL)
+\item \textbf{apps:} Programme, die die Grafik-Funktionalität verwenden 
+\item \textbf{electronics:} Schnittstellen zu verschiedenen Elektronik-Komponenten wie Sensoren und Aktoren
+\item \textbf{smart_home_apps:} Programme aus Smart Home-Bereich
+\item \textbf{rc_vehicles:} Zwei RaspberryPi-basierte Steuerungsprogramm (Boot, Bot)
+\item \textbf{smart_home_visualization:} Visualisierungslösungen für das Smart Home (Kombination aus Smart Home und Grafik)
+
 \item \textbf{apps:} Beispielanwendungen
 \end{itemize}
 
