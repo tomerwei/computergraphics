@@ -1,1 +1,0 @@
-git clone abo781@<ip>:abo781/repositories/git/homeautomation
