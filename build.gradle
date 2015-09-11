@@ -1,5 +1,3 @@
-apply plugin: 'java-library-distribution'
-
 allprojects {
     apply plugin: 'java'
     group = 'computer_graphics'
