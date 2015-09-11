@@ -1,4 +1,7 @@
 TODO  
+- Render-System als Strategy-Plugin-Pattern
+- Fix ShaderEditorPanel
+- Fix TestTransportOrder
 - Kurven: GUI-An/Aus für Kontrollpunkte und Kontrollpolygon. 
 - Bug: keine Szene -> Absturz unter Windows 8
 - View frustum culling Visualisierung
