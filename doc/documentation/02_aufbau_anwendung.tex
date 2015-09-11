@@ -6,27 +6,42 @@
 Das Framework besteht aus folgenden Modulen
 
 \begin{itemize}
-\item \textbf{graphics_core:} Szenengraph (siehe Abschnitt \ref{sec:scene_graph}), Interfaces für die Bausteine (Anwendung, UI und Rendering), Picking-Funktionalität, Kamera, Datenstrukturen und Algorithmen, I/O, Material
-\item \textbf{rendering_jogl:} Rendering mit OpenGL (hier JOGL)
+\item \textbf{graphics\_core:} Szenengraph (siehe Abschnitt \ref{sec:scene_graph}), Interfaces für die Bausteine (Anwendung, UI und Rendering), Picking-Funktionalität, Kamera, Datenstrukturen und Algorithmen, I/O, Material
+\item \textbf{rendering\_jogl:} Rendering mit OpenGL (hier JOGL)
 \item \textbf{apps:} Programme, die die Grafik-Funktionalität verwenden 
 \item \textbf{electronics:} Schnittstellen zu verschiedenen Elektronik-Komponenten wie Sensoren und Aktoren
-\item \textbf{smart_home_apps:} Programme aus Smart Home-Bereich
-\item \textbf{rc_vehicles:} Zwei RaspberryPi-basierte Steuerungsprogramm (Boot, Bot)
-\item \textbf{smart_home_visualization:} Visualisierungslösungen für das Smart Home (Kombination aus Smart Home und Grafik)
+\item \textbf{smart\_home\_apps:} Programme aus Smart Home-Bereich
+\item \textbf{rc\_vehicles:} Zwei RaspberryPi-basierte Steuerungsprogramm (Boot, Bot)
+\item \textbf{smart\_home\_visualization:} Visualisierungslösungen für das Smart Home (Kombination aus Smart Home und Grafik)
+\end{itemize}
 
-\item \textbf{apps:} Beispielanwendungen
+Die Abhängigkeiten zwischen den Teilprojekten sind in Abbildung \ref{fig:abhaengigkeiten_projekte} aufgezeigt.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=5cm]{images/abhaengigkeiten_projekte.png}
+\caption{Abhängigkeiten zwischen den Teilprojekten}
+\label{fig:abhaengigkeiten_projekte}
+\end{figure} 
+
+Im Projektverzeichnis befinden sich außerdem die folgenden Unterverzeichnisse, die keinen Code beinhalten:
+
+\begin{itemize}
+\item \textbf{assets:} Daten für die Anwendungen wie Icons und Dreiecksnetze
+\item \textbf{doc:} Dokumentation für das Framework, u.a. dieses Dokument
+\item \textbf{doc:} Skripte zum Verwenden des Frameworks auf einem Raspberry Pi
 \end{itemize}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[height=8cm]{images/cgresearch.png}
-\label{fig:cgapplication.png}
 \caption{Screenshot einer Anwendung mit dem cgresearch Framework. Das Fenster besteht aus verschiedenen Blöcken: 3D-View (rechts), Debug-Konsole (unten), Szenengraph und Controller (oben links) Editor-Dialoge (Mitte) und Menü.}
+\label{fig:cgapplication.png}
 \end{figure} 
 
 \subsection{Anwendungsobjekt}
 
-In diesem Abschnitt wird beschrieben, wie mit dem cgresearch Framework eine Anwendung geschrieben werden kann. Als Rendering-System wird JOGL (siehe Abschnitte \ref{section:JOGL}) verwendet.
+In diesem Abschnitt wird beschrieben, wie mit dem cgresearch Framework eine Anwendung geschrieben werden kann. Als Rendering-System wird JOGL (siehe Abschnitte \ref{section:JOGL}) verwendet. Die Anwendung liegt im Teilprojekt \emph{apps}.
 
 Im Zentrum einer Anwendung steht ein \verb+CgApplication+-Objekt. Darin spielt sich die eigentliche Logik der Anwendung ab. Zur Darstellung wird (optional) eine Instanz eines Rendering-Frames erzeugt. Auch das Benutzerinterface ist eine optionale Komponente. Die Klasse \verb+JoglSwingUserInterface+ stellt beispielsweise ein Benutzerinterface für das JOGL-System mit Java Swing bereit.
 
@@ -42,13 +57,12 @@ Zu dem Logger finden Sie Informationen im Abschnitt \ref{sec:logging}, der \verb
 
 \subsection{Rendering}
 
-Aktuell  stehen zwei Klassen (und damit Systeme) für das Rendering zur Verfügung:
+Aktuell steht primär ein System für das Rendering zur Verfügung:
 \begin{itemize}
 \item \verb+JoglFrame+ (JOGL)
-\item \verb+JMonkeyFrame+ (jMonkey)
 \end{itemize}
 
-Die Rendering-Systeme werden ausführlicher in Abschnitt \ref{sec:rendering} besprochen.
+Die Rendering-Systeme werden ausführlicher in Abschnitt \ref{sec:rendering} besprochen. Prinzipiell lauffähige Systeme, die aber deutlich weniger Integration in die bestehenden Datenstrukturen haben, sind jMonkey und libGDX.
 
 \subsection{Grafische Benutzerschnittstelle}
 
