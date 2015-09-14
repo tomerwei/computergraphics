@@ -101,14 +101,14 @@ class Model {
     /* Send rudder and properller state to server -> GET */
     func sendBoatCommandsToServer(){
         let url = RCBOAT_COMMANDS_REQUEST + "rudder=\(boatRudderAngle),propeller=\(boatPropellerSpeed)"
-        HttpRequest.post(url, errorHandler:{() -> Void in print("Error during post")});
+        HttpRequest.post(url, errorHandler:{() -> Void in print("Error during post", terminator: "")});
     }
     
     /* Send rudder and properller state to server -> GET */
     func sendPiBotCommandsToServer(){
         let url = RCPIBOT_COMMANDS_REQUEST + "velocity=\(piBotVelocity),rotation=\(piBotRotation)"
-        print(url)
-        HttpRequest.post(url, errorHandler:{() -> Void in print("Error during post")});
+        print(url, terminator: "")
+        HttpRequest.post(url, errorHandler:{() -> Void in print("Error during post", terminator: "")});
     }
     
     /* Check the server status and update the status variable -> POST */

@@ -7,7 +7,6 @@ package cgresearch.apps.smoothing;
 
 import java.util.List;
 
-import cgresearch.AppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -21,6 +20,7 @@ import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.Transformation;
+import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Demo frame to work with triangle meshes clouds.
@@ -67,8 +67,9 @@ public class LaplacianSmoothing extends CgApplication {
   public static void main(String[] args) {
     ResourcesLocator.getInstance().parseIniFile("resources.ini");
     CgApplication app = new LaplacianSmoothing();
-    AppLauncher.getInstance().create(app);
-    AppLauncher.getInstance().setRenderSystem(RenderSystem.JOGL);
-    AppLauncher.getInstance().setUiSystem(UI.JOGL_SWING);
+    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(app);
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
   }
 }

@@ -3,7 +3,7 @@
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "boat_58.png",
+      "filename" : "icon_rc_vehicles_58.png",
       "scale" : "2x"
     },
     {
@@ -14,7 +14,7 @@
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "boat_80.png",
+      "filename" : "icon_rc_vehicles_80.png",
       "scale" : "2x"
     },
     {
@@ -25,7 +25,7 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "boat_120.png",
+      "filename" : "icon_rc_vehicles_120.png",
       "scale" : "2x"
     },
     {
@@ -34,8 +34,9 @@
       "scale" : "3x"
     },
     {
-      "idiom" : "ipad",
       "size" : "29x29",
+      "idiom" : "ipad",
+      "filename" : "icon_rc_vehicles_29.png",
       "scale" : "1x"
     },
     {
@@ -44,8 +45,9 @@
       "scale" : "2x"
     },
     {
-      "idiom" : "ipad",
       "size" : "40x40",
+      "idiom" : "ipad",
+      "filename" : "icon_rc_vehicles_40.png",
       "scale" : "1x"
     },
     {
@@ -56,13 +58,13 @@
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "boat_76.png",
+      "filename" : "icon_rc_vehicles_76.png",
       "scale" : "1x"
     },
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "boat_152.png",
+      "filename" : "icon_rc_vehicles_152.png",
       "scale" : "2x"
     }
   ],

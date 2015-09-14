@@ -5,7 +5,6 @@
  */
 package cgresearch.apps.motioncapture;
 
-import cgresearch.AppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -15,6 +14,7 @@ import cgresearch.graphics.datastructures.motioncapture.MotionCaptureTopology;
 import cgresearch.graphics.fileio.MoCapImporter;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Central frame for the mesh exercise.
@@ -24,32 +24,31 @@ import cgresearch.graphics.scenegraph.CgNode;
  */
 public class MotionCaptureFrame extends CgApplication {
 
-	/**
-	 * Constructor.
-	 */
-	public MotionCaptureFrame() {
-		MoCapImporter importer = new MoCapImporter();
-		MotionCaptureTopology topology = new MotionCaptureTopology();
-		topology.add(new MotionCaptureConnection("0", "2"));
-		topology.add(new MotionCaptureConnection("2", "4"));
-		topology.add(new MotionCaptureConnection("5", "7"));
-		CgNode animationNode = importer.readFromFile(
-				"mocap/Trackdata_8_komplexe_bewegung.txt", topology);
-		if (animationNode != null) {
-			getCgRootNode().addChild(animationNode);
-		}
-		AnimationTimer.getInstance().setMaxValue(
-				animationNode.getNumChildren() - 1);
-	}
+  /**
+   * Constructor.
+   */
+  public MotionCaptureFrame() {
+    MoCapImporter importer = new MoCapImporter();
+    MotionCaptureTopology topology = new MotionCaptureTopology();
+    topology.add(new MotionCaptureConnection("0", "2"));
+    topology.add(new MotionCaptureConnection("2", "4"));
+    topology.add(new MotionCaptureConnection("5", "7"));
+    CgNode animationNode = importer.readFromFile("mocap/Trackdata_8_komplexe_bewegung.txt", topology);
+    if (animationNode != null) {
+      getCgRootNode().addChild(animationNode);
+    }
+    AnimationTimer.getInstance().setMaxValue(animationNode.getNumChildren() - 1);
+  }
 
-	/**
-	 * Program entry point.
-	 */
-	public static void main(String[] args) {
-		ResourcesLocator.getInstance().parseIniFile("resources.ini");
-		AppLauncher.getInstance().create(new MotionCaptureFrame());
-		AppLauncher.getInstance().setRenderSystem(RenderSystem.JOGL);
-		AppLauncher.getInstance().setUiSystem(UI.JOGL_SWING);
-	}
+  /**
+   * Program entry point.
+   */
+  public static void main(String[] args) {
+    ResourcesLocator.getInstance().parseIniFile("resources.ini");
+    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(new MotionCaptureFrame());
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
+  }
 
 }

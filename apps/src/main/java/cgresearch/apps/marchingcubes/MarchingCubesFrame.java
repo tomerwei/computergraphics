@@ -7,7 +7,6 @@ package cgresearch.apps.marchingcubes;
 
 import com.jogamp.opengl.GL2;
 
-import cgresearch.AppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -23,6 +22,7 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.misc.ImplicitFunctionVisualization;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
+import cgresearch.rendering.jogl.JoglAppLauncher;
 import cgresearch.rendering.jogl.core.JoglRenderable;
 
 /**
@@ -31,8 +31,7 @@ import cgresearch.rendering.jogl.core.JoglRenderable;
  * @author Philipp Jenke
  * 
  */
-public class MarchingCubesFrame extends CgApplication
-    implements JoglRenderable {
+public class MarchingCubesFrame extends CgApplication implements JoglRenderable {
 
   /**
    * Visualizer for the implicit function.
@@ -51,31 +50,22 @@ public class MarchingCubesFrame extends CgApplication
    */
   public MarchingCubesFrame() {
     implicitFunction = new ImplicitFunction3DTorus(1, 0.5);
-    marchingCubes =
-        new MarchingCubes(50,
-            VectorMatrixFactory.newIVector3(-3, -3, -3), 6);
+    marchingCubes = new MarchingCubes(50, VectorMatrixFactory.newIVector3(-3, -3, -3), 6);
     vis = new ImplicitFunctionVisualization(256);
 
     // Create marching cubes mesh
-    ITriangleMesh marchingCubesMesh =
-        marchingCubes.createMesh(implicitFunction);
-     marchingCubesMesh =
-     NodeMerger.merge(marchingCubesMesh, 1e-5);
-    marchingCubesMesh.getMaterial().setRenderMode(
-        Material.Normals.PER_VERTEX);
-    marchingCubesMesh.getMaterial().setShaderId(
-        Material.SHADER_PHONG_SHADING);
-    marchingCubesMesh.getMaterial().setReflectionDiffuse(
-        Material.PALETTE2_COLOR3);
-    CgNode nodeSuperquadric =
-        new CgNode(marchingCubesMesh, "marching cubes");
+    ITriangleMesh marchingCubesMesh = marchingCubes.createMesh(implicitFunction);
+    marchingCubesMesh = NodeMerger.merge(marchingCubesMesh, 1e-5);
+    marchingCubesMesh.getMaterial().setRenderMode(Material.Normals.PER_VERTEX);
+    marchingCubesMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    marchingCubesMesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR3);
+    CgNode nodeSuperquadric = new CgNode(marchingCubesMesh, "marching cubes");
     nodeSuperquadric.setVisible(true);
     getCgRootNode().addChild(nodeSuperquadric);
 
     // Create visualization
     ITriangleMesh mesh = vis.getTriangleMesh();
-    CgNode node =
-        new CgNode(mesh, "implicit function plane");
+    CgNode node = new CgNode(mesh, "implicit function plane");
     getCgRootNode().addChild(node);
     node.setVisible(true);
 
@@ -158,15 +148,12 @@ public class MarchingCubesFrame extends CgApplication
    * Program entry point.
    */
   public static void main(String[] args) {
-    ResourcesLocator.getInstance().parseIniFile(
-        "resources.ini");
+    ResourcesLocator.getInstance().parseIniFile("resources.ini");
     MarchingCubesFrame app = new MarchingCubesFrame();
-    AppLauncher.getInstance().create(app);
-    AppLauncher.getInstance().setRenderSystem(
-        RenderSystem.JOGL);
-    AppLauncher.getInstance().setUiSystem(UI.JOGL_SWING);
-    AppLauncher.getInstance().addCustomUi(
-        new MarchingCubesGui(app.getVis(), app
-            .getImplicitFunction()));
+    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(app);
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
+    appLauncher.addCustomUi(new MarchingCubesGui(app.getVis(), app.getImplicitFunction()));
   }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Observer;
 import java.util.Set;
 
-import cgresearch.AppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -23,6 +22,7 @@ import cgresearch.projects.portalculling.PortalEdge;
 import cgresearch.projects.portalculling.PortalScene2D;
 import cgresearch.projects.portalculling.PortalSceneImporter;
 import cgresearch.projects.portalculling.ViewVolume2D;
+import cgresearch.rendering.jogl.JoglAppLauncher;
 import cgresearch.rendering.jogl.core.JoglRenderable;
 import cgresearch.rendering.jogl.material.JoglTexture;
 
@@ -35,8 +35,7 @@ import com.jogamp.opengl.util.texture.Texture;
  * @author Philipp Jenke
  * 
  */
-public class PortalCullingFrame extends CgApplication
-    implements Observer, JoglRenderable {
+public class PortalCullingFrame extends CgApplication implements Observer, JoglRenderable {
 
   /**
    * The scene with the portals.
@@ -56,23 +55,18 @@ public class PortalCullingFrame extends CgApplication
   /**
    * Render settings for the portal culling.
    */
-  private PortalCullingSettings settings =
-      new PortalCullingSettings();
+  private PortalCullingSettings settings = new PortalCullingSettings();
 
   /**
    * Constructor.
    */
   public PortalCullingFrame() {
     scene = new PortalScene2D();
-    PortalSceneImporter importer =
-        new PortalSceneImporter();
+    PortalSceneImporter importer = new PortalSceneImporter();
     importer.importScene(scene, "portal/scene.scene");
 
-    viewVolume =
-        new ViewVolume2D(VectorMatrixFactory.newIVector3(2,
-            0, 6),
-            VectorMatrixFactory.newIVector3(6, 0, 6),
-            VectorMatrixFactory.newIVector3(7, 0, -1));
+    viewVolume = new ViewVolume2D(VectorMatrixFactory.newIVector3(2, 0, 6), VectorMatrixFactory.newIVector3(6, 0, 6),
+        VectorMatrixFactory.newIVector3(7, 0, -1));
 
     AnimationTimer.getInstance().setMaxValue(50);
   }
@@ -86,13 +80,10 @@ public class PortalCullingFrame extends CgApplication
     // Render scene
     if (settings.showCells) {
       gl.glColor3f(0.1f, 0.1f, 0.1f);
-      for (int edgeIndex = 0; edgeIndex < scene
-          .getNumberOfEdges(); edgeIndex++) {
+      for (int edgeIndex = 0; edgeIndex < scene.getNumberOfEdges(); edgeIndex++) {
         PortalEdge edge = scene.getEdge(edgeIndex);
-        IVector3 startNode =
-            scene.getNode(edge.getStartNodeIndex());
-        IVector3 endNode =
-            scene.getNode(edge.getEndNodeIndex());
+        IVector3 startNode = scene.getNode(edge.getStartNodeIndex());
+        IVector3 endNode = scene.getNode(edge.getEndNodeIndex());
         if (edge.getState() == PortalEdge.State.WALL) {
           gl.glLineWidth(4);
         } else {
@@ -110,15 +101,9 @@ public class PortalCullingFrame extends CgApplication
       gl.glBegin(GL2.GL_LINES);
       gl.glColor3f(0.25f, 0.25f, 0.75f);
       gl.glVertex3fv(viewVolume.getOrigin().floatData(), 0);
-      gl.glVertex3fv(
-          viewVolume.getOrigin()
-              .add(viewVolume.getLeftBoundary())
-              .floatData(), 0);
+      gl.glVertex3fv(viewVolume.getOrigin().add(viewVolume.getLeftBoundary()).floatData(), 0);
       gl.glVertex3fv(viewVolume.getOrigin().floatData(), 0);
-      gl.glVertex3fv(
-          viewVolume.getOrigin()
-              .add(viewVolume.getRightBoundary())
-              .floatData(), 0);
+      gl.glVertex3fv(viewVolume.getOrigin().add(viewVolume.getRightBoundary()).floatData(), 0);
       gl.glEnd();
     }
 
@@ -140,30 +125,22 @@ public class PortalCullingFrame extends CgApplication
     // Show wall walls in the scene.
     if (settings.showAllWalls) {
       if (texture == null) {
-        texture =
-            JoglTexture
-                .createTexture("textures/bricks.jpg");
+        texture = JoglTexture.createTexture("textures/bricks.jpg");
       }
       if (texture != null) {
         gl.glEnable(GL2.GL_TEXTURE_2D);
         gl.glDisable(GL2.GL_LIGHTING);
-        gl.glBindTexture(GL2.GL_TEXTURE_2D,
-            texture.getTextureObject(gl));
-        gl.glTexParameteri(GL2.GL_TEXTURE_2D,
-            GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-        gl.glTexParameteri(GL2.GL_TEXTURE_2D,
-            GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureObject(gl));
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
       }
-      for (int cellIndex = 0; cellIndex < scene
-          .getNumberOfCells(); cellIndex++) {
+      for (int cellIndex = 0; cellIndex < scene.getNumberOfCells(); cellIndex++) {
         PortalCell cell = scene.getCell(cellIndex);
         for (int i = 0; i < 3; i++) {
           int edgeIndex = cell.getEdgeIndex(i);
           PortalEdge edge = scene.getEdge(edgeIndex);
-          IVector3 v0 =
-              scene.getNode(edge.getStartNodeIndex());
-          IVector3 v1 =
-              scene.getNode(edge.getEndNodeIndex());
+          IVector3 v0 = scene.getNode(edge.getStartNodeIndex());
+          IVector3 v1 = scene.getNode(edge.getEndNodeIndex());
           if (edge.getState() == PortalEdge.State.WALL) {
             gl.glBegin(GL2.GL_QUADS);
             gl.glColor3f(1, 1, 1);
@@ -185,29 +162,22 @@ public class PortalCullingFrame extends CgApplication
     // Show the walls of the PVS
     if (settings.showPvsWalls) {
       if (texture == null) {
-        texture =
-            JoglTexture
-                .createTexture("textures/bricks.jpg");
+        texture = JoglTexture.createTexture("textures/bricks.jpg");
       }
       if (texture != null) {
         gl.glEnable(GL2.GL_TEXTURE_2D);
         gl.glDisable(GL2.GL_LIGHTING);
-        gl.glBindTexture(GL2.GL_TEXTURE_2D,
-            texture.getTextureObject(gl));
-        gl.glTexParameteri(GL2.GL_TEXTURE_2D,
-            GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-        gl.glTexParameteri(GL2.GL_TEXTURE_2D,
-            GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureObject(gl));
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
+        gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
       }
       for (Integer cellIndex : pvs) {
         PortalCell cell = scene.getCell(cellIndex);
         for (int i = 0; i < 3; i++) {
           int edgeIndex = cell.getEdgeIndex(i);
           PortalEdge edge = scene.getEdge(edgeIndex);
-          IVector3 v0 =
-              scene.getNode(edge.getStartNodeIndex());
-          IVector3 v1 =
-              scene.getNode(edge.getEndNodeIndex());
+          IVector3 v0 = scene.getNode(edge.getStartNodeIndex());
+          IVector3 v1 = scene.getNode(edge.getEndNodeIndex());
           if (edge.getState() == PortalEdge.State.WALL) {
             gl.glBegin(GL2.GL_QUADS);
             gl.glColor3f(1, 1, 1);
@@ -230,8 +200,7 @@ public class PortalCullingFrame extends CgApplication
   @Override
   public BoundingBox getBoundingBox() {
     BoundingBox box = new BoundingBox();
-    for (int nodeIndex = 0; nodeIndex < scene
-        .getNumberOfNodes(); nodeIndex++) {
+    for (int nodeIndex = 0; nodeIndex < scene.getNumberOfNodes(); nodeIndex++) {
       box.add(scene.getNode(nodeIndex));
     }
     return box;
@@ -248,16 +217,13 @@ public class PortalCullingFrame extends CgApplication
    * Program entry point.
    */
   public static void main(String[] args) {
-    ResourcesLocator.getInstance().parseIniFile(
-        "resources.ini");
+    ResourcesLocator.getInstance().parseIniFile("resources.ini");
     PortalCullingFrame app = new PortalCullingFrame();
-    AppLauncher.getInstance().create(app);
-    AppLauncher.getInstance().setRenderSystem(
-        RenderSystem.JOGL);
-    AppLauncher.getInstance().setUiSystem(UI.JOGL_SWING);
-    AppLauncher.getInstance().addRenderable(app);
-    AppLauncher.getInstance().addCustomUi(
-        new PortalCullingGui(app.getSettings()));
-
+    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(app);
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
+    appLauncher.addRenderable(app);
+    appLauncher.addCustomUi(new PortalCullingGui(app.getSettings()));
   }
 }

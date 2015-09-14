@@ -17,7 +17,6 @@ public class Auto {
 		this.heck = heck;
 	}
 
-
 	public Auto(double hoehe, double laenge, double breite, int min, int max) {
 		this.chassis = generateChassis(hoehe, laenge, breite);
 		this.front = generateFront(hoehe, laenge, breite, min);

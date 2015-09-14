@@ -42,13 +42,13 @@ class HttpRequest {
         let session = NSURLSession(configuration: config)
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request, completionHandler: {(data, response, error) in
             if ( error != nil ){
-                print("Failed to get request result for url " + url)
+                print("Failed to get request result for url " + url, terminator: "")
                 errorHandler()
             } else {
                 if let data2 = data {
                     resultHandler(data2)
                 } else {
-                    print("Failed to get request result for url " + url)
+                    print("Failed to get request result for url " + url, terminator: "")
                 }
             }
         });

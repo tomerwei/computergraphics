@@ -3,15 +3,15 @@
 
 \subsection{Module}
 
-Das Framework besteht aus folgenden Modulen
+Das Framework besteht aus folgenden Modulen:
 
 \begin{itemize}
 \item \textbf{graphics\_core:} Szenengraph (siehe Abschnitt \ref{sec:scene_graph}), Interfaces für die Bausteine (Anwendung, UI und Rendering), Picking-Funktionalität, Kamera, Datenstrukturen und Algorithmen, I/O, Material.
 \item \textbf{rendering\_jogl:} Rendering mit OpenGL (hier JOGL).
-\item \textbf{apps:} Programme, die die Grafik-Funktionalität verwenden .
+\item \textbf{apps:} Programme, die die Grafik-Funktionalität verwenden.
 \item \textbf{electronics:} Schnittstellen zu verschiedenen Elektronik-Komponenten wie Sensoren und Aktoren.
-\item \textbf{smart\_home\_apps:} Programme aus Smart Home-Bereich.
-\item \textbf{rc\_vehicles:} Zwei RaspberryPi-basierte Steuerungsprogramm (Boot, Bot).
+\item \textbf{smart\_home\_apps:} Programme aus dem Smart Home-Bereich.
+\item \textbf{rc\_vehicles:} Zwei Raspberry Pi-basierte Steuerungsprogramme (Boot, Bot).
 \item \textbf{smart\_home\_visualization:} Visualisierungslösungen für das Smart Home (Kombination aus Smart Home und Grafik).
 \end{itemize}
 
@@ -29,7 +29,7 @@ Im Projektverzeichnis befinden sich außerdem die folgenden Unterverzeichnisse, d
 \begin{itemize}
 \item \textbf{assets:} Daten für die Anwendungen wie Icons und Dreiecksnetze.
 \item \textbf{doc:} Dokumentation für das Framework, u.a. dieses Dokument.
-\item \textbf{doc:} Skripte zum Verwenden des Frameworks auf einem Raspberry Pi.
+\item \textbf{raspberry\_pi\_build\_scripts:} Skripte zum Verwenden des Frameworks auf einem Raspberry Pi.
 \item \textbf{mobile:} Apps für mobile Endgeräte.
 \end{itemize}
 
@@ -48,11 +48,12 @@ Im Zentrum einer Anwendung steht ein \verb+CgApplication+-Objekt. Darin spielt s
 
 Die main-Methode der Anwendung könnte also lauten:
 \begin{verbatim}
-new ConsoleLogger(Logger.VerboseMode.DEBUG);
 ResourcesLocator.getInstance().parseIniFile("resources.ini");
-CgApplication app = new TriangleMeshFrame();
-new JoglFrame(app);
-new JoglSwingUserInterface(app);
+CgApplication app = new ObjTriangleMesh();
+JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+appLauncher.create(app);
+appLauncher.setRenderSystem(RenderSystem.JOGL);
+appLauncher.setUiSystem(UI.JOGL_SWING);
 \end{verbatim}
 Zu dem Logger finden Sie Informationen im Abschnitt \ref{sec:logging}, der \verb+ResoucesLocator+ ist in Abschnitt \ref{section:ressourcen} dargestellt.
 

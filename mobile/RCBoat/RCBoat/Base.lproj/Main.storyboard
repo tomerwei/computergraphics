@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8187.4" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6ah-Z0-YO3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6ah-Z0-YO3">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8151.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -10,7 +10,7 @@
         <scene sceneID="DXZ-C2-aaM">
             <objects>
                 <navigationController title="Boat" id="Udz-0V-WiV" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Boot" id="vKn-2x-2tP"/>
+                    <tabBarItem key="tabBarItem" title="Boot" image="Boot Tab Image" id="vKn-2x-2tP"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fSg-cS-sAK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -26,7 +26,7 @@
         <!--Boat-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="Boat" id="BYZ-38-t0r" customClass="RCBoatViewController" customModule="RCBoat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Boat" id="BYZ-38-t0r" customClass="RCBoatViewController" customModule="RC_Vehicles" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -158,7 +158,7 @@
         <!--PiBot-->
         <scene sceneID="8XR-4B-7IB">
             <objects>
-                <viewController title="PiBot" id="C3R-Xe-8cv" customClass="RCPiBotViewController" customModule="RCBoat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="PiBot" id="C3R-Xe-8cv" customClass="RCPiBotViewController" customModule="RC_Vehicles" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Yhx-7f-hpA"/>
                         <viewControllerLayoutGuide type="bottom" id="YQR-Ny-5F3"/>
@@ -292,7 +292,7 @@
         <scene sceneID="PRi-kD-jlv">
             <objects>
                 <navigationController title="PiBot" id="OFv-YV-s7L" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="1" title="Bot" image="pibot_icon" id="7ot-Bz-NMD"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="Bot" image="Bot Tab Image" id="7ot-Bz-NMD"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Bcg-nN-nKo">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -326,9 +326,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Boot Tab Image" width="30" height="12"/>
+        <image name="Bot Tab Image" width="30" height="21"/>
         <image name="banner2" width="800" height="494"/>
         <image name="green" width="50" height="50"/>
-        <image name="pibot_icon" width="22" height="22"/>
         <image name="reverse" width="50" height="30"/>
     </resources>
 </document>

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import cgresearch.AppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -21,6 +20,7 @@ import cgresearch.graphics.datastructures.halfedge.TriangleMeshHalfEdgeConverter
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Central widget to test the half edge simplification functionality.
@@ -105,9 +105,10 @@ public class SimplifcationFrame extends CgApplication implements ActionListener 
 	 */
 	public static void main(String[] args) {
 		ResourcesLocator.getInstance().parseIniFile("resources.ini");
-		AppLauncher.getInstance().create(new SimplifcationFrame());
-		AppLauncher.getInstance().setRenderSystem(RenderSystem.JOGL);
-		AppLauncher.getInstance().setUiSystem(UI.JOGL_SWING);
+		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(new SimplifcationFrame());
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
 	}
 
 }

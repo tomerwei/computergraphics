@@ -5,7 +5,6 @@
  */
 package cgresearch.apps.raytracing;
 
-import cgresearch.AppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -15,6 +14,7 @@ import cgresearch.graphics.datastructures.primitives.Plane;
 import cgresearch.graphics.datastructures.primitives.Sphere;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Test the raytracer.
@@ -26,29 +26,24 @@ public class RaytracingFrame extends CgApplication {
    */
   public RaytracingFrame() {
 
-     Sphere sphere1 = new Sphere(VectorMatrixFactory.newIVector3(1, 0, 1),
-     0.5);
-     sphere1.getMaterial().setReflectionDiffuse(
-     VectorMatrixFactory.newIVector3(1, 0, 0));
-     sphere1.getMaterial().setReflection(0);
-     sphere1.getMaterial().setRefraction(0);
-     sphere1.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-     CgNode sphere1Node = new CgNode(sphere1, "sphere1");
-     getCgRootNode().addChild(sphere1Node);
-    
-     Sphere sphere2 =
-     new Sphere(VectorMatrixFactory.newIVector3(-1, 0, -1), 0.5);
-     sphere2.getMaterial().setReflectionDiffuse(
-     VectorMatrixFactory.newIVector3(0.25, .55, .55));
-     sphere2.getMaterial().setReflection(0.5);
-     sphere2.getMaterial().setRefraction(0);
-     sphere2.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-     CgNode sphere2Node = new CgNode(sphere2, "sphere2");
-     getCgRootNode().addChild(sphere2Node);
+    Sphere sphere1 = new Sphere(VectorMatrixFactory.newIVector3(1, 0, 1), 0.5);
+    sphere1.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(1, 0, 0));
+    sphere1.getMaterial().setReflection(0);
+    sphere1.getMaterial().setRefraction(0);
+    sphere1.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    CgNode sphere1Node = new CgNode(sphere1, "sphere1");
+    getCgRootNode().addChild(sphere1Node);
+
+    Sphere sphere2 = new Sphere(VectorMatrixFactory.newIVector3(-1, 0, -1), 0.5);
+    sphere2.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.25, .55, .55));
+    sphere2.getMaterial().setReflection(0.5);
+    sphere2.getMaterial().setRefraction(0);
+    sphere2.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    CgNode sphere2Node = new CgNode(sphere2, "sphere2");
+    getCgRootNode().addChild(sphere2Node);
 
     Sphere sphere3 = new Sphere(VectorMatrixFactory.newIVector3(0, 0, 0), 0.5);
-    sphere3.getMaterial().setReflectionDiffuse(
-        VectorMatrixFactory.newIVector3(0.55, .25, .55));
+    sphere3.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.55, .25, .55));
     sphere3.getMaterial().setReflection(1);
     sphere3.getMaterial().setRefraction(0);
     sphere3.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
@@ -64,11 +59,8 @@ public class RaytracingFrame extends CgApplication {
     // mesh.getMaterial().setRefraction(0);
     // getCgRootNode().addChild(new CgNode(mesh, "tetrahedron"));
 
-    Plane plane =
-        new Plane(VectorMatrixFactory.newIVector3(0, -1, 0),
-            VectorMatrixFactory.newIVector3(0, 1, 0));
-    plane.getMaterial().setReflectionDiffuse(
-        VectorMatrixFactory.newIVector3(0.8, 0.8, 0.8));
+    Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, -1, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
+    plane.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.8, 0.8));
     plane.getMaterial().setReflection(0.5);
     plane.getMaterial().setRefraction(0.0);
     plane.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
@@ -82,11 +74,11 @@ public class RaytracingFrame extends CgApplication {
   public static void main(String[] args) {
     ResourcesLocator.getInstance().parseIniFile("resources.ini");
     RaytracingFrame frame = new RaytracingFrame();
-    AppLauncher.getInstance().create(frame);
-    AppLauncher.getInstance().setRenderSystem(RenderSystem.JOGL);
-    AppLauncher.getInstance().setUiSystem(UI.JOGL_SWING);
+    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(frame);
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
     RaytracingGui gui = new RaytracingGui(frame.getCgRootNode());
-
-    AppLauncher.getInstance().addCustomUi(gui);
+    appLauncher.addCustomUi(gui);
   }
 }
