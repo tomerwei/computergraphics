@@ -1,0 +1,6 @@
+Speed 195 4.5V (Graupner 6393)
+Herstellerbeschreibung: Mit 8 Gramm Gewicht, besonders kleiner SPEED Motor. Ideal geeignet für mehrmotorige Micro- Modelle. Geeignete Luftschraube 1375.8.3
+
+Technische Daten
+
+Nennspannung 4,5 V Betriebsspannungsbereich 1,2 ... 7,4 V Leerlaufdrehzahl ca. 16000 min-1 Leerlaufstromaufnahme ca. 0,1 A Stromaufnahme bei max.Wirkungsgrad ca. 0,35 A Blockierstromaufnahme ca. 1,25 A Höchster Wirkungsgradohne Getriebe ca. 45 % Zulässige Motorlaufrichtung L und R Gehäuselänge ohne Welle 19,5 mm Gehäusedurchmesser 11/15 mm Freie Wellenlänge 5 mm Wellendurchmesser 1,5mm Gewicht 8 g 

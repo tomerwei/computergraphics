@@ -1,0 +1,889 @@
+html, body, div, h1, h2, h3, h4, p, ul, ol, li, em, img, form, table, a {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  }
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	}
+	
+div#page, div#narrow {
+	width: 964px; /* 970px total */
+	margin: 0 auto;
+	padding: 0 3px;
+	}
+	
+	div#narrow {
+		width: 715px;
+		}
+
+h1, h2.recentreviews {
+	font-size: 22px;
+	font-weight: normal;
+	margin: 0 0 8px 0;
+	}
+
+h2 {
+	font-size: 13px;
+	font-weight: bold;
+	margin: 25px 0 6px 0;
+	}
+	
+	h2.recentreviews {
+		margin: 40px 0 -40px 0;
+		}
+
+h3 {
+	font-size: 11px;
+	font-weight: bold;
+	display: inline;
+	}
+
+p {
+	line-height: 1.5em;
+	margin: 1.0em 0 0;
+	}
+
+a {
+	color: #00c;
+	}
+
+strong {
+	font-weight: bold;
+	font-style: normal;
+	}
+	
+em {
+	font-weight: normal;
+	font-style: italic;
+	}
+	
+form#cse-search-box div {
+	display: inline;
+	margin-right: 5px;
+	}	
+	
+	
+/*======================================================== Header ========================================================*/
+
+div#header {
+	width: 100%;
+	background: url(images/servo-dimensions.gif) center bottom no-repeat;
+	}
+	
+	div#header ul {
+		list-style: none;
+		margin: 6px 0 19px 0;
+		}
+		
+		div#header ul li {
+			display: inline;
+			margin-right: 7px;
+			}
+		
+	div#header ul#secondary {
+		margin-top: -20px;
+		}
+			
+		div#header ul#secondary li {
+			display: inline;
+			margin-right: 3px;
+			}
+			
+			div#header ul li a {
+				padding: 2px;			
+				}
+
+		div#header a#morebrands {
+			margin-right: 0;
+			outline: none;
+			padding-right: 9px;
+			}
+
+	div#header a#logo {
+		display: block;
+		width: 350px;
+		margin: 0 auto;
+		}
+		
+		div#header a#logo img {
+			}
+			
+			
+div#search {
+	width: 715px;
+	margin: 0 auto 24px auto;
+	}
+		
+	div#search h3 {
+		font-weight: normal;
+		font-size: 12px;
+		}
+		
+	div#search p {
+		margin: 5px 0;
+		display: inline;
+		}
+		
+.floatright {
+	float: right;
+	}
+	
+	div#search .floatright {
+		margin-top: 2px;
+		}
+				
+	div#search form {
+		display: inline;
+		}
+		
+ul#adverts {
+	list-style: none;
+	margin: 12px 0 0 0;
+	height: 60px;
+	}
+	
+	ul#adverts li {
+		float: left;
+		width: 25%;
+		text-align: center;
+		}
+		
+		ul#adverts li.duplex {
+			width: 50%;
+			}
+		
+		ul#adverts li.fourplex img {
+			width: 234px;
+			height: 60px;
+			}
+			
+p#advertise {
+	margin: 0 5px 0 0;
+	font-size: 10px;
+	text-align: right;
+	line-height: normal;
+	}
+
+	p#advertise a {
+		color: #bbb;
+		text-decoration: none;
+		}
+	
+		p#advertise a:hover {
+			color: #999;
+			text-decoration: underline;
+			}
+
+
+	
+	
+/*======================================================== Servo Table ========================================================*/
+
+table {
+	font-family: Arial, Tahoma, Helvetica, sans-serif;
+	border-top: 1px solid #a00;
+	border-bottom: 1px solid #edb;
+	clear: left;
+	font-size: 12px;
+	width: 100%;
+	}
+	
+	table th {
+		font-weight: normal;
+		color: #fff;
+		background: #c00;
+		padding: 3px 4px;
+		border-left: 1px solid #a00;
+		}
+		
+		table th a {
+			color: #fff;
+			}
+			
+			table th a.asc, table th a.desc {
+				padding-right: 10px;
+				background: url(/images/icons/sort-arrow.gif) right -8px no-repeat;
+				}
+				
+			table th a.dim {
+				padding-right: 9px;
+				margin-right: 4px;
+				}
+				
+			table th a.desc {
+				background: url(/images/icons/sort-arrow.gif) right 6px no-repeat;
+				}
+		
+		table th#last {
+			border-right: 1px solid #a00;
+			}
+
+	table tr:hover, table tr.even:hover {
+		background-color: #cdf;
+		}
+		
+		table tr:hover td, table tr.even:hover td {
+			border-color: #abe;
+			}
+		
+		
+	table tr.even {
+		background-color: #fec;
+		}
+	
+		table td {
+			border-left: 1px solid #edb;
+			padding: 3px 2px;
+			}
+			
+		table td.last {
+			border-right: 1px solid #edb;
+			text-align: center;
+			}
+
+		table td.nowrap {
+			white-space: nowrap;
+		}
+		
+		table td.price {
+			text-align: right;
+			}
+		
+	table a {
+		text-decoration: none;
+		}
+		
+		table a:hover {
+			text-decoration: underline;
+			}		
+	
+span.metric {
+	color: #987;
+	}
+
+
+td.last a.compare-add {
+	background: url(images/icons/compare-servo.gif) 6px -22px no-repeat;
+	width: 21px;
+	height: 19px;
+	display: block;
+	margin: 0 auto;
+	padding: 3px 6px;
+	}
+	
+	td.last a.compare-add:hover {
+		background: url(images/icons/compare-servo.gif) 6px 3px no-repeat;
+		}
+
+td.last a.compare-view {
+	display: block;
+	font-size: 12px;
+	padding-left: 3px;
+	}
+		
+td.last a.compare-remove {
+	background: url(images/icons/compare-servo.gif) 1px -73px no-repeat;
+	width: 11px;
+	height: 11px;
+	display: block;
+	padding: 3px 4px;
+	float: right;
+	}
+	
+	td.last a.compare-remove:hover {
+		background: url(images/icons/compare-servo.gif) 1px -48px no-repeat;
+		}
+
+a.remove-only {
+	padding: 5px 3px;
+	}
+	
+a.servo {
+	padding: 5px 0px;
+	}
+
+	td.last div.add a, td.last div.remove a {
+		outline: 0;
+		}
+	
+td.last div.add a.compare-view { display: none; }
+td.last div.add a.compare-remove { display: none; }
+td.last div.remove a.compare-add { display: none; }
+
+p.removeall {
+	margin: 4px 2px;
+	}
+	
+	p.removeall a {
+		text-decoration: none;
+		font-size: 12px;
+		font-family: Arial, Helvetica, sans-serif;
+		color: #aaa;
+		}
+		
+	p.removeall a:hover {
+		text-decoration: underline;
+		color: #c00;
+		}
+
+
+
+p#pagestop {
+	margin: 5px 0;
+	float: right;
+	}
+
+p#pagesbottom {
+	margin: 15px 0 5px 0;
+	text-align: center;
+	}
+
+p.pagelinks span.ellipsis {
+	color: #333;
+	padding-left: 2px;
+	}
+		
+p.pagelinks a {
+	padding: 2px 5px;
+	color: #00c;
+	text-decoration: none;
+	margin-left: 3px;
+	}
+
+p.pagelinks a:hover {
+	background-color: #cdf;
+	}
+
+p.pagelinks a.activepage {
+	background-color: #02d;
+	color: #fff;
+	}
+	
+	
+	
+	
+
+/*======================================================== Single-Servo Pages ========================================================*/
+
+div#photobox {
+	float: right;
+	width: 250px;
+	margin-bottom: 20px;
+	}
+	
+	div#photobox img.servo {
+		margin: 10px 0 20px 0;
+		}
+		
+	p#addphoto {
+		text-align: center;
+		margin: -20px 0 20px 0;
+		font-size: 12px;
+		}
+		
+		p#addphoto a {
+			color: #a99;
+			}
+			
+		p#addphoto a:hover {
+			color: #00c;
+			}
+	
+div#specs {
+	margin-right: 300px;
+	}
+	
+	div#narrow h2.underline {
+		margin-bottom: 12px;
+		}		
+	
+		div#narrow h2.underline span {
+			border-bottom: 1px solid #c00;
+			padding-bottom: 6px;
+			}
+		
+	div#narrow table {
+		border: none;
+		border-top: 1px solid #c00;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		width: auto;
+		}
+
+		div#narrow table td {
+			border: none;
+			border-bottom: 1px solid #ddd;
+			padding: 5px 12px 5px 3px;
+			}
+			
+			div#narrow table td.label {
+				}
+			
+		div#narrow table tr:hover {
+			background: #fff;
+			}
+
+	div#specs ul {
+		margin-left: 15px;
+		}
+		
+		div#specs ul li {
+			font-size: 12px;
+			line-height: 17px;
+			margin-bottom: 6px;
+			}
+
+	div#specs h3.dimension {
+		font-weight: normal;
+		font-family: Tahoma, Arial, Helvetica, sans-serif;
+		display: block;
+		float: left;
+		width: 47px;
+		padding-top: 1px;
+		}
+
+span.missing {
+	font-size: 12px;
+	color: #a99;
+	margin-left: 3px;
+	text-align: center;
+	}
+	
+	span.missing a {
+		color: #a99;
+		padding: 2px 1px;
+		}
+		
+	span.missing a:hover {
+		color: #00c;
+	}
+		
+div#photobox td.add a, div#photobox td.remove a {
+	outline: 0;
+	}
+
+div#photobox td.add a.compare-view { display: none; }
+div#photobox td.add a.compare-remove { display: none; }
+div#photobox td.remove a.compare-add { display: none; }
+
+	
+div#photobox a.compare-add {
+	background: none;
+	padding: 2px 1px;
+	}
+	
+	div#photobox a.compare-add:hover {
+		background: none;
+		}
+
+div#photobox a.compare-view {
+	display: block;
+	float: left;
+	padding: 2px 1px;
+	}
+		
+div#photobox a.compare-remove {
+	background: url(images/icons/compare-servo.gif) 1px -73px no-repeat;
+	width: 7px;
+	height: 8px;
+	display: block;
+	padding: 3px;
+	float: left;
+	margin: 1px 0 0 8px;
+	}
+	
+	div#photobox a.compare-remove:hover {
+		background: url(images/icons/compare-servo.gif) 1px -48px no-repeat;
+		}		
+
+img#comparedemo {
+	margin: 15px 0;
+	}
+
+
+p#breadcrumbs {
+	font-size: 11px;
+	margin-bottom: 10px;
+	}
+	
+	p#breadcrumbs a {
+		text-decoration: none;
+		padding: 3px;
+		}
+	p#breadcrumbs a:hover {
+		text-decoration: underline;
+		}
+		
+		p#breadcrumbs a#first {
+			padding-left: 0;
+			}
+
+
+
+/*======================================================== Reviews ========================================================*/
+
+
+div#reviews {
+	margin-top: 45px;
+	}
+	
+	div#reviews h2 {
+		font-size: 15px;
+		clear: both;
+		}
+	
+	div#reviews ul {
+		list-style: none;
+		}
+		
+		div#reviews ul li {
+			padding: 15px;
+			margin-top: 11px;
+			border: 1px solid #b0c0ff;
+			background: #e8eaff;
+			}
+
+p#submitreview {
+	background: #e7e7e7;
+	border: 1px solid #c2c2c2;
+	text-align: center;
+	padding: 10px;
+	}
+
+.clear {
+	clear: both;
+	}
+
+div.metadata {
+	float: left;
+	width: 150px;
+	text-align: center;
+	}
+	
+	div.metadata p {
+		margin: 0;
+		font-size: 12px;
+		}
+		
+	div.metadata img {
+		margin: 10px 0;
+		}
+		
+div.rating {
+	margin-left: 165px;
+	margin-right: 25px;
+	}
+	
+	div.rating img.stars {
+		display: block;
+		}
+	
+	div.rating h3 {
+		display: block;
+		float: left;
+		font-size: 12px;
+		margin: 0 10px 0 0;
+		line-height: 18px;
+		}
+		
+	div.rating p {
+		font-size: 12px;
+		line-height: 18px;
+		margin: 0;
+		margin-bottom: 10px;
+		}
+
+
+
+
+/*======================================================== Missing Data and Review Forms ========================================================*/
+
+form {
+	margin: 20px 0;
+	}
+	
+	form p {
+		margin: 1em 0;
+		}
+		
+	form#review p {
+		margin: 1.2em 0;
+		}
+	
+	form label {
+		font-size: 11px;
+		line-height: 1.5em;
+		}
+			
+	form input.small {
+		width: 45px;
+		}
+		
+	form input.long {
+		width: 340px;
+		}	
+
+	p.submit-alert, p.submit-success, p.alert {
+		padding: 4px 8px;
+		background: #ffb;
+		border: 1px solid #fc6;
+		border-width: 1px;
+		}
+		
+	p.alert {
+		text-align: center;
+		}
+		
+	p.submit-success {
+		background: #ddffe0;
+		border-color: #0c6;
+		}
+
+	img#captchatext {
+		margin-bottom: -6px;
+		}
+
+ 	img#refresh {
+		margin-bottom: -3px;
+		}
+
+	form small {
+		font-size: 11px;
+		}
+		
+	p#dec {
+		display: none;
+		}
+
+
+
+/*======================================================== Advanced Search ========================================================*/
+
+form#filter {
+	margin: 25px 0;
+	}
+	
+	form#filter input {
+		margin-left: 0;
+		}
+
+	form#filter ul {
+		list-style: none;
+		}
+		
+		form#filter ul li {
+			clear: left;
+			}
+			
+	form#filter h2 {
+		width: 95px;
+		float: left;
+		margin: 1px 5px 12px 0;
+		font-weight: normal;
+	}
+	
+	form#filter div.options {
+		float: left;
+		}
+
+	form#filter p.makeinput {
+		float: left;
+		width: 172px;
+		margin: 0;
+		}
+			
+	form#filter p#checkall {
+		font-size: 11px;
+		clear: both;
+		margin-left: 100px;
+		}
+		
+	form#filter div#allmakes {
+		margin-bottom: 20px;
+		}
+	
+	form#filter input#filterSubmit {
+		margin: 15px 30px 25px 99px;
+		}
+
+	form#filter small {
+		font-size: 12px;
+		}
+		
+	form#filter label {
+		margin-right: 4px;
+		padding: 3px 1px;
+		}
+		
+	form#filter p.note {
+		font-size: 11px;
+		color: #333;
+		}
+		
+	form#filter sup {
+		line-height: 0;
+		color: #333;
+		}	
+
+	a.restore {
+		text-decoration: none;
+		font-size: 12px;
+		}
+		
+	a.restore:hover {
+		text-decoration: underline;
+		}
+
+	img#dimensions {
+		float: right;
+		margin-right: 200px;
+		}
+		
+	a#collapse {
+		float: left;
+		padding: 3px 10px 3px 5px;
+		margin: 6px 0 0 10px;
+		font-size: 11px;
+		text-decoration: none;
+		outline: none;
+		}
+		.down { background: url(images/icons/collapse-arrow.gif) right -8px no-repeat; } /* Using a#collapse.down induces an IE bug : http://css-discuss.incutio.com/?page=MultipleIdClassBug */
+		.up { background: url(images/icons/collapse-arrow.gif) right 9px no-repeat; }
+		
+		a#collapse:hover {
+			text-decoration: underline;
+			}
+		
+	.floatleft {
+		float: left;
+		}
+	
+	.collapsed {
+		display: none;
+		}
+		
+div#settings {
+	margin: 10px 0;
+	padding: 6px 8px;
+	border: 1px solid #b0c0ff;
+	background: #eaecff;
+	font-size: 11px;
+	}
+	
+	div#settings ul {
+		list-style: none;
+		font-weight: bold;
+		clear: left;
+		}
+		
+		div#settings ul h3 {
+			float: left;
+			width: 80px;
+			font-weight: normal;
+			clear: left;
+			}
+			
+		div#settings ul li {
+			margin: 5px 0;
+			}
+
+			div#settings ul li div {
+				margin-left: 80px;
+				}
+			
+			div#settings ul li span {
+				font-weight: normal;
+				color: #a00;
+				}
+				
+				div#settings ul li span.green {
+					color: #070;
+					}
+		
+	div#settings a {
+		margin-left: 78px;
+		padding: 2px;
+		}
+			
+	div#settings p {
+		margin: 6px 0 0 0;
+		}
+
+
+
+
+/*======================================================== Bottom Nav ========================================================*/
+
+div#bileft {
+	margin-left: 20px;
+	width: 55%;
+	}
+
+div#biright {
+	float: right;
+	width: 30%;
+	margin-right: 20px;
+	display: block; /* ie6 hack */
+	}
+	
+ul#quicklinks {
+	list-style: none;
+	}
+	
+ul#tips {
+	margin-left: 15px;
+	}
+
+ul#tips li {
+	margin: 5px 0;
+	}
+
+
+ul#quicklinks li {
+	margin: 2px 0;
+	float: left;
+	width: 49.9%;	
+	}
+
+
+
+
+/*======================================================== Miscellaneous ========================================================*/
+
+ul.bullets {
+	list-style: outside;
+	margin: 15px 0 0 15px;
+	}
+
+p.highlight {
+	background-color: #ff5;
+	padding: 2px 4px;
+	}
+
+div#ad-rect {
+	margin-top: 25px;
+	}
+	
+		
+
+	
+/*======================================================== Footer ========================================================*/
+
+div#footer {
+	text-align: center;
+	font-size: 12px;
+	color: #666;
+	margin: 90px 0 30px 0;
+	clear: both;
+	}
+	
+	div#footer a {
+		color: #777;
+		}
+		
+	div#footer a#report-error {
+		color: #b00;
+		}
+		

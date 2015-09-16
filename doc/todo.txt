@@ -10,6 +10,13 @@ TODO
   - Lichtbrechnung
   - Dreiecksnetze
   - als Option in jedes GUI
+- Dummies für Tinkerforge bricklets
+- Compile target send in Makefile
+- Backup mxsql database
+- Document REST API
+
+*** NICE-TO-HAVE ***
+- Sensor-Messung in eigenem Thread
 
 NICO-TO-HAVE 
 - Shader ausdünnen
@@ -89,6 +96,11 @@ DONE
 - Curves implementieren IBoundingBoxed
 - Scrollbar im Debug-Fenster
 - Koordinatensystem
+- nur aktuelle Sensoren anzeigen
+- Properties zum Konfigurieren der Tools
+- Konstanten-Interface
+- Anzeige von Sensor-Graphen
+- Demon-Info in /etc/init.d/homeautomation anpassen
 
 IGNORIERT
 - Nested Repositories: http://stackoverflow.com/questions/1871282/nested-git-repositories
