@@ -1,0 +1,15 @@
+RaspBerry Pi
+- I2C mit raspi-config aktivieren
+- /etc/modules
+  - i2c-bcm2708
+  - i2c-dev
+- sudo apt-get install python-smbus i2c-tools
+- /etc/modprobe.d/raspi-blacklist.conf
+  - # blacklist spi-bcm2708
+  - # blacklist i2c-bcm2708
+- sudo i2cdetect -y 1 
+
+*** Starten ***
+sudo java -cp lib/*:target/homeautomation.jar homeautomation.modelvehicles.RCServer
+- sudo java -cp lib/*:target/homeautomation.jar homeautomation.modelvehicles.RCPiBot
+sudo java -cp lib/*:target/homeautomation.jar homeautomation.actors.ServoAtAdafruitBoard
