@@ -1,17 +1,13 @@
 TODO  
-- Render-System als Strategy-Plugin-Pattern
 - Fix ShaderEditorPanel
-- Fix TestTransportOrder
 - Kurven: GUI-An/Aus für Kontrollpunkte und Kontrollpolygon. 
 - Bug: keine Szene -> Absturz unter Windows 8
-- View frustum culling Visualisierung
 - Schnittfläche bei Marching Cubes - Fehler beim Erzeugen der Textur
 - Raytracer
   - Lichtbrechnung
   - Dreiecksnetze
   - als Option in jedes GUI
 - Dummies für Tinkerforge bricklets
-- Compile target send in Makefile
 - Backup mxsql database
 - Document REST API
 
@@ -32,6 +28,10 @@ NICO-TO-HAVE
 - Generischer Info/Edit-Dialog über Reflection 
 
 DONE
+- Fix TestTransportOrder
+- [Build-System ersetzt -> Gradle] Compile target send in Makefile
+- [Bachelorarbeit] View frustum culling Visualisierung
+- Render-System als Strategy-Plugin-Pattern
 - Raytracer
   - Ebene als Schachbrettmuster
   - Einstellung per GUI

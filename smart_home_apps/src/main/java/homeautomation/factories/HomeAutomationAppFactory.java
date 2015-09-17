@@ -90,12 +90,14 @@ public class HomeAutomationAppFactory {
             Logger.getInstance().message("Successfully created app " + app.toString());
           }
           return app;
-//        } else if (event == Event.KEY_NAME && parser.getString().equals(JsonConstants.APPNAME_RCBOAT)) {
-//          RCApp app = createRCBoat(parser);
-//          if (app != null) {
-//            Logger.getInstance().message("Successfully created app " + app.toString());
-//          }
-//          return app;
+          // } else if (event == Event.KEY_NAME &&
+          // parser.getString().equals(JsonConstants.APPNAME_RCBOAT)) {
+          // RCApp app = createRCBoat(parser);
+          // if (app != null) {
+          // Logger.getInstance().message("Successfully created app " +
+          // app.toString());
+          // }
+          // return app;
         } else if (event == Event.END_OBJECT) {
           return null;
         }
@@ -118,9 +120,9 @@ public class HomeAutomationAppFactory {
    *          JSON parser at the current position.
    * @return Created application.
    */
-//  private RCApp createRCBoat(JsonParser parser) {
-//    return new RCApp();
-//  }
+  // private RCApp createRCBoat(JsonParser parser) {
+  // return new RCApp();
+  // }
 
   /**
    * Create an app to test the electrical switches.
