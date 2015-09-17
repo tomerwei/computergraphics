@@ -50,7 +50,10 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements
 
 	JPanel props = new JPanel();
 	TitledBorder slide = BorderFactory.createTitledBorder("Front/Gast/Heck");
-	RangeSlider slider = new RangeSlider(1, 100, 33, 66);
+	JLabel fgs1 = new JLabel("Vorne / %");
+	JSlider slider1 = new JSlider(JSlider.HORIZONTAL, 0, 100, 31);
+	JLabel fgs2 = new JLabel("Hinten / %");
+	JSlider slider2 = new JSlider(JSlider.HORIZONTAL, 0, 100, 66);
 
 	JPanel gast = new JPanel(new GridLayout(0, 1));
 	TitledBorder gastBorder = BorderFactory.createTitledBorder("Gast");
@@ -187,6 +190,16 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements
 		hvers.setMinorTickSpacing(100);
 		hvers.setPaintTicks(true);
 		hvers.setPaintLabels(true);
+		
+		slider1.setMajorTickSpacing(10);
+		slider1.setMinorTickSpacing(100);
+		slider1.setPaintTicks(true);
+		slider1.setPaintLabels(true);
+
+		slider2.setMajorTickSpacing(10);
+		slider2.setMinorTickSpacing(100);
+		slider2.setPaintTicks(true);
+		slider2.setPaintLabels(true);
 
 		ls.addChangeListener(new ChangeListener() {
 
@@ -332,7 +345,16 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements
 			}
 		});
 
-		slider.addChangeListener(new ChangeListener() {
+		slider1.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				remove();
+				generateAuto();
+			}
+		});
+		
+		slider2.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
@@ -354,7 +376,11 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements
 
 		props.setBorder(slide);
 		props.setSize(100, 300);
-		props.add(slider);
+		props.add(fgs1);
+		props.add(slider1);
+		props.add(fgs2);
+		props.add(slider2);
+
 
 		gast.setBorder(gastBorder);
 		gast.setSize(100, 300);
@@ -422,8 +448,8 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements
 
 		double hoehe = (double) hs.getValue() / 100;
 		double laenge = (double) ls.getValue() / 100;
-		int min = slider.getLowValue();
-		int max = slider.getHighValue();
+		int min = slider1.getValue();
+		int max = slider2.getValue();
 		int frontHoehe = fhs.getValue();
 		int heckHoehe = hhs.getValue();
 
