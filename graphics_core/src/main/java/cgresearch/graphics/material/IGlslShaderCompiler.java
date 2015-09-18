@@ -1,4 +1,4 @@
-package cgresearch.ui.resources;
+package cgresearch.graphics.material;
 
 public interface IGlslShaderCompiler {
 

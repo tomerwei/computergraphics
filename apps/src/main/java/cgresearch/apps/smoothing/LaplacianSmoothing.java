@@ -7,6 +7,7 @@ package cgresearch.apps.smoothing;
 
 import java.util.List;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -20,7 +21,6 @@ import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.Transformation;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Demo frame to work with triangle meshes clouds.

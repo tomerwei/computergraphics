@@ -4,11 +4,10 @@ import com.jogamp.opengl.GL2;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
+import cgresearch.graphics.material.IGlslShaderCompiler;
 import cgresearch.rendering.jogl.core.JoglRenderable;
-import cgresearch.ui.resources.IGlslShaderCompiler;
 
-public class JoglShaderCompiler implements
-    IGlslShaderCompiler, JoglRenderable {
+public class JoglShaderCompiler implements IGlslShaderCompiler, JoglRenderable {
 
   /**
    * Flag to indicate compile requirement.
@@ -42,15 +41,11 @@ public class JoglShaderCompiler implements
   @Override
   public void draw3D(GL2 gl2) {
     if (compileRequired) {
-      int id =
-          JoglShader.compileShaderFromSource(gl2,
-              shaderType, source);
+      int id = JoglShader.compileShaderFromSource(gl2, shaderType, source);
       if (id < 0) {
-        Logger.getInstance().error(
-            "Failed to compile shader");
+        Logger.getInstance().error("Failed to compile shader");
       } else {
-        Logger.getInstance().message(
-            "Successfully compiled shader");
+        Logger.getInstance().message("Successfully compiled shader");
       }
       compileRequired = false;
     }

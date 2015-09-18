@@ -5,6 +5,7 @@
  */
 package cgresearch.apps.pointclouds;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -15,7 +16,6 @@ import cgresearch.graphics.fileio.AsciiPointFormat;
 import cgresearch.graphics.fileio.AsciiPointsReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Demo frame to work with point clouds.

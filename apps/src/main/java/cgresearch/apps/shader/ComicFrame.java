@@ -7,6 +7,7 @@ package cgresearch.apps.shader;
 
 import java.util.List;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -15,7 +16,6 @@ import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Test the comic shader

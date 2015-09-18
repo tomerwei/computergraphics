@@ -1,0 +1,3 @@
+install the CH340 driver
+sudo nvram boot-args="kext-dev-mode=1"
+Reboot

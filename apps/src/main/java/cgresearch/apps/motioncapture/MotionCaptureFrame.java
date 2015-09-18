@@ -5,6 +5,7 @@
  */
 package cgresearch.apps.motioncapture;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -14,7 +15,6 @@ import cgresearch.graphics.datastructures.motioncapture.MotionCaptureTopology;
 import cgresearch.graphics.fileio.MoCapImporter;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Central frame for the mesh exercise.

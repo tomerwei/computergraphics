@@ -2,6 +2,7 @@ package cgresearch.apps.curves;
 
 import java.util.Observable;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -14,7 +15,6 @@ import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Play around with tensor product surfaces.

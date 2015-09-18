@@ -19,6 +19,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -34,7 +35,6 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.Transformation;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
 

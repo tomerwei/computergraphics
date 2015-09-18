@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.apps.hlsvis.Package.Vehicle;
@@ -28,7 +29,6 @@ import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Central frame for the mesh exercise.

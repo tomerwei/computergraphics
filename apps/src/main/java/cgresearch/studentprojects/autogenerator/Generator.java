@@ -1,10 +1,10 @@
 package cgresearch.studentprojects.autogenerator;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 public class Generator extends CgApplication {
 

@@ -5,6 +5,7 @@
  */
 package cgresearch.apps.trianglemeshes;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -15,7 +16,6 @@ import cgresearch.graphics.fileio.PlyFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Demo frame to work with triangle meshes clouds.

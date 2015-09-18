@@ -7,6 +7,7 @@ package cgresearch.apps.marchingcubes;
 
 import com.jogamp.opengl.GL2;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -22,7 +23,6 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.misc.ImplicitFunctionVisualization;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 import cgresearch.rendering.jogl.core.JoglRenderable;
 
 /**

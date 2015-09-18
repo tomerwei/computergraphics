@@ -5,6 +5,7 @@
  */
 package cgresearch.apps.curves;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -16,7 +17,6 @@ import cgresearch.graphics.datastructures.curves.ICurve;
 import cgresearch.graphics.datastructures.curves.LagrangeCurve;
 import cgresearch.graphics.datastructures.curves.MonomialCurve;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 import cgresearch.ui.IApplicationControllerGui;
 
 /**

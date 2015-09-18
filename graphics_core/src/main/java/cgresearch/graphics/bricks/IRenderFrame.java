@@ -5,8 +5,8 @@
  */
 package cgresearch.graphics.bricks;
 
+import cgresearch.graphics.material.IGlslShaderCompiler;
 import cgresearch.rendering.core.IRenderObjectsFactory;
-import cgresearch.ui.resources.IGlslShaderCompiler;
 
 /**
  * Interface for all rendering frames with different 3D engines. The generic
@@ -28,6 +28,6 @@ public interface IRenderFrame<T> {
 	/**
 	 * Return a shader compiler instance.
 	 */
-	public IGlslShaderCompiler getShaderCompiler();
+  public IGlslShaderCompiler getShaderCompiler();
 
 }

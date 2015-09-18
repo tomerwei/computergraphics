@@ -1,5 +1,6 @@
 package cgresearch.apps.simulation;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -9,7 +10,6 @@ import cgresearch.graphics.scenegraph.Animation;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.projects.simulation.Simulation;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 public class SimulationFrame extends CgApplication {
 

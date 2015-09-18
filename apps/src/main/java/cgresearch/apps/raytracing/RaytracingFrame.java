@@ -5,6 +5,7 @@
  */
 package cgresearch.apps.raytracing;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -14,7 +15,6 @@ import cgresearch.graphics.datastructures.primitives.Plane;
 import cgresearch.graphics.datastructures.primitives.Sphere;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 
 /**
  * Test the raytracer.

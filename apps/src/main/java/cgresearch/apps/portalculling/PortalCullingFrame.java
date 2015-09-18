@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Observer;
 import java.util.Set;
 
+import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
@@ -22,7 +23,6 @@ import cgresearch.projects.portalculling.PortalEdge;
 import cgresearch.projects.portalculling.PortalScene2D;
 import cgresearch.projects.portalculling.PortalSceneImporter;
 import cgresearch.projects.portalculling.ViewVolume2D;
-import cgresearch.rendering.jogl.JoglAppLauncher;
 import cgresearch.rendering.jogl.core.JoglRenderable;
 import cgresearch.rendering.jogl.material.JoglTexture;
 

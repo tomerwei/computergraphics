@@ -8,6 +8,7 @@ import cgresearch.graphics.bricks.IRenderFrame;
 import cgresearch.graphics.bricks.IUserInterface;
 import cgresearch.ui.IApplicationControllerGui;
 import cgresearch.ui.SwingUserInterface;
+import cgresearch.ui.menu.CgApplicationMenu;
 
 /**
  * Convenience class to launch cgapplication apps
@@ -104,14 +105,10 @@ public class AppLauncher {
     }
 
     if (ui == UI.SWING) {
-      if (renderSystem != null) {
-        uiSystem = new SwingUserInterface(app, renderSystem.getShaderCompiler());
-      } else {
-        uiSystem = new SwingUserInterface(app);
-      }
+      uiSystem = new SwingUserInterface(app);
+    } else {
+      Logger.getInstance().error("UI system " + ui + " not supported by default AppLauncher.");
     }
-
-    Logger.getInstance().error("UI system " + ui + " not supported by default AppLauncher.");
   }
 
   /**
@@ -123,5 +120,15 @@ public class AppLauncher {
     } else {
       Logger.getInstance().message("Custom UI not compatible with UI system. Looking for JoglAppLauncher?");
     }
+  }
+
+  /**
+   * Add a custom menu entry.
+   * 
+   * @param menu
+   *          Menu.
+   */
+  public void addCustomMenu(CgApplicationMenu menu) {
+    uiSystem.registerApplicationMenu(menu);
   }
 }

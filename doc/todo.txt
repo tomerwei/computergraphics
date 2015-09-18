@@ -10,6 +10,7 @@ TODO
 - Dummies für Tinkerforge bricklets
 - Backup mxsql database
 - Document REST API
+- iOS Apps: http -> https
 
 *** NICE-TO-HAVE ***
 - Sensor-Messung in eigenem Thread

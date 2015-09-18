@@ -1,4 +1,4 @@
-package cgresearch.rendering.jogl;
+package cgresearch;
 
 import cgresearch.AppLauncher;
 import cgresearch.core.logging.Logger;

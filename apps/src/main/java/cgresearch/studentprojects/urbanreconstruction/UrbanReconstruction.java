@@ -5,10 +5,11 @@
  */
 package cgresearch.studentprojects.urbanreconstruction;
 
+import cgresearch.JoglAppLauncher;
+import cgresearch.AppLauncher.RenderSystem;
+import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.rendering.jogl.ui.JoglFrame;
-import cgresearch.rendering.jogl.ui.JoglSwingUserInterface;
 
 /**
  * Central frame for the urban reconstruction.
@@ -84,9 +85,11 @@ public class UrbanReconstruction extends CgApplication {
 
 		ResourcesLocator.getInstance().parseIniFile("resources.ini");
 		UrbanReconstruction app = new UrbanReconstruction();
-		JoglSwingUserInterface ui = new JoglSwingUserInterface(app);
-		ui.registerApplicationGUI(new UrbanGUI());
-		new JoglFrame(app);
+		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(app);
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
+   
 
 		// IVector3 u = VectorMatrixFactory.newIVector3(1, -2, 6);
 		// IVector3 v = VectorMatrixFactory.newIVector3(-4, 3, 3);
