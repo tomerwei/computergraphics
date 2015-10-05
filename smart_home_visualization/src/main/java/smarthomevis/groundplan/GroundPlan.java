@@ -1,5 +1,6 @@
 package smarthomevis.groundplan;
 
-public class GroundPlan {
-
+public class GroundPlan
+{
+	// test
 }
