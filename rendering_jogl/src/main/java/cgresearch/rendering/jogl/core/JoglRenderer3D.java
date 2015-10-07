@@ -287,7 +287,8 @@ public class JoglRenderer3D implements Observer {
 
     JoglHelper.hasGLError(gl, "GL rendering");
 
-    System.out.println(drawable.getAnimator().getLastFPS());
+    // Show framerate
+    //System.out.println(drawable.getAnimator().getLastFPS());
   }
 
   /**
