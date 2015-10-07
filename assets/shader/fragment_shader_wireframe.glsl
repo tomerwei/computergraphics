@@ -11,5 +11,6 @@ float edgeFactor(){
  */
 void main (void)
 {
-	gl_FragColor.rgb = mix(vec3(0.0), vec3(1), edgeFactor());
+	//gl_FragColor.rgb = mix(vec3(0.0), vec3(1), edgeFactor());
+	gl_FragColor.rgb = vec3(0,0,0);
 }
