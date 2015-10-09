@@ -3,10 +3,13 @@ package smarthomevis.groundplan;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Iterator;
 import java.util.List;
 
+import org.kabeja.dxf.DXFBlock;
 import org.kabeja.dxf.DXFConstants;
 import org.kabeja.dxf.DXFDocument;
+import org.kabeja.dxf.DXFEntity;
 import org.kabeja.dxf.DXFLayer;
 import org.kabeja.dxf.DXFLine;
 import org.kabeja.dxf.DXFPolyline;
@@ -30,15 +33,13 @@ import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
-import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
-import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
 
 public class Test extends CgApplication
 {
 
-	private DXFLayer readLayer(String filename, String layerId)
+	private DXFDocument readDocument(String filename)
 	{
 		// get the File
 		FileInputStream in = null;
@@ -54,8 +55,7 @@ public class Test extends CgApplication
 
 		// get requested DXF Content
 		Parser parser = ParserBuilder.createDefaultParser();
-
-		DXFLayer layer = null;
+		DXFDocument doc = null;
 		try
 		{
 
@@ -63,15 +63,14 @@ public class Test extends CgApplication
 			parser.parse(in, DXFParser.DEFAULT_ENCODING);
 
 			// get the document and the layer
-			DXFDocument doc = parser.getDocument();
-			layer = doc.getDXFLayer(layerId);
+			doc = parser.getDocument();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 
-		return layer;
+		return doc;
 	}
 
 	/*
@@ -79,7 +78,8 @@ public class Test extends CgApplication
 	 */
 	private void testOne()
 	{
-		DXFLayer layer = readLayer("dxf/Grundriss-Ferienhaus.dxf", "0");
+		DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
+		DXFLayer layer = doc.getDXFLayer("0");
 		@SuppressWarnings("unchecked")
 		List<DXFLine> lineList = layer.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
 		handleLines(lineList);
@@ -157,15 +157,31 @@ public class Test extends CgApplication
 
 	private void testWalls()
 	{
-		DXFLayer layer = readLayer("dxf/Grundriss-Ferienhaus.dxf", "0");
-		@SuppressWarnings("unchecked")
-		List<DXFLine> lineList = layer.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
-		handleWalls(lineList);
+		// ferienhaus();
+		haus02();
+	}
+
+	private void ferienhaus()
+	{
+		DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
+		DXFLayer layer = doc.getDXFLayer("0");
+		handleWalls(layer);
+	}
+
+	private void haus02()
+	{
+		DXFDocument doc = readDocument("dxf/Grundriss_Haus_02.dxf");
+		DXFLayer layer = doc.getDXFLayer("Ansichtskanten");
+		handleWalls(layer);		
+		DXFLayer layer2 = doc.getDXFLayer("Schnittkanten");
+		handleWalls(layer2);
 
 	}
 
-	private void handleWalls(List<DXFLine> lineList)
+	private void handleWalls(DXFLayer layer)
 	{
+		@SuppressWarnings("unchecked")
+		List<DXFLine> lineList = layer.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
 		for (DXFLine line : lineList)
 		{
 			ITriangleMesh mesh = new TriangleMesh();
@@ -173,7 +189,7 @@ public class Test extends CgApplication
 
 			mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 			mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR4));
-			
+
 			getCgRootNode().addChild(new CgNode(mesh, "testmesh"));
 		}
 	}
@@ -197,6 +213,66 @@ public class Test extends CgApplication
 	}
 
 	/*
+	 * ########### Printing Content #############
+	 */
+
+	private void printContent(String dxfURL)
+	{
+		DXFDocument doc = readDocument(dxfURL);
+
+		@SuppressWarnings("unchecked")
+		Iterator<DXFBlock> itBlock = doc.getDXFBlockIterator();
+
+		System.out.println("#==========Blocks============#");
+
+		for (; itBlock.hasNext();)
+		{
+			DXFBlock block = itBlock.next();
+			System.out.println("| + Block: " + block.getName());
+			System.out.println("| + Description: " + block.getDescription());
+			System.out.println("| + Length: " + block.getLength());
+			System.out.println("| + LayerID: " + block.getLayerID());
+
+			@SuppressWarnings("unchecked")
+			Iterator<DXFEntity> entIty = block.getDXFEntitiesIterator();
+			for (; entIty.hasNext();)
+			{
+				DXFEntity e = entIty.next();
+				System.out.println("| + + Entity ID: " + e.getID());
+				System.out.println("| + + Layername: " + e.getLayerName());
+			}
+			System.out.println("#============================#");
+
+		}
+
+		@SuppressWarnings("unchecked")
+		Iterator<DXFLayer> it = doc.getDXFLayerIterator();
+
+		System.out.println("#==========Layers============#");
+
+		for (; it.hasNext();)
+		{
+			DXFLayer layer = it.next();
+			System.out.println("| - Layer: " + layer.getName());
+			System.out.println("| - LineType: " + layer.getLineType());
+			System.out.println("| - PlotStyle: " + layer.getPlotStyle());
+			printLayerContents(layer);
+			System.out.println("#============================#");
+		}
+
+	}
+
+	private void printLayerContents(DXFLayer layer)
+	{
+		@SuppressWarnings("unchecked")
+		Iterator<String> it = layer.getDXFEntityTypeIterator();
+		for (; it.hasNext();)
+		{
+			System.out.println("| - - " + it.next());
+		}
+	}
+
+	/*
 	 * 
 	 * ==============================================================
 	 */
@@ -205,6 +281,9 @@ public class Test extends CgApplication
 	{
 		// testOne();
 		testWalls();
+		// printContent("dxf/Grundriss-Ferienhaus.dxf");
+		// printContent("dxf/Grundriss_Haus_02.dxf");
+		// printContent("dxf/4H-HORA Projekt1.dxf");
 	}
 
 	public static void main(String[] args)
