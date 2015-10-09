@@ -42,7 +42,7 @@ public class VolumeComputeVisualization extends CgApplication implements Observe
 
   private ITriangleMesh spatMesh;
   private ITriangleMesh mesh;
-  boolean showSpat = false;
+  boolean showSpat = true;
 
   /**
    * Constructor.
@@ -68,6 +68,7 @@ public class VolumeComputeVisualization extends CgApplication implements Observe
     // Spat mesh
     spatMesh = new TriangleMesh();
     spatMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    spatMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
     spatMesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
     getCgRootNode().addChild(new CgNode(spatMesh, "spat"));
 
@@ -115,7 +116,7 @@ public class VolumeComputeVisualization extends CgApplication implements Observe
 
     // Set color depending on spat volume sign
     double spatVolume = a.getPosition().multiply(b.getPosition().cross(c.getPosition()));
-    if (spatVolume > 0) {
+    if (spatVolume < 0) {
       spatMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
     } else {
       spatMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
