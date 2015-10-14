@@ -1,449 +1,363 @@
 package cgresearch.studentprojects.registration;
 
+import java.util.Arrays;
+
 import cgresearch.core.logging.Logger;
+import cgresearch.core.math.IMatrix3;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.MathHelpers;
+import cgresearch.core.math.Matrix3;
+import cgresearch.core.math.Matrix4;
+import cgresearch.core.math.Vector3;
+import cgresearch.core.math.Vector4;
+import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.core.math.functions.Function;
+import cgresearch.core.math.jama.EigenvalueDecomposition;
+import cgresearch.core.math.jama.Matrix;
 import cgresearch.graphics.datastructures.points.IPointCloud;
+import cgresearch.graphics.datastructures.points.Point;
+import cgresearch.graphics.datastructures.points.PointCloud;
 
-/**
- * Distance function in the ICP registration.
- * 
- * @author Philipp Jenke
- *
- */
-public class IcpDistanceFunction extends Function {
-
-	/**
-	 * First point cloud in the registration. This point cloud is not altered.
-	 */
-	private final IPointCloud pointCloudBase;
-
-	/**
-	 * Second point coud in the registration. This point cloud is tranformed.
-	 */
-	private final IPointCloud pointCloudRegister;
-
-	/**
-	 * Array of indices of corresponding points in the two point clouds. The
-	 * first index is the index in the base point cloud, the second index is the
-	 * index in the register point cloud (which is transformed).
-	 */
-	private int[][] correspondences = null;
-
-	/*
-	 * /** Constructor
-	 */
-	public IcpDistanceFunction(IPointCloud pointCloudBase,
-			IPointCloud pointCloudRegister) {
+public class IcpDistanceFunction  {
+	
+	private IPointCloud pointCloudBase;
+	
+	private IPointCloud pointCloudRegister;
+	
+	
+	
+	int x = 0,y = 1,z = 2;
+	
+	
+	public IcpDistanceFunction(IPointCloud pointCloudBase) {
 		this.pointCloudBase = pointCloudBase;
-		this.pointCloudRegister = pointCloudRegister;
-	}
 
-	/**
-	 * Setter for the correspondences between points in the two point clouds.
+
+	}
+	
+	
+	public IPointCloud startAlgorithm(IPointCloud newPointCloud){
+		
+		pointCloudRegister = getClosestPoints(newPointCloud);
+		
+		Point upCloudBase = centerOfMass(pointCloudBase);
+		Point uxCloudRegister = centerOfMass(pointCloudRegister);
+		
+		Matrix3 covarianceMatrix = this.getCrossCovarianceMatrix(pointCloudBase, pointCloudRegister, upCloudBase, uxCloudRegister);
+		Matrix4 q = this.getQ(covarianceMatrix);
+		Vector4 eigenVector = getMaxEigenVector(q);
+		Matrix3 rotationMatrix = getRotationMatrix(eigenVector);
+		Vector3 translationVector = translationVector(rotationMatrix, upCloudBase, uxCloudRegister);
+		
+		System.out.println("\n");
+		System.out.println("eigenVector: "+ eigenVector.toString());
+		System.out.println("\n");
+		System.out.println("RotationsMatrix: \n"+ rotationMatrix.toString());
+		System.out.println("\n");
+		System.out.println("TranslationVector: \n"+ translationVector.toString());
+		pointCloudRegister = computeRegistration(rotationMatrix, translationVector, pointCloudRegister);
+		
+		
+		return pointCloudRegister;
+		
+	}
+	
+	/*
+	 * Get the closestPoints between two Pointclouds
 	 */
-	public void setCoorresponcences(int[][] correspondences) {
-		this.correspondences = correspondences;
-	}
+	
+	private IPointCloud getClosestPoints(IPointCloud pointCloudRegister){
+		
+		Point[] tmp = new Point[pointCloudBase.getNumberOfPoints()];
+		IPointCloud ClosestPoints = new PointCloud();
+		
+		for(int i =0 ; i < pointCloudBase.getNumberOfPoints();){
+			Point closest = null;
+			double dist = Double.POSITIVE_INFINITY;
 
-	@Override
-	public int getDimension() {
-		return 6;
-	}
-
-	@Override
-	public double eval(double[] x) {
-
-		if (correspondences == null) {
-			Logger.getInstance().error("Correspondences array missing!");
-			return Double.POSITIVE_INFINITY;
+			for(int k = 0; k < pointCloudRegister.getNumberOfPoints(); k++)
+			{
+				System.out.println("i: "+i+" "+pointCloudBase.getPoint(i).getPosition());
+				System.out.println("k: "+i+" "+pointCloudRegister.getPoint(k).getPosition());
+				double distance = getDistance(pointCloudBase.getPoint(i), pointCloudRegister.getPoint(k));
+				System.out.println("Distance: "+distance);
+				System.out.println("Dist: "+dist);
+				if(distance < dist)
+				{
+					closest = pointCloudRegister.getPoint(k);
+					
+					dist = distance;
+				}
+			}
+			ClosestPoints.addPoint(closest);
+			System.out.println("i ClosestPoints: "+i+" "+ClosestPoints.getPoint(i).getPosition());
+			
+			
+			i++;
 		}
-
-		double fx = 0;
-		// Iterate of the corresponding point pairs.
-		for (int i = 0; i < correspondences.length; i++) {
-			int baseIndex = correspondences[i][0];
-			int registerIndex = correspondences[i][1];
-
-			fx += eval(baseIndex, registerIndex, x);
+		for(int j = 0; j <3; j++){
+			System.out.println("ClosestsPoint: " + ClosestPoints.getPoint(j).getPosition());
 		}
-		// Normalize over the number of correspondences
-		return fx / (double) correspondences.length;
+		
+		return ClosestPoints;
 	}
-
-	/**
-	 * Evaluate the error function for a single correspondence.
+	
+	
+	private double getDistance(Point a, Point b){
+		
+		return Math.sqrt(Math.pow(b.getPosition().get(0) - a.getPosition().get(0),2) + Math.pow(b.getPosition().get(1) - a.getPosition().get(1),2) + Math.pow(b.getPosition().get(2) - a.getPosition().get(2),2));
+		
+		
+	}
+	
+	/*
+	 * Center of Mass for the PointCLoud
 	 */
-	private double eval(int baseIndex, int registerIndex, double[] x) {
-		double alpha = x[0];
-		double beta = x[1];
-		double gamma = x[2];
-		double tx = x[3];
-		double ty = x[4];
-		double tz = x[5];
-		IVector3 b = pointCloudBase.getPoint(baseIndex).getPosition();
-		double bx = b.get(0);
-		double by = b.get(1);
-		double bz = b.get(2);
-		IVector3 r = pointCloudRegister.getPoint(registerIndex).getPosition();
-		double rx = r.get(0);
-		double ry = r.get(1);
-		double rz = r.get(2);
-
-		// double fx = MathHelpers.sqr(ry
-		// * cos(alpha)
-		// * cos(beta)
-		// * cos(gamma)
-		// * sin(alpha)
-		// * sin(gamma)
-		// + rz
-		// * cos(alpha)
-		// * sin(beta)
-		// + (cos(alpha) * cos(beta) * cos(gamma) - sin(alpha)
-		// * sin(gamma)) * rx - bx + tx)
-		// + MathHelpers.sqr(rx * cos(gamma) * sin(beta) - ry * sin(beta)
-		// * sin(gamma) - rz * cos(beta) + bz - tz)
-		// + MathHelpers.sqr(rz
-		// * sin(alpha)
-		// * sin(beta)
-		// + (cos(beta) * cos(gamma) * sin(alpha) + cos(alpha)
-		// * sin(gamma))
-		// * rx
-		// - (cos(beta) * sin(alpha) * sin(gamma) - cos(alpha)
-		// * cos(gamma)) * ry - by + ty);
-		double fx = MathHelpers.sqr(rz
-				* cos(alpha)
-				* cos(beta)
-				- (cos(alpha) * cos(gamma) * sin(beta) - sin(alpha)
-						* sin(gamma))
-				* rx
-				+ (cos(alpha) * sin(beta) * sin(gamma) + cos(gamma)
-						* sin(alpha)) * ry - bz + tz)
-
-				+ MathHelpers.sqr(rx * cos(beta) * cos(gamma) - ry * cos(beta)
-						* sin(gamma) + rz * sin(beta) - bx + tx)
-
-				+ MathHelpers.sqr(rz
-						* cos(beta)
-						* sin(alpha)
-						- (cos(gamma) * sin(alpha) * sin(beta) + cos(alpha)
-								* sin(gamma))
-						* rx
-						+ (sin(alpha) * sin(beta) * sin(gamma) - cos(alpha)
-								* cos(gamma)) * ry + by - ty);
-
-		return fx;
+	
+	private Point centerOfMass(IPointCloud ipc){
+		
+		
+		IVector3 newPoint = VectorMatrixFactory.newIVector3(0,0,0);
+				
+		for(int i = 0; i < ipc.getNumberOfPoints(); i++)
+		{
+			newPoint.set(x, (newPoint.get(x) + ipc.getPoint(i).getPosition().get(x)));
+			newPoint.set(y, (newPoint.get(y) + ipc.getPoint(i).getPosition().get(y)));
+			newPoint.set(z, (newPoint.get(z) + ipc.getPoint(i).getPosition().get(z)));			
+		}
+		newPoint.set(x, (newPoint.get(x) / ipc.getNumberOfPoints()));
+		newPoint.set(y, (newPoint.get(y) / ipc.getNumberOfPoints()));
+		newPoint.set(z, (newPoint.get(z) / ipc.getNumberOfPoints()));
+		return new Point(newPoint);
+		
 	}
-
-	@Override
-	public double[] getGradient(double[] x) {
-
-		if (correspondences == null) {
-			Logger.getInstance().error("Correspondences array missing!");
+	
+	/*
+	 * Calculate the cross Covariance Matrix
+	 */
+	
+	private Matrix3 getCrossCovarianceMatrix(IPointCloud pointCloudBase, IPointCloud ClosestPoints, Point upCloudBase, Point uxCloudRegister){
+		
+		if(pointCloudBase.getNumberOfPoints()!=ClosestPoints.getNumberOfPoints())
 			return null;
-		}
 
-		// Check if gradient array was allocated
-		if (gradient == null) {
-			gradient = new double[getDimension()];
+		Matrix3 covariance = new Matrix3();
+		
+		for(int i = 0; i < pointCloudBase.getNumberOfPoints(); i++){
+			
+			for(int k =0 ; k < 3 ; k++){
+				for (int j = 0; j < 3; j++){
+					
+					covariance.set(k, j, (covariance.get(k, j) + (pointCloudBase.getPoint(i).getPosition().get(k) * ClosestPoints.getPoint(i).getPosition().get(j))));
+					
+				}
+				
+			}	
 		}
-		// Reset to 0
-		for (int i = 0; i < getDimension(); i++) {
-			gradient[i] = 0;
+		
+		for(int k =0 ; k < 3 ; k++){
+			for (int j = 0; j < 3; j++){
+					
+				covariance.set(k, j, (covariance.get(k, j) / pointCloudBase.getNumberOfPoints()));
+					
+			}
+		}		
+		for(int u =0 ; u < 3 ; u++){
+			for (int j = 0; j < 3; j++){
+					
+				covariance.set(u, j, (covariance.get(u, j) - (upCloudBase.getPosition().get(u) * uxCloudRegister.getPosition().get(j))));
+			}
 		}
-		// Compute gradient for each corresponding pair of points
-		for (int i = 0; i < correspondences.length; i++) {
-			int baseIndex = correspondences[i][0];
-			int registerIndex = correspondences[i][1];
-
-			// Increment the gradient vector for each corresponding point pair.
-			incGradient(baseIndex, registerIndex, x, gradient);
-		}
-		// Normalize gradient.
-		for (int i = 0; i < getDimension(); i++) {
-			gradient[i] /= (double) correspondences.length;
-		}
-		return gradient;
+	return covariance;
+		
 	}
-
-	/**
-	 * Compute the gradient for a corresponding point pair.
+	
+	/*
+	 * Calculate the 4x4 Matrix Q 
 	 */
-	private void incGradient(int baseIndex, int registerIndex, double[] x,
-			double[] gradient) {
-		double alpha = x[0];
-		double beta = x[1];
-		double gamma = x[2];
-		double tx = x[3];
-		double ty = x[4];
-		double tz = x[5];
-		IVector3 b = pointCloudBase.getPoint(baseIndex).getPosition();
-		double bx = b.get(0);
-		double by = b.get(1);
-		double bz = b.get(2);
-		IVector3 r = pointCloudRegister.getPoint(registerIndex).getPosition();
-		double rx = r.get(0);
-		double ry = r.get(1);
-		double rz = r.get(2);
-
-		gradient[0] += 2
-				* (ry * MathHelpers.sqr(cos(alpha)) * cos(beta) * cos(gamma)
-						* sin(gamma) - ry * cos(beta) * cos(gamma)
-						* MathHelpers.sqr(sin(alpha)) * sin(gamma) - rz
-						* sin(alpha) * sin(beta) - (cos(beta) * cos(gamma)
-						* sin(alpha) + cos(alpha) * sin(gamma))
-						* rx)
-				* (ry
-						* cos(alpha)
-						* cos(beta)
-						* cos(gamma)
-						* sin(alpha)
-						* sin(gamma)
-						+ rz
-						* cos(alpha)
-						* sin(beta)
-						+ (cos(alpha) * cos(beta) * cos(gamma) - sin(alpha)
-								* sin(gamma)) * rx - bx + tx)
-				+ 2
-				* (rz
-						* cos(alpha)
-						* sin(beta)
-						+ (cos(alpha) * cos(beta) * cos(gamma) - sin(alpha)
-								* sin(gamma)) * rx - (cos(alpha) * cos(beta)
-						* sin(gamma) + cos(gamma) * sin(alpha))
-						* ry)
-				* (rz
-						* sin(alpha)
-						* sin(beta)
-						+ (cos(beta) * cos(gamma) * sin(alpha) + cos(alpha)
-								* sin(gamma))
-						* rx
-						- (cos(beta) * sin(alpha) * sin(gamma) - cos(alpha)
-								* cos(gamma)) * ry - by + ty);
-
-		gradient[1] += -2
-				* (ry
-						* cos(alpha)
-						* cos(beta)
-						* cos(gamma)
-						* sin(alpha)
-						* sin(gamma)
-						+ rz
-						* cos(alpha)
-						* sin(beta)
-						+ (cos(alpha) * cos(beta) * cos(gamma) - sin(alpha)
-								* sin(gamma)) * rx - bx + tx)
-				* (ry * cos(alpha) * cos(gamma) * sin(alpha) * sin(beta)
-						* sin(gamma) + rx * cos(alpha) * cos(gamma) * sin(beta) - rz
-						* cos(alpha) * cos(beta))
-				+ 2
-				* (rx * cos(beta) * cos(gamma) - ry * cos(beta) * sin(gamma) + rz
-						* sin(beta))
-				* (rx * cos(gamma) * sin(beta) - ry * sin(beta) * sin(gamma)
-						- rz * cos(beta) + bz - tz)
-				- 2
-				* (rx * cos(gamma) * sin(alpha) * sin(beta) - ry * sin(alpha)
-						* sin(beta) * sin(gamma) - rz * cos(beta) * sin(alpha))
-				* (rz
-						* sin(alpha)
-						* sin(beta)
-						+ (cos(beta) * cos(gamma) * sin(alpha) + cos(alpha)
-								* sin(gamma))
-						* rx
-						- (cos(beta) * sin(alpha) * sin(gamma) - cos(alpha)
-								* cos(gamma)) * ry - by + ty);
-
-		gradient[2] += 2
-				* (ry * cos(alpha) * cos(beta) * MathHelpers.sqr(cos(gamma))
-						* sin(alpha) - ry * cos(alpha) * cos(beta) * sin(alpha)
-						* MathHelpers.sqr(sin(gamma)) - (cos(alpha) * cos(beta)
-						* sin(gamma) + cos(gamma) * sin(alpha))
-						* rx)
-				* (ry
-						* cos(alpha)
-						* cos(beta)
-						* cos(gamma)
-						* sin(alpha)
-						* sin(gamma)
-						+ rz
-						* cos(alpha)
-						* sin(beta)
-						+ (cos(alpha) * cos(beta) * cos(gamma) - sin(alpha)
-								* sin(gamma)) * rx - bx + tx)
-				- 2
-				* (rx * cos(gamma) * sin(beta) - ry * sin(beta) * sin(gamma)
-						- rz * cos(beta) + bz - tz)
-				* (ry * cos(gamma) * sin(beta) + rx * sin(beta) * sin(gamma))
-				- 2
-				* (rz
-						* sin(alpha)
-						* sin(beta)
-						+ (cos(beta) * cos(gamma) * sin(alpha) + cos(alpha)
-								* sin(gamma))
-						* rx
-						- (cos(beta) * sin(alpha) * sin(gamma) - cos(alpha)
-								* cos(gamma)) * ry - by + ty)
-				* ((cos(beta) * sin(alpha) * sin(gamma) - cos(alpha)
-						* cos(gamma))
-						* rx + (cos(beta) * cos(gamma) * sin(alpha) + cos(alpha)
-						* sin(gamma))
-						* ry);
-
-		gradient[3] += 2
-				* ry
-				* cos(alpha)
-				* cos(beta)
-				* cos(gamma)
-				* sin(alpha)
-				* sin(gamma)
-				+ 2
-				* rz
-				* cos(alpha)
-				* sin(beta)
-				+ 2
-				* (cos(alpha) * cos(beta) * cos(gamma) - sin(alpha)
-						* sin(gamma)) * rx - 2 * bx + 2 * tx;
-
-		gradient[4] += 2
-				* rz
-				* sin(alpha)
-				* sin(beta)
-				+ 2
-				* (cos(beta) * cos(gamma) * sin(alpha) + cos(alpha)
-						* sin(gamma))
-				* rx
-				- 2
-				* (cos(beta) * sin(alpha) * sin(gamma) - cos(alpha)
-						* cos(gamma)) * ry - 2 * by + 2 * ty;
-
-		gradient[5] += -2 * rx * cos(gamma) * sin(beta) + 2 * ry * sin(beta)
-				* sin(gamma) + 2 * rz * cos(beta) - 2 * bz + 2 * tz;
-
-//		gradient[0] = 2
-//				* (rz
-//						* cos(alpha)
-//						* cos(beta)
-//						- (cos(alpha) * cos(gamma) * sin(beta) - sin(alpha)
-//								* sin(gamma)) * rx + (cos(alpha) * sin(beta)
-//						* sin(gamma) + cos(gamma) * sin(alpha))
-//						* ry)
-//				* (rz
-//						* cos(beta)
-//						* sin(alpha)
-//						- (cos(gamma) * sin(alpha) * sin(beta) + cos(alpha)
-//								* sin(gamma))
-//						* rx
-//						+ (sin(alpha) * sin(beta) * sin(gamma) - cos(alpha)
-//								* cos(gamma)) * ry + by - ty)
-//				- 2
-//				* (rz
-//						* cos(alpha)
-//						* cos(beta)
-//						- (cos(alpha) * cos(gamma) * sin(beta) - sin(alpha)
-//								* sin(gamma))
-//						* rx
-//						+ (cos(alpha) * sin(beta) * sin(gamma) + cos(gamma)
-//								* sin(alpha)) * ry - bz + tz)
-//				* (rz
-//						* cos(beta)
-//						* sin(alpha)
-//						- (cos(gamma) * sin(alpha) * sin(beta) + cos(alpha)
-//								* sin(gamma)) * rx + (sin(alpha) * sin(beta)
-//						* sin(gamma) - cos(alpha) * cos(gamma))
-//						* ry);
-//		gradient[1] = -2
-//				* (rx * cos(alpha) * cos(beta) * cos(gamma) - ry * cos(alpha)
-//						* cos(beta) * sin(gamma) + rz * cos(alpha) * sin(beta))
-//				* (rz
-//						* cos(alpha)
-//						* cos(beta)
-//						- (cos(alpha) * cos(gamma) * sin(beta) - sin(alpha)
-//								* sin(gamma))
-//						* rx
-//						+ (cos(alpha) * sin(beta) * sin(gamma) + cos(gamma)
-//								* sin(alpha)) * ry - bz + tz)
-//				- 2
-//				* (rx * cos(beta) * cos(gamma) * sin(alpha) - ry * cos(beta)
-//						* sin(alpha) * sin(gamma) + rz * sin(alpha) * sin(beta))
-//				* (rz
-//						* cos(beta)
-//						* sin(alpha)
-//						- (cos(gamma) * sin(alpha) * sin(beta) + cos(alpha)
-//								* sin(gamma))
-//						* rx
-//						+ (sin(alpha) * sin(beta) * sin(gamma) - cos(alpha)
-//								* cos(gamma)) * ry + by - ty)
-//				- 2
-//				* (rx * cos(beta) * cos(gamma) - ry * cos(beta) * sin(gamma)
-//						+ rz * sin(beta) - bx + tx)
-//				* (rx * cos(gamma) * sin(beta) - ry * sin(beta) * sin(gamma) - rz
-//						* cos(beta));
-//		gradient[2] = -2
-//				* (rx * cos(beta) * cos(gamma) - ry * cos(beta) * sin(gamma)
-//						+ rz * sin(beta) - bx + tx)
-//				* (ry * cos(beta) * cos(gamma) + rx * cos(beta) * sin(gamma))
-//				+ 2
-//				* (rz
-//						* cos(alpha)
-//						* cos(beta)
-//						- (cos(alpha) * cos(gamma) * sin(beta) - sin(alpha)
-//								* sin(gamma))
-//						* rx
-//						+ (cos(alpha) * sin(beta) * sin(gamma) + cos(gamma)
-//								* sin(alpha)) * ry - bz + tz)
-//				* ((cos(alpha) * sin(beta) * sin(gamma) + cos(gamma)
-//						* sin(alpha))
-//						* rx + (cos(alpha) * cos(gamma) * sin(beta) - sin(alpha)
-//						* sin(gamma))
-//						* ry)
-//				+ 2
-//				* (rz
-//						* cos(beta)
-//						* sin(alpha)
-//						- (cos(gamma) * sin(alpha) * sin(beta) + cos(alpha)
-//								* sin(gamma))
-//						* rx
-//						+ (sin(alpha) * sin(beta) * sin(gamma) - cos(alpha)
-//								* cos(gamma)) * ry + by - ty)
-//				* ((sin(alpha) * sin(beta) * sin(gamma) - cos(alpha)
-//						* cos(gamma))
-//						* rx + (cos(gamma) * sin(alpha) * sin(beta) + cos(alpha)
-//						* sin(gamma))
-//						* ry);
-//		gradient[3] = 2 * rx * cos(beta) * cos(gamma) - 2 * ry * cos(beta)
-//				* sin(gamma) + 2 * rz * sin(beta) - 2 * bx + 2 * tx;
-//		gradient[4] = -2
-//				* rz
-//				* cos(beta)
-//				* sin(alpha)
-//				+ 2
-//				* (cos(gamma) * sin(alpha) * sin(beta) + cos(alpha)
-//						* sin(gamma))
-//				* rx
-//				- 2
-//				* (sin(alpha) * sin(beta) * sin(gamma) - cos(alpha)
-//						* cos(gamma)) * ry - 2 * by + 2 * ty;
-//		gradient[5] = 2
-//				* rz
-//				* cos(alpha)
-//				* cos(beta)
-//				- 2
-//				* (cos(alpha) * cos(gamma) * sin(beta) - sin(alpha)
-//						* sin(gamma))
-//				* rx
-//				+ 2
-//				* (cos(alpha) * sin(beta) * sin(gamma) + cos(gamma)
-//						* sin(alpha)) * ry - 2 * bz + 2 * tz;
-
-		gradient[3] = gradient[4] = gradient[5] = 0;
+	
+	private Matrix4 getQ(Matrix3 covariance){
+		
+		System.out.println("Covariance: \n"+ covariance.toString());
+		System.out.println("\n");
+		
+		
+		Matrix4 q = new Matrix4();
+		
+		q.set(0, 0, getTrace(covariance));
+		
+		//Coveriance Matrix - Covariance Matrix transponiert, ergibt den Vector Delta, um Q zu bilden.
+		
+		q.set(1, 0, (covariance.get(1, 2) - covariance.get(2, 1)));
+		q.set(2, 0, (covariance.get(2, 0) - covariance.get(0, 2)));
+		q.set(3, 0, (covariance.get(0, 1) - covariance.get(1, 0)));
+		
+		//Transponiert Delta
+		q.set(0, 1, (q.get(1, 0)));
+		q.set(0, 2, (q.get(2, 0)));
+		q.set(0, 3, (q.get(3, 0)));
+		
+		//Rest von Q auffüllen
+		
+		for(int i =0; i < 3; i++)
+		{
+			for(int j =0; j < 3; j++)
+			{
+				q.set((1+i), (1+j), (covariance.get(i, j) + covariance.get(j, i) - (i==j?q.get(0, 0):0)));
+			}
+		}
+			
+		return q;
 	}
+	
+	/*
+	 * calculate the Trace of the Matrix
+	 */
+	
+	private double getTrace(Matrix3 covariance)
+	{
+		double trace = 0;
+		for(int i =0; i < 3; i++)
+		{
+			trace += covariance.get(i, i);
+		}
 
-	private double cos(double x) {
-		return Math.cos(x);
+		return trace;
 	}
+	
+	private Vector4 getMaxEigenVector(Matrix4 q){
+		
+		System.out.println("Q: \n"+ q.toString());
+		System.out.println("\n");
+		
+		double[][] temp = new double[4][4];
+		
+		for(int i =0; i < 4; i++)
+		{
+			for(int j =0; j < 4; j++)
+			{
+				temp[i][j] = q.get(i, j);
+			}
+		}
+		
+		Matrix m = new Matrix(temp);
+		EigenvalueDecomposition evd = new EigenvalueDecomposition(m);
 
-	private double sin(double x) {
-		return Math.sin(x);
+		double[] eigenValues = evd.getRealEigenvalues();
+		double max = Double.NEGATIVE_INFINITY;
+		int index = 0;
+		Vector4 eigenVector = new Vector4();
+
+		for(int i =0; i < eigenValues.length; i++)
+		{
+			System.out.println("EV: "+eigenValues[i]);
+			System.out.println(Arrays.toString(evd.getV().transpose().getArray()[i]));
+			if(eigenValues[i]>max)
+			{
+				max = eigenValues[i];
+				index = i;
+			}
+		}
+		
+		double[] test = evd.getV().transpose().getArray()[index];
+		
+		for(int i = 0; i < test.length; i++){
+			eigenVector.set(i, test[i]);
+		}
+
+		return eigenVector;
+		
+		
 	}
+	
+	private Matrix3 getRotationMatrix(Vector4 eigenVector){
+		
+		Matrix3 rotationMatrix = new Matrix3();
+		int q0 = 0, q1 = 1, q2 = 2 , q3 = 3;
+		
+		rotationMatrix.set(0, 0, ((eigenVector.get(q0) * eigenVector.get(q0)) + (eigenVector.get(q1) * eigenVector.get(q1))
+				- (eigenVector.get(q2) * eigenVector.get(q2)) - (eigenVector.get(q3) * eigenVector.get(q3))));
+		
+		rotationMatrix.set(0, 1, (2 * ((eigenVector.get(q1) * eigenVector.get(q2)) - (eigenVector.get(q0) * eigenVector.get(q3)))));
+		rotationMatrix.set(0, 2, (2 * ((eigenVector.get(q1) * eigenVector.get(q3)) + (eigenVector.get(q0) * eigenVector.get(q2)))));
+		
+		rotationMatrix.set(1, 0, (2 * ((eigenVector.get(q1) * eigenVector.get(q2)) + (eigenVector.get(q0) * eigenVector.get(q3)))));
+		rotationMatrix.set(1, 1, ((eigenVector.get(q0) * eigenVector.get(q0)) + (eigenVector.get(q2) * eigenVector.get(q2))
+				- (eigenVector.get(q1) * eigenVector.get(q1)) - (eigenVector.get(q3) * eigenVector.get(q3))));
+		
+		rotationMatrix.set(1, 2, (2 * ((eigenVector.get(q2) * eigenVector.get(q3)) - (eigenVector.get(q0) * eigenVector.get(q1)))));
+		
+		rotationMatrix.set(2, 0, (2 * ((eigenVector.get(q1) * eigenVector.get(q3)) - (eigenVector.get(q0) * eigenVector.get(q2)))));
+		rotationMatrix.set(2, 1, (2 * ((eigenVector.get(q2) * eigenVector.get(q3)) + (eigenVector.get(q0) * eigenVector.get(q1)))));
+		rotationMatrix.set(2, 2, ((eigenVector.get(q0) * eigenVector.get(q0)) + (eigenVector.get(q3) * eigenVector.get(q3))
+				- (eigenVector.get(q1) * eigenVector.get(q1)) - (eigenVector.get(q2) * eigenVector.get(q2))));
+		
+		return rotationMatrix;
+		
+	}
+	
+	private Vector3 translationVector(Matrix3 rotation, Point upCloudBase, Point uxCloudRegister){
+		
+		Vector3 translation = new Vector3();
+		
+		translation.set(x, (uxCloudRegister.getPosition().get(x) - (rotation.get(0, 0) * upCloudBase.getPosition().get(x) + rotation.get(0, 1) 
+				* upCloudBase.getPosition().get(y) + rotation.get(0, 2) * upCloudBase.getPosition().get(z))));
+		
+		translation.set(y, (uxCloudRegister.getPosition().get(y) - (rotation.get(1, 0) * upCloudBase.getPosition().get(x) + rotation.get(1, 1) 
+				* upCloudBase.getPosition().get(y) + rotation.get(1, 2) * upCloudBase.getPosition().get(z))));
+		
+		translation.set(z, (uxCloudRegister.getPosition().get(z) - (rotation.get(2, 0) * upCloudBase.getPosition().get(x) + rotation.get(2, 1) 
+				* upCloudBase.getPosition().get(y) + rotation.get(2, 2) * upCloudBase.getPosition().get(z))));
+		
+		
+		return translation;
+	}
+	
+	private IPointCloud computeRegistration(Matrix3 rotation, Vector3 translation, IPointCloud pointCloudRegister){
+		Vector3 rotationBase = new Vector3();
+		Point bla = new Point();
+		double error;
+		IPointCloud temp = new PointCloud();
+		//Rotation *pi
+		
+		for(int i =0; i < pointCloudRegister.getNumberOfPoints(); i++){
+		rotationBase.set(x, (rotation.get(0, 0) * pointCloudRegister.getPoint(i).getPosition().get(x) + 
+				rotation.get(0, 1) * pointCloudRegister.getPoint(0).getPosition().get(y) + rotation.get(0, 2) * pointCloudRegister.getPoint(0).getPosition().get(z)));
+		rotationBase.set(y, (rotation.get(1, 0) * pointCloudRegister.getPoint(i).getPosition().get(x) + 
+				rotation.get(1, 1) * pointCloudRegister.getPoint(0).getPosition().get(y) + rotation.get(1, 2) * pointCloudRegister.getPoint(0).getPosition().get(z)));
+		rotationBase.set(z, (rotation.get(2, 0) * pointCloudRegister.getPoint(i).getPosition().get(x) + 
+				rotation.get(2, 1) * pointCloudRegister.getPoint(0).getPosition().get(y) + rotation.get(2, 2) * pointCloudRegister.getPoint(0).getPosition().get(z)));
+		
+		//(R*pi)+t
+//		rotationBase.add(translation);
+		rotationBase.set(x, (rotationBase.get(x) + translation.get(x)));
+		rotationBase.set(y, (rotationBase.get(y) + translation.get(y)));
+		rotationBase.set(z, (rotationBase.get(z) + translation.get(z)));
+		//(R*pi)+T-pj
+		rotationBase.set(x, (rotationBase.get(x) - pointCloudBase.getPoint(i).getPosition().get(x)));
+		rotationBase.set(y, (rotationBase.get(y) - pointCloudBase.getPoint(i).getPosition().get(y)));
+		rotationBase.set(z, (rotationBase.get(z) - pointCloudBase.getPoint(i).getPosition().get(z)));
+		
+		//((R*pi)+T-pj)²
+//		rotationBase.multiply(rotationBase);
+		rotationBase.set(x, (rotationBase.get(x) * rotationBase.get(x)));
+		rotationBase.set(y, (rotationBase.get(y) * rotationBase.get(y)));
+		rotationBase.set(z, (rotationBase.get(z) * rotationBase.get(z)));
+		System.out.println("I: "+i);
+		bla.getPosition().set(x, rotationBase.get(x));
+		bla.getPosition().set(y, rotationBase.get(y));
+		bla.getPosition().set(z, rotationBase.get(z));
+		error = rotationBase.get(x) + rotationBase.get(y) + rotationBase.get(z);
+		//return error;
+		System.out.println("error: \n"+ error);
+		temp.addPoint(bla);
+		}
+		
+		return temp;
+	}
+	
+	
 }
+
+
+
