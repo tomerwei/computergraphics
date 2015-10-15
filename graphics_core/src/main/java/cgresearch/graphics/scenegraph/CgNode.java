@@ -201,7 +201,7 @@ public class CgNode extends Observable implements Observer {
 		}
 
 		// If transform - transform bounding box of children
-		if (content instanceof Transformation) {
+		if (content instanceof Transformation && bbox.isInitialized() ) {
 			Transformation transformation = (Transformation) content;
 			bbox.transform(transformation);
 		}

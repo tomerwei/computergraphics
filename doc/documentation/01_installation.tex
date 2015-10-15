@@ -1,28 +1,46 @@
 \section{Getting Started}
 \label{section:cg}
 
-Wir beginnen mit dem Schnelleinstieg. Zunächst müssen auf dem Rechner die Voraussetzungen sichergestellt werden:
+Wir beginnen mit dem Schnelleinstieg. 
+
+\subsection{Voraussetzungen}
+
+Zunächst müssen auf dem Rechner die Voraussetzungen sichergestellt werden:
 \begin{itemize}
 \item Oracle Java 1.8 oder neuer \\ (\emph{http://www.oracle.com/technetwork/java/javase/overview/index.html})
 \item Gradle 2.6 oder neuer (\emph{https://gradle.org/})
 \item Git 2.3 oder neuer (unterschiedliche Quellen je nach OS)
-\item Eclipse 4.5 (Mars) oder neuer (\emph{https://eclipse.org/})
+\item Entwicklungsumgebubng
+	\begin{itemize} 
+	\item (entweder) Eclipse 4.5 (Mars) oder neuer (\emph{https://eclipse.org/})
+	\item (oder) Intellij IDEA 14.X ((\emph{https://www.jetbrains.com/idea/})
+	\end{itemize}
 \end{itemize}
 
-Folgende Schritte müssen durchgeführt werden, damit das Framework verwendet werden kann: 
+\subsection{Repository Auschecken [nicht notwendig bei Verwendung von IntelliJ]}
+
+Das Repository mit allen notwendigen Sourcen und sonstigen Dateien finden sich unter folgender URL: \\
+\emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/computergraphics}.\\
 
 \begin{itemize}
-	\item \textbf{Auschecken des Repositories:} Das Repository mit allen notwendigen Sourcen und sonstigen Dateien finden sich unter folgender URL: \\
-	\emph{git.informatik.haw-hamburg.de/srv/git/computergrafik/computergraphics}.\\
-	Es muss auf den Entwicklungsrechner gecloned werden:\\
+	\item Es muss auf den Entwicklungsrechner gecloned werden:\\
 	\verb+git clone ssh://<login>@git.informatik.haw-hamburg.de/+\\
 	\verb+     srv/git/computergrafik/computergraphics+
 	\item \textbf{Kompilieren mit Gradle:} Gradle bietet die Möglichkeit, das Projekt über die Kommandozeile zu kompilieren. Dazu muss im Projektverzeichnis (Elternverzeichnis der Unterprojekte wie \emph{graphics\_core}) folgender Befehl ausgeführt werden:\\
 	\verb+gradle build+
-	\item \textbf{Erstellen der Eclipse-Projekte:} Zum Erstellen der Eclipse-Projektdateien wird wieder Gradle verwendet:\\
+\end{itemize}
+
+\subsection{Entwicklungsumgebung}
+
+Im Prinzip kann man mit jeder beliebigen Entwicklungsumgebung (oder einem Text-Editor) arbeiten. Anleitungen werden hier für Eclipse und IntelliJ gegeben.
+
+\subsubsection{Eclipse}
+
+\begin{itemize}
+	\item \textbf{Projekte erstellen:} Zum Erstellen der Eclipse-Projektdateien wird wieder Gradle verwendet:\\
 	\verb+gradle eclipse+\\
 	Nach erfolgreicher Ausführung dieses Befehls befinden sich Eclipse-Projektdateien (\emph{.project}, ...) in jedem der Unterprojekte.
-	\item \textbf{Import in Eclipse:} Je nachdem, was genau gemacht werden soll, benötigt man verschiedene Unterprojekte. Beispielhaft soll hier die Demo-Anwendung \verb+ObjTriangleMesh+ ausgeführt werden. Diese befinden sich in dem Unterprojekt \emph{apps}. Um das Projekt in Eclipse zu importieren sind die folgenden Schritte notwendig:
+	\item \textbf{Import:} Je nachdem, was genau gemacht werden soll, benötigt man verschiedene Unterprojekte. Beispielhaft soll hier die Demo-Anwendung \verb+ObjTriangleMesh+ ausgeführt werden. Diese befinden sich in dem Unterprojekt \emph{apps}. Um das Projekt in Eclipse zu importieren sind die folgenden Schritte notwendig:
 	\begin{itemize}
 		\item File
 		\item Import
@@ -31,6 +49,29 @@ Folgende Schritte müssen durchgeführt werden, damit das Framework verwendet werd
 		\item Finish
 	\end{itemize}
 	Nun ist das Projekt in Eclipse importiert und erscheint im Projekt-Exporer. 
+\end{itemize}
+
+\subsubsection{IntelliJ}
+
+\begin{itemize}
+\item \textbf{Intellij konfigurieren}, so dass es den nativen SSH-Client benutzt (openSSH unter Linux Mint). Der schon in Intellij eingebaute SSH-Client hat mit dem Git-Server der HAW bei mir nicht funktioniert.)
+Configure $\rightarrow$ Settings $\rightarrow$ Version Control $\rightarrow$ Git $\rightarrow$ SSH executable build-in auf native ändern.
+\item \textbf{Auschecken des Repositories:} Check out from Version Control $\rightarrow$ Git\\
+Git Repository URL:\\
+\verb+ ssh://<login>@git.informatik.haw-hamburg.de/+\\
+\verb+     srv/git/computergrafik/computergraphics+\\
+Parent Directory: Standardgemäß:\\ 
+\verb+/home/<account>/IdeaProjects+\\
+oder\\ 
+\verb+C:\Users\<account>\IdeaProjects+\\
+Directory Name: \verb+computergraphics+. Anschließend clonen.
+\item \textbf{Importieren des Projektes mit Gradle:} Nach dem clonen fragt Intellij, ob die \emph{gradle.build} Datei geöffnet werden soll. Dies bestätigen wir mit Ja. Ist Gradle auf dem Rechner installiert muss man hier lediglich den Pfad angeben. Ansonsten bietet Intellij die Option einen \emph{Customizable Gradle Wrapper} zu benutzen. Im zweiten Fall ist die Installation von Gradle nicht notwendig.
+
+\end{itemize}
+
+\subsection{Abschluss}
+
+\begin{itemize}
 	\item \textbf{Asset-Pfad einrichten:} Viele Programme verwenden Daten (z.B. Icons oder Dreiecksnetze). Standarddaten finden sich im Projektverzeichnis im Unterverzeichnis \emph{assets}. Damit ausgeführte Programme diese Assets auch finden, muss der Pfad zu diesem Verzeichnis bekannt gegeben werde. Dazu wird der absolute Pfad des Unterverzeichnisses \emph{assets} in der Textdatei \emph{resources.txt} eingetragen.
 	\item \textbf{Demo-Programm starten:} Im Package \verb+cgresearch.apps.trianglemeshes+ kann nun die Klasse \verb+ObjTriangleMesh+ durch \emph{Rechtsklick} $\rightarrow$ \emph{Run As} $\rightarrow$ \emph{Java Application} ausgeführt werden. Hat alles geklappt, dann öffnet sich ein Fenster und ein 3D-Modell erscheint.
 \end{itemize}
