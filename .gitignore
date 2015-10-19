@@ -9,3 +9,6 @@ bin
 *.toc
 *.log
 *.gz
+*.iml
+.idea/
+*.ini
