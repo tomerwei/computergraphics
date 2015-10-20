@@ -5,6 +5,7 @@
  */
 package cgresearch.rendering.jogl.core;
 
+import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 /**
@@ -17,6 +18,11 @@ public interface IRenderContent {
 	 * All Gl drawing functionality is called here
 	 */
 	public void draw3D(GL2 gl);
+
+	/**
+	 * All drawing functionality is called here
+	 */
+	public void draw3D(GL2 gl, LightSource lightSource);
 
 	/**
 	 * This method if called after all children are drawn.

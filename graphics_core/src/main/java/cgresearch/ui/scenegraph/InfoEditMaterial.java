@@ -54,6 +54,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 	private static String ACTION_TEXTURE = "ACTION_TEXTURE";
 	private static String ACTION_SHADER = "ACTION_VERTEX_SHADER";
 	private static String ACTION_SHININESS = "ACTION_SHININESS";
+	private static String ACTION_SHADOW = "ACTION_SHADOW";
 
 	/**
 	 * Reference to the material object.
@@ -102,6 +103,11 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 	private JTextField textShininess = new JTextField("");
 
 	/**
+	 * This label represents whether the object throws a shadow
+	 */
+	private JCheckBox checkBoxThrowsShadow = new JCheckBox("Throws Shadow");
+
+	/**
 	 * Constructor.
 	 */
 	public InfoEditMaterial(JScrollPane parent, CgNode node) {
@@ -138,6 +144,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 			comboRenderMode.addItem(renderMode.toString());
 		}
 
+
 		// Register events
 		checkBoxSophisticatedRendering
 				.setActionCommand(ACTION_SOPHISTICATED_RENDERING);
@@ -148,6 +155,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 		comboBoxTexture.setActionCommand(ACTION_TEXTURE);
 		comboBoxShader.setActionCommand(ACTION_SHADER);
 		textShininess.setActionCommand(ACTION_SHININESS);
+		checkBoxThrowsShadow.setActionCommand(ACTION_SHADOW);
 
 		setLabels();
 
@@ -160,6 +168,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 		comboBoxTexture.addActionListener(this);
 		comboBoxShader.addActionListener(this);
 		textShininess.addActionListener(this);
+		checkBoxThrowsShadow.addActionListener(this);
 
 		// Arrange components on GUI
 		JPanel panel = new JPanel();
@@ -189,6 +198,9 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 
 		panel.add(new JLabel("Shininess: "));
 		panel.add(textShininess);
+
+		panel.add(new JLabel("Throws Shadow: "));
+		panel.add(checkBoxThrowsShadow);
 	}
 
 	/**
@@ -218,6 +230,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 		checkBoxSophisticatedRendering.setSelected(material
 				.isShowSophisticatesMesh());
 		textShininess.setText("" + material.getSpecularShininess());
+		checkBoxThrowsShadow.setSelected(material.isThrowingShadow());
 	}
 
 	/*
@@ -303,6 +316,9 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 				material.setSpecularShininess(shininess);
 			} catch (Exception ex) {
 			}
+		} else if (e.getActionCommand().equals(ACTION_SHADOW)) {
+			material.setThrowsShadow(checkBoxThrowsShadow.isSelected());
+			node.getContent().updateRenderStructures();
 		}
 	}
 

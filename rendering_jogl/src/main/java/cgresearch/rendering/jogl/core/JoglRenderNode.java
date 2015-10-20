@@ -8,6 +8,7 @@ package cgresearch.rendering.jogl.core;
 import java.util.Observable;
 import java.util.Observer;
 
+import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.graphics.material.CgGlslShader;
@@ -64,6 +65,13 @@ public class JoglRenderNode implements Observer {
    * @param gl
    */
   public void draw3D(GL2 gl) {
+    draw3D(gl, null);
+  }
+
+  /**
+   * Draw the conten
+   */
+  public void draw3D(GL2 gl, LightSource lightSource) {
     if (cgNode == null || !cgNode.isVisible()) {
       return;
     }
@@ -78,11 +86,19 @@ public class JoglRenderNode implements Observer {
         // Material uses shaders
         for (int shaderIndex = 0; shaderIndex < material.getNumberOfShaders(); shaderIndex++) {
           setupShader(gl, material, shaderIndex);
-          renderContent.draw3D(gl);
+          if (lightSource != null) {
+            renderContent.draw3D(gl, lightSource);
+          } else {
+            renderContent.draw3D(gl);
+          }
         }
       } else {
         // No shader specified - fixed function pipeline
-        renderContent.draw3D(gl);
+        if (lightSource != null) {
+          renderContent.draw3D(gl, lightSource);
+        } else {
+          renderContent.draw3D(gl);
+        }
       }
       // gl.glPopMatrix();
     }

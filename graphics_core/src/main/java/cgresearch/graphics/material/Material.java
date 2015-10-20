@@ -134,7 +134,7 @@ public class Material extends Observable {
   private IVector3 reflectionDiffuse = null;
 
   /**
-   * Ambien reflection
+   * Ambient reflection
    */
   private IVector3 reflectionAmbient = null;
 
@@ -159,6 +159,11 @@ public class Material extends Observable {
    * refraction must not exceed 1.
    */
   private double refraction = 0;
+
+  /**
+   * Defines if the object throws a shadow
+   */
+  private boolean throwsShadow = false;
 
   /**
    * Constructor
@@ -388,5 +393,19 @@ public class Material extends Observable {
    */
   public void setRefraction(double newValue) {
     refraction = newValue;
+  }
+
+  /**
+   * Getter
+   */
+  public boolean isThrowingShadow() {
+    return throwsShadow;
+  }
+
+  /**
+   * Setter
+   */
+  public void setThrowsShadow(boolean throwsShadow) {
+    this.throwsShadow = throwsShadow;
   }
 }

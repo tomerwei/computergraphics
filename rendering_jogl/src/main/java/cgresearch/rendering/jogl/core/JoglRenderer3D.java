@@ -6,6 +6,7 @@
 
 package cgresearch.rendering.jogl.core;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Observer;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
+import cgresearch.core.math.IMatrix4;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.camera.Camera;
@@ -27,12 +29,15 @@ import cgresearch.rendering.jogl.misc.PickingRenderer;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2GL3;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.fixedfunc.GLPointerFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.GLReadBufferUtil;
+import com.jogamp.opengl.util.awt.TextRenderer;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  * Implements the 3D rendering functionality.
@@ -177,12 +182,11 @@ public class JoglRenderer3D implements Observer {
     Logger.getInstance().debug("Initially create JOGL render nodes for scene graph.");
     renderObjectMananger.update(rootNode, CgNodeStateChange.makeAddChild(null, rootNode));
 
+    // Define frame rate
     drawable.getAnimator().setUpdateFPSFrames(3, null);
   }
 
-  /**
-   * Set the current lights
-   */
+  /*
   private void updateLights(GL2 gl) {
     if (updateLightsRequired) {
       Logger.getInstance().debug("Updated lights.");
@@ -240,6 +244,82 @@ public class JoglRenderer3D implements Observer {
       }
       updateLightsRequired = false;
     }
+  }*/
+
+  /**
+   * Set the current lights
+   */
+  private void updateLights(GL2 gl) {
+    if (updateLightsRequired) {
+      Logger.getInstance().debug("Updated lights.");
+
+      /*
+      // Disable inactive lights
+      for (int i = 0; i < JOGL_NUMBER_OF_LIGHTS; i++) {
+        gl.glDisable(getLightIndex(i));
+        int lightIndex = getLightIndex(i);
+        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, new float[] { -1, -1, -1, -1 }, 0);
+      }*/
+
+      for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
+        updateLight(gl, i);
+      }
+      updateLightsRequired = false;
+    }
+  }
+
+  private void disableLight(GL2 gl, int lightID) {
+    gl.glDisable(getLightIndex(lightID));
+    int lightIndex = getLightIndex(lightID);
+    //gl.glLightfv(lightIndex, GL2.GL_AMBIENT, new float[] { 0, 0, 0, 0 }, 0); // changed
+    gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, new float[] { -1, -1, -1, -1 }, 0);
+  }
+
+  private void updateLight(GL2 gl, int lightID) {
+    int lightIndex = getLightIndex(lightID);
+    LightSource light = rootNode.getLight(lightID);
+
+    disableLight(gl, lightID);
+
+    float lightAmbient[] = { 1, 1, 1, 1 };
+    float lightSpecular[] = { 1, 1, 1, 1 };
+    float lightPosition[] = { 1, 1, 1, 1 };
+    float lightDiffuse[] = { 1, 1, 1, 1 };
+    gl.glEnable(lightIndex);
+    gl.glLightfv(lightIndex, GL2.GL_AMBIENT, lightAmbient, 0);
+    gl.glLightfv(lightIndex, GL2.GL_SPECULAR, lightSpecular, 0);
+    switch (light.getType()) {
+      case DIRECTIONAL:
+        lightPosition[0] = (float) light.getPosition().get(0);
+        lightPosition[1] = (float) light.getPosition().get(1);
+        lightPosition[2] = (float) light.getPosition().get(2);
+        lightPosition[3] = 0;
+        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
+        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
+        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
+        lightDiffuse[3] = 1;
+        gl.glEnable(lightIndex);
+        gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
+        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
+
+        break;
+      case POINT:
+        lightPosition[0] = (float) light.getPosition().get(0);
+        lightPosition[1] = (float) light.getPosition().get(1);
+        lightPosition[2] = (float) light.getPosition().get(2);
+        lightPosition[3] = 1;
+        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
+        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
+        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
+        lightDiffuse[3] = 1;
+        gl.glEnable(lightIndex);
+        gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
+        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
+        break;
+      default:
+        Logger.getInstance().error("Unsupported light type: " + light.getType());
+        break;
+    }
   }
 
   public void resize(GLAutoDrawable drawable, int w, int h) {
@@ -253,10 +333,15 @@ public class JoglRenderer3D implements Observer {
     updateExtrinsicCameraParameters(drawable);
   }
 
-  /**
-   * Draw content
-   */
   public void draw(GLAutoDrawable drawable) {
+    if (rootNode.areShadowsAllowed()) {
+      drawWithShadow(drawable);
+    } else {
+      drawWithoutShadow(drawable);
+    }
+  }
+
+  private void drawWithoutShadow(GLAutoDrawable drawable) {
     // clear the color buffer and the depth buffer
     GL2 gl = drawable.getGL().getGL2();
 
@@ -277,7 +362,7 @@ public class JoglRenderer3D implements Observer {
     }
 
     // Render the scene graph
-    renderNode(rootNode, gl);
+    renderNode(rootNode, gl, false, null);
 
     // Render the current camera path
     renderCameraPath(gl);
@@ -289,6 +374,173 @@ public class JoglRenderer3D implements Observer {
 
     // Show framerate
     //System.out.println(drawable.getAnimator().getLastFPS());
+  }
+
+
+  TextRenderer renderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18), true);
+
+  /**
+   * Draw content with shadows
+   */
+  private void drawWithShadow(GLAutoDrawable drawable) {
+    // clear the color buffer and the depth buffer
+    GL2 gl = drawable.getGL().getGL2();
+
+    gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT );
+
+    // Load projection infinite matrix
+    IMatrix4 pInf = getProjectionInfinity();
+    gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+    gl.glLoadMatrixd(pInf.data(), 0);
+
+    // Load Modelview matrix
+    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+    // Update extrinsic camera
+    updateExtrinsicCameraParameters(drawable);
+
+    // Enable depth testing
+    gl.glEnable(GL2.GL_DEPTH_TEST);
+    gl.glDepthFunc(GL2.GL_LESS);
+
+    // Enable back-face culling
+    gl.glEnable(GL2.GL_CULL_FACE);
+    gl.glCullFace(GL2.GL_BACK);
+
+    // Enable ambient light only
+    gl.glEnable(GL2.GL_LIGHTING);
+    for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
+      disableLight(gl, i);
+    }
+    float[] lightAmbientOn = {0.9f, 0.9f, 0.9f, 1};
+    gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmbientOn, 0);
+
+    // Render the scene graph
+    renderNode(rootNode, gl, false, null);
+
+    // Disable depth writes
+    gl.glDepthMask(false);
+
+    // Enable additive blending
+    gl.glEnable(GL.GL_BLEND);
+    gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE);
+
+    // "Disable" ambient light
+    float[] lightAmbientOff = {0, 0, 0, 0};
+    gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmbientOff, 0);
+
+
+    // For all light sources
+    for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
+      LightSource light = rootNode.getLight(i);
+
+      // Clear the stencil buffer
+      gl.glClear(GL.GL_STENCIL_BUFFER_BIT);
+
+      // Disable color buffer writes
+      gl.glColorMask(false, false, false, false);
+
+      // Enable stencil testing
+      gl.glEnable(GL.GL_STENCIL_TEST);
+      gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+      gl.glStencilMask(~0);
+
+      //region Two-Sided Stencil buffer code
+      //gl.glEnable(GL2.GL_STENCIL_TEST_TWO_SIDE_EXT);
+      //gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+      //gl.glStencilMask(~0);
+
+      //gl.glActiveStencilFaceEXT(GL.GL_BACK);
+      //gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL2GL3.GL_DECR_WRAP);
+      //gl.glStencilMask(~0);
+      //gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+
+      //gl.glActiveStencilFaceEXT(GL.GL_FRONT);
+      //gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR_WRAP);
+      //gl.glStencilMask(~0);
+      //gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+      //endregion
+
+      // Debug
+      //updateLight(gl, i);
+      //gl.glColorMask(false, true, false, false);
+
+      // Increment stencil buffer value for front-facing polygons that fail the depth test
+      gl.glCullFace(GL.GL_FRONT);
+      gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR, GL.GL_KEEP);
+      renderNode(rootNode, gl, true, light);
+
+      // Decrement stencil buffer value for back-facing polygons that fail the depth test
+      gl.glCullFace(GL.GL_BACK);
+      gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR, GL.GL_KEEP);
+      renderNode(rootNode, gl, true, light);
+
+      // Enable current light source
+      updateLight(gl, i);
+
+      // Set stencil to only render pixel with a 0 value
+      // Hier scheiterts anscheinend.
+      gl.glStencilFunc(GL.GL_EQUAL, 0, ~0);
+      gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR);
+      gl.glDepthFunc(GL.GL_EQUAL);
+      gl.glColorMask(true, true , true, true);
+      renderNode(rootNode, gl, false , null);
+
+      // Restore depth test
+      gl.glDepthFunc(GL.GL_LESS);
+      // Disable stencil tesing
+      gl.glDisable(GL.GL_STENCIL_TEST);
+    }
+
+    // Disable blending and re-enable depth writes
+    gl.glDisable(GL.GL_BLEND);
+    gl.glDepthMask(true);
+
+
+    // Set some lights
+    //updateLights(gl);
+
+    // Render the current camera path
+    //renderCameraPath(gl);
+
+    // Take screenshot
+    checkTakeScreenshot(drawable);
+
+    JoglHelper.hasGLError(gl, "GL rendering");
+
+    // Show framerate
+    renderer.beginRendering(SCREEN_WIDTH, SCREEN_HEIGHT);
+    renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0, SCREEN_HEIGHT - 20);
+    renderer.endRendering();
+    //System.out.println(drawable.getAnimator().getLastFPS());
+  }
+
+  private IMatrix4 getProjectionInfinity() {
+    IMatrix4 pInf = VectorMatrixFactory.newIMatrix4();
+
+    // Field of view in radians
+    double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
+
+    // Cotangent of the field of view
+    double coTanFOV = 1.0 / Math.tan(rads);
+
+    pInf.set(0, 0, coTanFOV / aspectRatio);
+    pInf.set(0, 1, 0);
+    pInf.set(0, 2, 0);
+    pInf.set(0, 3, 0);
+    pInf.set(1, 0, 0);
+    pInf.set(1, 1, coTanFOV);
+    pInf.set(1, 2, 0);
+    pInf.set(1, 3, 0);
+    pInf.set(2, 0, 0);
+    pInf.set(2, 1, 0);
+    pInf.set(2, 2, -1);
+    pInf.set(2, 3, -1);
+    pInf.set(3, 0, 0);
+    pInf.set(3, 1, 0);
+    pInf.set(3, 2, -2 * nearClippingPlane);
+    pInf.set(3, 3, 0);
+
+    return pInf;
   }
 
   /**
@@ -366,7 +618,7 @@ public class JoglRenderer3D implements Observer {
   /**
    * Recursive method to render nodes.
    */
-  private void renderNode(CgNode node, GL2 gl) {
+  private void renderNode(CgNode node, GL2 gl, boolean renderShadowVolume, LightSource lightSource) {
     if (node == null) {
       return;
     }
@@ -381,7 +633,11 @@ public class JoglRenderer3D implements Observer {
     // Draw node
     JoglRenderNode renderNode = renderObjectMananger.getRenderNode(node);
     if (renderNode != null) {
-      renderNode.draw3D(gl);
+      if (!renderShadowVolume) {
+        renderNode.draw3D(gl);
+      } else if (lightSource != null) {
+        renderNode.draw3D(gl, lightSource);
+      }
     }
 
     // Draw children
@@ -389,11 +645,11 @@ public class JoglRenderer3D implements Observer {
       if (node.getContent() instanceof Animation) {
         // Special case: animation node, only render current time step.
         if (AnimationTimer.getInstance().getValue() == childIndex) {
-          renderNode(node.getChildNode(childIndex), gl);
+          renderNode(node.getChildNode(childIndex), gl, renderShadowVolume, lightSource);
         }
       } else {
         // Non-animation node
-        renderNode(node.getChildNode(childIndex), gl);
+        renderNode(node.getChildNode(childIndex), gl, renderShadowVolume, lightSource);
       }
     }
 

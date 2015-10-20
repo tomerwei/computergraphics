@@ -9,7 +9,17 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import cgresearch.core.math.IVector;
+import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.trianglemesh.Edge;
+import cgresearch.graphics.scenegraph.LightSource;
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.IVector3;
@@ -20,6 +30,7 @@ import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.rendering.jogl.material.JoglTexture;
+import com.jogamp.opengl.GL2GL3;
 
 /**
  * A render node for a triangle mesh.
@@ -33,6 +44,11 @@ public class RenderContentTriangleMesh implements IRenderContent {
 	 * Reference to the triangle mesh.
 	 */
 	private final ITriangleMesh triangleMesh;
+
+	/**
+	 * All edges of the triangle mesh
+	 */
+	private List<Edge> edges = null;
 
 	/**
 	 * Temporary data structures containing the vertex information.
@@ -315,6 +331,170 @@ public class RenderContentTriangleMesh implements IRenderContent {
 						.createSophisticatedMeshNode(triangleMesh);
 			}
 			sophisticatedMeshNode.draw3D(gl);
+		}
+
+
+/*
+		if (edges == null) {
+			createEdgeList();
+		}
+		updateBackFacingInformation(VectorMatrixFactory.newIVector3(0,0.5,2));
+		renderShadowPolygons(gl, VectorMatrixFactory.newIVector3(0,0.5,2));*/
+	}
+
+	Map<Triangle, Boolean> backFacing = null;
+
+	@Override
+	public void draw3D(GL2 gl, LightSource lightSource) {
+		if (triangleMesh.getMaterial().isThrowingShadow()) {
+			if (edges == null) {
+				createEdgeList();
+			}
+
+			IVector3 lightPosition = lightSource.getPosition();
+			updateBackFacingInformation(lightPosition);
+
+			renderShadowPolygons(gl, lightPosition);
+		}
+	}
+
+	private void renderShadowPolygons(GL2 gl, IVector3 lightPosition) {
+		gl.glBegin(GL2GL3.GL_QUADS);
+		for (Edge e : edges) {
+			Triangle t1 = e.getTriangle(0);
+			Triangle t2 = e.getTriangle(1);
+			if (t2 == null || backFacing.get(t1) != backFacing.get(t2)) {
+				// Possible silhouette edge found
+				Vertex a, b;
+
+				if (backFacing.get(t1)) {
+					a = triangleMesh.getVertex(e.getB());
+					b = triangleMesh.getVertex(e.getA());
+				} else {
+					a = triangleMesh.getVertex(e.getA());
+					b = triangleMesh.getVertex(e.getB());
+				}
+
+				IVector3 vA = a.getPosition();
+				IVector3 vB = b.getPosition();
+
+				float[] aInf = {(float)(vA.get(0) - lightPosition.get(0)),
+						        (float)(vA.get(1) - lightPosition.get(1)),
+								(float)(vA.get(2) - lightPosition.get(2)), 0.0f};
+				float[] bInf = {(float)(vB.get(0) - lightPosition.get(0)),
+								(float)(vB.get(1) - lightPosition.get(1)),
+								(float)(vB.get(2) - lightPosition.get(2)), 0.0f};
+
+				gl.glVertex3fv(vB.floatData(), 0);
+				gl.glVertex3fv(vA.floatData(), 0);
+				gl.glVertex4fv(aInf, 0);
+				gl.glVertex4fv(bInf, 0);
+			}
+
+		}
+		//region old
+		/*
+		for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
+			Triangle t = triangleMesh.getTriangle(i);
+			if (!backFacing.get(t)) {
+				// Get all three edges
+				List<Edge> triangleEdges = edges.stream().filter(e -> e.isTriangleUsingEdge(t))
+						.collect(Collectors.toList());
+
+				for (Edge e : triangleEdges) {
+					Triangle neighbor = e.getNeighbor(t);
+					System.out.println(neighbor == null);
+					if (neighbor == null || backFacing.get(neighbor)) {
+						// Possible silhouette edge found
+						Vertex a = triangleMesh.getVertex(e.getA());
+						Vertex b = triangleMesh.getVertex(e.getB());
+
+						IVector3 vA = a.getPosition();
+						IVector3 vB = b.getPosition();
+
+						gl.glVertex3fv(vB.floatData(), 0);
+						gl.glVertex3fv(vA.floatData(), 0);
+						gl.glVertex4d(vA.get(0) - lightPosition.get(0),
+								vA.get(1) - lightPosition.get(1),
+								vA.get(2) - lightPosition.get(2), 1);
+						gl.glVertex4d(vB.get(0) - lightPosition.get(0),
+								vB.get(1) - lightPosition.get(1),
+								vB.get(2) - lightPosition.get(2), 1);
+					}
+				}
+			}
+		}*/
+		//endregion
+		gl.glEnd();
+
+
+		gl.glBegin(GL.GL_TRIANGLES);
+		for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
+			Triangle t = triangleMesh.getTriangle(i);
+			for (int j = 0; j < 3; j++) {
+				int vIndex = t.get(j);
+				Vertex v = triangleMesh.getVertex(vIndex);
+				IVector3 vPos = v.getPosition();
+				if (backFacing.get(t)) {
+					float[] vInf = {(float)(vPos.get(0) - lightPosition.get(0)),
+							(float)(vPos.get(1) - lightPosition.get(1)),
+							(float)(vPos.get(2) - lightPosition.get(2)), 0.0f};
+					gl.glVertex4fv(vInf, 0);
+				} else {
+					gl.glVertex3fv(vPos.floatData(), 0);
+				}
+			}
+		}
+		gl.glEnd();
+
+	}
+
+	private void createEdgeList() {
+		edges = new ArrayList<>();
+		for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
+			Triangle t = triangleMesh.getTriangle(i);
+			for (int j = 0; j < 3; j++) {
+				Edge e = new Edge(t.get(j), t.get((j+1) % 3));
+				if (!edges.contains(e)) {
+					e.addTriangle(t);
+					edges.add(e);
+				} else {
+					int index = edges.indexOf(e);
+					Edge existingEdge = edges.get(index);
+					existingEdge.addTriangle(t);
+				}
+			}
+		}
+	}
+
+	private void updateBackFacingInformation(IVector3 lightPosition) {
+		boolean init = false;
+		if (backFacing == null) {
+			backFacing = new HashMap<>();
+			init = true;
+		}
+
+		for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
+			Triangle t = triangleMesh.getTriangle(i);
+			Vertex[] triangleVertices = new Vertex[3];
+			triangleVertices[0] = triangleMesh.getVertex(t.getA());
+			triangleVertices[1] = triangleMesh.getVertex(t.getB());
+			triangleVertices[2] = triangleMesh.getVertex(t.getC());
+
+			IVector3 tMiddle = triangleVertices[0].getPosition().add(triangleVertices[1].getPosition());
+			tMiddle = tMiddle.add(triangleVertices[2].getPosition());
+			tMiddle.set(0, tMiddle.get(0) / 3.0);
+			tMiddle.set(1, tMiddle.get(1) / 3.0);
+			tMiddle.set(2, tMiddle.get(2) / 3.0);
+
+			// Get the direction vector to L
+			//IVector3 l = tMiddle.subtract(lightPosition);
+			IVector3 l = lightPosition.subtract(tMiddle);
+			//l.normalize();
+			if (init)
+				backFacing.put(t, l.multiply(t.getNormal()) < 0);
+			else
+				backFacing.replace(t, l.multiply(t.getNormal()) < 0);
 		}
 	}
 

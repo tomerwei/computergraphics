@@ -1,5 +1,6 @@
 package cgresearch.rendering.jogl.core;
 
+import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.graphics.scenegraph.Transformation;
@@ -26,6 +27,11 @@ public class RenderContentTransformation extends JoglRenderContent {
 
 	@Override
 	public void draw3D(GL2 gl) {
+		draw3D(gl, null);
+	}
+
+	@Override
+	public void draw3D(GL2 gl, LightSource lightSource) {
 		gl.glPushMatrix();
 		if (transformation != null) {
 			gl.glMultMatrixd(transformation.getTransposedTransformation()

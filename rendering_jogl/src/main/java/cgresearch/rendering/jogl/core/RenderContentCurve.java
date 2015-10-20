@@ -8,6 +8,7 @@ package cgresearch.rendering.jogl.core;
 import java.util.Observable;
 import java.util.Observer;
 
+import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.IMatrix3;
@@ -209,6 +210,11 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
 
   @Override
   public void draw3D(GL2 gl) {
+  }
+
+  @Override
+  public void draw3D(GL2 gl, LightSource lightSource) {
+
   }
 
   @Override
