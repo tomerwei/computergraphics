@@ -12,6 +12,10 @@ import java.util.Observer;
 
 import javax.swing.JFrame;
 
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLProfile;
+
+import cgresearch.core.logging.Logger;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.bricks.IRenderFrame;
 import cgresearch.graphics.camera.Camera;
@@ -65,7 +69,11 @@ public class JoglFrame extends JFrame implements IRenderFrame<JoglRenderNode>, O
     // Setup a default scene graph
     renderObjectManager = new JoglRenderObjectManager(application.getCgRootNode());
 
-    view = new JoglCanvas(application.getCgRootNode(), renderObjectManager);
+    GLCapabilities capabilities = new GLCapabilities(GLProfile.getDefault());
+    // TODO: Using a magic number of Stencil bits!
+    capabilities.setStencilBits(8);
+    view = new JoglCanvas(application.getCgRootNode(), renderObjectManager, capabilities);
+    Logger.getInstance().message("Stencil bits: " + capabilities.getStencilBits());
     getContentPane().add(view);
 
     AnimationTimer.getInstance().addObserver(this);

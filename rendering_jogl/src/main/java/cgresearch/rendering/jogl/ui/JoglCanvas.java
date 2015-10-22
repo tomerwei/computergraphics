@@ -33,7 +33,6 @@ import cgresearch.rendering.jogl.core.JoglRenderer3D;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -42,17 +41,15 @@ import com.jogamp.opengl.util.FPSAnimator;
  * 
  * @author Philipp Jenke
  */
-public class JoglCanvas extends GLJPanel implements
-    GLEventListener, MouseListener, MouseWheelListener,
-    MouseMotionListener, KeyListener, Observer {
+public class JoglCanvas extends GLJPanel
+    implements GLEventListener, MouseListener, MouseWheelListener, MouseMotionListener, KeyListener, Observer {
 
   /**
    * Constants.
    */
   private static final long serialVersionUID = 1L;
   private static final int FPS = 60;
-  private static final int KEY_IS_PRESSED_UPDATE_INTERVAL =
-      50;
+  private static final int KEY_IS_PRESSED_UPDATE_INTERVAL = 50;
   private static final char KEY_PRESSED_NONE = ' ';
 
   /**
@@ -74,8 +71,7 @@ public class JoglCanvas extends GLJPanel implements
   /**
    * Last coordinates of the mouse
    */
-  private IVector3 lastMouseCoordinates =
-      VectorMatrixFactory.newIVector3(-1, -1, 0);
+  private IVector3 lastMouseCoordinates = VectorMatrixFactory.newIVector3(-1, -1, 0);
 
   /**
    * Remember last clicked button.
@@ -85,11 +81,9 @@ public class JoglCanvas extends GLJPanel implements
   /**
    * Constructor
    */
-  public JoglCanvas(CgRootNode rootNode,
-      JoglRenderObjectManager renderObjectManager) {
-    super(new GLCapabilities(GLProfile.getDefault()));
-    renderer3d =
-        new JoglRenderer3D(renderObjectManager, rootNode);
+  public JoglCanvas(CgRootNode rootNode, JoglRenderObjectManager renderObjectManager, GLCapabilities capabilities) {
+    super(capabilities);
+    renderer3d = new JoglRenderer3D(renderObjectManager, rootNode);
     addGLEventListener(this);
     addMouseListener(this);
     addMouseMotionListener(this);
@@ -114,8 +108,7 @@ public class JoglCanvas extends GLJPanel implements
   }
 
   @Override
-  public void reshape(GLAutoDrawable drawable, int x,
-      int y, int w, int h) {
+  public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h) {
     renderer3d.resize(drawable, w, h);
   }
 
@@ -144,14 +137,10 @@ public class JoglCanvas extends GLJPanel implements
   @Override
   public void mouseReleased(MouseEvent event) {
     currentButton = -1;
-    lastMouseCoordinates =
-        VectorMatrixFactory.newIVector3(event.getX(),
-            event.getY(), 0);
+    lastMouseCoordinates = VectorMatrixFactory.newIVector3(event.getX(), event.getY(), 0);
 
     if (Picking.getInstance().isActive()) {
-      Picking.getInstance().handleSelectionClick(
-          event.getX(), event.getY(), getWidth(),
-          getHeight(),
+      Picking.getInstance().handleSelectionClick(event.getX(), event.getY(), getWidth(), getHeight(),
           Camera.getInstance().getOpeningAngle());
     }
   }
@@ -159,14 +148,9 @@ public class JoglCanvas extends GLJPanel implements
   @Override
   public void mouseDragged(MouseEvent event) {
     if (currentButton == MouseEvent.BUTTON1) {
-      if ((lastMouseCoordinates.get(0) > 0)
-          && (lastMouseCoordinates.get(1) > 0)) {
-        float deltaX =
-            (float) (event.getX() - lastMouseCoordinates
-                .get(0));
-        float deltaY =
-            (float) (event.getY() - lastMouseCoordinates
-                .get(1));
+      if ((lastMouseCoordinates.get(0) > 0) && (lastMouseCoordinates.get(1) > 0)) {
+        float deltaX = (float) (event.getX() - lastMouseCoordinates.get(0));
+        float deltaY = (float) (event.getY() - lastMouseCoordinates.get(1));
 
         if (Picking.getInstance().isActive()) {
           if (currentlyPressedKey == 'x') {
@@ -178,30 +162,19 @@ public class JoglCanvas extends GLJPanel implements
           }
         } else {
           // Regular camera controller
-          Camera.getInstance().getCurrentController()
-              .mouseDeltaXLeftButton(deltaX);
-          Camera.getInstance().getCurrentController()
-              .mouseDeltaYLeftButton(deltaY);
+          Camera.getInstance().getCurrentController().mouseDeltaXLeftButton(deltaX);
+          Camera.getInstance().getCurrentController().mouseDeltaYLeftButton(deltaY);
         }
 
       }
       lastMouseCoordinates.set(0, event.getX());
       lastMouseCoordinates.set(1, event.getY());
     } else if (currentButton == MouseEvent.BUTTON3) {
-      if ((lastMouseCoordinates.get(0) > 0)
-          && (lastMouseCoordinates.get(1) > 0)) {
-        Camera
-            .getInstance()
-            .getCurrentController()
-            .mouseDeltaXRightButton(
-                (float) (event.getX() - lastMouseCoordinates
-                    .get(0)));
-        Camera
-            .getInstance()
-            .getCurrentController()
-            .mouseDeltaYRightButton(
-                (float) (event.getY() - lastMouseCoordinates
-                    .get(1)));
+      if ((lastMouseCoordinates.get(0) > 0) && (lastMouseCoordinates.get(1) > 0)) {
+        Camera.getInstance().getCurrentController()
+            .mouseDeltaXRightButton((float) (event.getX() - lastMouseCoordinates.get(0)));
+        Camera.getInstance().getCurrentController()
+            .mouseDeltaYRightButton((float) (event.getY() - lastMouseCoordinates.get(1)));
       }
       lastMouseCoordinates.set(0, event.getX());
       lastMouseCoordinates.set(1, event.getY());
@@ -214,8 +187,7 @@ public class JoglCanvas extends GLJPanel implements
 
   @Override
   public void mouseWheelMoved(MouseWheelEvent event) {
-    Camera.getInstance().getCurrentController()
-        .mouseWheelMoved(event.getWheelRotation());
+    Camera.getInstance().getCurrentController().mouseWheelMoved(event.getWheelRotation());
   }
 
   @Override
@@ -227,8 +199,7 @@ public class JoglCanvas extends GLJPanel implements
         @Override
         public void run() {
           while (!Thread.currentThread().isInterrupted()) {
-            Camera.getInstance().getCurrentController()
-                .keyIsPressed(keyCode);
+            Camera.getInstance().getCurrentController().keyIsPressed(keyCode);
             try {
               Thread.sleep(KEY_IS_PRESSED_UPDATE_INTERVAL);
             } catch (InterruptedException e) {
@@ -241,8 +212,7 @@ public class JoglCanvas extends GLJPanel implements
       keyIsPressed.start();
     }
 
-    Camera.getInstance().getCurrentController()
-        .keyDown(e.getKeyCode());
+    Camera.getInstance().getCurrentController().keyDown(e.getKeyCode());
   }
 
   @Override
@@ -256,11 +226,9 @@ public class JoglCanvas extends GLJPanel implements
     }
 
     if (e.getKeyChar() == '+') {
-      Camera.getInstance().getCurrentController()
-          .mouseDeltaYRightButton(-1);
+      Camera.getInstance().getCurrentController().mouseDeltaYRightButton(-1);
     } else if (e.getKeyChar() == '-') {
-      Camera.getInstance().getCurrentController()
-          .mouseDeltaYRightButton(1);
+      Camera.getInstance().getCurrentController().mouseDeltaYRightButton(1);
     } else if (e.getKeyChar() == 't') {
       takeScreenshot();
     } else if (e.getKeyChar() == 'c') {
@@ -286,8 +254,7 @@ public class JoglCanvas extends GLJPanel implements
     final JFileChooser fc = new JFileChooser();
     fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
     fc.setMultiSelectionEnabled(false);
-    fc.addChoosableFileFilter(new FileNameExtensionFilter(
-        "Images", "PNG, JPG"));
+    fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "PNG, JPG"));
     int returnVal = fc.showSaveDialog(null);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       final File screenshotFile = fc.getSelectedFile();
@@ -316,8 +283,7 @@ public class JoglCanvas extends GLJPanel implements
   @Override
   public void update(Observable o, Object arg) {
     if (o instanceof AnimationTimer) {
-      Camera.getInstance().getCurrentController()
-          .animationTimerTick();
+      Camera.getInstance().getCurrentController().animationTimerTick();
     }
   }
 
