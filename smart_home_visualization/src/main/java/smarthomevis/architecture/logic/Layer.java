@@ -1,4 +1,4 @@
-package smarthomevis.architecture;
+package smarthomevis.architecture.logic;
 
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
