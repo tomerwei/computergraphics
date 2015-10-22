@@ -5,6 +5,7 @@
  */
 package cgresearch.rendering.jogl.core;
 
+import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.graphics.datastructures.linesegments.LineSegments;
@@ -41,6 +42,11 @@ public class RenderContentLineSegments implements IRenderContent {
       gl.glVertex3fv(lineSegments.getLineEndPoint(lineIndex).floatData(), 0);
     }
     gl.glEnd();
+  }
+
+  @Override
+  public void draw3D(GL2 gl, LightSource lightSource) {
+
   }
 
   @Override

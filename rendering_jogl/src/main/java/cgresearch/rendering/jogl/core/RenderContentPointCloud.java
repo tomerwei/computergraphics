@@ -8,6 +8,7 @@ package cgresearch.rendering.jogl.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.logging.Logger;
@@ -220,7 +221,12 @@ public class RenderContentPointCloud extends
     }
   }
 
-  private void renderNormals(GL2 gl) {
+    @Override
+    public void draw3D(GL2 gl, LightSource lightSource) {
+
+    }
+
+    private void renderNormals(GL2 gl) {
     // Normals
     double scale = 0.005;
     gl.glBegin(GL2.GL_LINES);

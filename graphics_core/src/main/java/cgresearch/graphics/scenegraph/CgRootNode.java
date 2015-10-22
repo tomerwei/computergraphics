@@ -18,6 +18,11 @@ public class CgRootNode extends CgNode {
 	private List<LightSource> lights = new ArrayList<LightSource>();
 
 	/**
+	 * Defines whether shadows are allowed in this scene
+	 */
+	private boolean allowShadows = false;
+
+	/**
 	 * Constructor.
 	 */
 	public CgRootNode() {
@@ -60,5 +65,19 @@ public class CgRootNode extends CgNode {
 	public void lightingChanged() {
 		setChanged();
 		notifyObservers();
+	}
+
+	/**
+	 * Getter
+	 */
+	public boolean areShadowsAllowed() {
+		return allowShadows;
+	}
+
+	/**
+	 * Setter
+	 */
+	public void setAllowShadows(boolean allowShadows) {
+		this.allowShadows = allowShadows;
 	}
 }

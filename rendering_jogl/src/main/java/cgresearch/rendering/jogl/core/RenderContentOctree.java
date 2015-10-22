@@ -1,5 +1,6 @@
 package cgresearch.rendering.jogl.core;
 
+import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.IVector3;
@@ -35,6 +36,11 @@ public class RenderContentOctree implements IRenderContent {
 		gl.glDisable(GL2.GL_LIGHTING);
 		gl.glColor3f(0.5f, 0.5f, 0.5f);
 		renderOctreeNode(gl, rootNode);
+	}
+
+	@Override
+	public void draw3D(GL2 gl, LightSource lightSource) {
+
 	}
 
 	/**

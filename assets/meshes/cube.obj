@@ -1,5 +1,5 @@
 # Material file
-#mtllib haw_cube.mtl
+mtllib haw_cube.mtl
 # Vertices
 v -0.5 -0.5 -0.5
 v 0.5 -0.5 -0.5

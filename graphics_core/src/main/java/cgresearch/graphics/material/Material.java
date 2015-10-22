@@ -31,75 +31,37 @@ public class Material extends Observable {
   /**
    * Ids for the default shaders.
    */
-  public static final String SHADER_TEXTURE_PHONG =
-      "SHADER_TEXTURE_PHONG";
-  public static final String SHADER_TEXTURE =
-      "SHADER_TEXTURE";
-  public static final String SHADER_ENVIRONMENT_MAPPING =
-      "SHADER_ENVIRONMENT_MAPPING";
-  public static final String SHADER_PHONG_SHADING =
-      "SHADER_PHONG_SHADING";
+  public static final String SHADER_TEXTURE_PHONG = "SHADER_TEXTURE_PHONG";
+  public static final String SHADER_TEXTURE = "SHADER_TEXTURE";
+  public static final String SHADER_ENVIRONMENT_MAPPING = "SHADER_ENVIRONMENT_MAPPING";
+  public static final String SHADER_PHONG_SHADING = "SHADER_PHONG_SHADING";
   public static final String SHADER_COMIC = "SHADER_COMIC";
-  public static final String SHADER_SILHOUETTE =
-      "SHADER_SILHOUETTE";
+  public static final String SHADER_SILHOUETTE = "SHADER_SILHOUETTE";
+  public static final String SHADER_BLACK = "SHADER_BLACK";
   public static final String SHADER_COLOR = "SHADER_COLOR";
-  public static final String SHADER_WIREFRAME =
-      "SHADER_WIREFRAME";
-  public static final String SHADER_GOURAUD_SHADING =
-      "SHADER_GOURAUD_SHADING";
-  public static final String SHADER_TEXTURE_PHONG_SPOTLIGHT =
-      "SHADER_TEXTURE_PHONG_SPOTLIGHT";
+  public static final String SHADER_WIREFRAME = "SHADER_WIREFRAME";
+  public static final String SHADER_GOURAUD_SHADING = "SHADER_GOURAUD_SHADING";
+  public static final String SHADER_TEXTURE_PHONG_SPOTLIGHT = "SHADER_TEXTURE_PHONG_SPOTLIGHT";
 
-  public static final IVector3 PALETTE0_COLOR0 =
-      VectorMatrixFactory.newIVector3(215 / 255.0,
-          129 / 255.0, 36 / 255.0);
-  public static final IVector3 PALETTE0_COLOR1 =
-      VectorMatrixFactory.newIVector3(226 / 255.0,
-          227 / 255.0, 163 / 255.0);
-  public static final IVector3 PALETTE0_COLOR2 =
-      VectorMatrixFactory.newIVector3(182 / 255.0,
-          176 / 255.0, 131 / 255.0);
-  public static final IVector3 PALETTE0_COLOR3 =
-      VectorMatrixFactory.newIVector3(55 / 255.0,
-          78 / 255.0, 75 / 255.0);
-  public static final IVector3 PALETTE0_COLOR4 =
-      VectorMatrixFactory.newIVector3(7 / 255.0,
-          19 / 255.0, 40 / 255.0);
+  public static final IVector3 PALETTE0_COLOR0 = VectorMatrixFactory.newIVector3(215 / 255.0, 129 / 255.0, 36 / 255.0);
+  public static final IVector3 PALETTE0_COLOR1 = VectorMatrixFactory.newIVector3(226 / 255.0, 227 / 255.0, 163 / 255.0);
+  public static final IVector3 PALETTE0_COLOR2 = VectorMatrixFactory.newIVector3(182 / 255.0, 176 / 255.0, 131 / 255.0);
+  public static final IVector3 PALETTE0_COLOR3 = VectorMatrixFactory.newIVector3(55 / 255.0, 78 / 255.0, 75 / 255.0);
+  public static final IVector3 PALETTE0_COLOR4 = VectorMatrixFactory.newIVector3(7 / 255.0, 19 / 255.0, 40 / 255.0);
 
-  public static final IVector3 PALETTE1_COLOR0 =
-      VectorMatrixFactory.newIVector3(68 / 255.0,
-          37 / 255.0, 42 / 255.0);
-  public static final IVector3 PALETTE1_COLOR1 =
-      VectorMatrixFactory.newIVector3(65 / 255.0,
-          71 / 255.0, 93 / 255.0);
-  public static final IVector3 PALETTE1_COLOR2 =
-      VectorMatrixFactory.newIVector3(88 / 255.0,
-          119 / 255.0, 122 / 255.0);
-  public static final IVector3 PALETTE1_COLOR3 =
-      VectorMatrixFactory.newIVector3(136 / 255.0,
-          171 / 255.0, 129 / 255.0);
-  public static final IVector3 PALETTE1_COLOR4 =
-      VectorMatrixFactory.newIVector3(236 / 255.0,
-          209 / 255.0, 142 / 255.0);
+  public static final IVector3 PALETTE1_COLOR0 = VectorMatrixFactory.newIVector3(68 / 255.0, 37 / 255.0, 42 / 255.0);
+  public static final IVector3 PALETTE1_COLOR1 = VectorMatrixFactory.newIVector3(65 / 255.0, 71 / 255.0, 93 / 255.0);
+  public static final IVector3 PALETTE1_COLOR2 = VectorMatrixFactory.newIVector3(88 / 255.0, 119 / 255.0, 122 / 255.0);
+  public static final IVector3 PALETTE1_COLOR3 = VectorMatrixFactory.newIVector3(136 / 255.0, 171 / 255.0, 129 / 255.0);
+  public static final IVector3 PALETTE1_COLOR4 = VectorMatrixFactory.newIVector3(236 / 255.0, 209 / 255.0, 142 / 255.0);
 
-  public static final IVector3 PALETTE2_COLOR0 =
-      VectorMatrixFactory.newIVector3(73 / 255.0,
-          10 / 255.0, 61 / 255.0);
-  public static final IVector3 PALETTE2_COLOR1 =
-      VectorMatrixFactory.newIVector3(189 / 255.0,
-          21 / 255.0, 80 / 255.0);
-  public static final IVector3 PALETTE2_COLOR2 =
-      VectorMatrixFactory.newIVector3(233 / 255.0,
-          127 / 255.0, 2 / 255.0);
-  public static final IVector3 PALETTE2_COLOR3 =
-      VectorMatrixFactory.newIVector3(248 / 255.0,
-          202 / 255.0, 0 / 255.0);
-  public static final IVector3 PALETTE2_COLOR4 =
-      VectorMatrixFactory.newIVector3(138 / 255.0,
-          155 / 255.0, 15 / 255.0);
+  public static final IVector3 PALETTE2_COLOR0 = VectorMatrixFactory.newIVector3(73 / 255.0, 10 / 255.0, 61 / 255.0);
+  public static final IVector3 PALETTE2_COLOR1 = VectorMatrixFactory.newIVector3(189 / 255.0, 21 / 255.0, 80 / 255.0);
+  public static final IVector3 PALETTE2_COLOR2 = VectorMatrixFactory.newIVector3(233 / 255.0, 127 / 255.0, 2 / 255.0);
+  public static final IVector3 PALETTE2_COLOR3 = VectorMatrixFactory.newIVector3(248 / 255.0, 202 / 255.0, 0 / 255.0);
+  public static final IVector3 PALETTE2_COLOR4 = VectorMatrixFactory.newIVector3(138 / 255.0, 155 / 255.0, 15 / 255.0);
 
-  public static final IVector3 COLOR_BLACK =
-      VectorMatrixFactory.newIVector3(0, 0, 0);
+  public static final IVector3 COLOR_BLACK = VectorMatrixFactory.newIVector3(0, 0, 0);
 
   /**
    * IDs for the default textures
@@ -134,7 +96,7 @@ public class Material extends Observable {
   private IVector3 reflectionDiffuse = null;
 
   /**
-   * Ambien reflection
+   * Ambient reflection
    */
   private IVector3 reflectionAmbient = null;
 
@@ -161,16 +123,18 @@ public class Material extends Observable {
   private double refraction = 0;
 
   /**
+   * Defines if the object throws a shadow
+   */
+  private boolean throwsShadow = false;
+
+  /**
    * Constructor
    */
   public Material() {
     renderMode = Normals.PER_VERTEX;
-    reflectionAmbient =
-        VectorMatrixFactory.newIVector3(0.1, 0.1, 0.1);
-    reflectionDiffuse =
-        VectorMatrixFactory.newIVector3(PALETTE1_COLOR4);
-    reflectionSpecular =
-        VectorMatrixFactory.newIVector3(1, 1, 1);
+    reflectionAmbient = VectorMatrixFactory.newIVector3(0.1, 0.1, 0.1);
+    reflectionDiffuse = VectorMatrixFactory.newIVector3(PALETTE1_COLOR4);
+    reflectionSpecular = VectorMatrixFactory.newIVector3(1, 1, 1);
     showSophisticatesMesh = false;
     textureId = null;
     specularShininess = 20;
@@ -388,5 +352,19 @@ public class Material extends Observable {
    */
   public void setRefraction(double newValue) {
     refraction = newValue;
+  }
+
+  /**
+   * Getter
+   */
+  public boolean isThrowingShadow() {
+    return throwsShadow;
+  }
+
+  /**
+   * Setter
+   */
+  public void setThrowsShadow(boolean throwsShadow) {
+    this.throwsShadow = throwsShadow;
   }
 }
