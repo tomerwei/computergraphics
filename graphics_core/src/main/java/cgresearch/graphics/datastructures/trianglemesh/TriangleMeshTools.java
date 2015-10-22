@@ -23,7 +23,7 @@ public class TriangleMeshTools {
     // Create Laplacian
     IMatrix L = new Matrix(mesh.getNumberOfVertices(), mesh.getNumberOfVertices());
     for (int triangleIndex = 0; triangleIndex < mesh.getNumberOfTriangles(); triangleIndex++) {
-      Triangle t = mesh.getTriangle(triangleIndex);
+      ITriangle t = mesh.getTriangle(triangleIndex);
       L.set(t.getA(), t.getB(), -1);
       L.set(t.getB(), t.getA(), -1);
       L.set(t.getA(), t.getC(), -1);

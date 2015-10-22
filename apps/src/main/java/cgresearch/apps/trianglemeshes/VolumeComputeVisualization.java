@@ -16,6 +16,7 @@ import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -97,7 +98,7 @@ public class VolumeComputeVisualization extends CgApplication implements Observe
     }
 
     spatMesh.clear();
-    Triangle triangle = mesh.getTriangle(index);
+    ITriangle triangle = mesh.getTriangle(index);
     spatMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(0, 0, 0)));
     Vertex a = new Vertex(mesh.getVertex(triangle.getA()));
     Vertex b = new Vertex(mesh.getVertex(triangle.getB()));

@@ -2,8 +2,8 @@ package cgresearch.projects.raytracing;
 
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.Ray3D;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
 /**
@@ -28,8 +28,7 @@ public class IntersectionTriangleMesh implements Intersect<ITriangleMesh> {
     for (int i = 0; i < mesh.getNumberOfTriangles(); i++) {
       IntersectionResult triangleIntersection = intersect(mesh, i, ray);
       if (triangleIntersection != null) {
-        double triangleIntersectionSqrDist =
-            triangleIntersection.point.subtract(ray.getPoint()).getSqrNorm();
+        double triangleIntersectionSqrDist = triangleIntersection.point.subtract(ray.getPoint()).getSqrNorm();
         if (result == null) {
           result = triangleIntersection;
           currentSqrDist = triangleIntersectionSqrDist;
@@ -47,10 +46,9 @@ public class IntersectionTriangleMesh implements Intersect<ITriangleMesh> {
    * 
    * @return Intersection result. Return null if there is no intersection.
    */
-  private IntersectionResult intersect(ITriangleMesh mesh, int triangleIndex,
-      Ray3D ray) {
+  private IntersectionResult intersect(ITriangleMesh mesh, int triangleIndex, Ray3D ray) {
 
-    Triangle triangle = mesh.getTriangle(triangleIndex);
+    ITriangle triangle = mesh.getTriangle(triangleIndex);
     IVector3 vA = mesh.getVertex(triangle.getA()).getPosition();
 
     // Step 1: compute intersection between ray an plane defined by triangle
@@ -58,18 +56,14 @@ public class IntersectionTriangleMesh implements Intersect<ITriangleMesh> {
     if (Math.abs(nr) < 1e-5) {
       return null;
     }
-    double lambda =
-        (triangle.getNormal().multiply(vA) - triangle.getNormal().multiply(
-            ray.getPoint()))
-            / nr;
+    double lambda = (triangle.getNormal().multiply(vA) - triangle.getNormal().multiply(ray.getPoint())) / nr;
     if (lambda < EPISLON) {
       return null;
     }
 
     IVector3 vB = mesh.getVertex(triangle.getB()).getPosition();
     IVector3 vC = mesh.getVertex(triangle.getC()).getPosition();
-    IVector3 intersectionPoint =
-        ray.getPoint().add(ray.getDirection().multiply(lambda));
+    IVector3 intersectionPoint = ray.getPoint().add(ray.getDirection().multiply(lambda));
     IVector3 ab = vB.subtract(vA);
     IVector3 ac = vC.subtract(vA);
     double areaTriangle = ab.cross(ac).getNorm() / 2.0;
@@ -83,8 +77,7 @@ public class IntersectionTriangleMesh implements Intersect<ITriangleMesh> {
     double beta = areaB / areaTriangle;
     double gamma = areaC / areaTriangle;
 
-    if (Math.abs(alpha + beta + gamma - 1) < EPISLON && alpha >= 0 && beta >= 0
-        && gamma >= 0) {
+    if (Math.abs(alpha + beta + gamma - 1) < EPISLON && alpha >= 0 && beta >= 0 && gamma >= 0) {
       IntersectionResult result = new IntersectionResult();
       result.point = intersectionPoint;
       result.normal = triangle.getNormal();

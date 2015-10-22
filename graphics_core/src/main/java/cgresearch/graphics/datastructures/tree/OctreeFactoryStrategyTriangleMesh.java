@@ -3,8 +3,8 @@ package cgresearch.graphics.datastructures.tree;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 
 /**
  * Strategy class to create an octree of triangles.
@@ -49,7 +49,7 @@ public class OctreeFactoryStrategyTriangleMesh implements
 
 	@Override
 	public boolean elementFitsInNode(int elementIndex, OctreeNode<Integer> node) {
-		Triangle triangle = mesh.getTriangle(elementIndex);
+		ITriangle triangle = mesh.getTriangle(elementIndex);
 		IVector3 boxhalfsize = VectorMatrixFactory.newIVector3(
 				node.getLength() / 2.0, node.getLength() / 2.0,
 				node.getLength() / 2.0);

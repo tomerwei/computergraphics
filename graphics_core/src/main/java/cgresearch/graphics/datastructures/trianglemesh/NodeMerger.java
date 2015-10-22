@@ -27,7 +27,7 @@ public class NodeMerger {
 
         for (int triangleIndex = 0; triangleIndex < inputMesh
                 .getNumberOfTriangles(); triangleIndex++) {
-            Triangle triangle = inputMesh.getTriangle(triangleIndex);
+            ITriangle triangle = inputMesh.getTriangle(triangleIndex);
 
             IVector3 a = inputMesh.getVertex(triangle.getA()).getPosition();
             IVector3 b = inputMesh.getVertex(triangle.getB()).getPosition();

@@ -12,7 +12,6 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.graphics.datastructures.halfedge.TriangleMeshHalfEdgeConverter;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -37,9 +36,9 @@ public class HalfEdgeFrame extends CgApplication {
       // Create shape and insert into scene graph
       getCgRootNode().addChild(new CgNode(mesh, "Triangle mesh for HalfEdge structure."));
 
-      // Create half edge data structure
-      TriangleMeshHalfEdgeConverter converter = new TriangleMeshHalfEdgeConverter();
-      converter.convert(mesh);
+//      // Create half edge data structure
+//      TriangleMeshHalfEdgeConverter converter = new TriangleMeshHalfEdgeConverter();
+//      converter.convert(mesh);
     }
   }
 

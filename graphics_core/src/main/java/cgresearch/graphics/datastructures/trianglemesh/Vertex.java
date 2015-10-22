@@ -14,93 +14,92 @@ import cgresearch.core.math.VectorMatrixFactory;
  * @author Philipp Jenke
  * 
  */
-public class Vertex {
+public class Vertex implements IVertex {
 
-	/**
-	 * 3D position of the vertex.
-	 */
-	private final IVector3 position = VectorMatrixFactory.newIVector3();
+  /**
+   * 3D position of the vertex.
+   */
+  private final IVector3 position = VectorMatrixFactory.newIVector3();
 
-	/**
-	 * (Normalized) normal direction of the vertex.
-	 */
-	private IVector3 normal = VectorMatrixFactory.newIVector3(1, 0, 0);
+  /**
+   * (Normalized) normal direction of the vertex.
+   */
+  private IVector3 normal = VectorMatrixFactory.newIVector3(1, 0, 0);
 
-	/**
-	 * Color
-	 */
-	//private IVector3 color = VectorMatrixFactory.newIVector3(0, 0, 0);
+  /**
+   * Color
+   */
+  // private IVector3 color = VectorMatrixFactory.newIVector3(0, 0, 0);
 
-	/**
-	 * Constructor.
-	 */
-	public Vertex() {
-	}
+  /**
+   * Constructor.
+   */
+  public Vertex() {
+  }
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param position
-	 *            Initial value for position.
-	 */
-	public Vertex(IVector3 position) {
-		this.position.copy(position);
-		this.normal = VectorMatrixFactory.newIVector3(1, 0, 0);
-	}
+  /**
+   * Constructor.
+   * 
+   * @param position
+   *          Initial value for position.
+   */
+  public Vertex(IVector3 position) {
+    this.position.copy(position);
+    this.normal = VectorMatrixFactory.newIVector3(1, 0, 0);
+  }
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param position
-	 *            Initial value for position.
-	 * @param normal
-	 *            Initial value for normal.
-	 */
-	public Vertex(IVector3 position, IVector3 normal) {
-		this.position.copy(position);
-		this.normal = normal;
-	}
+  /**
+   * Constructor.
+   * 
+   * @param position
+   *          Initial value for position.
+   * @param normal
+   *          Initial value for normal.
+   */
+  public Vertex(IVector3 position, IVector3 normal) {
+    this.position.copy(position);
+    this.normal = normal;
+  }
 
-	/**
-	 * Copy constructor
-	 */
-	public Vertex(Vertex vertex) {
-		this(VectorMatrixFactory.newIVector3(vertex.getPosition()),
-				VectorMatrixFactory.newIVector3(vertex.normal));
-	}
+  /**
+   * Copy constructor
+   */
+  public Vertex(IVertex vertex) {
+    this(VectorMatrixFactory.newIVector3(vertex.getPosition()), VectorMatrixFactory.newIVector3(vertex.getNormal()));
+  }
 
-	/**
-	 * Getter.
-	 */
-	public IVector3 getPosition() {
-		return position;
-	}
+  /**
+   * Getter.
+   */
+  public IVector3 getPosition() {
+    return position;
+  }
 
-	/**
-	 * Getter.
-	 */
-	public IVector3 getNormal() {
-		return normal;
-	}
+  /**
+   * Getter.
+   */
+  public IVector3 getNormal() {
+    return normal;
+  }
 
-	/**
-	 * Getter.
-	 */
-//	public IVector3 getColor() {
-//		return color;
-//	}
+  /**
+   * Getter.
+   */
+  // public IVector3 getColor() {
+  // return color;
+  // }
 
-	/**
-	 * @param normal
-	 */
-	public void setNormal(IVector3 normal) {
-		this.normal = normal;
-	}
+  /**
+   * @param normal
+   */
+  public void setNormal(IVector3 normal) {
+    this.normal = normal;
+  }
 
-	/**
-	 * @param color
-	 */
-	// public void setColor(IVector3 color) {
-	// this.color.copy(color);
-	// }
+  /**
+   * @param color
+   */
+  // public void setColor(IVector3 color) {
+  // this.color.copy(color);
+  // }
 }

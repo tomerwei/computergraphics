@@ -14,10 +14,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.graphics.datastructures.halfedge.HalfEdgeDatastructureFactory;
-import cgresearch.graphics.datastructures.halfedge.HalfEdgeDatastructureOperations;
-import cgresearch.graphics.datastructures.halfedge.IHalfEdgeDatastructure;
-import cgresearch.graphics.datastructures.halfedge.TriangleMeshHalfEdgeConverter;
+import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -33,7 +30,7 @@ public class SimplifcationFrame extends CgApplication implements ActionListener 
 	/**
 	 * Half edge data structure
 	 */
-	private IHalfEdgeDatastructure ds = null;
+	private HalfEdgeTriangleMesh ds = null;
 
 	/**
 	 * Constructor.
@@ -44,20 +41,20 @@ public class SimplifcationFrame extends CgApplication implements ActionListener 
 		toolbar.setSize(200, 50);
 		toolbar.setVisible(true);
 
-		HalfEdgeDatastructureFactory factory = new HalfEdgeDatastructureFactory();
-		ds = factory.createHalfEdgeDatastructure();
-
-		// Read mesh from file
-		ObjFileReader reader = new ObjFileReader();
-		List<ITriangleMesh> meshes = reader.readFile("meshes/sphere.obj");
-		if (meshes.size() == 1) {
-			ITriangleMesh mesh = meshes.get(0);
-			mesh.fitToUnitBox();
-			// Convert triangle mesh to half edge data structure
-			TriangleMeshHalfEdgeConverter converter = new TriangleMeshHalfEdgeConverter();
-			ds = converter.convert(mesh);
-			ds.checkConsistency();
-		}
+//		HalfEdgeDatastructureFactory factory = new HalfEdgeDatastructureFactory();
+//		ds = factory.createHalfEdgeDatastructure();
+//
+//		// Read mesh from file
+//		ObjFileReader reader = new ObjFileReader();
+//		List<ITriangleMesh> meshes = reader.readFile("meshes/sphere.obj");
+//		if (meshes.size() == 1) {
+//			ITriangleMesh mesh = meshes.get(0);
+//			mesh.fitToUnitBox();
+//			// Convert triangle mesh to half edge data structure
+//			TriangleMeshHalfEdgeConverter converter = new TriangleMeshHalfEdgeConverter();
+//			ds = converter.convert(mesh);
+//			ds.checkConsistency();
+//		}
 
 		// Create a triangle mesh for rendering
 		createShapeAndAddToSceneGraph();
@@ -68,11 +65,11 @@ public class SimplifcationFrame extends CgApplication implements ActionListener 
 	 * scene graph.
 	 */
 	private void createShapeAndAddToSceneGraph() {
-		// Create shape and insert into scene graph
-		TriangleMeshHalfEdgeConverter converter = new TriangleMeshHalfEdgeConverter();
-		ITriangleMesh mesh = converter.convert(ds);
-		CgNode meshNode = new CgNode(mesh, "Mesh");
-		getCgRootNode().addChild(meshNode);
+//		// Create shape and insert into scene graph
+//		TriangleMeshHalfEdgeConverter converter = new TriangleMeshHalfEdgeConverter();
+//		ITriangleMesh mesh = converter.convert(ds);
+//		CgNode meshNode = new CgNode(mesh, "Mesh");
+//		getCgRootNode().addChild(meshNode);
 
 	}
 
@@ -80,10 +77,10 @@ public class SimplifcationFrame extends CgApplication implements ActionListener 
 	 * Apply one simplification step
 	 */
 	private void simplify() {
-		HalfEdgeDatastructureOperations ops = new HalfEdgeDatastructureOperations();
-		ops.collapse(ds, ds.getHalfEdge(0));
-		ds.checkConsistency();
-		createShapeAndAddToSceneGraph();
+//		HalfEdgeDatastructureOperations ops = new HalfEdgeDatastructureOperations();
+//		ops.collapse(ds, ds.getHalfEdge(0));
+//		ds.checkConsistency();
+//		createShapeAndAddToSceneGraph();
 	}
 
 	/*

@@ -6,8 +6,8 @@ public class ArchitectureTest {
 
     @Test
     public void testThis() {
-        Manager manager = new Manager();
-        manager.connectToMongoDB("morphia_example");
-        manager.addDatasource();
+//        Manager manager = new Manager();
+//        manager.connectToMongoDB("morphia_example");
+//        manager.addDatasource();
     }
 }

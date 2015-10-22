@@ -15,13 +15,14 @@ import java.util.List;
 import java.util.Map;
 
 import cgresearch.graphics.datastructures.trianglemesh.Edge;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.IVector3;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.Triangle;
+import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
@@ -148,11 +149,11 @@ public class RenderContentTriangleMesh implements IRenderContent {
   private void createBufferArrays(int numberOfTriangles, float vb[], float nb[], float[] cb, float tcb[], float vab[]) {
     for (int triangleIndex = 0; triangleIndex < numberOfTriangles; triangleIndex++) {
 
-      final Triangle triangle = triangleMesh.getTriangle(triangleIndex);
+      final ITriangle triangle = triangleMesh.getTriangle(triangleIndex);
 
       for (int triangleVertexIndex = 0; triangleVertexIndex < NUMBER_OF_VERTICES_PER_TRIANGLE; triangleVertexIndex++) {
         final int vertexIndex = triangle.get(triangleVertexIndex);
-        Vertex vertex = triangleMesh.getVertex(vertexIndex);
+        IVertex vertex = triangleMesh.getVertex(vertexIndex);
 
         // Select normal (per face or per vertex)
         IVector3 normal = (triangleMesh.getMaterial().getRenderMode() == Material.Normals.PER_FACET)
@@ -305,7 +306,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
      */
   }
 
-  Map<Triangle, Boolean> backFacing = null;
+  Map<ITriangle, Boolean> backFacing = null;
 
   @Override
   public void draw3D(GL2 gl, LightSource lightSource) {
@@ -324,11 +325,11 @@ public class RenderContentTriangleMesh implements IRenderContent {
   private void renderShadowPolygons(GL2 gl, IVector3 lightPosition) {
     gl.glBegin(GL2GL3.GL_QUADS);
     for (Edge e : edges) {
-      Triangle t1 = e.getTriangle(0);
-      Triangle t2 = e.getTriangle(1);
+      ITriangle t1 = e.getTriangle(0);
+      ITriangle t2 = e.getTriangle(1);
       if (t2 == null || backFacing.get(t1) != backFacing.get(t2)) {
         // Possible silhouette edge found
-        Vertex a, b;
+        IVertex a, b;
 
         if (backFacing.get(t1)) {
           a = triangleMesh.getVertex(e.getB());
@@ -379,10 +380,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
     gl.glBegin(GL.GL_TRIANGLES);
     for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
-      Triangle t = triangleMesh.getTriangle(i);
+      ITriangle t = triangleMesh.getTriangle(i);
       for (int j = 0; j < 3; j++) {
         int vIndex = t.get(j);
-        Vertex v = triangleMesh.getVertex(vIndex);
+        IVertex v = triangleMesh.getVertex(vIndex);
         IVector3 vPos = v.getPosition();
         if (backFacing.get(t)) {
           float[] vInf = { (float) (vPos.get(0) - lightPosition.get(0)), (float) (vPos.get(1) - lightPosition.get(1)),
@@ -400,7 +401,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
   private void createEdgeList() {
     edges = new ArrayList<>();
     for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
-      Triangle t = triangleMesh.getTriangle(i);
+      ITriangle t = triangleMesh.getTriangle(i);
       for (int j = 0; j < 3; j++) {
         Edge e = new Edge(t.get(j), t.get((j + 1) % 3));
         if (!edges.contains(e)) {
@@ -423,8 +424,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
 
     for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
-      Triangle t = triangleMesh.getTriangle(i);
-      Vertex[] triangleVertices = new Vertex[3];
+      ITriangle t = triangleMesh.getTriangle(i);
+      IVertex[] triangleVertices = new Vertex[3];
       triangleVertices[0] = triangleMesh.getVertex(t.getA());
       triangleVertices[1] = triangleMesh.getVertex(t.getB());
       triangleVertices[2] = triangleMesh.getVertex(t.getC());
