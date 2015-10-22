@@ -12,8 +12,12 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
+import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMeshTools;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
+import cgresearch.graphics.material.Material;
+import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
 
 /**
@@ -31,15 +35,16 @@ public class HalfEdgeFrame extends CgApplication {
     String sphereObjFilename = "meshes/cube.obj";
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile(sphereObjFilename);
-    for (int i = 0; i < meshes.size(); i++) {
-      ITriangleMesh mesh = meshes.get(i);
-      // Create shape and insert into scene graph
-      getCgRootNode().addChild(new CgNode(mesh, "Triangle mesh for HalfEdge structure."));
-
-//      // Create half edge data structure
-//      TriangleMeshHalfEdgeConverter converter = new TriangleMeshHalfEdgeConverter();
-//      converter.convert(mesh);
+    if (meshes.size() == 0) {
+      return;
     }
+    HalfEdgeTriangleMesh heMesh = HalfEdgeTriangleMeshTools.fromMesh(meshes.get(0));
+    heMesh.getMaterial().setRenderMode(Normals.PER_FACET);
+    heMesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR2);
+    heMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    // heMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
+    CgNode node = new CgNode(heMesh, "half edge mesh");
+    getCgRootNode().addChild(node);
   }
 
   /**

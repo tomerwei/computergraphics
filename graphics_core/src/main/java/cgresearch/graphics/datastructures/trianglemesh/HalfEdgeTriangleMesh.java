@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.logging.Logger;
+import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.IVector3;
+import cgresearch.core.math.MathHelpers;
+import cgresearch.core.math.VectorMatrixFactory;
 
 /**
  * A triangle mesh a a list of facets, a list of half edges and a list of
@@ -109,7 +112,7 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
       facet.setNormal(normal);
     }
 
-    System.out.println("Successfully computed face normals.");
+    Logger.getInstance().message("Successfully computed face normals.");
   }
 
   /**
@@ -128,11 +131,9 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
         // ÏnumberOfAdjacentFacets++;
       }
       vertex.setNormal(normal.getNormalized());
-      // System.out.println("Number of adjacent facets: " +
-      // numberOfAdjacentFacets);
     }
 
-    System.out.println("Successfully computed vertex normals.");
+    Logger.getInstance().message("Successfully computed vertex normals.");
   }
 
   @Override
@@ -150,7 +151,7 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
     // Set half edge for each vertex
     for (int halfEdgeIndex = 0; halfEdgeIndex < halfEdges.size(); halfEdgeIndex++) {
       HalfEdge halfEdge = halfEdges.get(halfEdgeIndex);
-      halfEdge.getStartVertex().setHalfEgde(halfEdge);
+      halfEdge.getStartVertex().setHalfEdge(halfEdge);
     }
 
     // Connect opposite halfEdges
@@ -188,28 +189,134 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
   }
 
   @Override
+  public IVector3 getTextureCoordinate(int index) {
+    return VectorMatrixFactory.newIVector3(-1, -1, 0);
+  }
+
+  @Override
   public int addTextureCoordinate(IVector3 texCoord3f) {
     throw new UnsupportedOperationException("Method not implemented.", null);
   }
 
   @Override
   public int getNumberOfTextureCoordinates() {
-    throw new UnsupportedOperationException("Method not implemented.", null);
-  }
-
-  @Override
-  public IVector3 getTextureCoordinate(int index) {
-    throw new UnsupportedOperationException("Method not implemented.", null);
+    return 0;
   }
 
   @Override
   public void fitToUnitBox() {
-    throw new UnsupportedOperationException("Method not implemented.", null);
+    BoundingBox bb = getBoundingBox();
+    IVector3 center = bb.getCenter();
+    IVector3 diagonal = bb.getUpperRight().subtract(bb.getLowerLeft());
+    double scale = Math.max(Math.max(diagonal.get(MathHelpers.INDEX_0), diagonal.get(MathHelpers.INDEX_1)),
+        diagonal.get(MathHelpers.INDEX_2));
+    for (int i = 0; i < vertices.size(); i++) {
+      vertices.get(i).getPosition().copy(vertices.get(i).getPosition().subtract(center).multiply(1.0 / scale));
+    }
+  }
+
+  @Override
+  public BoundingBox getBoundingBox() {
+    BoundingBox bbox = new BoundingBox();
+    for (IVertex vertex : vertices) {
+      bbox.add(vertex.getPosition());
+    }
+    return bbox;
   }
 
   @Override
   public void invertFaceNormals() {
-    throw new UnsupportedOperationException("Method not implemented.", null);
+    for (int vertexIndex = 0; vertexIndex < getNumberOfVertices(); vertexIndex++) {
+      getVertex(vertexIndex).setNormal(getVertex(vertexIndex).getNormal().multiply(-1));
+    }
+    for (int triangleIndex = 0; triangleIndex < getNumberOfTriangles(); triangleIndex++) {
+      getTriangle(triangleIndex).setNormal(getTriangle(triangleIndex).getNormal().multiply(-1));
+    }
+  }
+
+  public void removeFacet(HalfEdgeTriangle facet) {
+    facet.setHalfEdge(null);
+    facets.remove(facet);
+  }
+
+  public void removeVertex(HalfEdgeVertex vertex) {
+    vertex.setHalfEdge(null);
+    vertices.remove(vertex);
+  }
+
+  public void removeHalfEdge(HalfEdge halfEdge) {
+    halfEdge.setNext(null);
+    halfEdge.setOpposite(null);
+    halfEdge.setStartVertex(null);
+    halfEdge.setFacet(null);
+    halfEdges.remove(halfEdge);
+  }
+
+  public boolean checkConsistencyVertices() {
+    boolean isConsistent = true;
+    for (int i = 0; i < getNumberOfVertices(); i++) {
+      HalfEdgeVertex vertex = getVertex(i);
+      if (vertex.getHalfEdge() == null) {
+        isConsistent = false;
+      }
+      if (!halfEdges.contains(vertex.getHalfEdge())) {
+        isConsistent = false;
+      }
+    }
+    return isConsistent;
+  }
+
+  public boolean checkConsistencyFacets() {
+    boolean isConsistent = true;
+    for (int i = 0; i < getNumberOfTriangles(); i++) {
+      HalfEdgeTriangle facet = getTriangle(i);
+      isConsistent = isConsistent && facet.getHalfEdge() != null;
+      isConsistent = isConsistent && facet.getHalfEdge().getFacet() == getTriangle(i);
+      isConsistent = isConsistent && facet.getHalfEdge() != null;
+      isConsistent = isConsistent && halfEdges.contains(facet.getHalfEdge());
+    }
+    return isConsistent;
+  }
+
+  public boolean checkConsistencyHalfEdges() {
+    boolean isConsistent = true;
+    for (int i = 0; i < getNumberOfHalfEdges(); i++) {
+
+      HalfEdge halfEdge = getHalfEdge(i);
+
+      if (halfEdge.getOpposite() == null || halfEdge.getOpposite() == halfEdge
+          || halfEdge != halfEdge.getOpposite().getOpposite()) {
+        isConsistent = false;
+      }
+
+      // Test facet link
+      if (halfEdge.getFacet() != getHalfEdge(i).getNext().getFacet()) {
+        isConsistent = false;
+      }
+
+      // Test vertex
+      if (halfEdge.getStartVertex() == null || !vertices.contains(halfEdge.getStartVertex())) {
+        isConsistent = false;
+      }
+    }
+    return isConsistent;
+  }
+
+  public boolean checkConsistency() {
+    boolean isConsistent = true;
+    if (!checkConsistencyFacets()) {
+      isConsistent = false;
+      Logger.getInstance().error("Consistency check failed - facets inconsistent");
+    }
+    if (!checkConsistencyHalfEdges()) {
+      isConsistent = false;
+      Logger.getInstance().error("Consistency check failed - half edges inconsistent");
+    }
+    if (!checkConsistencyVertices()) {
+      isConsistent = false;
+      Logger.getInstance().error("Consistency check failed - vertices inconsistent");
+    }
+    return isConsistent;
   }
 
   @Override

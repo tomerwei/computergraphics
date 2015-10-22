@@ -50,7 +50,7 @@ public class HalfEdge {
   }
 
   public void setStartVertex(IVertex startVertex) {
-    if (!(startVertex instanceof HalfEdgeVertex)) {
+    if (startVertex != null && !(startVertex instanceof HalfEdgeVertex)) {
       throw new IllegalArgumentException("Can only work with HalfEdgeVertex!");
     }
     this.startVertex = (HalfEdgeVertex) startVertex;

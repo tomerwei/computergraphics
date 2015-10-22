@@ -1,6 +1,5 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
-import cgresearch.core.logging.Logger;
 import cgresearch.core.math.IVector3;
 
 /**
@@ -70,31 +69,38 @@ public class HalfEdgeTriangle implements ITriangle {
 
   @Override
   public int getA() {
-    Logger.getInstance().error("Not implemented yet");
-    return -1;
+    throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
   }
 
   @Override
   public int getB() {
-    Logger.getInstance().error("Not implemented yet");
-    return -1;
+    throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
   }
 
   @Override
   public int getC() {
-    Logger.getInstance().error("Not implemented yet");
-    return -1;
+    throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
   }
 
   @Override
   public int getTextureCoordinate(int index) {
-    Logger.getInstance().error("Not implemented yet");
     return -1;
   }
 
   @Override
   public int get(int i) {
-    Logger.getInstance().error("Not implemented yet");
-    return -1;
+    throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
+  }
+
+  /**
+   * Set the global index for a vertex.
+   * 
+   * @param i
+   *          Triangle index, in 0-2;
+   * @param vertexIndex
+   *          Global vertex index;
+   */
+  public void setVertexIndex(int i, int vertexIndex) {
+    throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
   }
 }

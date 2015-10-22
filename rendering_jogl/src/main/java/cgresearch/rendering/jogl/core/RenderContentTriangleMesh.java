@@ -23,6 +23,7 @@ import com.jogamp.opengl.GL2;
 import cgresearch.core.math.IVector3;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshVertexProvider;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
@@ -152,8 +153,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
       final ITriangle triangle = triangleMesh.getTriangle(triangleIndex);
 
       for (int triangleVertexIndex = 0; triangleVertexIndex < NUMBER_OF_VERTICES_PER_TRIANGLE; triangleVertexIndex++) {
-        final int vertexIndex = triangle.get(triangleVertexIndex);
-        IVertex vertex = triangleMesh.getVertex(vertexIndex);
+        IVertex vertex = TriangleMeshVertexProvider.getVertex(triangleVertexIndex, triangleMesh, triangle);
 
         // Select normal (per face or per vertex)
         IVector3 normal = (triangleMesh.getMaterial().getRenderMode() == Material.Normals.PER_FACET)

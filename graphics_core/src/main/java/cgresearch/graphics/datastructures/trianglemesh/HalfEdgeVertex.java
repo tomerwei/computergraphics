@@ -86,7 +86,7 @@ public class HalfEdgeVertex implements IVertex {
     return halfEgde;
   }
 
-  public void setHalfEgde(HalfEdge halfEgde) {
+  public void setHalfEdge(HalfEdge halfEgde) {
     this.halfEgde = halfEgde;
   }
 
