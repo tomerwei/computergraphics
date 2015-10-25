@@ -1,49 +1,49 @@
 package smarthomevis.architecture.logic;
 
-import org.mongodb.morphia.annotations.*;
+import org.mongodb.morphia.annotations.Entity;
 
 @Entity("datasources")
 public class DataSource extends BaseEntity {
 
-  private String name;
-  private String data;
+    private String name;
+    private String data;
 
-  public DataSource() {
-  }
+    public DataSource() {
+    }
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other)
-      return true;
-    if (other == null || getClass() != other.getClass())
-      return false;
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
 
-    DataSource that = (DataSource) other;
+        DataSource that = (DataSource) other;
 
-    return name.equals(that.name) && data.equals(that.data);
+        return name.equals(that.name) && data.equals(that.data);
 
-  }
+    }
 
-  @Override
-  public int hashCode() {
-    int result = name != null ? name.hashCode() : 0;
-    result = 31 * result + (data != null ? data.hashCode() : 0);
-    return result;
-  }
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (data != null ? data.hashCode() : 0);
+        return result;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getData() {
-    return data;
-  }
+    public String getData() {
+        return data;
+    }
 
-  public void setData(String data) {
-    this.data = data;
-  }
+    public void setData(String data) {
+        this.data = data;
+    }
 }
