@@ -39,18 +39,17 @@ public class ObjTriangleMesh extends CgApplication {
   }
 
   public void loadLotrCubeWithTextureAtlas() {
-    String objFilename = "meshes/bunny.obj";
+    String objFilename = "meshes/square.obj";
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile(objFilename);
     if (meshes == null) {
       return;
     }
     ITriangleMesh mesh = meshes.get(0);
-    mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR4));
+    mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     String LOTR_TEXTURE_ATLAS = "LOTR_TEXTURE_ATLAS";
     ResourceManager.getTextureManagerInstance().addResource(LOTR_TEXTURE_ATLAS,
-        new CgTexture("textures/lotr_texture_atlas.png"));
+        new CgTexture("textures/lego.png"));
     mesh.getMaterial().setTextureId(LOTR_TEXTURE_ATLAS);
     getCgRootNode().addChild(new CgNode(mesh, "mesh"));
   }
