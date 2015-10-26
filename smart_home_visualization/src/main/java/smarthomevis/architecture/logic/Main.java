@@ -15,7 +15,7 @@ public class Main extends CgApplication {
     public static void main(String[] args) {
         layers = new ArrayList<>();
 
-        ResourcesLocator.getInstance().parseIniFile("smart_home_visualization\\resources.ini");
+        ResourcesLocator.getInstance().parseIniFile("smart_home_visualization/resources.ini");
         CgApplication main = new Main();
         JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
         appLauncher.create(main);

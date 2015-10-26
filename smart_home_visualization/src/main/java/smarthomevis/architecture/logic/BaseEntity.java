@@ -13,7 +13,7 @@ public abstract class BaseEntity {
     protected ObjectId id;
 
     protected Date creationDate;
-    protected Date lastChange;
+    protected Date lastChanged;
 
     @Version
     private long version;
@@ -30,14 +30,14 @@ public abstract class BaseEntity {
         return creationDate;
     }
 
-    public Date getLastChange() {
-        return lastChange;
+    public Date getLastChanged() {
+        return lastChanged;
     }
 
     @PrePersist
     public void prePersist() {
         creationDate = (creationDate == null) ? new Date() : creationDate;
-        lastChange = (lastChange == null) ? creationDate : new Date();
+        lastChanged = (lastChanged == null) ? creationDate : new Date();
     }
 
 }
