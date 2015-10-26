@@ -12,7 +12,7 @@ import java.io.IOException;
 
 // This test needs MongoDB running on localhost:27017 to pass
 @Ignore
-public class TestResource {
+public class testResource {
 
     private static final String NAME_FOR_TEST_DB = "testDB";
 
