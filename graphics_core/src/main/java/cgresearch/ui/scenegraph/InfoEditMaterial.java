@@ -105,7 +105,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 	/**
 	 * This label represents whether the object throws a shadow
 	 */
-	private JCheckBox checkBoxThrowsShadow = new JCheckBox("Throws Shadow");
+	private JCheckBox checkBoxThrowsShadow = new JCheckBox("Throws ShadowType");
 
 	/**
 	 * Constructor.
@@ -199,7 +199,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 		panel.add(new JLabel("Shininess: "));
 		panel.add(textShininess);
 
-		panel.add(new JLabel("Throws Shadow: "));
+		panel.add(new JLabel("Throws ShadowType: "));
 		panel.add(checkBoxThrowsShadow);
 	}
 

@@ -4,6 +4,7 @@ import cgresearch.AppLauncher;
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.*;
@@ -27,7 +28,7 @@ import java.util.Observable;
  */
 public class ShadowVolumeDemo extends CgApplication {
 
-  private LightSource lightSource = new LightSource(LightSource.Type.POINT);
+  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.PLANE_Z);
   private double alpha = 0;
 
   /**
@@ -44,14 +45,12 @@ public class ShadowVolumeDemo extends CgApplication {
     // Load elements
     createEnvironment();
     //loadHulk();
-    loadCube();
+    //loadCube();
+    loadObject();
 
     // Set light source
     lightSource.setPosition(VectorMatrixFactory.newIVector3(0.5, 5, 5));
-    // LightSource lightSource2 = new LightSource(LightSource.Type.POINT);
-    // lightSource2.setPosition(VectorMatrixFactory.newIVector3(0,0.7,2));
     getCgRootNode().addLight(lightSource);
-    // getCgRootNode().addLight(lightSource2);
     getCgRootNode().setAllowShadows(true);
   }
 
@@ -98,7 +97,7 @@ public class ShadowVolumeDemo extends CgApplication {
     String texId = "tex_id_dhl_logo";
     ResourceManager.getTextureManagerInstance().addResource(texId, new CgTexture("textures/android.png"));
     room.getMaterial().setTextureId(texId);
-    room.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    //room.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG_SPOTLIGHT);
 
     // Position environment into the middle
     Transformation t = new Transformation();
@@ -124,11 +123,30 @@ public class ShadowVolumeDemo extends CgApplication {
     Transformation t = new Transformation();
     t.addScale(.3);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 1.5, -0.5));
-    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    //hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
     hulk.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.9, 1.0));
     hulk.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.25));
     CgNode node = new CgNode(t, "Scale");
     node.addChild(new CgNode(hulk, "cube"));
+    getCgRootNode().addChild(node);
+  }
+
+  private void loadObject() {
+    String objFilename = "meshes/cow.obj";
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = reader.readFile(objFilename);
+    if (meshes == null) {
+      return;
+    }
+    ITriangleMesh hulk = meshes.get(0);
+    hulk.getMaterial().setThrowsShadow(true);
+    //hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    Transformation t = new Transformation();
+    t.addScale(1);
+    t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
+    //t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0), 90));
+    CgNode node = new CgNode(t, "Scale");
+    node.addChild(new CgNode(hulk, "hulk"));
     getCgRootNode().addChild(node);
   }
 
@@ -141,7 +159,7 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    //hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     Transformation t = new Transformation();
     t.addScale(.1);
     // t.addTranslation(VectorMatrixFactory.newIVector3(0, 0, -3.5));
@@ -152,10 +170,11 @@ public class ShadowVolumeDemo extends CgApplication {
 
   @Override
   public void update(Observable o, Object arg) {
+
     if (o instanceof AnimationTimer) {
       lightSource
           .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
-      alpha += 0.1;
+      alpha += 0.05;
     }
   }
 
