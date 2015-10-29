@@ -49,6 +49,7 @@ public class CgTexture {
 	 */
 	public void setTextureFilename(String filename) {
 		this.textureFilename = filename;
+		isLoaded = false;
 	}
 
 	/**
@@ -63,6 +64,7 @@ public class CgTexture {
 	 */
 	public void setTextureImage(BufferedImage image) {
 		this.textureImage = image;
+		isLoaded = false;
 	}
 
 	/**
