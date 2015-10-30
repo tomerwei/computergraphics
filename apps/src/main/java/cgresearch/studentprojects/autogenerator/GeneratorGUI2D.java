@@ -5,7 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -42,6 +46,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	private static final long serialVersionUID = 1L;
 
 	ITriangleMesh triangleMesh = new TriangleMesh();
+	Analyzer analyzer = new Analyzer();
 
 	JPanel size = new JPanel(new GridLayout(0, 1));
 	TitledBorder sizeBorder = BorderFactory.createTitledBorder("Abmessungen");
@@ -120,6 +125,9 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	JButton down = new JButton("Down");
 	JButton left = new JButton("Left");
 	JButton right = new JButton("Right");
+	JButton save = new JButton("Speichern");
+
+	Auto2D auto;
 
 	public GeneratorGUI2D(CgRootNode rootNode) {
 
@@ -502,6 +510,34 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		});
 		add(generate);
 
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				saveAuto();
+			}
+
+		});
+		save.setEnabled(false);
+		add(save);
+
+		JButton serialize = new JButton("Serialisieren");
+		serialize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				serialize();
+			}
+
+		});
+		add(serialize);
+
+		JButton deserialize = new JButton("Deserialisieren");
+		deserialize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				deserialize();
+			}
+
+		});
+		add(deserialize);
+
 	}
 
 	@Override
@@ -539,8 +575,9 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		int gastHeckHor = gheckhors.getValue();
 		int gastHeckVer = gheckvers.getValue();
 
-		Auto2D auto = new Auto2D(hoehe, laenge, min, max, frontHoehe, heckHoehe, degree, fronth, frontv, gastv, gasth,
-				heckh, heckv, chassisv, chassish, gastFrontHor, gastFrontVer, gastHeckHor, gastHeckVer);
+		auto = null;
+		auto = new Auto2D(hoehe, laenge, min, max, frontHoehe, heckHoehe, degree, fronth, frontv, gastv, gasth, heckh,
+				heckv, chassisv, chassish, gastFrontHor, gastFrontVer, gastHeckHor, gastHeckVer);
 
 		CgNode father = new CgNode(null, "auto");
 
@@ -613,6 +650,8 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		i = 1;
 
 		getRootNode().addChild(father);
+
+		save.setEnabled(true);
 
 	}
 
@@ -736,6 +775,69 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		left.setEnabled(true);
 		right.setEnabled(true);
 
+	}
+
+	public void saveAuto() {
+		Data2D data = new Data2D();
+		data.getCurves().add(this.auto.getFront().getLeft());
+		data.getCurves().add(this.auto.getFront().getTop());
+		data.getCurves().add(this.auto.getGast().getLeft());
+		data.getCurves().add(this.auto.getGast().getTop());
+		data.getCurves().add(this.auto.getGast().getRight());
+		data.getCurves().add(this.auto.getHeck().getTop());
+		data.getCurves().add(this.auto.getHeck().getRight());
+		data.getCurves().add(this.auto.getChassis().getRight());
+		data.getCurves().add(this.auto.getChassis().getBottom());
+		data.getCurves().add(this.auto.getChassis().getLeft());
+
+		data.fillPoints();
+		for (IVector3 v : data.getPoints()) {
+			System.out.println(v.get(0) + " / " + v.get(1) + " / " + v.get(2));
+		}
+		data.fillArrays();
+		for (double d : data.getX()) {
+			System.out.println("x = " + d);
+		}
+
+		for (double d : data.getY()) {
+			System.out.println("y = " + d);
+		}
+
+		analyzer.getData().add(data);
+
+		save.setEnabled(false);
+	}
+
+	public void serialize() {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(
+					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\analyzer.ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(this.analyzer);
+			out.close();
+			fileOut.close();
+
+		} catch (IOException e) {
+		}
+	}
+
+	public void deserialize() {
+		Analyzer a = null;
+		try {
+			FileInputStream fileIn = new FileInputStream(
+					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\analyzer.ser");
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			a = (Analyzer) in.readObject();
+			in.close();
+			fileIn.close();
+		} catch (IOException i) {
+			i.printStackTrace();
+		} catch (ClassNotFoundException c) {
+			System.out.println("Analyzer class not found");
+			c.printStackTrace();
+		}
+		this.analyzer = a;
+		System.out.println(analyzer.getData().get(0));
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
