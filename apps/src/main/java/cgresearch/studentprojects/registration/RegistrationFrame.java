@@ -71,6 +71,7 @@ public class RegistrationFrame extends CgApplication {
 		pointCloud2.addPoint(new Point(position4, color, normal));
 		pointCloud2.addPoint(new Point(position5, color, normal));
 		pointCloud2.addPoint(new Point(position6, color, normal));
+
 		
 //		IcpDistanceFunction icp =  new IcpDistanceFunction(pointCloud);
 //		icp.startAlgorithm(pointCloud2);
@@ -84,6 +85,7 @@ public class RegistrationFrame extends CgApplication {
 		getCgRootNode().addChild(pointCloudNode);
 		CgNode pointCloudNode2 = new CgNode(pointCloud2, "pointCloud2");
 		getCgRootNode().addChild(pointCloudNode2);
+		
 
 
 		
@@ -98,12 +100,12 @@ public class RegistrationFrame extends CgApplication {
 		ResourcesLocator.getInstance().parseIniFile("resources.ini");
 		RegistrationFrame app = new RegistrationFrame();
 		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-		RegistrationButton button = new RegistrationButton();
+//		RegistrationButton button = new RegistrationButton();
 		appLauncher.create(app);
 		appLauncher.setRenderSystem(RenderSystem.JOGL);
 		appLauncher.setUiSystem(UI.JOGL_SWING);
 //		appLauncher.addCustomMenu(new RegistrationMenu());
-	    appLauncher.addCustomUi(button);
+//	    appLauncher.addCustomUi(button);
 
 		
 		

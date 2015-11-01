@@ -1,9 +1,15 @@
 package cgresearch.studentprojects.registration;
 
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import cgresearch.studentprojects.shapegrammar.gui.frame.NewBuildingFrame;
 import cgresearch.studentprojects.shapegrammar.gui.frame.NewCityFrame;
@@ -16,28 +22,47 @@ public class RegistrationMenu extends CgApplicationMenu implements ActionListene
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+//	private JTextField iteration;
 
 	public RegistrationMenu() {
 		super("Registration");
-		JMenuItem full = new JMenuItem("Full");
-		full.addActionListener(this);
-		full.setActionCommand("Full");
-		JMenuItem step_by_step = new JMenuItem("Step by Step");
-		step_by_step.addActionListener(this);
-		step_by_step.setActionCommand("step_by_step");
-		add(full);
-		add(step_by_step);
+//		JPanel jp = new JPanel();
+//		jp.setLayout(new GridLayout(7,2));
+//		jp.setPreferredSize(new Dimension(300,130));
+//		
+//		
+//		
+//		jp.add(new JLabel("Iteration"));
+//		iteration = new JTextField("200");
+//		jp.add(iteration);
+		
+		
+		
+		
+		
+		
+		JMenuItem start = new JMenuItem("Start");
+		start.addActionListener(this);
+		start.setActionCommand("start");
+		
+//		JMenuItem step_by_step = new JMenuItem("Options");
+//		step_by_step.addActionListener(this);
+//		step_by_step.setActionCommand("options");
+//		
+		add(start);
+//		add(step_by_step);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if ("Full".equals(e.getActionCommand())){
-			NewBuildingFrame newFrame = new NewBuildingFrame();
+		if ("start".equals(e.getActionCommand())){
+			StartMenu newFrame = new StartMenu();
 			newFrame.setVisible(true);
-		}else if("step_by_step".equals(e.getActionCommand())){
-			NewCityFrame cityFrame = new NewCityFrame();
-			cityFrame.setVisible(true);
+//		}else if("options".equals(e.getActionCommand())){
+//			Options options = new Options();
+//			cityFrame.setVisible(true);
 		}
 		
 	}
