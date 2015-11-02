@@ -3,8 +3,13 @@ package smarthomevis.groundplan;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.kabeja.dxf.DXFBlock;
 import org.kabeja.dxf.DXFConstants;
@@ -16,6 +21,11 @@ import org.kabeja.dxf.helpers.Point;
 import org.kabeja.parser.DXFParser;
 import org.kabeja.parser.Parser;
 import org.kabeja.parser.ParserBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
@@ -32,286 +42,395 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
 
 public class Test extends CgApplication
-{
+	{
 
-    private DXFDocument readDocument(String filename)
-    {
-        // get the File
-        FileInputStream in = null;
-        try
-        {
-            String absoluteFilename = ResourcesLocator.getInstance().getPathToResource(filename);
-            in = new FileInputStream(new File(absoluteFilename));
-        }
-        catch (FileNotFoundException e1)
-        {
-            e1.printStackTrace();
-        }
+	private DXFDocument readDocument(String filename)
+		{
+		// get the File
+		FileInputStream in = null;
+		try
+			{
+			String absoluteFilename = ResourcesLocator.getInstance()
+				.getPathToResource(filename);
+			in = new FileInputStream(new File(absoluteFilename));
+			}
+		catch (FileNotFoundException e1)
+			{
+			e1.printStackTrace();
+			}
 
-        // get requested DXF Content
-        Parser parser = ParserBuilder.createDefaultParser();
-        DXFDocument doc = null;
-        try
-        {
+		// get requested DXF Content
+		Parser parser = ParserBuilder.createDefaultParser();
+		DXFDocument doc = null;
+		try
+			{
 
-            // parse
-            parser.parse(in, DXFParser.DEFAULT_ENCODING);
+			// parse
+			parser.parse(in, DXFParser.DEFAULT_ENCODING);
 
-            // get the document and the layer
-            doc = parser.getDocument();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+			// get the document and the layer
+			doc = parser.getDocument();
+			}
+		catch (Exception e)
+			{
+			e.printStackTrace();
+			}
 
-        return doc;
-    }
+		return doc;
+		}
 
-    /*
-     * ########### First Test with Lines #############
-     */
-    private void testOne()
-    {
-        // DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
-        DXFDocument doc = readDocument("dxf/Grundriss_Haus_02.dxf");
-        getCgRootNode().addChild(renderLayer(doc, "Schnittkanten"));
-        getCgRootNode().addChild(renderLayer(doc, "Ansichtskanten"));
+	/*
+	 * ########### First Test with Lines #############
+	 */
+	private void testOne()
+		{
+		// DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
+		DXFDocument doc = readDocument("dxf/Grundriss_Haus_02.dxf");
+		getCgRootNode().addChild(renderLayer(doc, "Schnittkanten"));
+		getCgRootNode().addChild(renderLayer(doc, "Ansichtskanten"));
 
-    }
+		}
 
-    private void testTwo()
-    {
-        // DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
-        DXFDocument doc = readDocument("dxf/4H-HORA Projekt1.dxf");
-        getCgRootNode().addChild(renderLayer(doc, "VOM$SYSTEM$VORDEFINIERT"));
+	private void testTwo()
+		{
+		// DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
+		DXFDocument doc = readDocument("dxf/4H-HORA Projekt1.dxf");
+		getCgRootNode().addChild(renderLayer(doc, "VOM$SYSTEM$VORDEFINIERT"));
+		// getCgRootNode().addChild(renderLayer(doc,
+		// "M$BEL$1$100$$PCAE-PLOTVIEW$"));
 
-    }
+		}
 
-    private CgNode renderLayer(DXFDocument doc, String layerName)
-    {
-        DXFLayer layer = doc.getDXFLayer(layerName);
-        @SuppressWarnings("unchecked")
-        List<DXFLine> lineList = layer.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
-        return handleLines(layerName, lineList);
-    }
+	private void testThree()
+		{
+		// DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
+		DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
+		getCgRootNode().addChild(renderLayer(doc, "0"));
 
-    private CgNode handleLines(String name, List<DXFLine> lineList)
-    {
-        CgNode result = null;
-        LineSegments lineSegments = new LineSegments();
-        int i = 0;
-        for (DXFLine line : lineList)
-        {
-            Point startPoint = line.getStartPoint();
-            Point endPoint = line.getEndPoint();
-            System.out.println("Line " + line.getID() + " | Start=[" + startPoint.getX() + ", " + startPoint.getY()
-                + ", " + startPoint.getZ() + "], End=[" + endPoint.getX() + ", " + endPoint.getY() + ", "
-                + endPoint.getZ() + "]");
-            System.out.println(
-                "Type: " + line.getType() + "; Flags: " + line.getFlags() + "; LayerName: " + line.getLayerName());
+		}
 
-            lineSegments
-                .addPoint(VectorMatrixFactory.newIVector3(startPoint.getX(), startPoint.getY(), startPoint.getZ()));
-            lineSegments.addPoint(VectorMatrixFactory.newIVector3(endPoint.getX(), endPoint.getY(), endPoint.getZ()));
+	private void testFour()
+		{
+		Document doc = readXMLDocument("dxf/4H-HORA Projekt1.xml");
+		System.out.println("NodeType: " + doc.getDocumentElement().getNodeType()
+			+ ", NodeName: " + doc.getDocumentElement().getNodeName());
+		NodeList nodeList = doc.getDocumentElement().getChildNodes();
 
-            lineSegments.addLine(i++, i++);
-        }
+		for (int i = 0; i < nodeList.getLength(); i++)
+			{
+			Node node = nodeList.item(i);
+			System.out.println("NodeType: " + node.getNodeType()
+				+ ", NodeName: " + node.getNodeName());
+			if (node.hasAttributes())
+				{
+				NamedNodeMap map = node.getAttributes();
+				for (int j = 0; j < map.getLength(); j++)
+					{
+					Node n = map.item(j);
+					System.out.println("NodeType: " + n.getNodeType()
+						+ ", NodeName: " + n.getNodeName());
+					System.out.println("\t" + n.toString());
+					}
+				}
 
-        lineSegments.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
-        lineSegments.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE1_COLOR0));
-        result = new CgNode(lineSegments, name);
-        return result;
-    }
+			if (node.getNodeName().equals("layer") && node.hasChildNodes())
+				{
+				NodeList wallsOfLayer = node.getChildNodes();
+				for (int k = 0; k < wallsOfLayer.getLength(); k++)
+					{
+					Node wall = wallsOfLayer.item(k);
+					System.out.println("NodeType: " + wall.getNodeType()
+						+ ", NodeName: " + wall.getNodeName());
+					if (wall.hasAttributes())
+						{
+						NamedNodeMap map = wall.getAttributes();
+						for (int j = 0; j < map.getLength(); j++)
+							{
+							Node n = map.item(j);
+							System.out.println("NodeType: " + n.getNodeType()
+								+ ", NodeName: " + n.getNodeName());
+							System.out
+								.println("\t== wall " + n.toString() + " ==");
+							}
+						}
 
-    /*
-     * ########### Test with Walls #############
-     */
+					if (wall.getNodeName().equals("wall")
+						&& wall.hasChildNodes())
+						{
+						NodeList surfaces = wall.getChildNodes();
+						for (int l = 0; l < surfaces.getLength(); l++)
+							{
+							Node surface = surfaces.item(l);
+							System.out
+								.println("NodeType: " + surface.getNodeType()
+									+ ", NodeName: " + surface.getNodeName());
+							if (surface.hasAttributes())
+								{
+								NamedNodeMap attr = surface.getAttributes();
+								for (int j = 0; j < attr.getLength(); j++)
+									{
+									Node n = attr.item(j);
+									System.out
+										.println("NodeType: " + n.getNodeType()
+											+ ", NodeName: " + n.getNodeName());
+									System.out.println(
+										"\t\t surface " + n.toString());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
-    private void testWalls()
-    {
-        // ferienhaus();
-        haus02();
-    }
+	private Document readXMLDocument(String filename)
+		{
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-    private void ferienhaus()
-    {
-        DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
-        DXFLayer layer = doc.getDXFLayer("0");
-        handleWalls(layer);
-    }
+		Document xmlDoc = null;
 
-    private void haus02()
-    {
-        DXFDocument doc = readDocument("dxf/Grundriss_Haus_02.dxf");
-        DXFLayer layer = doc.getDXFLayer("Ansichtskanten");
-        handleWalls(layer);
-        DXFLayer layer2 = doc.getDXFLayer("Schnittkanten");
-        handleWalls(layer2);
+		try
+			{
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			String absoluteFilename = ResourcesLocator.getInstance()
+				.getPathToResource(filename);
+			FileInputStream in = null;
 
-    }
+			in = new FileInputStream(new File(absoluteFilename));
+			xmlDoc = builder.parse(in);
+			in.close();
 
-    private void handleWalls(DXFLayer layer)
-    {
-        @SuppressWarnings("unchecked")
-        List<DXFLine> lineList = layer.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
-        for (DXFLine line : lineList)
-        {
-            ITriangleMesh mesh = new TriangleMesh();
-            buildAWall(mesh, line);
+			}
+		// FIXME replace syserr with exception logging
+		catch (ParserConfigurationException e)
+			{
+			System.err.println("Could not create a DocumentBuilder");
+			e.printStackTrace();
+			}
+		catch (FileNotFoundException e)
+			{
+			System.err.println("Could not load xml file");
+			e.printStackTrace();
+			}
+		catch (IOException e)
+			{
+			System.err.println("Failed to parse xmlFile or close InputStream");
+			e.printStackTrace();
+			}
+		catch (SAXException e)
+			{
+			System.err.println("Error occured while parsing xmlFile");
+			e.printStackTrace();
+			}
 
-            mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-            mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR4));
+		// NodeList nodeList = xmlDoc.getDocumentElement().getChildNodes();
 
-            getCgRootNode().addChild(new CgNode(mesh, "testmesh"));
-        }
-    }
+		return xmlDoc;
+		}
 
-    private void buildAWall(ITriangleMesh mesh, DXFLine line)
-    {
-        Point start = line.getStartPoint();
-        Point end = line.getEndPoint();
+	private CgNode renderLayer(DXFDocument doc, String layerName)
+		{
+		DXFLayer layer = doc.getDXFLayer(layerName);
+		@SuppressWarnings("unchecked")
+		List<DXFLine> lineList = layer
+			.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
+		GPRenderer renderer = new GPRenderer();
 
-        // creating the two bottom points
-        int a = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(start.getX(), start.getY(), start.getZ())));
-        int b = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(end.getX(), end.getY(), end.getZ())));
+		return new CgNode(renderer.renderWallFromDXFLineFormat(lineList),
+			layerName);
+		// return handleLines(layerName, lineList);
+		}
 
-        // creating the two top points
-        int c = mesh
-            .addVertex(new Vertex(VectorMatrixFactory.newIVector3(start.getX(), start.getY(), start.getZ() + 1.5)));
-        int d = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(end.getX(), end.getY(), end.getZ() + 1.5)));
+	private CgNode handleLines(String name, List<DXFLine> lineList)
+		{
+		CgNode result = null;
+		LineSegments lineSegments = new LineSegments();
+		int i = 0;
+		for (DXFLine line : lineList)
+			{
+			Point startPoint = line.getStartPoint();
+			Point endPoint = line.getEndPoint();
+			System.out.println("Line " + line.getID() + " | Start=["
+				+ startPoint.getX() + ", " + startPoint.getY() + ", "
+				+ startPoint.getZ() + "], End=[" + endPoint.getX() + ", "
+				+ endPoint.getY() + ", " + endPoint.getZ() + "]");
+			System.out.println("Type: " + line.getType() + "; Flags: "
+				+ line.getFlags() + "; LayerName: " + line.getLayerName());
 
-        mesh.addTriangle(new Triangle(a, b, c));
-        mesh.addTriangle(new Triangle(b, c, d));
-    }
+			lineSegments.addPoint(VectorMatrixFactory.newIVector3(
+				startPoint.getX(), startPoint.getY(), startPoint.getZ()));
+			lineSegments.addPoint(VectorMatrixFactory.newIVector3(
+				endPoint.getX(), endPoint.getY(), endPoint.getZ()));
 
-    /*
-     * ########### Printing Content #############
-     */
+			lineSegments.addLine(i++, i++);
+			}
 
-    private void printContent(String dxfURL)
-    {
-        DXFDocument doc = readDocument(dxfURL);
+		lineSegments.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
+		lineSegments.getMaterial().setReflectionDiffuse(
+			VectorMatrixFactory.newIVector3(Material.PALETTE1_COLOR0));
+		result = new CgNode(lineSegments, name);
+		return result;
+		}
 
-        @SuppressWarnings("unchecked")
-        Iterator<DXFBlock> itBlock = doc.getDXFBlockIterator();
+	/*
+	 * ########### Test with Walls #############
+	 */
 
-        System.out.println("#==========Blocks============#");
+	private void testWalls()
+		{
+		// ferienhaus();
+		haus02();
+		}
 
-        for (; itBlock.hasNext();)
-        {
-            DXFBlock block = itBlock.next();
-            System.out.println("| + Block: " + block.getName());
-            System.out.println("| + Description: " + block.getDescription());
-            System.out.println("| + Length: " + block.getLength());
-            System.out.println("| + LayerID: " + block.getLayerID());
+	private void ferienhaus()
+		{
+		DXFDocument doc = readDocument("dxf/Grundriss-Ferienhaus.dxf");
+		DXFLayer layer = doc.getDXFLayer("0");
+		handleWalls(layer);
+		}
 
-            @SuppressWarnings("unchecked")
-            Iterator<DXFEntity> entIty = block.getDXFEntitiesIterator();
-            for (; entIty.hasNext();)
-            {
-                DXFEntity e = entIty.next();
-                System.out.println("| + + Entity ID: " + e.getID());
-                System.out.println("| + + Layername: " + e.getLayerName());
-            }
-            System.out.println("#============================#");
+	private void haus02()
+		{
+		DXFDocument doc = readDocument("dxf/Grundriss_Haus_02.dxf");
+		DXFLayer layer = doc.getDXFLayer("Ansichtskanten");
+		handleWalls(layer);
+		DXFLayer layer2 = doc.getDXFLayer("Schnittkanten");
+		handleWalls(layer2);
 
-        }
+		}
 
-        @SuppressWarnings("unchecked")
-        Iterator<DXFLayer> it = doc.getDXFLayerIterator();
+	private void handleWalls(DXFLayer layer)
+		{
+		@SuppressWarnings("unchecked")
+		List<DXFLine> lineList = layer
+			.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
+		for (DXFLine line : lineList)
+			{
+			ITriangleMesh mesh = new TriangleMesh();
+			buildAWall(mesh, line);
 
-        System.out.println("#==========Layers============#");
+			mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+			mesh.getMaterial().setReflectionDiffuse(
+				VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR4));
 
-        for (; it.hasNext();)
-        {
-            DXFLayer layer = it.next();
-            System.out.println("| - Layer: " + layer.getName());
-            System.out.println("| - LineType: " + layer.getLineType());
-            System.out.println("| - PlotStyle: " + layer.getPlotStyle());
-            printLayerContents(layer);
-            System.out.println("#============================#");
-        }
+			getCgRootNode().addChild(new CgNode(mesh, "testmesh"));
+			}
+		}
 
-    }
+	private void buildAWall(ITriangleMesh mesh, DXFLine line)
+		{
+		Point start = line.getStartPoint();
+		Point end = line.getEndPoint();
 
-    private void printLayerContents(DXFLayer layer)
-    {
-        @SuppressWarnings("unchecked")
-        Iterator<String> it = layer.getDXFEntityTypeIterator();
-        for (; it.hasNext();)
-        {
-            System.out.println("| - - " + it.next());
-        }
-    }
+		// creating the two bottom points
+		int a = mesh.addVertex(new Vertex(VectorMatrixFactory
+			.newIVector3(start.getX(), start.getY(), start.getZ())));
+		int b = mesh.addVertex(new Vertex(VectorMatrixFactory
+			.newIVector3(end.getX(), end.getY(), end.getZ())));
 
-    /*
-     *
-     * ==============================================================
-     */
+		// creating the two top points
+		int c = mesh.addVertex(new Vertex(VectorMatrixFactory
+			.newIVector3(start.getX(), start.getY(), start.getZ() + 1.5)));
+		int d = mesh.addVertex(new Vertex(VectorMatrixFactory
+			.newIVector3(end.getX(), end.getY(), end.getZ() + 1.5)));
 
-    public Test()
-    {
-        // testOne();
-        testTwo();
-        // testWalls();
-        // printContent("dxf/Grundriss-Ferienhaus.dxf");
-        // printContent("dxf/Grundriss_Haus_02.dxf");
-        // printContent("dxf/4H-HORA Projekt1.dxf");
-    }
+		mesh.addTriangle(new Triangle(a, b, c));
+		mesh.addTriangle(new Triangle(b, c, d));
 
-    public static void main(String[] args)
-    {
-        ResourcesLocator.getInstance().parseIniFile("resources.ini");
-        JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-        CgApplication app = new Test();
-        appLauncher.create(app);
-        appLauncher.setRenderSystem(RenderSystem.JOGL);
-        appLauncher.setUiSystem(UI.JOGL_SWING);
-    }
+		}
 
-    // private void drawPolylines(List<DXFPolyline> dxfEntities)
-    // {
-    // System.out.println("Starting to draw");
-    // for (DXFPolyline pLine : dxfEntities)
-    // {
-    // drawTriangle(pLine);
-    // }
-    // }
-    //
-    // private void drawTriangle(DXFPolyline pLine)
-    // {
-    // if (pLine.getVertexCount() == 4)
-    // {
-    // ITriangleMesh triangleMesh = new TriangleMesh();
-    //
-    // int a, b, c, d = 0;
-    // // iterate over all vertex of the polyline
-    // a = drawVertex(triangleMesh, pLine.getVertex(0).);
-    // b = drawVertex(triangleMesh, pLine.getVertex(1));
-    // c = drawVertex(triangleMesh, pLine.getVertex(2));
-    // d = drawVertex(triangleMesh, pLine.getVertex(3));
-    //
-    // triangleMesh.addTriangle(new Triangle(a, b, c));
-    // triangleMesh.addTriangle(new Triangle(a, c, d));
-    //
-    // triangleMesh.computeTriangleNormals();
-    // triangleMesh.computeVertexNormals();
-    //
-    // triangleMesh.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
-    // triangleMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR0));
-    // getCgRootNode().addChild(new CgNode(triangleMesh, "testmesh"));
-    // }
-    // else
-    // {
-    // System.out.println("!==! Vertex count is " + pLine.getVertexCount());
-    // }
-    // }
-    //
-    // private int drawVertex(ITriangleMesh triangleMesh, DXFVertex vertex)
-    // {
-    // return triangleMesh
-    // .addVertex(new Vertex(VectorMatrixFactory.newIVector3(vertex.getX(),
-    // vertex.getY(), vertex.getZ())));
-    // }
-}
+	/*
+	 * ########### Printing Content #############
+	 */
+
+	private void printContent(String dxfURL)
+		{
+		DXFDocument doc = readDocument(dxfURL);
+
+		@SuppressWarnings("unchecked")
+		Iterator<DXFBlock> itBlock = doc.getDXFBlockIterator();
+
+		System.out.println("#==========Blocks============#");
+
+		for (; itBlock.hasNext();)
+			{
+			DXFBlock block = itBlock.next();
+			System.out.println("| + Block: " + block.getName());
+			System.out.println("| + Description: " + block.getDescription());
+			System.out.println("| + Length: " + block.getLength());
+			System.out.println("| + LayerID: " + block.getLayerID());
+
+			@SuppressWarnings("unchecked")
+			Iterator<DXFEntity> entIty = block.getDXFEntitiesIterator();
+			for (; entIty.hasNext();)
+				{
+				DXFEntity e = entIty.next();
+				System.out.println("| + + Entity ID: " + e.getID());
+				System.out.println("| + + Layername: " + e.getLayerName());
+				}
+			System.out.println("#============================#");
+
+			}
+
+		@SuppressWarnings("unchecked")
+		Iterator<DXFLayer> it = doc.getDXFLayerIterator();
+
+		System.out.println("#==========Layers============#");
+
+		for (; it.hasNext();)
+			{
+			DXFLayer layer = it.next();
+			System.out.println("| - Layer: " + layer.getName());
+			System.out.println("| - LineType: " + layer.getLineType());
+			System.out.println("| - PlotStyle: " + layer.getPlotStyle());
+			printLayerContents(layer);
+			System.out.println("#============================#");
+			}
+
+		}
+
+	private void printLayerContents(DXFLayer layer)
+		{
+		@SuppressWarnings("unchecked")
+		Iterator<String> it = layer.getDXFEntityTypeIterator();
+		for (; it.hasNext();)
+			{
+			System.out.println("| - - " + it.next());
+			}
+
+		@SuppressWarnings("unchecked")
+		List<DXFLine> lineList = layer
+			.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
+
+
+		}
+
+	/*
+	 *
+	 * ==============================================================
+	 */
+
+	public Test()
+		{
+		// testOne();
+		// testTwo();
+		// testThree();
+		// testFour();
+		// testWalls();
+		// printContent("dxf/Grundriss-Ferienhaus.dxf");
+		// printContent("dxf/Grundriss_Haus_02.dxf");
+		printContent("dxf/4H-HORA Projekt1.dxf");
+		}
+
+	public static void main(String[] args)
+		{
+		ResourcesLocator.getInstance().parseIniFile("resources.ini");
+		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+		CgApplication app = new Test();
+		appLauncher.create(app);
+		appLauncher.setRenderSystem(RenderSystem.JOGL);
+		appLauncher.setUiSystem(UI.JOGL_SWING);
+		}
+
+	}
