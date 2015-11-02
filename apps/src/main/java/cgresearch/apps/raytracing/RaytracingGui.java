@@ -54,7 +54,7 @@ public class RaytracingGui extends IApplicationControllerGui implements
     cbPhong.setSelected(true);
     add(cbPhong);
 
-    // Shadow rays
+    // ShadowType rays
     JLabel labelShadowRays = new JLabel("Use shadow rays");
     add(labelShadowRays);
     cbShadowRays = new JCheckBox();

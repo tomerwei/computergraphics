@@ -50,6 +50,12 @@ public class RenderContentTriangleMesh implements IRenderContent {
   private List<Edge> edges = null;
 
   /**
+   * Back facing information for each Triangle in respect to the current light source
+   */
+  private Map<ITriangle, Boolean> backFacing = null;
+
+
+  /**
    * Temporary data structures containing the vertex information.
    */
   private FloatBuffer vertexBuffer = null;
@@ -298,15 +304,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
       }
       sophisticatedMeshNode.draw3D(gl);
     }
-
-    /*
-     * if (edges == null) { createEdgeList(); }
-     * updateBackFacingInformation(VectorMatrixFactory.newIVector3(0,0.5,2));
-     * renderShadowPolygons(gl, VectorMatrixFactory.newIVector3(0,0.5,2));
-     */
   }
-
-  Map<ITriangle, Boolean> backFacing = null;
 
   @Override
   public void draw3D(GL2 gl, LightSource lightSource) {
@@ -322,6 +320,9 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
   }
 
+  /**
+   * Draws the shadow polygons
+   */
   private void renderShadowPolygons(GL2 gl, IVector3 lightPosition) {
     gl.glBegin(GL2GL3.GL_QUADS);
     for (Edge e : edges) {
@@ -398,6 +399,9 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
   }
 
+  /**
+   * Creates edge information for the triangle mesh
+   */
   private void createEdgeList() {
     edges = new ArrayList<>();
     for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
@@ -416,6 +420,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
   }
 
+  /**
+   * Updates back-facing information in respect to the given light
+   * @param lightPosition Current light's postion
+   */
   private void updateBackFacingInformation(IVector3 lightPosition) {
     boolean init = false;
     if (backFacing == null) {

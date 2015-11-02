@@ -8,7 +8,6 @@ package cgresearch.rendering.jogl.core;
 
 import java.awt.*;
 import java.io.File;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -16,6 +15,7 @@ import java.util.Observer;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
+import cgresearch.core.math.IMatrix4;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.camera.Camera;
@@ -31,7 +31,6 @@ import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.rendering.jogl.material.JoglShader;
 import cgresearch.rendering.jogl.misc.PickingRenderer;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -60,9 +59,9 @@ public class JoglRenderer3D implements Observer {
   private static final int SCREEN_WIDTH = 640;
   private static final int SCREEN_HEIGHT = 480;
   private static final float OPAQUE = 1.0f;
-  // private static final IVector3 CLEAR_COLOR =
-  // VectorMatrixFactory.newIVector3(1, 1, 1);
-  private static final IVector3 CLEAR_COLOR = VectorMatrixFactory.newIVector3(0.9, 0.9, 0.9);
+   private static final IVector3 CLEAR_COLOR =
+   VectorMatrixFactory.newIVector3(1, 1, 1);
+  //private static final IVector3 CLEAR_COLOR = VectorMatrixFactory.newIVector3(0.9, 0.9, 0.9);
 
   /**
    * Screen aspect ration
@@ -121,6 +120,26 @@ public class JoglRenderer3D implements Observer {
   private boolean updateLightsRequired = true;
 
   /**
+   * Render used for FPS display
+   */
+  private TextRenderer renderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18), true);
+
+  /**
+   * Number of required light sources for plane based soft shadow
+   */
+  private final int softShadowPlaneCount = 9;
+
+  /**
+   * Number of required light sources for sphere based soft shadow
+   */
+  private final int softShadowSphereCount = 15;
+
+  /**
+   * Defines the distance of additional lights for soft shadows
+   */
+  private final float softShadowOffset = 0.12f;
+
+  /**
    * Constructor.
    */
   public JoglRenderer3D(JoglRenderObjectManager renderObjectManager, CgRootNode rootNode) {
@@ -151,7 +170,7 @@ public class JoglRenderer3D implements Observer {
     gl.glEnable(GL2.GL_DEPTH_TEST);
 
     // which is the front? the one which is drawn counter clockwise
-    gl.glFrontFace(GL2.GL_CW);
+    gl.glFrontFace(GL2.GL_CCW);
     // which one should NOT be drawn
     gl.glCullFace(GL2.GL_BACK);
 
@@ -243,12 +262,15 @@ public class JoglRenderer3D implements Observer {
        */
 
       for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
-        updateLight(gl, i);
+        updateLight(gl, i, false);
       }
       updateLightsRequired = false;
     }
   }
 
+  /**
+   * Disables the given light
+   */
   private void disableLight(GL2 gl, int lightID) {
     gl.glDisable(getLightIndex(lightID));
     int lightIndex = getLightIndex(lightID);
@@ -257,14 +279,32 @@ public class JoglRenderer3D implements Observer {
     gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, new float[] { -1, -1, -1, -1 }, 0);
   }
 
-  private void updateLight(GL2 gl, int lightID) {
+  /**
+   * Sets the current light
+   * @param gl GL object
+   * @param lightID Id of the light source
+   * @param drawShadows Has to be true if scene is drawn with shadows
+   */
+  private void updateLight(GL2 gl, int lightID, boolean drawShadows) {
     int lightIndex = getLightIndex(lightID);
     LightSource light = rootNode.getLight(lightID);
 
     disableLight(gl, lightID);
 
-    float lightAmbient[] = { 1, 1, 1, 1 };
-    float lightSpecular[] = { 1, 1, 1, 1 };
+    float lightCount = 1f;
+    if (drawShadows) {
+      LightSource.ShadowType shadow = light.getShadowType();
+      if (shadow == LightSource.ShadowType.PLANE_X
+              || shadow == LightSource.ShadowType.PLANE_Y
+              || shadow == LightSource.ShadowType.PLANE_Z) {
+        lightCount = (float) softShadowPlaneCount;
+      } else if (shadow == LightSource.ShadowType.SPHERE) {
+        lightCount = (float) softShadowSphereCount;
+      }
+    }
+
+    float lightAmbient[] = { 1f/lightCount, 1f/lightCount, 1f/lightCount, 1f };
+    float lightSpecular[] = { 1f/lightCount, 1f/lightCount, 1f/lightCount, 1f };
     float lightPosition[] = { 1, 1, 1, 1 };
     float lightDiffuse[] = { 1, 1, 1, 1 };
     gl.glEnable(lightIndex);
@@ -276,9 +316,9 @@ public class JoglRenderer3D implements Observer {
         lightPosition[1] = (float) light.getPosition().get(1);
         lightPosition[2] = (float) light.getPosition().get(2);
         lightPosition[3] = 0;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
+        lightDiffuse[0] = (float) light.getDiffuseColor().get(0)/lightCount;
+        lightDiffuse[1] = (float) light.getDiffuseColor().get(1)/lightCount;
+        lightDiffuse[2] = (float) light.getDiffuseColor().get(2)/lightCount;
         lightDiffuse[3] = 1;
         gl.glEnable(lightIndex);
         gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
@@ -290,9 +330,9 @@ public class JoglRenderer3D implements Observer {
         lightPosition[1] = (float) light.getPosition().get(1);
         lightPosition[2] = (float) light.getPosition().get(2);
         lightPosition[3] = 1;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
+        lightDiffuse[0] = (float) light.getDiffuseColor().get(0)/lightCount;
+        lightDiffuse[1] = (float) light.getDiffuseColor().get(1)/lightCount;
+        lightDiffuse[2] = (float) light.getDiffuseColor().get(2)/lightCount;
         lightDiffuse[3] = 1;
         gl.glEnable(lightIndex);
         gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
@@ -315,6 +355,9 @@ public class JoglRenderer3D implements Observer {
     updateExtrinsicCameraParameters(drawable);
   }
 
+  /**
+   * Draw content
+   */
   public void draw(GLAutoDrawable drawable) {
     if (rootNode.areShadowsAllowed()) {
       drawWithShadow(drawable);
@@ -323,6 +366,9 @@ public class JoglRenderer3D implements Observer {
     }
   }
 
+  /**
+   * Draw content without shadows
+   */
   private void drawWithoutShadow(GLAutoDrawable drawable) {
     // clear the color buffer and the depth buffer
     GL2 gl = drawable.getGL().getGL2();
@@ -358,8 +404,6 @@ public class JoglRenderer3D implements Observer {
     // System.out.println(drawable.getAnimator().getLastFPS());
   }
 
-  TextRenderer renderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18), true);
-
   /**
    * Draw content with shadows
    */
@@ -367,62 +411,88 @@ public class JoglRenderer3D implements Observer {
 
     // clear the color buffer and the depth buffer
     GL2 gl = drawable.getGL().getGL2();
+    gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT );
 
-    IntBuffer stencilBits = Buffers.newDirectIntBuffer(1);
-    gl.glGetIntegerv(GL2.GL_STENCIL_BITS, stencilBits);
-    if (stencilBits.get(0) < 1) {
-      Logger.getInstance().error("Life sucks without a stencil buffer.\n");
-    }
+    //IntBuffer stencilBits = Buffers.newDirectIntBuffer(1);
+    //gl.glGetIntegerv(GL2.GL_STENCIL_BITS, stencilBits);
+    //if (stencilBits.get(0) < 1) {
+    //  Logger.getInstance().error("Life sucks without a stencil buffer.\n");
+    //}
 
     // Update cam
     updateExtrinsicCameraParameters(drawable);
 
     // Clear buffers
-    gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
+    // Load projection infinite matrix
+    IMatrix4 pInf = getProjectionInfinity();
+    gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+    gl.glLoadMatrixd(pInf.data(), 0);
+
+    // Load Modelview matrix
+    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+
+    // Enable depth testing
     gl.glEnable(GL2.GL_DEPTH_TEST);
-    gl.glDisable(GL2.GL_STENCIL_TEST);
-    gl.glDisable(GL2.GL_CULL_FACE);
-    gl.glColorMask(true, true, true, true);
-    gl.glDepthMask(true);
+    gl.glDepthFunc(GL2.GL_LESS);
+
+    // Enable back-face culling
+    gl.glEnable(GL2.GL_CULL_FACE);
+    gl.glCullFace(GL2.GL_BACK);
+
+    // Enable ambient light only
+    gl.glEnable(GL2.GL_LIGHTING);
+    for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
+      disableLight(gl, i);
+    }
+    float[] lightAmbientOn = {1f, 1f, 1f, 1f};
+    gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmbientOn, 0);
+
+    // Render the scene graph
     renderNode(rootNode, gl, false, null);
 
-    gl.glColorMask(false, false, false, false);
+    // Disable depth writes
     gl.glDepthMask(false);
-    gl.glEnable(GL2.GL_STENCIL_TEST);
-    gl.glEnable(GL2.GL_CULL_FACE);
+
+    // Enable additive blending
+    gl.glEnable(GL.GL_BLEND);
+    gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE);
+
+    // "Disable" ambient light
+    float[] lightAmbientOff = {0, 0, 0, 0};
+    gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmbientOff, 0);
+
+    // For all light sources
     for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
       LightSource light = rootNode.getLight(i);
-      gl.glClear(GL.GL_STENCIL_BUFFER_BIT);
+      drawShadows(gl, light, i);
 
-      // Front faces
-      gl.glCullFace(GL2.GL_FRONT);
-      gl.glStencilOp(GL2.GL_KEEP, GL2.GL_KEEP, GL2.GL_INCR);
-      gl.glStencilFunc(GL2.GL_ALWAYS, 0, 0xff);
-      renderNode(rootNode, gl, true, light);
-
-      // Back faces
-      gl.glCullFace(GL2.GL_BACK);
-      gl.glStencilOp(GL2.GL_KEEP, GL2.GL_KEEP, GL2.GL_DECR);
-      gl.glStencilFunc(GL2.GL_ALWAYS, 0, 0xff);
-      renderNode(rootNode, gl, true, light);
+      LightSource[] lights = null;
+      switch (light.getShadowType()) {
+        case PLANE_X:
+          lights = generateSoftShadowPlane(light, 0);
+          break;
+        case PLANE_Y:
+          lights = generateSoftShadowPlane(light, 1);
+          break;
+        case PLANE_Z:
+          lights = generateSoftShadowPlane(light, 2);
+          break;
+        case SPHERE:
+          lights = generateSoftShadowSphere(light);
+          break;
+        default:
+          // Continue, we already have a hard shadow
+          break;
+      }
+      if (lights != null) {
+        for (int j = 0; j < lights.length; j++) {
+          drawShadows(gl, lights[j], i);
+        }
+      }
     }
-    gl.glEnable(GL2.GL_CULL_FACE);
-    gl.glDisable(GL2.GL_STENCIL_TEST);
-
-    // Reallow writing to frame and depth buffer
-    gl.glColorMask(true, true, true, true);
+    // Disable blending and re-enable depth writes
+    gl.glDisable(GL.GL_BLEND);
     gl.glDepthMask(true);
-    gl.glDisable(GL2.GL_CULL_FACE);
-
-    // Draw shadowed surface
-    gl.glEnable(GL2.GL_STENCIL_TEST);
-    gl.glEnable(GL2.GL_DEPTH_TEST);
-    gl.glStencilFunc(GL2.GL_NOTEQUAL, 0, 0xff);
-    gl.glStencilOp(GL2.GL_REPLACE, GL2.GL_REPLACE, GL2.GL_REPLACE);
-    CgGlslShader shaderBlack = ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_BLACK);
-    JoglShader.use(shaderBlack, gl);
-    drawBlackSquareFullscreen(gl);
-    gl.glDisable(GL2.GL_STENCIL_TEST);
 
     // Take screenshot
     checkTakeScreenshot(drawable);
@@ -433,12 +503,154 @@ public class JoglRenderer3D implements Observer {
 
     renderer.setUseVertexArrays(false);
     renderer.beginRendering(SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderer.setColor(0.5f, 0.5f, 0.5f, 0.8f);
+    renderer.setColor(0.0f, 0f, 0f, 0.8f);
     renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0, SCREEN_HEIGHT - 20);
     renderer.endRendering();
-    // System.out.println(drawable.getAnimator().getLastFPS());
 
     JoglHelper.hasGLError(gl, "GL rendering");
+  }
+
+  /**
+   * Generates additional lights required for plane based soft shadows
+   * @param light Current light source
+   * @param coord Positioning lights around this coordinate
+   * @return Additional lights
+   */
+  private LightSource[] generateSoftShadowPlane(LightSource light, int coord) {
+    LightSource[] lights = new LightSource[softShadowPlaneCount-1];
+
+    for (int i = 0; i < lights.length; i++) {
+      lights[i] = new LightSource(light.getType(), light.getShadowType());
+      lights[i].setColor(light.getDiffuseColor());
+      lights[i].setDirection(light.getDirection());
+    }
+
+    float offset = softShadowOffset;
+
+    if (coord == 0) {
+      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, offset)));
+      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, -offset)));
+      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, offset)));
+      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, offset)));
+      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, -offset)));
+      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, -offset)));
+    } else if (coord == 1) {
+      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, offset)));
+      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, -offset)));
+      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, offset)));
+      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, offset)));
+      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, -offset)));
+      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, -offset)));
+    } else {
+      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset,0)));
+      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, 0)));
+      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, offset, 0)));
+      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, offset, 0)));
+      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, -offset, 0)));
+      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, -offset, 0)));
+    }
+
+    return lights;
+  }
+
+  /**
+   * Generates additional lights required for plane sphere soft shadows
+   * @param light Current light source
+   * @return Additional lights
+   */
+  private LightSource[] generateSoftShadowSphere(LightSource light) {
+    LightSource[] lights = new LightSource[softShadowSphereCount-1];
+
+    for (int i = 0; i < lights.length; i++) {
+      lights[i] = new LightSource(light.getType());
+      lights[i].setColor(light.getDiffuseColor());
+      lights[i].setDirection(light.getDirection());
+    }
+
+    float offset = softShadowOffset;
+
+    lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, 0)));
+    lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, 0)));
+    lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, 0)));
+    lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, 0)));
+    lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, offset)));
+    lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, -offset)));
+    lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, offset, 0)));
+    lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, -offset, 0)));
+    lights[8].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, offset)));
+    lights[9].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, -offset)));
+    lights[10].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, offset, 0)));
+    lights[11].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, -offset, 0)));
+    lights[12].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, offset)));
+    lights[13].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, -offset)));
+
+    return lights;
+  }
+
+  /**
+   * Draws shadows into the scene in respect to the given light
+   */
+  private void drawShadows(GL2 gl, LightSource light, int lightID) {
+    // Clear the stencil buffer
+    gl.glClear(GL.GL_STENCIL_BUFFER_BIT);
+
+    // Disable color buffer writes
+    gl.glColorMask(false, false, false, false);
+
+    gl.glDisable(GL.GL_CULL_FACE);
+    // Enable stencil testing
+
+    gl.glEnable(GL.GL_STENCIL_TEST);
+    gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+    gl.glStencilMask(~0);
+
+    //region Two-Sided Stencil buffer code
+    gl.glEnable(GL2.GL_STENCIL_TEST_TWO_SIDE_EXT);
+
+    gl.glActiveStencilFaceEXT(GL.GL_BACK);
+    gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_DECR_WRAP);
+    //gl.glStencilMask(~0);
+    gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+
+    gl.glActiveStencilFaceEXT(GL.GL_FRONT);
+    gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR_WRAP);
+    //gl.glStencilMask(~0);
+    gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+    //endregion
+
+    // Debug
+    //updateLight(gl, lightID, false);
+    //gl.glColorMask(false, true, false, false);
+
+    // Decrement stencil buffer value for back-facing polygons that fail the depth test
+    //gl.glCullFace(GL.GL_BACK);
+    //gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR);
+    renderNode(rootNode, gl, true, light);
+
+    // Increment stencil buffer value for front-facing polygons that fail the depth test
+    //gl.glCullFace(GL.GL_FRONT);
+    //gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_DECR);
+
+    // Enable current light source
+    updateLight(gl, lightID, true);
+
+    // Set stencil to only render pixel with a 0 value
+    gl.glStencilFunc(GL.GL_EQUAL, 0, ~0);
+    gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR);
+    gl.glDepthFunc(GL.GL_EQUAL);
+    gl.glColorMask(true, true , true, true);
+    renderNode(rootNode, gl, false , null);
+
+    // Restore depth test
+    gl.glDepthFunc(GL.GL_LESS);
+    // Disable stencil tesing
+    gl.glDisable(GL.GL_STENCIL_TEST);
   }
 
   private void drawBlackSquareFullscreen(GL2 gl) {
@@ -460,34 +672,35 @@ public class JoglRenderer3D implements Observer {
     gl.glEnd();
   }
 
-  // private IMatrix4 getProjectionInfinity() {
-  // IMatrix4 pInf = VectorMatrixFactory.newIMatrix4();
-  //
-  // // Field of view in radians
-  // double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
-  //
-  // // Cotangent of the field of view
-  // double coTanFOV = 1.0 / Math.tan(rads);
-  //
-  // pInf.set(0, 0, coTanFOV / aspectRatio);
-  // pInf.set(0, 1, 0);
-  // pInf.set(0, 2, 0);
-  // pInf.set(0, 3, 0);
-  // pInf.set(1, 0, 0);
-  // pInf.set(1, 1, coTanFOV);
-  // pInf.set(1, 2, 0);
-  // pInf.set(1, 3, 0);
-  // pInf.set(2, 0, 0);
-  // pInf.set(2, 1, 0);
-  // pInf.set(2, 2, -1);
-  // pInf.set(2, 3, -1);
-  // pInf.set(3, 0, 0);
-  // pInf.set(3, 1, 0);
-  // pInf.set(3, 2, -2 * nearClippingPlane);
-  // pInf.set(3, 3, 0);
-  //
-  // return pInf;
-  // }
+  /**
+   * Creates a projection matrix which has no far plane
+   */
+   private IMatrix4 getProjectionInfinity() {
+   IMatrix4 pInf = VectorMatrixFactory.newIMatrix4();
+   // Field of view in radians
+   double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
+   // Cotangent of the field of view
+   double coTanFOV = 1.0 / Math.tan(rads);
+
+   pInf.set(0, 0, coTanFOV / aspectRatio);
+   pInf.set(0, 1, 0);
+   pInf.set(0, 2, 0);
+   pInf.set(0, 3, 0);
+   pInf.set(1, 0, 0);
+   pInf.set(1, 1, coTanFOV);
+   pInf.set(1, 2, 0);
+   pInf.set(1, 3, 0);
+   pInf.set(2, 0, 0);
+   pInf.set(2, 1, 0);
+   pInf.set(2, 2, -1);
+   pInf.set(2, 3, -1);
+   pInf.set(3, 0, 0);
+   pInf.set(3, 1, 0);
+   pInf.set(3, 2, -2 * nearClippingPlane);
+   pInf.set(3, 3, 0);
+
+   return pInf;
+   }
 
   /**
    * Update the intrinsic camera parameters.

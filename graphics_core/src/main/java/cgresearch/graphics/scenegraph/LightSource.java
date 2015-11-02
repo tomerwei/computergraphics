@@ -13,7 +13,11 @@ public class LightSource {
 
 	public enum Type {
 		POINT, DIRECTIONAL
-	};
+	}
+
+	public enum ShadowType {
+		HARD, PLANE_X, PLANE_Y, PLANE_Z, SPHERE
+	}
 
 	/**
 	 * Position in 3-space.
@@ -36,10 +40,24 @@ public class LightSource {
 	private Type type = Type.POINT;
 
 	/**
+	 * Type of the light's shadow
+	 */
+	private ShadowType shadow = ShadowType.HARD;
+
+	/**
 	 * Constructor.
 	 */
 	public LightSource(Type type) {
 		this.type = type;
+		this.shadow = ShadowType.HARD;
+	}
+
+	/**
+	 * Constructor
+	 */
+	public LightSource(Type type, ShadowType shadow) {
+		this.type = type;
+		this.shadow = shadow;
 	}
 
 	public IVector3 getPosition() {
@@ -56,6 +74,10 @@ public class LightSource {
 
 	public Type getType() {
 		return type;
+	}
+
+	public ShadowType getShadowType() {
+		return shadow;
 	}
 
 	public LightSource setPosition(IVector3 position) {
