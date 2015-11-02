@@ -21,11 +21,11 @@ public static IPointCloud getClosestPoints(IPointCloud Model, IPointCloud Regist
 
 			for(int k = 0; k < Model.getNumberOfPoints(); k++)
 			{
-				System.out.println("i Model: "+i+" "+Model.getPoint(i).getPosition());
-				System.out.println("k Register: "+i+" "+Register.getPoint(k).getPosition());
+//				System.out.println("i Model: "+i+" "+Model.getPoint(i).getPosition());
+//				System.out.println("k Register: "+i+" "+Register.getPoint(k).getPosition());
 				double distance = getDistance(Model.getPoint(i), Register.getPoint(k));
-				System.out.println("Distance: "+distance);
-				System.out.println("Dist: "+dist);
+//				System.out.println("Distance: "+distance);
+//				System.out.println("Dist: "+dist);
 				if(distance < dist)
 				{
 					closest = Register.getPoint(k);
@@ -34,13 +34,13 @@ public static IPointCloud getClosestPoints(IPointCloud Model, IPointCloud Regist
 				}
 			}
 			ClosestPoints.addPoint(closest);
-			System.out.println("i ClosestPoints: "+i+" "+ClosestPoints.getPoint(i).getPosition());
+//			System.out.println("i ClosestPoints: "+i+" "+ClosestPoints.getPoint(i).getPosition());
 			
 			
 			i++;
 		}
 		for(int j = 0; j <3; j++){
-			System.out.println("ClosestsPoint: " + ClosestPoints.getPoint(j).getPosition());
+//			System.out.println("ClosestsPoint: " + ClosestPoints.getPoint(j).getPosition());
 		}
 		
 		return ClosestPoints;

@@ -46,10 +46,12 @@ public class IcpDistanceFunction  {
 		for(int k = 0; k < iterationSteps; k++){
 			closestPoints = NormalDistance.getClosestPoints(pointCloudBase, Register);
 			Register = min.calculate(Register, closestPoints, k);
-			Register.updateRenderStructures();
+//			RegistrationFrame.pointCloud2.updateRenderStructures();
 		
 		}
-		
+		for(int i = 0; i < Register.getNumberOfPoints(); i++){
+			System.out.println("Register "+Register.getPoint(i).getPosition());
+		}
 		return Register;
 		
 	}

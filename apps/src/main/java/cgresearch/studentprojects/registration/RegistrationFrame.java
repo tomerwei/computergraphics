@@ -49,13 +49,16 @@ public class RegistrationFrame extends CgApplication {
 	}
 	
 	public void loadIPointCloud(){
-		IVector3 position1 = VectorMatrixFactory.newIVector3(1,1,1);
-		IVector3 position2 = VectorMatrixFactory.newIVector3(0,0,0);
-		IVector3 position3 = VectorMatrixFactory.newIVector3(2,2,2);
+		IVector3 position1 = VectorMatrixFactory.newIVector3(0,0,0);
+		IVector3 position2 = VectorMatrixFactory.newIVector3(0,0,2);
+		IVector3 position3 = VectorMatrixFactory.newIVector3(2,0,2);
+		IVector3 position4 = VectorMatrixFactory.newIVector3(2,0,0);
 		
-		IVector3 position4 = VectorMatrixFactory.newIVector3(0,3,0);
-		IVector3 position5 = VectorMatrixFactory.newIVector3(1,4,1);
-		IVector3 position6 = VectorMatrixFactory.newIVector3(2,5,2);
+		IVector3 position5 = VectorMatrixFactory.newIVector3(0,0,0);
+		IVector3 position6 = VectorMatrixFactory.newIVector3(0,0,2);
+		IVector3 position7 = VectorMatrixFactory.newIVector3(0,2,2);
+		IVector3 position8 = VectorMatrixFactory.newIVector3(0,2,0);
+		
 		IVector3 color = VectorMatrixFactory.newIVector3(Math.random(),
 				Math.random(), Math.random());
 		IVector3 normal = VectorMatrixFactory.newIVector3(Math.random(),
@@ -65,24 +68,32 @@ public class RegistrationFrame extends CgApplication {
 		pointCloud.addPoint(new Point(position1, color, normal));
 		pointCloud.addPoint(new Point(position2, color, normal));
 		pointCloud.addPoint(new Point(position3, color, normal));
+		pointCloud.addPoint(new Point(position4, color, normal));
 		
 		
 //		IPointCloud pointCloud2 = new PointCloud();
-		pointCloud2.addPoint(new Point(position4, color, normal));
 		pointCloud2.addPoint(new Point(position5, color, normal));
 		pointCloud2.addPoint(new Point(position6, color, normal));
-
+		pointCloud2.addPoint(new Point(position7, color, normal));
+		pointCloud2.addPoint(new Point(position8, color, normal));
+		
+		
 		
 //		IcpDistanceFunction icp =  new IcpDistanceFunction(pointCloud);
 //		icp.startAlgorithm(pointCloud2);
+		
 //		ObjFileReader reader = new ObjFileReader();
 //		List<ITriangleMesh> meshes = reader.readFile("meshes/square.obj");
 //		IPointCloud pointCloud3 = PointCloudFactory.createDummyPointCloud();
-////		ITriangleMesh mesh = meshes.get(0);
-////		IPointCloud pointCloud3 = MeshSampler.sample(mesh, 5000);
+//		ITriangleMesh mesh = meshes.get(0);
+//		pointCloud3 = MeshSampler.sample(mesh, 5000);
+
+
+
 //		
-		CgNode pointCloudNode = new CgNode(pointCloud, "pointCloud1");
+		CgNode pointCloudNode = new CgNode(pointCloud, "pointCloud");
 		getCgRootNode().addChild(pointCloudNode);
+		
 		CgNode pointCloudNode2 = new CgNode(pointCloud2, "pointCloud2");
 		getCgRootNode().addChild(pointCloudNode2);
 		
@@ -100,12 +111,13 @@ public class RegistrationFrame extends CgApplication {
 		ResourcesLocator.getInstance().parseIniFile("resources.ini");
 		RegistrationFrame app = new RegistrationFrame();
 		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-//		RegistrationButton button = new RegistrationButton();
+		RegistrationButton button = new RegistrationButton();
 		appLauncher.create(app);
 		appLauncher.setRenderSystem(RenderSystem.JOGL);
 		appLauncher.setUiSystem(UI.JOGL_SWING);
 //		appLauncher.addCustomMenu(new RegistrationMenu());
-//	    appLauncher.addCustomUi(button);
+	    appLauncher.addCustomUi(button);
+	    
 
 		
 		

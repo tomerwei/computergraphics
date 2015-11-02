@@ -66,7 +66,7 @@ private Point centerOfMass(IPointCloud ipc){
 			newPoint.set(x, (newPoint.get(x) + ipc.getPoint(i).getPosition().get(x)));
 			newPoint.set(y, (newPoint.get(y) + ipc.getPoint(i).getPosition().get(y)));
 			newPoint.set(z, (newPoint.get(z) + ipc.getPoint(i).getPosition().get(z)));
-			System.out.println("i centerofmass "+ i);
+//			System.out.println("i centerofmass "+ i);
 		}
 		newPoint.set(x, (newPoint.get(x) / ipc.getNumberOfPoints()));
 		newPoint.set(y, (newPoint.get(y) / ipc.getNumberOfPoints()));
@@ -123,8 +123,8 @@ private Point centerOfMass(IPointCloud ipc){
 	
 	private Matrix4 getQ(Matrix3 covariance){
 		
-		System.out.println("Covariance: \n"+ covariance.toString());
-		System.out.println("\n");
+//		System.out.println("Covariance: \n"+ covariance.toString());
+//		System.out.println("\n");
 		
 		
 		Matrix4 q = new Matrix4();
@@ -172,8 +172,8 @@ private Point centerOfMass(IPointCloud ipc){
 	
 	private Vector4 getMaxEigenVector(Matrix4 q){
 		
-		System.out.println("Q: \n"+ q.toString());
-		System.out.println("\n");
+//		System.out.println("Q: \n"+ q.toString());
+//		System.out.println("\n");
 		
 		double[][] temp = new double[4][4];
 		
@@ -195,8 +195,8 @@ private Point centerOfMass(IPointCloud ipc){
 
 		for(int i =0; i < eigenValues.length; i++)
 		{
-			System.out.println("EV: "+eigenValues[i]);
-			System.out.println(Arrays.toString(evd.getV().transpose().getArray()[i]));
+//			System.out.println("EV: "+eigenValues[i]);
+//			System.out.println(Arrays.toString(evd.getV().transpose().getArray()[i]));
 			if(eigenValues[i]>max)
 			{
 				max = eigenValues[i];
@@ -260,16 +260,33 @@ private Point centerOfMass(IPointCloud ipc){
 	
 	private IPointCloud computeNewPointCloud(IPointCloud Register, Matrix3 rotationMatrix, Vector3 translationVector){
 		IPointCloud newPoints = new PointCloud();
+		double x1,y1,z1;
+		
+		Point p = new Point();
 		// Pk+1 = Pk * R
 			for(int i =0; i < Register.getNumberOfPoints(); i++){
-				newPoints.getPoint(i).getPosition().set(x, ((rotationMatrix.get(0, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(0, 1) * Register.getPoint(i).getPosition().get(y) + 
-						(rotationMatrix.get(0, 2) * Register.getPoint(i).getPosition().get(z)))));
-				
-				newPoints.getPoint(i).getPosition().set(y, ((rotationMatrix.get(1, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(1, 1) * Register.getPoint(i).getPosition().get(y) + 
-						(rotationMatrix.get(1, 2) * Register.getPoint(i).getPosition().get(z)))));
-				
-				newPoints.getPoint(i).getPosition().set(x, ((rotationMatrix.get(2, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(2, 1) * Register.getPoint(i).getPosition().get(y) + 
-						(rotationMatrix.get(2, 2) * Register.getPoint(i).getPosition().get(z)))));
+			x1 = 0;
+			y1 = 0;
+			z1 = 0;
+
+			x1 = ((rotationMatrix.get(0, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(0, 1) * Register.getPoint(i).getPosition().get(y) + 
+					(rotationMatrix.get(0, 2) * Register.getPoint(i).getPosition().get(z))));
+			y1 = ((rotationMatrix.get(1, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(1, 1) * Register.getPoint(i).getPosition().get(y) + 
+					(rotationMatrix.get(1, 2) * Register.getPoint(i).getPosition().get(z))));
+			z1 = ((rotationMatrix.get(2, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(2, 1) * Register.getPoint(i).getPosition().get(y) + 
+					(rotationMatrix.get(2, 2) * Register.getPoint(i).getPosition().get(z))));
+			IVector3 position = VectorMatrixFactory.newIVector3(x1,y1,z1);
+			newPoints.addPoint(new Point(position));
+			
+			
+//				newPoints..getPoint(i).getPosition().set(x, ((rotationMatrix.get(0, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(0, 1) * Register.getPoint(i).getPosition().get(y) + 
+//						(rotationMatrix.get(0, 2) * Register.getPoint(i).getPosition().get(z)))));
+//				
+//				newPoints.getPoint(i).getPosition().set(y, ((rotationMatrix.get(1, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(1, 1) * Register.getPoint(i).getPosition().get(y) + 
+//						(rotationMatrix.get(1, 2) * Register.getPoint(i).getPosition().get(z)))));
+//				
+//				newPoints.getPoint(i).getPosition().set(x, ((rotationMatrix.get(2, 0) * Register.getPoint(i).getPosition().get(x)) + (rotationMatrix.get(2, 1) * Register.getPoint(i).getPosition().get(y) + 
+//						(rotationMatrix.get(2, 2) * Register.getPoint(i).getPosition().get(z)))));
 				
 				newPoints.getPoint(i).getPosition().set(x, (newPoints.getPoint(i).getPosition().get(x) + translationVector.get(x)) );
 				newPoints.getPoint(i).getPosition().set(y, (newPoints.getPoint(i).getPosition().get(y) + translationVector.get(y)) );
@@ -291,21 +308,37 @@ private Point centerOfMass(IPointCloud ipc){
 		double error = 0;
 		IPointCloud temp = new PointCloud();
 		IPointCloud temp2 = new PointCloud();
+		double x1,y1,z1,x2,y2,z2;
 		//Rotation *pi
 		
 		
-		
+		//temp anstatt Register
 		for(int i =0; i < Register.getNumberOfPoints(); i++){
-			temp.getPoint(i).getPosition().set(x, ((rotation.get(0, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(0, 1) * Register.getPoint(i).getPosition().get(y) + 
-					(rotation.get(0, 2) * Register.getPoint(i).getPosition().get(z)))));
 			
-			temp.getPoint(i).getPosition().set(y, ((rotation.get(1, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(1, 1) * Register.getPoint(i).getPosition().get(y) + 
-					(rotation.get(1, 2) * Register.getPoint(i).getPosition().get(z)))));
+			x1 = 0;
+			y1 = 0;
+			z1 = 0;
 			
-			temp.getPoint(i).getPosition().set(z, ((rotation.get(2, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(2, 1) * Register.getPoint(i).getPosition().get(y) + 
-					(rotation.get(2, 2) * Register.getPoint(i).getPosition().get(z)))));
+			x1 = ((rotation.get(0, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(0, 1) * Register.getPoint(i).getPosition().get(y) + 
+					(rotation.get(0, 2) * Register.getPoint(i).getPosition().get(z))));
+			y1 = ((rotation.get(1, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(1, 1) * Register.getPoint(i).getPosition().get(y) + 
+					(rotation.get(1, 2) * Register.getPoint(i).getPosition().get(z))));
+			z1 = ((rotation.get(2, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(2, 1) * Register.getPoint(i).getPosition().get(y) + 
+					(rotation.get(2, 2) * Register.getPoint(i).getPosition().get(z))));
 			
-		//(R*pi)-t
+			IVector3 position = VectorMatrixFactory.newIVector3(x1,y1,z1);
+			temp.addPoint(new Point(position));
+			
+//			Register.getPoint(i).getPosition().set(x, ((rotation.get(0, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(0, 1) * Register.getPoint(i).getPosition().get(y) + 
+//					(rotation.get(0, 2) * Register.getPoint(i).getPosition().get(z)))));
+//			
+//			Register.getPoint(i).getPosition().set(y, ((rotation.get(1, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(1, 1) * Register.getPoint(i).getPosition().get(y) + 
+//					(rotation.get(1, 2) * Register.getPoint(i).getPosition().get(z)))));
+//			
+//			Register.getPoint(i).getPosition().set(z, ((rotation.get(2, 0) * Register.getPoint(i).getPosition().get(x)) + (rotation.get(2, 1) * Register.getPoint(i).getPosition().get(y) + 
+//					(rotation.get(2, 2) * Register.getPoint(i).getPosition().get(z)))));
+			
+		//(R*pi)-t temp anstatt Register
 //		rotationBase.add(translation);
 		
 		temp.getPoint(i).getPosition().set(x, (temp.getPoint(i).getPosition().get(x) - translation.get(x)) );
@@ -316,10 +349,23 @@ private Point centerOfMass(IPointCloud ipc){
 //		rotationBase.set(y, (rotationBase.get(y) + translation.get(y)));
 //		rotationBase.set(z, (rotationBase.get(z) + translation.get(z)));
 		//(R*pi)+T-pj
+		//temp2 anstatt Register
 		
-		temp2.getPoint(i).getPosition().set(x, (closestPoints.getPoint(i).getPosition().get(x) - temp.getPoint(i).getPosition().get(x)));
-		temp2.getPoint(i).getPosition().set(y, (closestPoints.getPoint(i).getPosition().get(y) - temp.getPoint(i).getPosition().get(y)));
-		temp2.getPoint(i).getPosition().set(z, (closestPoints.getPoint(i).getPosition().get(z) - temp.getPoint(i).getPosition().get(z)));
+		x2 = 0;
+		y2 = 0;
+		z2 = 0;
+
+		x2 = (closestPoints.getPoint(i).getPosition().get(x) - temp.getPoint(i).getPosition().get(x));
+		y2 = (closestPoints.getPoint(i).getPosition().get(y) - temp.getPoint(i).getPosition().get(y));
+		z2 = (closestPoints.getPoint(i).getPosition().get(z) - temp.getPoint(i).getPosition().get(z));
+		
+		IVector3 position2 = VectorMatrixFactory.newIVector3(x2,y2,z2);
+		temp2.addPoint(new Point(position2));
+		
+
+//		temp2.getPoint(i).getPosition().set(x, (closestPoints.getPoint(i).getPosition().get(x) - temp.getPoint(i).getPosition().get(x)));
+//		temp2.getPoint(i).getPosition().set(y, (closestPoints.getPoint(i).getPosition().get(y) - temp.getPoint(i).getPosition().get(y)));
+//		temp2.getPoint(i).getPosition().set(z, (closestPoints.getPoint(i).getPosition().get(z) - temp.getPoint(i).getPosition().get(z)));
 		
 		error = error + (temp2.getPoint(i).getPosition().get(x) * temp2.getPoint(i).getPosition().get(x) + temp2.getPoint(i).getPosition().get(y) * temp2.getPoint(i).getPosition().get(y)
 				+ temp2.getPoint(i).getPosition().get(z) * temp2.getPoint(i).getPosition().get(z));
