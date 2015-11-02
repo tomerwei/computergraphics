@@ -464,7 +464,12 @@ public class JoglRenderer3D implements Observer {
     // For all light sources
     for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
       LightSource light = rootNode.getLight(i);
-      drawShadows(gl, light, i);
+
+      // Create a copy of the current light.
+      // This step is required if an animation is moving the current light source while drawing the shadows.
+      LightSource lightCopy = light.copy();
+
+      drawShadows(gl, lightCopy, i);
 
       LightSource[] lights = null;
       switch (light.getShadowType()) {
@@ -603,7 +608,7 @@ public class JoglRenderer3D implements Observer {
     // Disable color buffer writes
     gl.glColorMask(false, false, false, false);
 
-    gl.glDisable(GL.GL_CULL_FACE);
+    //gl.glDisable(GL.GL_CULL_FACE);
     // Enable stencil testing
 
     gl.glEnable(GL.GL_STENCIL_TEST);
@@ -611,31 +616,34 @@ public class JoglRenderer3D implements Observer {
     gl.glStencilMask(~0);
 
     //region Two-Sided Stencil buffer code
+    /*
     gl.glEnable(GL2.GL_STENCIL_TEST_TWO_SIDE_EXT);
 
     gl.glActiveStencilFaceEXT(GL.GL_BACK);
-    gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_DECR_WRAP);
+    gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR_WRAP);
     //gl.glStencilMask(~0);
     gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
 
     gl.glActiveStencilFaceEXT(GL.GL_FRONT);
-    gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR_WRAP);
+    gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_DECR_WRAP);
     //gl.glStencilMask(~0);
     gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+    */
     //endregion
 
     // Debug
     //updateLight(gl, lightID, false);
     //gl.glColorMask(false, true, false, false);
 
-    // Decrement stencil buffer value for back-facing polygons that fail the depth test
-    //gl.glCullFace(GL.GL_BACK);
-    //gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR);
+    // Increment stencil buffer value for front-facing polygons that fail the depth test
+    gl.glCullFace(GL.GL_FRONT);
+    gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR, GL.GL_KEEP);
     renderNode(rootNode, gl, true, light);
 
-    // Increment stencil buffer value for front-facing polygons that fail the depth test
-    //gl.glCullFace(GL.GL_FRONT);
-    //gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_DECR);
+    // Decrement stencil buffer value for back-facing polygons that fail the depth test
+    gl.glCullFace(GL.GL_BACK);
+    gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR, GL.GL_KEEP);
+    renderNode(rootNode, gl, true, light);
 
     // Enable current light source
     updateLight(gl, lightID, true);

@@ -95,4 +95,11 @@ public class LightSource {
 		return this;
 	}
 
+	public LightSource copy() {
+		LightSource copy = new LightSource(type, shadow);
+		copy.setColor(color);
+		copy.setDirection(direction);
+		copy.setPosition(position);
+		return copy;
+	}
 }

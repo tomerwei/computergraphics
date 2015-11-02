@@ -28,7 +28,7 @@ import java.util.Observable;
  */
 public class ShadowVolumeDemo extends CgApplication {
 
-  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.PLANE_Z);
+  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.SPHERE);
   private double alpha = 0;
 
   /**
@@ -45,8 +45,8 @@ public class ShadowVolumeDemo extends CgApplication {
     // Load elements
     createEnvironment();
     //loadHulk();
-    //loadCube();
-    loadObject();
+    loadCube();
+    //loadObject();
 
     // Set light source
     lightSource.setPosition(VectorMatrixFactory.newIVector3(0.5, 5, 5));
