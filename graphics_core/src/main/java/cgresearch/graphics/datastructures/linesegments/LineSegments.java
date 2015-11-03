@@ -29,8 +29,9 @@ public class LineSegments extends ICgNodeContent {
   public LineSegments() {
   }
 
-  public void addPoint(IVector3 p) {
+  public int addPoint(IVector3 p) {
     points.add(p);
+    return points.indexOf(p);
   }
 
   public void addLine(int startIndex, int endIndex) {
