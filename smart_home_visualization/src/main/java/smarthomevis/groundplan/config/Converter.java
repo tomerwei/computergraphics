@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +23,14 @@ import org.kabeja.parser.DXFParser;
 import org.kabeja.parser.Parser;
 import org.kabeja.parser.ParserBuilder;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.VectorMatrixFactory;
+import smarthomevis.groundplan.config.GPLine.LineType;
 
 /**
  * Class to convert DXF elements via XML structure definitions to a GPDataType
@@ -43,20 +44,13 @@ public class Converter
 
 	private GPDataType resultData = null;
 	private DXFDocument dxfDoc = null;
-	private static int lineIndex;
+	private int lineIndex;
 
 	public Converter()
 		{
 		this.resultData = new GPDataType();
 		this.lineIndex = 0;
 		}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * File Reading
-	 */
 
 	public GPDataType importData(String dxfDocURI, String xmlDocURI)
 		{
@@ -82,95 +76,125 @@ public class Converter
 
 		for (int i = 0; i < nodeList.getLength(); i++)
 			{
-			Node layerNode = nodeList.item(i);
-
-			String layerName = "";
+			Node node = nodeList.item(i);
 
 			// handle children of each layer
-			if (layerNode.getNodeName().equals("layer")
-				&& layerNode.hasAttributes())
+			if (node.getNodeName().equals("layer") && node.hasAttributes())
 				{
 
-				layerName = layerNode.getAttributes().getNamedItem("name")
+				String layerName = node.getAttributes().getNamedItem("name")
 					.getNodeValue();
+				String lineTypeString = node.getAttributes()
+					.getNamedItem("type").getNodeValue();
 
-				if (!layerName.isEmpty() && layerNode.hasChildNodes())
-					System.out.println(
-						"Extracting wall nodes of layer '" + layerName + "'");
-				else
-					System.out.println(
-						"LayerName is missing or has no childs, please check xml");
-
-				DXFLayer dxfLayer = dxf.getDXFLayer(layerName);
-
-				if (dxfLayer != null)
+				if (layerName != null && lineTypeString != null
+					&& !layerName.isEmpty() && !lineTypeString.isEmpty())
 					{
-					Map<String, DXFLine> dxfEntityMap = extractDXFLinesFromLayer(
-						dxfLayer);
-					System.out.println(
-						"DXFEntityMap has size " + dxfEntityMap.size());
-					handleWallsOfLayer(dxfEntityMap, layerNode);
+					System.out
+						.println("Extracting " + lineTypeString.toLowerCase()
+							+ "s of layer '" + layerName + "'");
+					DXFLayer dxfLayer = dxf.getDXFLayer(layerName);
+					LineType lineType = defineLineTypeFromString(
+						lineTypeString);
+
+					if (dxfLayer != null)
+						{
+						List<DXFEntity> entityList = extractDXFLinesFromLayer(
+							dxfLayer);
+						System.out.println(
+							"DXFEntityMap has size " + entityList.size());
+						handleLinesOfLayer(layerName, entityList, lineType);
+						}
+					else
+						System.out.println(
+							"Failed loading dxfLayer '" + layerName + "'");
 					}
 				else
 					System.out
-						.println("Failed loading dxfLayer '" + layerName + "'");
+						.println("LayerName is missing, please check xml");
+
+				}
+			else if (node.getNodeName().equals("config")
+				&& node.getNodeType() == Node.ELEMENT_NODE)
+				{
+				Element element = (Element) node;
+				this.resultData.setWallTopHeight(Double
+					.valueOf(element.getElementsByTagName("wall_top_height")
+						.item(0).getTextContent()));
+				this.resultData.setWindowBottomHeight(Double.valueOf(
+					element.getElementsByTagName("window_bottom_height").item(0)
+						.getTextContent()));
+				this.resultData.setWindowTopHeight(Double
+					.valueOf(element.getElementsByTagName("window_top_height")
+						.item(0).getTextContent()));
+				this.resultData.setDoorTopHeight(Double
+					.valueOf(element.getElementsByTagName("door_top_height")
+						.item(0).getTextContent()));
 				}
 			}
 		}
 
-	private Map<String, DXFLine> extractDXFLinesFromLayer(DXFLayer dxfLayer)
+	private LineType defineLineTypeFromString(String lineTypeString)
 		{
-		Map<String, DXFLine> lineMap = new HashMap<>();
+		if (lineTypeString.equalsIgnoreCase("WALL"))
+			return LineType.WALL;
+		if (lineTypeString.equalsIgnoreCase("WINDOW"))
+			return LineType.WINDOW;
+		if (lineTypeString.equalsIgnoreCase("DOOR"))
+			return LineType.DOOR;
+
+		return LineType.WALL;
+		}
+
+	private List<DXFEntity> extractDXFLinesFromLayer(DXFLayer dxfLayer)
+		{
+		List<DXFEntity> lineList = new ArrayList<>();
 
 		@SuppressWarnings("unchecked")
 		Iterator<DXFEntity> it = dxfLayer
 			.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE).iterator();
 
-		int i = 0;
 		for (; it.hasNext();)
 			{
 			DXFEntity e = it.next();
 
-			lineMap.put("Line" + getLineIndex(), (DXFLine) e);
+			lineList.add(e);
 
 			}
-		return lineMap;
+		return lineList;
 		}
 
-	/**
-	 * iterate through the wall elements of a single layer node
-	 * 
-	 * @param layerName
-	 *          the name of the current layer
-	 * @param layerNode
-	 *          the parent layer node containing wall nodes
-	 */
-	private void handleWallsOfLayer(Map<String, DXFLine> dxfEntityMap,
-		Node layerNode)
+	private void handleLinesOfLayer(String layerName,
+		List<DXFEntity> dxfLineList, LineType lineType)
 		{
-		NodeList wallList = layerNode.getChildNodes();
-		for (int i = 0; i < wallList.getLength(); i++)
+		List<String> surfaceList = new ArrayList<>();
+
+		for (DXFEntity e : dxfLineList)
 			{
-			Node wallNode = wallList.item(i);
-			String wallId = "";
-
-			if (wallNode.getNodeName().equals("wall")
-				&& wallNode.hasAttributes())
+			if (e instanceof DXFLine)
 				{
-				wallId = wallNode.getAttributes().getNamedItem("id")
-					.getNodeValue();
-				}
+				String currentLineId = "Line_" + getNextIndex();
+				DXFLine l = (DXFLine) e;
+				Point startPoint = l.getStartPoint();
+				Point endPoint = l.getEndPoint();
 
-			if (!wallId.isEmpty() && wallNode.hasChildNodes())
-				{
-				System.out.println(
-					"Extracting surface nodes of wall '" + wallId + "'");
-				handleSurfacesOfWall(dxfEntityMap, wallId, wallNode);
-				}
+				GPLine surface = new GPLine(currentLineId,
+					VectorMatrixFactory.newIVector3(startPoint.getX(),
+						startPoint.getY(), startPoint.getZ()),
+					VectorMatrixFactory.newIVector3(endPoint.getX(),
+						endPoint.getY(), endPoint.getZ()));
 
+				surface.setLineType(lineType);
+
+				this.resultData.addLine(currentLineId, surface);
+				surfaceList.add(currentLineId);
+				}
 			}
+
+		this.resultData.addWall(layerName, surfaceList);
 		}
 
+	@SuppressWarnings("unused")
 	private void handleSurfacesOfWall(Map<String, DXFLine> dxfEntityMap,
 		String wallId, Node wallNode)
 		{
@@ -200,7 +224,7 @@ public class Converter
 						Point startPoint = surfaceEntity.getStartPoint();
 						Point endPoint = surfaceEntity.getEndPoint();
 
-						this.resultData.addSurface(surfaceId, new GPSurface(
+						this.resultData.addLine(surfaceId, new GPLine(
 							surfaceId,
 							VectorMatrixFactory.newIVector3(startPoint.getX(),
 								startPoint.getY(), startPoint.getZ()),
@@ -213,6 +237,13 @@ public class Converter
 
 		this.resultData.addWall(wallId, surfaceIdsOfWall);
 		}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * File Reading
+	 */
 
 	private DXFDocument readDXFDocument(String filename)
 		{
@@ -294,14 +325,8 @@ public class Converter
 		return xmlDoc;
 		}
 
-	private String getLineIndex()
+	private int getNextIndex()
 		{
-		if (lineIndex < 10)
-			return "00" + lineIndex++;
-		if (lineIndex < 100)
-			return "0" + lineIndex++;
-
-		return "" + lineIndex++;
+		return this.lineIndex++;
 		}
-
 	}

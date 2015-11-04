@@ -7,15 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import cgresearch.core.math.IVector3;
-
 public class GPDataType implements Serializable
 	{
-	// holds all surfaces and maps each to a name string
-	private Map<String, GPSurface> surfaces = null;
-	// combines Surfaces to logical Walls
-	private Map<String, List<String>> walls = null;
+	// holds all lines and maps each to a name string
+	private Map<String, GPLine> lines = null;
+	// registrates lines to layers
+	private Map<String, List<String>> layers = null;
 
+	private double wall_top_height = 0.0;
+	private double window_bottom_height = 0.0;
+	private double window_top_height = 0.0;
+	private double door_top_height = 0.0;
+	
+	
 	/**
 	 * 
 	 */
@@ -23,49 +27,69 @@ public class GPDataType implements Serializable
 
 	public GPDataType()
 		{
-		this.surfaces = new HashMap<>();
-		this.walls = new HashMap<>();
+		this.lines = new HashMap<>();
+		this.layers = new HashMap<>();
 		}
 
 	/*
 	 * Getters
 	 */
 
-	public GPSurface getSurface(String name)
+	public synchronized double getWallTopHeight()
 		{
-		return this.surfaces.get(name);
+		return wall_top_height;
 		}
 
-	public List<String> getWall(String id)
+	public synchronized double getWindowBottomHeight()
 		{
-		return this.walls.get(id);
+		return window_bottom_height;
 		}
 
-	public Map<String, List<GPSurface>> getWalls()
+	public synchronized double getWindowTopHeight()
 		{
-		Map<String, List<GPSurface>> result = new HashMap<>();
-		for (Entry<String, List<String>> e : this.walls.entrySet())
+		return window_top_height;
+		}
+
+	public synchronized double getDoorTopHeight()
+		{
+		return door_top_height;
+		}
+
+	public GPLine getLine(String name)
+		{
+		return this.lines.get(name);
+		}
+
+	public List<String> getLayer(String id)
+		{
+		return this.layers.get(id);
+		}
+
+	public Map<String, List<GPLine>> getLayers()
+		{
+		Map<String, List<GPLine>> result = new HashMap<>();
+		for (Entry<String, List<String>> e : this.layers.entrySet())
 			{
-			List<GPSurface> wall = new ArrayList<>();
+			List<GPLine> layerLineList = new ArrayList<>();
 			for (String name : e.getValue())
 				{
-				wall.add(this.surfaces.get(name));
+				layerLineList.add(this.lines.get(name));
 				}
-			result.put(e.getKey(), wall);
+			result.put(e.getKey(), layerLineList);
 			}
 
 		return result;
 		}
 
-	public List<List<GPSurface>> getWallsList()
+	public List<List<GPLine>> getLayerLists()
 		{
-		List<List<GPSurface>> result = new ArrayList<>();
-		for (Entry<String, List<String>> e : this.walls.entrySet())
+		List<List<GPLine>> result = new ArrayList<>();
+		for (Entry<String, List<String>> e : this.layers.entrySet())
 			{
-			List<GPSurface> wall = new ArrayList<>();
+			List<GPLine> wall = new ArrayList<>();
 			for (String name : e.getValue())
 				{
-				wall.add(this.surfaces.get(name));
+				wall.add(this.lines.get(name));
 				}
 			result.add(wall);
 			}
@@ -76,14 +100,34 @@ public class GPDataType implements Serializable
 	 * Setters
 	 */
 
-	public void addSurface(String id, GPSurface surface)
+	public synchronized void setWallTopHeight(double wall_top_height)
 		{
-		this.surfaces.put(id, surface);
+		this.wall_top_height = wall_top_height;
 		}
 
-	public void addWall(String id, List<String> surfaceList)
+	public synchronized void setWindowBottomHeight(double window_bottom_height)
 		{
-		this.walls.put(id, surfaceList);
+		this.window_bottom_height = window_bottom_height;
+		}
+
+	public synchronized void setWindowTopHeight(double window_top_height)
+		{
+		this.window_top_height = window_top_height;
+		}
+
+	public synchronized void setDoorTopHeight(double door_top_height)
+		{
+		this.door_top_height = door_top_height;
+		}
+
+	public void addLine(String id, GPLine line)
+		{
+		this.lines.put(id, line);
+		}
+
+	public void addWall(String id, List<String> lineList)
+		{
+		this.layers.put(id, lineList);
 		}
 
 	/*
@@ -95,10 +139,10 @@ public class GPDataType implements Serializable
 		{
 		StringBuffer buffy = new StringBuffer();
 
-		for (Entry<String, List<GPSurface>> e : getWalls().entrySet())
+		for (Entry<String, List<GPLine>> e : getLayers().entrySet())
 			{
-			buffy.append("Wall " + e.getKey() + "\n");
-			for (GPSurface s : e.getValue())
+			buffy.append("Layer " + e.getKey() + "\n");
+			for (GPLine s : e.getValue())
 				{
 				buffy.append("\t" + s.toString() + "\n");
 				}
@@ -106,6 +150,5 @@ public class GPDataType implements Serializable
 
 		return buffy.toString();
 		}
-
 
 	}

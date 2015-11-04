@@ -1,41 +1,27 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
  <groundplan name="4H-HORA Projext1">
-	<layer name="VOM$SYSTEM$VORDEFINIERT">
-		<wall id="0">
-			<surface id="Line057"/>
-			<surface id="Line021"/>
-			<surface id="Line015"/>
-			<surface id="Line019"/>
-			<surface id="Line004"/>
-			<surface id="Line010"/>
-			<surface id="Line000"/>
-			<surface id="Line001"/>
-			<surface id="Line011"/>
-			<surface id="Line005"/>
-			<surface id="Line020"/>
-			<surface id="Line014"/>
-			<surface id="Line016"/>
-			<surface id="Line022"/>
-			<surface id="Line060"/>
-		</wall>
-		<wall id="1">
-			<surface id="Line017"/>
-			<surface id="Line013"/>
-		</wall>
-		<wall id="2">
-			<surface id="Line006"/>
-			<surface id="Line026"/>
-			<surface id="Line009"/>
-			<surface id="Line025"/>
-		</wall>
-		<wall id="3">
-			<surface id="Line012"/>
-			<surface id="Line027"/>
-			<surface id="Line007"/>
-			<surface id="Line018"/>
-			<surface id="Line028"/>
-			<surface id="Line008"/>
-		</wall>
+	<config>
+		<wall_top_height>
+			100.0
+		</wall_top_height>
+		<window_bottom_height>
+			40.0
+		</window_bottom_height>
+		<window_top_height>
+			75.0
+		</window_top_height>
+		<door_top_height>
+			80.0
+		</door_top_height>
+	</config>
+	<layer name="VOM$SYSTEM$VORDEFINIERT" type="WALL">
+	
+	</layer>
+	<layer name="WINDOWS" type="WINDOW">
+	
+	</layer>
+	<layer name="DOORS" type="DOOR">
+	
 	</layer>
 </groundplan>	
 	

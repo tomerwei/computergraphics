@@ -12,7 +12,7 @@ import cgresearch.core.math.IVector3;
  * @author Leonard.Opitz
  *
  */
-public class GPSurface implements Serializable
+public class GPLine implements Serializable
 	{
 	/**
 	 * 
@@ -22,14 +22,14 @@ public class GPSurface implements Serializable
 	private String name = null;
 	private IVector3 start = null;
 	private IVector3 end = null;
-	private Facing face = null;
+	private LineType lineType = null;
 
-	public GPSurface(String name, IVector3 startPoint, IVector3 endPoint)
+	public GPLine(String name, IVector3 startPoint, IVector3 endPoint)
 		{
 		this.name = name;
 		this.start = startPoint;
 		this.end = endPoint;
-		this.face = Facing.INSIDE;
+		this.lineType = LineType.WALL;
 		}
 
 	public String getName()
@@ -37,14 +37,14 @@ public class GPSurface implements Serializable
 		return name;
 		}
 
-	public Facing getFace()
+	public LineType getLineType()
 		{
-		return face;
+		return lineType;
 		}
 
-	public void setFacing(Facing face)
+	public void setLineType(LineType type)
 		{
-		this.face = face;
+		this.lineType = type;
 		}
 
 	public IVector3 getStart()
@@ -63,9 +63,9 @@ public class GPSurface implements Serializable
 			+ this.end.toString(2) + ">";
 		}
 
-	public enum Facing
+	public enum LineType
 		{
-		OUTSIDE, INSIDE;
+		WALL, DOOR, WINDOW;
 		}
 
 	}

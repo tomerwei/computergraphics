@@ -235,7 +235,7 @@ public class Test extends CgApplication
 		@SuppressWarnings("unchecked")
 		List<DXFLine> lineList = layer
 			.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
-		GPRenderer renderer = new GPRenderer();
+		GPRenderer renderer = new GPRenderer(null);
 
 		return new CgNode(renderer.renderWallFromDXFLineFormat(lineList),
 			layerName);
@@ -403,7 +403,6 @@ public class Test extends CgApplication
 		List<DXFLine> lineList = layer
 			.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
 
-
 		}
 
 	/*
@@ -413,14 +412,14 @@ public class Test extends CgApplication
 
 	public Test()
 		{
-		// testOne();
+		testOne();
 		// testTwo();
 		// testThree();
 		// testFour();
 		// testWalls();
 		// printContent("dxf/Grundriss-Ferienhaus.dxf");
 		// printContent("dxf/Grundriss_Haus_02.dxf");
-		printContent("dxf/4H-HORA Projekt1.dxf");
+		// printContent("dxf/4H-HORA Projekt1.dxf");
 		}
 
 	public static void main(String[] args)

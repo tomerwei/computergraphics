@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <groundplan name="Grundriss_Haus_02">
+	<config>
+		<wall_top_height>
+			30.0
+		</wall_top_height>
+		<window_bottom_height>
+			10.0
+		</window_bottom_height>
+		<window_top_height>
+			26.0
+		</window_top_height>
+		<door_top_height>
+			28.0
+		</door_top_height>
+	</config>
+	<layer name="Schnittkanten" type="WALL">
+	
+	</layer>
+	<layer name="Ansichtskanten" type="WINDOW">
+	
+	</layer>
+	<layer name="Tuerkanten" type="DOOR">
+	
+	</layer>
+</groundplan>
