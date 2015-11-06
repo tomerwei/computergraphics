@@ -1,6 +1,8 @@
 package cgresearch.studentprojects.autogenerator;
 
 import java.io.Serializable;
+
+import cgresearch.core.math.IVector;
 import cgresearch.core.math.Vector;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,31 +13,31 @@ public class Data2D implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Vector> x = new ArrayList<Vector>();
-	private List<Vector> y = new ArrayList<Vector>();
-	private List<Vector> z = new ArrayList<Vector>();
+	private List<IVector> x = new ArrayList<IVector>();
+	private List<IVector> y = new ArrayList<IVector>();
+	private List<IVector> z = new ArrayList<IVector>();
 
-	public List<Vector> getX() {
+	public List<IVector> getX() {
 		return x;
 	}
 
-	public void setX(List<Vector> x) {
+	public void setX(List<IVector> x) {
 		this.x = x;
 	}
 
-	public List<Vector> getY() {
+	public List<IVector> getY() {
 		return y;
 	}
 
-	public void setY(List<Vector> y) {
+	public void setY(List<IVector> y) {
 		this.y = y;
 	}
 
-	public List<Vector> getZ() {
+	public List<IVector> getZ() {
 		return z;
 	}
 
-	public void setZ(List<Vector> z) {
+	public void setZ(List<IVector> z) {
 		this.z = z;
 	}
 

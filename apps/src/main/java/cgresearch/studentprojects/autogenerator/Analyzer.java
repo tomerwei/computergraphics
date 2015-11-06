@@ -1,23 +1,27 @@
 package cgresearch.studentprojects.autogenerator;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import cgresearch.core.math.PrincipalComponentAnalysis;
+import cgresearch.core.math.VectorMatrixFactory;
 
-public class Analyzer implements Serializable {
+public class Analyzer {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private List<Car> data = new ArrayList<Car>();
+	private PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
 
-	public List<Car> getData() {
-		return data;
+	public void initPCA(Data2D data) {
+
+		for (int i = 0; i < data.getX().size(); i++) {
+			// this.pca.add(VectorMatrixFactory.newIVector3(data.getX().get(i),
+			// data.getY().get(i), data.getZ().get(i)));
+		}
+
 	}
 
-	public void setData(List<Car> data) {
-		this.data = data;
+	public PrincipalComponentAnalysis getPca() {
+		return pca;
+	}
+
+	public void setPca(PrincipalComponentAnalysis pca) {
+		this.pca = pca;
 	}
 
 }

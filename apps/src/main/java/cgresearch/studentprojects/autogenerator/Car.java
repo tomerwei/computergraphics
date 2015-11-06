@@ -3,6 +3,7 @@ package cgresearch.studentprojects.autogenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgresearch.core.math.IVector;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
@@ -12,15 +13,15 @@ public class Car {
 
 	private List<BezierCurve> curves = new ArrayList<BezierCurve>();
 	private List<IVector3> points = new ArrayList<IVector3>();
-	private Vector x = new Vector(28);
-	private Vector y = new Vector(28);
-	private Vector z = new Vector(28);
+	private IVector x = new Vector(28);
+	private IVector y = new Vector(28);
+	private IVector z = new Vector(28);
 
 	public Car() {
 
 	}
 
-	public Car(Vector x, Vector y, Vector z) {
+	public Car(IVector x, IVector y, IVector z) {
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -157,29 +158,29 @@ public class Car {
 		this.points = points;
 	}
 
-	public Vector getX() {
+	public IVector getX() {
 		return x;
 	}
 
-	public void setX(Vector x) {
+	public void setX(IVector x) {
 		this.x = null;
 		this.x = x;
 	}
 
-	public Vector getY() {
+	public IVector getY() {
 		return y;
 	}
 
-	public void setY(Vector y) {
+	public void setY(IVector y) {
 		this.y = null;
 		this.y = y;
 	}
 
-	public Vector getZ() {
+	public IVector getZ() {
 		return z;
 	}
 
-	public void setZ(Vector z) {
+	public void setZ(IVector z) {
 		this.z = null;
 		this.z = z;
 	}
