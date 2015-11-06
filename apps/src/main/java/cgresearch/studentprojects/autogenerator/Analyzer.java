@@ -10,13 +10,13 @@ public class Analyzer implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Data2D> data = new ArrayList<Data2D>();
+	private List<Car> data = new ArrayList<Car>();
 
-	public List<Data2D> getData() {
+	public List<Car> getData() {
 		return data;
 	}
 
-	public void setData(List<Data2D> data) {
+	public void setData(List<Car> data) {
 		this.data = data;
 	}
 

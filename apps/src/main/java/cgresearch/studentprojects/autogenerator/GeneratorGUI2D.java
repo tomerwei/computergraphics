@@ -47,6 +47,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	ITriangleMesh triangleMesh = new TriangleMesh();
 	Analyzer analyzer = new Analyzer();
+	Data2D data = new Data2D();
 
 	JPanel size = new JPanel(new GridLayout(0, 1));
 	TitledBorder sizeBorder = BorderFactory.createTitledBorder("Abmessungen");
@@ -126,6 +127,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	JButton left = new JButton("Left");
 	JButton right = new JButton("Right");
 	JButton save = new JButton("Speichern");
+	JButton fromData = new JButton("Generate form Data");
 
 	Auto2D auto;
 
@@ -538,6 +540,16 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		});
 		add(deserialize);
 
+		fromData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				remove();
+				generateFromData();
+			}
+
+		});
+		fromData.setEnabled(false);
+		add(fromData);
+
 	}
 
 	@Override
@@ -778,32 +790,47 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void saveAuto() {
-		Data2D data = new Data2D();
-		data.getCurves().add(this.auto.getFront().getLeft());
-		data.getCurves().add(this.auto.getFront().getTop());
-		data.getCurves().add(this.auto.getGast().getLeft());
-		data.getCurves().add(this.auto.getGast().getTop());
-		data.getCurves().add(this.auto.getGast().getRight());
-		data.getCurves().add(this.auto.getHeck().getTop());
-		data.getCurves().add(this.auto.getHeck().getRight());
-		data.getCurves().add(this.auto.getChassis().getRight());
-		data.getCurves().add(this.auto.getChassis().getBottom());
-		data.getCurves().add(this.auto.getChassis().getLeft());
+		Car car = new Car();
+		car.getCurves().add(this.auto.getFront().getLeft());
+		car.getCurves().add(this.auto.getFront().getTop());
+		car.getCurves().add(this.auto.getGast().getLeft());
+		car.getCurves().add(this.auto.getGast().getTop());
+		car.getCurves().add(this.auto.getGast().getRight());
+		car.getCurves().add(this.auto.getHeck().getTop());
+		car.getCurves().add(this.auto.getHeck().getRight());
+		car.getCurves().add(this.auto.getChassis().getRight());
+		car.getCurves().add(this.auto.getChassis().getBottom());
+		car.getCurves().add(this.auto.getChassis().getLeft());
 
-		data.fillPoints();
-		for (IVector3 v : data.getPoints()) {
+		car.fillPoints();
+		for (IVector3 v : car.getPoints()) {
 			System.out.println(v.get(0) + " / " + v.get(1) + " / " + v.get(2));
 		}
-		data.fillArrays();
-		for (double d : data.getX()) {
-			System.out.println("x = " + d);
+		car.fillArrays();
+
+		System.out.println(car.getX().getDimension());
+		System.out.println(car.getY().getDimension());
+		System.out.println(car.getZ().getDimension());
+
+		for (int i = 0; i < car.getX().getDimension(); i++) {
+			System.out.println("x = " + car.getX().get(i));
 		}
 
-		for (double d : data.getY()) {
-			System.out.println("y = " + d);
+		for (int i = 0; i < car.getY().getDimension(); i++) {
+			System.out.println("y = " + car.getY().get(i));
 		}
 
-		analyzer.getData().add(data);
+		for (int i = 0; i < car.getZ().getDimension(); i++) {
+			System.out.println("z = " + car.getZ().get(i));
+		}
+
+		this.data.getX().add(car.getX());
+		this.data.getY().add(car.getY());
+		this.data.getZ().add(car.getZ());
+
+		System.out.println("Data " + this.data.getX().get(0).get(0));
+		System.out.println("Data " + this.data.getY().get(0).get(0));
+		System.out.println("Data " + this.data.getZ().get(0).get(0));
 
 		save.setEnabled(false);
 	}
@@ -811,9 +838,9 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	public void serialize() {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(
-					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\analyzer.ser");
+					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(this.analyzer);
+			out.writeObject(this.data);
 			out.close();
 			fileOut.close();
 
@@ -822,12 +849,12 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void deserialize() {
-		Analyzer a = null;
+		Data2D d = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(
-					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\analyzer.ser");
+					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
-			a = (Analyzer) in.readObject();
+			d = (Data2D) in.readObject();
 			in.close();
 			fileIn.close();
 		} catch (IOException i) {
@@ -836,8 +863,36 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			System.out.println("Analyzer class not found");
 			c.printStackTrace();
 		}
-		this.analyzer = a;
-		System.out.println(analyzer.getData().get(0));
+		this.data = null;
+		this.data = d;
+		System.out.println(this.data.getX().get(0).get(0) + "/" + this.data.getY().get(0).get(0) + "/"
+				+ this.data.getZ().get(0).get(0));
+		System.out.println("Size " + this.data.getX().size());
+		System.out.println("Size " + this.data.getY().size());
+		System.out.println("Size " + this.data.getZ().size());
+
+		fromData.setEnabled(true);
+
+	}
+
+	public void generateFromData() {
+
+		Car car = new Car(this.data.getX().get(29), this.data.getY().get(29), this.data.getZ().get(29));
+
+		CgNode father = new CgNode(null, "auto");
+
+		int i = 1;
+		for (BezierCurve c : car.getCurves()) {
+			CgNode node = new CgNode(c, "BezierCurve " + i);
+
+			father.addChild(node);
+			i++;
+		}
+
+		getRootNode().addChild(father);
+
+		fromData.setEnabled(false);
+
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
