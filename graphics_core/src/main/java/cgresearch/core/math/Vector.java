@@ -1,8 +1,14 @@
 package cgresearch.core.math;
 
-public class Vector implements IVector {
+import java.io.Serializable;
 
-  private double[] values;
+public class Vector implements IVector, Serializable {
+
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private double[] values;
 
   public Vector(int dimension) {
     values = new double[dimension];
