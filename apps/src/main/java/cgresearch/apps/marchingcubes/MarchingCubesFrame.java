@@ -43,34 +43,37 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
    */
   private MarchingCubes marchingCubes = null;
 
-  private IImplicitFunction3D implicitFunction;
-
   /**
    * Constructor.
    */
   public MarchingCubesFrame() {
-    implicitFunction = new ImplicitFunction3DTorus(1, 0.5);
     marchingCubes = new MarchingCubes(50, VectorMatrixFactory.newIVector3(-3, -3, -3), 6);
     vis = new ImplicitFunctionVisualization(256);
 
+    createMesh(new ImplicitFunction3DTorus(1, 0.5));
+
+    // Create visualization
+    ITriangleMesh mesh = vis.getTriangleMesh();
+    CgNode node = new CgNode(mesh, "implicit function plane");
+    // getCgRootNode().addChild(node);
+    node.setVisible(true);
+
+    CoordinateSystem coordSys = new CoordinateSystem();
+    getCgRootNode().addChild(coordSys);
+  }
+
+  public void createMesh(IImplicitFunction3D implicitFunction) {
     // Create marching cubes mesh
     ITriangleMesh marchingCubesMesh = marchingCubes.createMesh(implicitFunction);
     marchingCubesMesh = NodeMerger.merge(marchingCubesMesh, 1e-5);
     marchingCubesMesh.getMaterial().setRenderMode(Material.Normals.PER_VERTEX);
     marchingCubesMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    marchingCubesMesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR3);
+    // marchingCubesMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
+    marchingCubesMesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR4);
     CgNode nodeSuperquadric = new CgNode(marchingCubesMesh, "marching cubes");
     nodeSuperquadric.setVisible(true);
+    getCgRootNode().removeAllChildren();
     getCgRootNode().addChild(nodeSuperquadric);
-
-    // Create visualization
-    ITriangleMesh mesh = vis.getTriangleMesh();
-    CgNode node = new CgNode(mesh, "implicit function plane");
-    getCgRootNode().addChild(node);
-    node.setVisible(true);
-
-    CoordinateSystem coordSys = new CoordinateSystem();
-    getCgRootNode().addChild(coordSys);
   }
 
   @Override
@@ -133,16 +136,9 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
   /**
    * Getter.
    */
-  private IImplicitFunction3D getImplicitFunction() {
-    return implicitFunction;
-  }
-
-  /**
-   * Getter.
-   */
-  private ImplicitFunctionVisualization getVis() {
-    return vis;
-  }
+  // private ImplicitFunctionVisualization getVis() {
+  // return vis;
+  // }
 
   /**
    * Program entry point.
@@ -154,6 +150,6 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
     appLauncher.create(app);
     appLauncher.setRenderSystem(RenderSystem.JOGL);
     appLauncher.setUiSystem(UI.JOGL_SWING);
-    appLauncher.addCustomUi(new MarchingCubesGui(app.getVis(), app.getImplicitFunction()));
+    appLauncher.addCustomUi(new MarchingCubesGui(app));
   }
 }

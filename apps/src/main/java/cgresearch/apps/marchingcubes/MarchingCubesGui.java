@@ -1,15 +1,19 @@
 package cgresearch.apps.marchingcubes;
 
+import java.awt.FlowLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
 import javax.swing.BoxLayout;
-import javax.swing.JSlider;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
-import cgresearch.graphics.datastructures.implicitfunction.IImplicitFunction3D;
-import cgresearch.graphics.misc.ImplicitFunctionVisualization;
+import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunction3DSphere;
+import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunction3DTorus;
+import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunctionGourSat;
+import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunctionSuperquadric;
 import cgresearch.ui.IApplicationControllerGui;
 
 /**
@@ -18,88 +22,118 @@ import cgresearch.ui.IApplicationControllerGui;
  * @author Philipp Jenke
  *
  */
-public class MarchingCubesGui extends IApplicationControllerGui implements
-		ChangeListener {
+public class MarchingCubesGui extends IApplicationControllerGui implements ChangeListener, ItemListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * GUI components
-	 */
-	private JSlider sliderX = null;
-	private JSlider sliderY = null;
+  /**
+   * GUI components
+   */
+  // private JSlider sliderX = null;
+  // private JSlider sliderY = null;
+  private JComboBox<String> comboBoxFunctions;
 
-	/**
-	 * Vis object.
-	 */
-	private ImplicitFunctionVisualization vis = null;
+  /**
+   * Vis object.
+   */
+  // private ImplicitFunctionVisualization vis = null;
 
-	/**
-	 * Implicit function used
-	 */
-	private IImplicitFunction3D implicitFunction = null;
+  /**
+   * Settings values
+   */
+  // private int isoValue = 0;
+  // private IVector3 center = VectorMatrixFactory.newIVector3(0, 0, 0);
+  // private IVector3 dx = VectorMatrixFactory.newIVector3(1, 0, 0);
+  // private IVector3 dy = VectorMatrixFactory.newIVector3(0, 1, 0);
 
-	/**
-	 * Settings values
-	 */
-	private int isoValue = 0;
-	private IVector3 center = VectorMatrixFactory.newIVector3(0, 0, 0);
-	private IVector3 dx = VectorMatrixFactory.newIVector3(1, 0, 0);
-	private IVector3 dy = VectorMatrixFactory.newIVector3(0, 1, 0);
+  private enum Functions {
+    Torus, Sphere, Superquadric, GourSat
+  }
 
-	/**
-	 * Constructor
-	 */
-	public MarchingCubesGui(ImplicitFunctionVisualization vis,
-			IImplicitFunction3D implicitFunction) {
-		this.vis = vis;
-		this.implicitFunction = implicitFunction;
+  private final MarchingCubesFrame frame;
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+  /**
+   * Constructor
+   */
+  public MarchingCubesGui(MarchingCubesFrame frame) {
+    // this.vis = vis;
+    this.frame = frame;
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    setLayout(new FlowLayout());
 
-		sliderX = new JSlider();
-		sliderX.addChangeListener(this);
-		sliderX.setValue(0);
-		add(sliderX);
+    add(new JLabel("Select function:"));
+    comboBoxFunctions = new JComboBox<String>();
+    for (Functions function : Functions.values()) {
+      comboBoxFunctions.addItem(function.name());
+    }
+    comboBoxFunctions.addItemListener(this);
+    add(comboBoxFunctions);
 
-		sliderY = new JSlider();
-		sliderY.addChangeListener(this);
-		sliderY.setValue(0);
-		add(sliderY);
+    // sliderX = new JSlider();
+    // sliderX.addChangeListener(this);
+    // sliderX.setValue(0);
+    // add(sliderX);
+    //
+    // sliderY = new JSlider();
+    // sliderY.addChangeListener(this);
+    // sliderY.setValue(0);
+    // add(sliderY);
 
-		// Initial create
-		vis.create(implicitFunction, center, dx, dy, 4, isoValue);
-	}
+    // Initial create
+    // vis.create(implicitFunction, center, dx, dy, 4, isoValue);
+  }
 
-	@Override
-	public String getName() {
-		return "Implicit functions";
-	}
+  @Override
+  public String getName() {
+    return "Implicit functions";
+  }
 
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		if (sliderX != null && sliderY != null && vis != null) {
-			double alpha = (double) sliderX.getValue() / 100.0 * Math.PI * 2.0;
-			double beta = (double) sliderY.getValue() / 100.0 * Math.PI * 2.0;
-			IMatrix3 rotX = VectorMatrixFactory.getRotationMatrix(
-					VectorMatrixFactory.newIVector3(1, 0, 0), alpha);
-			IMatrix3 rotY = VectorMatrixFactory.getRotationMatrix(
-					VectorMatrixFactory.newIVector3(0, 1, 0), beta);
-			vis.create(implicitFunction, center,
-					rotY.multiply(rotX.multiply(dx)),
-					rotY.multiply(rotX.multiply(dy)), 4, isoValue);
-		}
-	}
+  @Override
+  public void stateChanged(ChangeEvent e) {
+    // if (sliderX != null && sliderY != null && vis != null) {
+    // double alpha = (double) sliderX.getValue() / 100.0 * Math.PI * 2.0;
+    // double beta = (double) sliderY.getValue() / 100.0 * Math.PI * 2.0;
+    // IMatrix3 rotX =
+    // VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(1,
+    // 0, 0), alpha);
+    // IMatrix3 rotY =
+    // VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,
+    // 1, 0), beta);
+    // vis.create(implicitFunction, center, rotY.multiply(rotX.multiply(dx)),
+    // rotY.multiply(rotX.multiply(dy)), 4,
+    // isoValue);
+    // }
+  }
 
-	/**
-	 * Setter
-	 */
-	public void setVis(ImplicitFunctionVisualization vis) {
-		this.vis = vis;
+  /**
+   * Setter
+   */
+  // public void setVis(ImplicitFunctionVisualization vis) {
+  // this.vis = vis;
+  // }
 
-	}
-
+  @Override
+  public void itemStateChanged(ItemEvent e) {
+    String functionName = (String) comboBoxFunctions.getSelectedItem();
+    Functions function = Functions.valueOf(functionName);
+    switch (function) {
+      case Torus:
+        frame.createMesh(new ImplicitFunction3DTorus(1, 0.5));
+        break;
+      case Sphere:
+        frame.createMesh(new ImplicitFunction3DSphere(1));
+        break;
+      case Superquadric:
+        frame.createMesh(new ImplicitFunctionSuperquadric(1, 0.5));
+        break;
+      case GourSat:
+        frame.createMesh(new ImplicitFunctionGourSat());
+        break;
+      default:
+        break;
+    }
+  }
 }

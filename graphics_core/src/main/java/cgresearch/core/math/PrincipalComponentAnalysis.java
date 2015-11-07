@@ -104,8 +104,8 @@ public class PrincipalComponentAnalysis {
 				V.get(2, 1));
 		tangentV = VectorMatrixFactory.newIVector3(V.get(0, 2), V.get(1, 2),
 				V.get(2, 2));
-		eigenValues = VectorMatrixFactory.newIVector3(D.get(0, 0), V.get(1, 0),
-				V.get(2, 0));
+		eigenValues = VectorMatrixFactory.newIVector3(D.get(0, 0), D.get(1, 1),
+				D.get(2, 2));
 
 	}
 

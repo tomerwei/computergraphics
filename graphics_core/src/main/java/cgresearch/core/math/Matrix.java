@@ -102,7 +102,7 @@ public class Matrix implements IMatrix {
 			result = new Matrix(getNumberOfRows(), getNumberOfColumns());
 
 			for (int i = 0; i < result.getNumberOfRows(); i++) {
-				for (int j = 0; j > result.getNumberOfColumns(); i++) {
+				for (int j = 0; j < result.getNumberOfColumns(); j++) {
 					result.set(i, j, this.get(i, j) + other.get(i, j));
 				}
 			}
