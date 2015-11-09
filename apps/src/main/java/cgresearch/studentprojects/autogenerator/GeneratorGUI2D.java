@@ -910,35 +910,20 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void testPCA() {
-//		PCA pca = new PCA();
-//		pca.testPCA();
-//		List<IVector> eigenVektor = new ArrayList<IVector>();
-//		List<Double> eigenValue = new ArrayList<Double>();
-//		for (int i = 0; i < 3; i++) {
-//			eigenVektor.add(pca.getEigenVector(i));
-//			eigenValue.add(pca.getEigenValue(i));
-//		}
-//		for (IVector v : eigenVektor) {
-//			System.out.println("Eigenvekor " + eigenVektor.indexOf(v) + ": " + v);
-//		}
-//		for (Double d : eigenValue) {
-//			System.out.println("Eigenvalue " + eigenValue.indexOf(d) + ": " + d);
-//		}
-		
-//		PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
-//		pca.testPCA();
-//		System.out.println("Eigenwert:");
-//		System.out.println("X = " + pca.getEigenValues().get(0) + "Y = " + pca.getEigenValues().get(1) + "Z = "
-//				+ pca.getEigenValues().get(2));
-//		System.out.println("Normal:");
-//		System.out.println(
-//				"X = " + pca.getNormal().get(0) + "Y = " + pca.getNormal().get(1) + "Z = " + pca.getNormal().get(2));
-//		System.out.println("TangentU:");
-//		System.out.println("X = " + pca.getTangentU().get(0) + "Y = " + pca.getTangentU().get(1) + "Z = "
-//				+ pca.getTangentU().get(2));
-//		System.out.println("TangentV:");
-//		System.out.println("X = " + pca.getTangentV().get(0) + "Y = " + pca.getTangentV().get(1) + "Z = "
-//				+ pca.getTangentV().get(2));
+		PCA pca = new PCA();
+		pca.testPCA();
+		List<IVector> eigenVektor = new ArrayList<IVector>();
+		List<Double> eigenValue = new ArrayList<Double>();
+		for (int i = 0; i < 3; i++) {
+			eigenVektor.add(pca.getEigenVector(i));
+			eigenValue.add(pca.getEigenValue(i));
+		}
+		for (IVector v : eigenVektor) {
+			System.out.println("Eigenvekor " + eigenVektor.indexOf(v) + ": " + v);
+		}
+		for (Double d : eigenValue) {
+			System.out.println("Eigenvalue " + eigenValue.indexOf(d) + ": " + d);
+		}
 
 	}
 
