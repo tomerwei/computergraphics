@@ -29,6 +29,7 @@ import cgresearch.core.math.IVector;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.IVector4;
 import cgresearch.core.math.PrincipalComponentAnalysis;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -564,6 +565,16 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		});
 		add(testPCA);
 
+		JButton applyPCA = new JButton("PCA verwenden");
+		applyPCA.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				applyPCA();
+			}
+
+		});
+		add(applyPCA);
+
 	}
 
 	@Override
@@ -891,7 +902,48 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void generateFromData() {
 
-		Car car = new Car(this.data.getX().get(29), this.data.getY().get(29), this.data.getZ().get(29));
+		// Car car = new Car(this.data.getX().get(29), this.data.getY().get(29),
+		// this.data.getZ().get(29));
+		// Car car = new Car(this.analyzer.getEigenX().get(0),
+		// this.analyzer.getEigenY().get(0),
+		// this.analyzer.getEigenZ().get(0));
+		// Car car = new Car(this.analyzer.getValueX(),
+		// this.analyzer.getValueY(), this.analyzer.getValueZ());
+
+		IVector x = new Vector(28);
+		IVector y = new Vector(28);
+		IVector z = new Vector(28);
+
+		// for (int i = 0; i < analyzer.getEigenX().get(1).getDimension(); i++)
+		// {
+		// x.set(i, analyzer.getEigenX().get(1).get(i) *
+		// analyzer.getValueX().get(1));
+		// }
+
+		// for (int i = 0; i < analyzer.getEigenY().get(1).getDimension(); i++)
+		// {
+		// y.set(i, analyzer.getEigenY().get(1).get(i) *
+		// analyzer.getValueY().get(1));
+		// }
+		//
+		// for (int i = 0; i < analyzer.getEigenZ().get(1).getDimension(); i++)
+		// {
+		// z.set(i, analyzer.getEigenZ().get(1).get(i) *
+		// analyzer.getValueZ().get(1));
+		// }
+
+		// x =
+		// analyzer.getEigenX().get(0).multiply(analyzer.getValueX().get(0));
+		// y =
+		// analyzer.getEigenY().get(0).multiply(analyzer.getValueY().get(0));
+		// z =
+		// analyzer.getEigenZ().get(0).multiply(analyzer.getValueZ().get(0));
+
+		x = analyzer.getPcaX().getEigenVector(0).multiply(analyzer.getPcaX().getEigenValue(27));
+		y = analyzer.getPcaY().getEigenVector(0).multiply(analyzer.getPcaY().getEigenValue(27));
+		z = analyzer.getPcaZ().getEigenVector(0).multiply(analyzer.getPcaZ().getEigenValue(27));
+
+		Car car = new Car(x, y, z);
 
 		CgNode father = new CgNode(null, "auto");
 
@@ -925,6 +977,10 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			System.out.println("Eigenvalue " + eigenValue.indexOf(d) + ": " + d);
 		}
 
+	}
+
+	public void applyPCA() {
+		analyzer.applyPCA(data);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
