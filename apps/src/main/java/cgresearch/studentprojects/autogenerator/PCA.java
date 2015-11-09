@@ -112,7 +112,7 @@ public class PCA {
 
 	public void testPCA() {
 		int dimension = 3;
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 10; i++) {
 			System.out.println("Vector " + (i + 1) + ":");
 			IVector v = new Vector(dimension);
 			v.set(0, Math.random() * 2);
