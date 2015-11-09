@@ -939,9 +939,16 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		// z =
 		// analyzer.getEigenZ().get(0).multiply(analyzer.getValueZ().get(0));
 
-		x = analyzer.getPcaX().getEigenVector(0).multiply(analyzer.getPcaX().getEigenValue(27));
-		y = analyzer.getPcaY().getEigenVector(0).multiply(analyzer.getPcaY().getEigenValue(27));
-		z = analyzer.getPcaZ().getEigenVector(0).multiply(analyzer.getPcaZ().getEigenValue(27));
+		// x =
+		// analyzer.getPcaX().getEigenVector(25).multiply(analyzer.getPcaX().getEigenValue(25));
+		// y =
+		// analyzer.getPcaY().getEigenVector(25).multiply(analyzer.getPcaY().getEigenValue(25));
+		// z =
+		// analyzer.getPcaZ().getEigenVector(25).multiply(analyzer.getPcaZ().getEigenValue(25));
+
+		x = analyzer.getPcaX().getVDV().multiply(analyzer.getPcaX().getEigenVector(27));
+		y = analyzer.getPcaY().getVDV().multiply(analyzer.getPcaY().getEigenVector(27));
+		z = analyzer.getPcaZ().getVDV().multiply(analyzer.getPcaZ().getEigenVector(27));
 
 		Car car = new Car(x, y, z);
 

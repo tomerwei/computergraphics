@@ -110,6 +110,28 @@ public class PCA {
 		V = null;
 	}
 
+	public IMatrix getVDV() {
+		int dimension = points.get(0).getDimension();
+		IMatrix result = new Matrix(dimension, dimension);
+		IMatrix v = new Matrix(V.getRowDimension(), V.getColumnDimension());
+		IMatrix d = new Matrix(D.getRowDimension(), D.getColumnDimension());
+		cgresearch.core.math.jama.Matrix VV = V.transpose();
+		IMatrix vv = new Matrix(V.getRowDimension(), V.getColumnDimension());
+
+		for (int rowIndex = 0; rowIndex < dimension; rowIndex++) {
+			for (int colIndex = 0; colIndex < dimension; colIndex++) {
+				v.set(colIndex, rowIndex, V.get(colIndex, rowIndex));
+				d.set(colIndex, rowIndex, D.get(colIndex, rowIndex));
+				vv.set(colIndex, rowIndex, VV.get(colIndex, rowIndex));
+			}
+		}
+
+		result = v.multiply(d);
+		result = result.multiply(vv);
+
+		return result;
+	}
+
 	public void testPCA() {
 		int dimension = 3;
 		for (int i = 0; i < 10; i++) {
