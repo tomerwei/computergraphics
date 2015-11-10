@@ -23,8 +23,7 @@ import cgresearch.graphics.material.Material;
  * @author Philipp Jenke
  * 
  */
-public class RenderContentPointCloud extends
-    JoglRenderContent {
+public class RenderContentPointCloud extends JoglRenderContent {
 
   /**
    * Reference to the rendered point cloud.
@@ -57,80 +56,49 @@ public class RenderContentPointCloud extends
       return;
     }
 
-    int numberOfBuffers =
-        (pointCloud.getNumberOfPoints() - 1)
-            / MAX_POINTS_PER_BUFFER + 1;
+    int numberOfBuffers = (pointCloud.getNumberOfPoints() - 1) / MAX_POINTS_PER_BUFFER + 1;
     resetBuffers(numberOfBuffers);
 
     for (int buffersIndex = 0; buffersIndex < numberOfBuffers; buffersIndex++) {
-      int bufferSize =
-          (buffersIndex != numberOfBuffers - 1) ? MAX_POINTS_PER_BUFFER
-              : pointCloud.getNumberOfPoints()
-                  - MAX_POINTS_PER_BUFFER
-                  * (numberOfBuffers - 1);
+      int bufferSize = (buffersIndex != numberOfBuffers - 1) ? MAX_POINTS_PER_BUFFER
+          : pointCloud.getNumberOfPoints() - MAX_POINTS_PER_BUFFER * (numberOfBuffers - 1);
       buffers.get(buffersIndex).setSize(bufferSize);
 
       // Init temp arrays
-      float vb[] =
-          new float[bufferSize
-              * JoglBuffers.NUMBER_FLOATS_IN_VERTEX];
-      float nb[] =
-          new float[bufferSize
-              * JoglBuffers.NUMBER_FLOATS_IN_VERTEX];
-      float cb[] =
-          new float[bufferSize
-              * JoglBuffers.NUMBER_FLOATS_IN_VERTEX];
-      float tcb[] =
-          new float[bufferSize
-              * JoglBuffers.NUMBER_FLOATS_TEXCOORD];
+      float vb[] = new float[bufferSize * JoglBuffers.NUMBER_FLOATS_IN_VERTEX];
+      float nb[] = new float[bufferSize * JoglBuffers.NUMBER_FLOATS_IN_VERTEX];
+      float cb[] = new float[bufferSize * JoglBuffers.NUMBER_FLOATS_IN_VERTEX];
+      float tcb[] = new float[bufferSize * JoglBuffers.NUMBER_FLOATS_TEXCOORD];
       int ib[] = new int[bufferSize];
 
       // Fill arrays
       for (int bufferEntryIndex = 0; bufferEntryIndex < bufferSize; bufferEntryIndex++) {
-        int pointIndex =
-            buffersIndex * MAX_POINTS_PER_BUFFER
-                + bufferEntryIndex;
+        int pointIndex = buffersIndex * MAX_POINTS_PER_BUFFER + bufferEntryIndex;
         Point point = pointCloud.getPoint(pointIndex);
         // Vertex buffer
-        vb[bufferEntryIndex * 3] =
-            (float) point.getPosition().get(0);
-        vb[bufferEntryIndex * 3 + 1] =
-            (float) point.getPosition().get(1);
-        vb[bufferEntryIndex * 3 + 2] =
-            (float) point.getPosition().get(2);
+        vb[bufferEntryIndex * 3] = (float) point.getPosition().get(0);
+        vb[bufferEntryIndex * 3 + 1] = (float) point.getPosition().get(1);
+        vb[bufferEntryIndex * 3 + 2] = (float) point.getPosition().get(2);
         // Normal buffer
-        nb[bufferEntryIndex * 3] =
-            (float) (point.getNormal().get(0));
-        nb[bufferEntryIndex * 3 + 1] =
-            (float) (point.getNormal().get(1));
-        nb[bufferEntryIndex * 3 + 2] =
-            (float) (point.getNormal().get(2));
+        nb[bufferEntryIndex * 3] = (float) (point.getNormal().get(0));
+        nb[bufferEntryIndex * 3 + 1] = (float) (point.getNormal().get(1));
+        nb[bufferEntryIndex * 3 + 2] = (float) (point.getNormal().get(2));
         // Color buffer
-        cb[bufferEntryIndex * 3] =
-            (float) (point.getColor().get(0));
-        cb[bufferEntryIndex * 3 + 1] =
-            (float) (point.getColor().get(1));
-        cb[bufferEntryIndex * 3 + 2] =
-            (float) (point.getColor().get(2));
+        cb[bufferEntryIndex * 3] = (float) (point.getColor().get(0));
+        cb[bufferEntryIndex * 3 + 1] = (float) (point.getColor().get(1));
+        cb[bufferEntryIndex * 3 + 2] = (float) (point.getColor().get(2));
         // Texture coordinate buffer
-        tcb[bufferEntryIndex * 2] =
-            (float) (point.getTexCoord().get(0));
-        tcb[bufferEntryIndex * 2 + 1] =
-            (float) (point.getTexCoord().get(1));
+        tcb[bufferEntryIndex * 2] = (float) (point.getTexCoord().get(0));
+        tcb[bufferEntryIndex * 2 + 1] = (float) (point.getTexCoord().get(1));
         // Index buffer
         ib[bufferEntryIndex] = bufferEntryIndex;
       }
       // Create buffers
-      buffers.get(buffersIndex).createVertexBuffer(
-          bufferSize, vb);
-      buffers.get(buffersIndex).createNormalBuffer(
-          bufferSize, nb);
-      buffers.get(buffersIndex).createColorBuffer(
-          bufferSize, cb);
-      buffers.get(buffersIndex).createTexCoordBuffer(
-          bufferSize, tcb);
-      buffers.get(buffersIndex).createIndexBuffer(
-          bufferSize, ib);
+      buffers.get(buffersIndex).createVertexBuffer(bufferSize, vb);
+      buffers.get(buffersIndex).createNormalBuffer(bufferSize, nb);
+      buffers.get(buffersIndex).createColorBuffer(bufferSize, cb);
+      buffers.get(buffersIndex).createTexCoordBuffer(bufferSize, tcb);
+      buffers.get(buffersIndex).createIndexBuffer(bufferSize, ib);
     }
   }
 
@@ -147,12 +115,7 @@ public class RenderContentPointCloud extends
     for (JoglBuffers buffer : buffers) {
       buffer.clear();
     }
-    Logger
-        .getInstance()
-        .message(
-            "Creating "
-                + buffers.size()
-                + " set(s) of buffers for point cloud rendering.");
+    Logger.getInstance().debug("Creating " + buffers.size() + " set(s) of buffers for point cloud rendering.");
   }
 
   @Override
@@ -166,41 +129,28 @@ public class RenderContentPointCloud extends
       createRenderStructures();
     }
 
-    for (int buffersIndex = 0; buffersIndex < buffers
-        .size(); buffersIndex++) {
+    for (int buffersIndex = 0; buffersIndex < buffers.size(); buffersIndex++) {
       JoglBuffers joglBuffers = buffers.get(buffersIndex);
 
-      if (joglBuffers.getVertexBuffer() != null
-          && joglBuffers.getColorBuffer() != null
-          && joglBuffers.getNormalBuffer() != null
-          && joglBuffers.getIndexBuffer() != null) {
+      if (joglBuffers.getVertexBuffer() != null && joglBuffers.getColorBuffer() != null
+          && joglBuffers.getNormalBuffer() != null && joglBuffers.getIndexBuffer() != null) {
 
         gl.glPointSize(2);
 
         // Call vertex list
-        gl.glVertexPointer(
-            JoglBuffers.NUMBER_FLOATS_IN_VERTEX,
-            GL2.GL_FLOAT, 0, joglBuffers.getVertexBuffer());
+        gl.glVertexPointer(JoglBuffers.NUMBER_FLOATS_IN_VERTEX, GL2.GL_FLOAT, 0, joglBuffers.getVertexBuffer());
 
         // Color
-        gl.glColorPointer(
-            JoglBuffers.NUMBER_FLOATS_IN_VERTEX,
-            GL2.GL_FLOAT, 0, joglBuffers.getColorBuffer());
+        gl.glColorPointer(JoglBuffers.NUMBER_FLOATS_IN_VERTEX, GL2.GL_FLOAT, 0, joglBuffers.getColorBuffer());
 
         // Texture coordinates
-        gl.glColorPointer(
-            JoglBuffers.NUMBER_FLOATS_TEXCOORD,
-            GL2.GL_FLOAT, 0,
-            joglBuffers.getTexCoordBuffer());
+        gl.glTexCoordPointer(JoglBuffers.NUMBER_FLOATS_TEXCOORD, GL2.GL_FLOAT, 0, joglBuffers.getTexCoordBuffer());
 
         // Normals
-        gl.glNormalPointer(GL2.GL_FLOAT, 0,
-            joglBuffers.getNormalBuffer());
+        gl.glNormalPointer(GL2.GL_FLOAT, 0, joglBuffers.getNormalBuffer());
 
         // Draw vertices via indices
-        gl.glDrawElements(GL2.GL_POINTS,
-            joglBuffers.getSize(), GL2.GL_UNSIGNED_INT,
-            joglBuffers.getIndexBuffer());
+        gl.glDrawElements(GL2.GL_POINTS, joglBuffers.getSize(), GL2.GL_UNSIGNED_INT, joglBuffers.getIndexBuffer());
       }
     }
 
@@ -213,30 +163,24 @@ public class RenderContentPointCloud extends
 
     if (showPointsAsDiscs) {
       if (!hasSubContent()) {
-        addSubContent(PointsAsDiscsMeshFactory
-            .createPointsAsDiscsNode(pointCloud,
-                Material.PALETTE0_COLOR0));
+        addSubContent(PointsAsDiscsMeshFactory.createPointsAsDiscsNode(pointCloud, Material.PALETTE0_COLOR0));
       }
       drawSubContent(gl);
     }
   }
 
-    @Override
-    public void draw3D(GL2 gl, LightSource lightSource) {
+  @Override
+  public void draw3D(GL2 gl, LightSource lightSource) {
 
-    }
+  }
 
-    private void renderNormals(GL2 gl) {
+  private void renderNormals(GL2 gl) {
     // Normals
     double scale = 0.005;
     gl.glBegin(GL2.GL_LINES);
-    for (int pointIndex = 0; pointIndex < pointCloud
-        .getNumberOfPoints(); pointIndex++) {
-      IVector3 pos =
-          pointCloud.getPoint(pointIndex).getPosition();
-      IVector3 end =
-          pos.add(pointCloud.getPoint(pointIndex)
-              .getNormal().multiply(scale));
+    for (int pointIndex = 0; pointIndex < pointCloud.getNumberOfPoints(); pointIndex++) {
+      IVector3 pos = pointCloud.getPoint(pointIndex).getPosition();
+      IVector3 end = pos.add(pointCloud.getPoint(pointIndex).getNormal().multiply(scale));
       gl.glVertex3fv(pos.floatData(), 0);
       gl.glVertex3fv(end.floatData(), 0);
     }

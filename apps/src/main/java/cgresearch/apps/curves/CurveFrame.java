@@ -17,6 +17,7 @@ import cgresearch.graphics.datastructures.curves.ICurve;
 import cgresearch.graphics.datastructures.curves.LagrangeCurve;
 import cgresearch.graphics.datastructures.curves.MonomialCurve;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.ui.IApplicationControllerGui;
 
 /**
@@ -38,6 +39,7 @@ public class CurveFrame extends CgApplication {
     gui.registerCurve(addHermiteCurve(), "Hermite-Curve");
     gui.registerCurve(addLagrangeCurve(), "Lagrange-Curve");
     gui.registerCurve(addBezierCurve(), "Bezier-Curve");
+    getCgRootNode().addChild(new CoordinateSystem());
   }
 
   /**
@@ -49,6 +51,8 @@ public class CurveFrame extends CgApplication {
     curve.setControlPoint(1, VectorMatrixFactory.newIVector3(-0.25, 0.5, -0.5));
     curve.setControlPoint(2, VectorMatrixFactory.newIVector3(0.25, -0.5, 0.5));
     curve.setControlPoint(3, VectorMatrixFactory.newIVector3(0.5, 0.5, 0.5));
+    curve.getMaterial().setShowCurrentPoint(true);
+    curve.getMaterial().setShowControlPolyon(true);
     CgNode curveNode = new CgNode(curve, "Bezier Curve");
     curveNode.setVisible(true);
     getCgRootNode().addChild(curveNode);
@@ -64,6 +68,8 @@ public class CurveFrame extends CgApplication {
     curve.setControlPoint(1, VectorMatrixFactory.newIVector3(-0.25, 0.5, -0.5));
     curve.setControlPoint(2, VectorMatrixFactory.newIVector3(0.25, -0.5, 0.5));
     curve.setControlPoint(3, VectorMatrixFactory.newIVector3(0.5, 0.5, 0.5));
+    curve.getMaterial().setShowCurrentPoint(true);
+    curve.getMaterial().setShowControlPolyon(true);
     CgNode curveNode = new CgNode(curve, "Lagrange Curve");
     curveNode.setVisible(false);
     getCgRootNode().addChild(curveNode);
@@ -77,6 +83,8 @@ public class CurveFrame extends CgApplication {
     ICurve curveHermite =
         new HermiteCurve(VectorMatrixFactory.newIVector3(-0.5, -0.5, 0), VectorMatrixFactory.newIVector3(-0.5, 0.5, 0),
             VectorMatrixFactory.newIVector3(0.5, -0.5, 0), VectorMatrixFactory.newIVector3(0.5, 0.5, 0));
+    curveHermite.getMaterial().setShowCurrentPoint(true);
+    curveHermite.getMaterial().setShowControlPolyon(true);
     CgNode curveNode = new CgNode(curveHermite, "Hermite Curve");
     curveNode.setVisible(false);
     getCgRootNode().addChild(curveNode);
@@ -91,6 +99,8 @@ public class CurveFrame extends CgApplication {
     curvePolynomial.setControlPoint(0, VectorMatrixFactory.newIVector3(-0.5, -0.5, 0.5));
     curvePolynomial.setControlPoint(1, VectorMatrixFactory.newIVector3(0, 0.5, 0));
     curvePolynomial.setControlPoint(2, VectorMatrixFactory.newIVector3(0.5, -0.5, 0.5));
+    curvePolynomial.getMaterial().setShowCurrentPoint(true);
+    curvePolynomial.getMaterial().setShowControlPolyon(true);
     CgNode curveNode = new CgNode(curvePolynomial, "Polynomial (Monom) Curve");
     curveNode.setVisible(false);
     getCgRootNode().addChild(curveNode);

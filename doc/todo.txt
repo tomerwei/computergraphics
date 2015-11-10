@@ -1,4 +1,5 @@
-TODO  
+*** TODO  ***
+- Remove magic number: 8Bit Stencil Buffer in JoglFrame
 - Homeautomation: Bug in "at homeautomation.webservice.ChartHelper.createTimeSeries(ChartHelper.java:195)" falls zu einem Sensor/Zeitpunkt zwei Werte vorliegen
 - Fix ShaderEditorPanel
 - Kurven: GUI-An/Aus für Kontrollpunkte und Kontrollpolygon. 

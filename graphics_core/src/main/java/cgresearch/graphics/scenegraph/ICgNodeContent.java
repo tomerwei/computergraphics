@@ -18,44 +18,44 @@ import cgresearch.graphics.material.Material;
  */
 public abstract class ICgNodeContent extends Observable {
 
-	private boolean needsUpdateRenderStructures = false;
+  private boolean needsUpdateRenderStructures = false;
 
-	/**
-	 * Material for the mesh.
-	 */
-	private Material material = new Material();
+  /**
+   * Material for the mesh.
+   */
+  protected Material material = new Material();
 
-	/**
-	 * Return the bounding box of the content.
-	 */
-	public BoundingBox getBoundingBox() {
-		return new BoundingBox();
-	}
+  /**
+   * Return the bounding box of the content.
+   */
+  public BoundingBox getBoundingBox() {
+    return new BoundingBox();
+  }
 
-	/**
-	 * Getter.
-	 */
-	public Material getMaterial() {
-		return material;
-	}
+  /**
+   * Getter.
+   */
+  public Material getMaterial() {
+    return material;
+  }
 
-	/**
-	 * Indicate that the render content needs to be updated
-	 */
-	public void updateRenderStructures() {
-		needsUpdateRenderStructures = true;
-	}
+  /**
+   * Indicate that the render content needs to be updated
+   */
+  public void updateRenderStructures() {
+    needsUpdateRenderStructures = true;
+  }
 
-	/**
-	 * Returns true if the render structured need to be updated. This call
-	 * resets the flag to false.
-	 */
-	public boolean needsUpdateRenderStructures() {
-		if (needsUpdateRenderStructures) {
-			needsUpdateRenderStructures = false;
-			return true;
-		} else {
-			return false;
-		}
-	}
+  /**
+   * Returns true if the render structured need to be updated. This call resets
+   * the flag to false.
+   */
+  public boolean needsUpdateRenderStructures() {
+    if (needsUpdateRenderStructures) {
+      needsUpdateRenderStructures = false;
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

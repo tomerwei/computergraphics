@@ -68,12 +68,10 @@ public class JoglFrame extends JFrame implements IRenderFrame<JoglRenderNode>, O
   public JoglFrame(CgApplication application) {
     // Setup a default scene graph
     renderObjectManager = new JoglRenderObjectManager(application.getCgRootNode());
-
     GLCapabilities capabilities = new GLCapabilities(GLProfile.getDefault());
-    // TODO: Using a magic number of Stencil bits!
     capabilities.setStencilBits(8);
     view = new JoglCanvas(application.getCgRootNode(), renderObjectManager, capabilities);
-    Logger.getInstance().message("Stencil bits: " + capabilities.getStencilBits());
+    Logger.getInstance().debug("Stencil bits: " + capabilities.getStencilBits());
     getContentPane().add(view);
 
     AnimationTimer.getInstance().addObserver(this);

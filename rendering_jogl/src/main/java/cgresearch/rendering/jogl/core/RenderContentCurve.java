@@ -44,9 +44,6 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
    */
   private Transformation transformation = new Transformation();
 
-  boolean showControlPolygon = false;
-  boolean showEvaluationNode = false;
-
   /**
    * Constructor
    */
@@ -59,16 +56,23 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
     CgNode curveNode = new CgNode(curveMesh, "curve");
     cgNode.addChild(curveNode);
 
+    ICurve curve = null;
+    if (cgNode.getContent() instanceof ICurve) {
+      curve = (ICurve) cgNode.getContent();
+    } else {
+      return;
+    }
+
     // Mesh for control points
     ITriangleMesh controlPointsmesh = createControlPointsMesh();
     CgNode controlPointsNode = new CgNode(controlPointsmesh, "control points");
-    if (showControlPolygon) {
+    if (curve.getMaterial().isShowControlPolyon()) {
       cgNode.addChild(controlPointsNode);
     }
 
     // CgNode for evaluation
     CgNode evalNode = createEvalNode();
-    evalNode.setVisible(showEvaluationNode);
+    evalNode.setVisible(curve.getMaterial().isShowCurrentPoint());
     cgNode.addChild(evalNode);
 
     // Initialize transformation
