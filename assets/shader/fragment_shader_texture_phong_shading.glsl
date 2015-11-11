@@ -54,7 +54,8 @@ void main (void)
     	
     		// Diffuse
     		if ( dot(N,L) > 0.0 ){
-    			diffuse.x = texColor.x * gl_LightSource[i].diffuse.x;
+    			vec4 diffuse;
+			diffuse.x = texColor.x * gl_LightSource[i].diffuse.x;
     			diffuse.y = texColor.y * gl_LightSource[i].diffuse.y;
     			diffuse.z = texColor.z * gl_LightSource[i].diffuse.z;
     			diffuse.w = 0.0;

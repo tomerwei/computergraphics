@@ -4,8 +4,6 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.logging.ConsoleLogger;
-import cgresearch.core.logging.Logger.VerboseMode;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.studentprojects.shapegrammar.gui.application.GrammarTreeView;
 import cgresearch.studentprojects.shapegrammar.gui.menu.BuilderMenu;
@@ -24,7 +22,6 @@ public class ShapeGrammarFrame extends CgApplication {
   }
 
   public static void main(String[] args) {
-    new ConsoleLogger(VerboseMode.NORMAL);
     ResourcesLocator.getInstance().parseIniFile("resources.ini");
     ShapeGrammarFrame app = new ShapeGrammarFrame();
     JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
