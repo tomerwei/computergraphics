@@ -20,6 +20,7 @@ void main (void)
     		numberOfLights++;
     	}
     }
+    //numberOfLights = 1;
     
     gl_FragColor = vec4(0,0,0,1);
    
@@ -63,7 +64,7 @@ void main (void)
     		specular.z = reflectionSpecular.z * gl_LightSource[i].specular.z;
     		specular.w = 0.0;
     		specular = specular * pow(abs(dot(R,E)), gl_FrontMaterial.shininess) / float(numberOfLights);
-    		gl_FragColor += specular;
+    		//gl_FragColor += specular;
     	}
     }
     

@@ -55,9 +55,9 @@ void main (void)
     		// Diffuse
     		if ( dot(N,L) > 0.0 ){
     			vec4 diffuse;
-			diffuse.x = texColor.x * gl_LightSource[i].diffuse.x;
-    			diffuse.y = texColor.y * gl_LightSource[i].diffuse.y;
-    			diffuse.z = texColor.z * gl_LightSource[i].diffuse.z;
+                diffuse.x = texColor.x * gl_LightSource[i].diffuse.x * 2.0;
+    			diffuse.y = texColor.y * gl_LightSource[i].diffuse.y * 2.0;
+    			diffuse.z = texColor.z * gl_LightSource[i].diffuse.z * 2.0;
     			diffuse.w = 0.0;
     			diffuse = diffuse * dot(N,L) / float(numberOfLights);
     			gl_FragColor += diffuse;

@@ -16,6 +16,7 @@ import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.implicitfunction.IImplicitFunction3D;
 import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunction3DTorus;
+import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunctionGourSat;
 import cgresearch.graphics.datastructures.implicitfunction.MarchingCubes;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.NodeMerger;
@@ -50,7 +51,7 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
     marchingCubes = new MarchingCubes(50, VectorMatrixFactory.newIVector3(-3, -3, -3), 6);
     vis = new ImplicitFunctionVisualization(256);
 
-    createMesh(new ImplicitFunction3DTorus(1, 0.5));
+    createMesh(new ImplicitFunctionGourSat());
 
     // Create visualization
     ITriangleMesh mesh = vis.getTriangleMesh();
@@ -68,12 +69,13 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
     marchingCubesMesh = NodeMerger.merge(marchingCubesMesh, 1e-5);
     marchingCubesMesh.getMaterial().setRenderMode(Material.Normals.PER_VERTEX);
     marchingCubesMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    // marchingCubesMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
+    marchingCubesMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
     marchingCubesMesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR4);
     CgNode nodeSuperquadric = new CgNode(marchingCubesMesh, "marching cubes");
     nodeSuperquadric.setVisible(true);
     getCgRootNode().removeAllChildren();
     getCgRootNode().addChild(nodeSuperquadric);
+    getCgRootNode().addChild(new CoordinateSystem());
   }
 
   @Override
