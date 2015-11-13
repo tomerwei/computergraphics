@@ -34,7 +34,9 @@ public class Analyzer {
 		pcaX.applyPCA();
 		for (int j = 0; j < data.getX().get(0).getDimension(); j++) {
 			eigenX.add(pcaX.getEigenVector(j));
-			valueX.set(data.getX().get(0).getDimension() - 1 - j, pcaX.getEigenValue(j));
+			// valueX.set(data.getX().get(0).getDimension() - 1 - j,
+			// pcaX.getEigenValue(j));
+			valueX.set(j, pcaX.getEigenValue(j));
 
 		}
 		System.out.println("Eigenvektoren X:");
@@ -56,7 +58,9 @@ public class Analyzer {
 		pcaY.applyPCA();
 		for (int j = 0; j < data.getY().get(0).getDimension(); j++) {
 			eigenY.add(pcaY.getEigenVector(j));
-			valueY.set(data.getY().get(0).getDimension() - 1 - j, pcaY.getEigenValue(j));
+			// valueY.set(data.getY().get(0).getDimension() - 1 - j,
+			// pcaY.getEigenValue(j));
+			valueY.set(j, pcaX.getEigenValue(j));
 		}
 		System.out.println("Eigenvektoren Y:");
 		for (IVector v : eigenY) {
@@ -77,7 +81,9 @@ public class Analyzer {
 		pcaZ.applyPCA();
 		for (int j = 0; j < data.getZ().get(0).getDimension(); j++) {
 			eigenZ.add(pcaZ.getEigenVector(j));
-			valueZ.set(data.getZ().get(0).getDimension() - 1 - j, pcaZ.getEigenValue(j));
+			// valueZ.set(data.getZ().get(0).getDimension() - 1 - j,
+			// pcaZ.getEigenValue(j));
+			valueZ.set(j, pcaX.getEigenValue(j));
 		}
 		System.out.println("Eigenvektoren Z:");
 		for (IVector v : eigenZ) {

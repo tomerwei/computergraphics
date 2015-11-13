@@ -24,10 +24,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import cgresearch.core.math.IMatrix;
 import cgresearch.core.math.IMatrix3;
 import cgresearch.core.math.IVector;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.IVector4;
+import cgresearch.core.math.Matrix;
 import cgresearch.core.math.PrincipalComponentAnalysis;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
@@ -902,55 +904,19 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void generateFromData() {
 
-		// Car car = new Car(this.data.getX().get(29), this.data.getY().get(29),
-		// this.data.getZ().get(29));
-		// Car car = new Car(this.analyzer.getEigenX().get(0),
-		// this.analyzer.getEigenY().get(0),
-		// this.analyzer.getEigenZ().get(0));
-		// Car car = new Car(this.analyzer.getValueX(),
-		// this.analyzer.getValueY(), this.analyzer.getValueZ());
+		Car car = new Car(this.data.getX().get(29), this.data.getY().get(29), this.data.getZ().get(29));
 
 		IVector x = new Vector(28);
 		IVector y = new Vector(28);
 		IVector z = new Vector(28);
 
-		// for (int i = 0; i < analyzer.getEigenX().get(1).getDimension(); i++)
-		// {
-		// x.set(i, analyzer.getEigenX().get(1).get(i) *
-		// analyzer.getValueX().get(1));
-		// }
+		for (int i = 0; i < 28; i++) {
+			x.set(i, Math.random() * 6);
+			y.set(i, Math.random() * 3);
+			z.set(i, 0);
+		}
 
-		// for (int i = 0; i < analyzer.getEigenY().get(1).getDimension(); i++)
-		// {
-		// y.set(i, analyzer.getEigenY().get(1).get(i) *
-		// analyzer.getValueY().get(1));
-		// }
-		//
-		// for (int i = 0; i < analyzer.getEigenZ().get(1).getDimension(); i++)
-		// {
-		// z.set(i, analyzer.getEigenZ().get(1).get(i) *
-		// analyzer.getValueZ().get(1));
-		// }
-
-		// x =
-		// analyzer.getEigenX().get(0).multiply(analyzer.getValueX().get(0));
-		// y =
-		// analyzer.getEigenY().get(0).multiply(analyzer.getValueY().get(0));
-		// z =
-		// analyzer.getEigenZ().get(0).multiply(analyzer.getValueZ().get(0));
-
-		x = analyzer.getPcaX().getEigenVector(27).multiply(analyzer.getPcaX().getEigenValue(27));
-		y = analyzer.getPcaY().getEigenVector(27).multiply(analyzer.getPcaY().getEigenValue(27));
-		z = analyzer.getPcaZ().getEigenVector(27).multiply(analyzer.getPcaZ().getEigenValue(27));
-
-		// x =
-		// analyzer.getPcaX().getVDV().multiply(analyzer.getPcaX().getEigenVector(27));
-		// y =
-		// analyzer.getPcaY().getVDV().multiply(analyzer.getPcaY().getEigenVector(27));
-		// z =
-		// analyzer.getPcaZ().getVDV().multiply(analyzer.getPcaZ().getEigenVector(27));
-
-		Car car = new Car(x, y, z);
+		// Car car = new Car(x, y, z);
 
 		CgNode father = new CgNode(null, "auto");
 
