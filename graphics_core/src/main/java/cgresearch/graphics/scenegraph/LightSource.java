@@ -12,7 +12,7 @@ import cgresearch.core.math.VectorMatrixFactory;
 public class LightSource {
 
 	public enum Type {
-		POINT, DIRECTIONAL
+		POINT, DIRECTIONAL, SPOT
 	}
 
 	public enum ShadowType {

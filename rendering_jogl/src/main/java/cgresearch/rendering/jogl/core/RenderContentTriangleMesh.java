@@ -316,14 +316,16 @@ public class RenderContentTriangleMesh implements IRenderContent {
       IVector3 lightPosition = lightSource.getPosition();
       updateBackFacingInformation(lightPosition);
 
-      renderShadowPolygons(gl, lightPosition);
+      renderShadowPolygons(gl, lightPosition, lightSource.getType() == LightSource.Type.DIRECTIONAL);
     }
   }
 
   /**
    * Draws the shadow polygons
    */
-  private void renderShadowPolygons(GL2 gl, IVector3 lightPosition) {
+  private void renderShadowPolygons(GL2 gl, IVector3 lightPosition, boolean isDirectional) {
+    int lW = isDirectional ? 0 : 1;
+
     gl.glBegin(GL2GL3.GL_QUADS);
     for (Edge e : edges) {
       ITriangle t1 = e.getTriangle(0);
@@ -343,10 +345,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
         IVector3 vA = a.getPosition();
         IVector3 vB = b.getPosition();
 
-        float[] aInf = { (float) (vA.get(0) - lightPosition.get(0)), (float) (vA.get(1) - lightPosition.get(1)),
-            (float) (vA.get(2) - lightPosition.get(2)), 0.0f };
-        float[] bInf = { (float) (vB.get(0) - lightPosition.get(0)), (float) (vB.get(1) - lightPosition.get(1)),
-            (float) (vB.get(2) - lightPosition.get(2)), 0.0f };
+        float[] aInf = { (float) (vA.get(0)*lW - lightPosition.get(0)), (float) (vA.get(1)*lW - lightPosition.get(1)),
+            (float) (vA.get(2)*lW - lightPosition.get(2)), 0.0f };
+        float[] bInf = { (float) (vB.get(0)*lW - lightPosition.get(0)), (float) (vB.get(1)*lW - lightPosition.get(1)),
+            (float) (vB.get(2)*lW - lightPosition.get(2)), 0.0f };
 
         gl.glVertex3fv(vB.floatData(), 0);
         gl.glVertex3fv(vA.floatData(), 0);
@@ -387,8 +389,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
         IVertex v = triangleMesh.getVertex(vIndex);
         IVector3 vPos = v.getPosition();
         if (backFacing.get(t)) {
-          float[] vInf = { (float) (vPos.get(0) - lightPosition.get(0)), (float) (vPos.get(1) - lightPosition.get(1)),
-              (float) (vPos.get(2) - lightPosition.get(2)), 0.0f };
+          float[] vInf = { (float) (vPos.get(0)*lW - lightPosition.get(0)), (float) (vPos.get(1)*lW - lightPosition.get(1)),
+              (float) (vPos.get(2)*lW - lightPosition.get(2)), 0.0f };
           gl.glVertex4fv(vInf, 0);
         } else {
           gl.glVertex3fv(vPos.floatData(), 0);

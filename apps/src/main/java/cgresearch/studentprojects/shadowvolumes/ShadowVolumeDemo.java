@@ -28,7 +28,7 @@ import java.util.Observable;
  */
 public class ShadowVolumeDemo extends CgApplication {
 
-  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.SPHERE);
+  private LightSource lightSource = new LightSource(LightSource.Type.SPOT, LightSource.ShadowType.HARD);
   private double alpha = 0;
 
   /**
@@ -45,11 +45,12 @@ public class ShadowVolumeDemo extends CgApplication {
     // Load elements
     createEnvironment();
     //loadHulk();
-    loadCube();
-    //loadObject();
+    //loadCube();
+    loadObject();
 
     // Set light source
-    lightSource.setPosition(VectorMatrixFactory.newIVector3(0.5, 5, 5));
+    lightSource.setPosition(VectorMatrixFactory.newIVector3(2, 5, 2));
+    lightSource.setDirection(VectorMatrixFactory.newIVector3(0, 0,1));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
   }
@@ -97,7 +98,7 @@ public class ShadowVolumeDemo extends CgApplication {
     String texId = "tex_id_dhl_logo";
     ResourceManager.getTextureManagerInstance().addResource(texId, new CgTexture("textures/android.png"));
     room.getMaterial().setTextureId(texId);
-    //room.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG_SPOTLIGHT);
+    room.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG_SPOTLIGHT);
 
     // Position environment into the middle
     Transformation t = new Transformation();
@@ -140,7 +141,7 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
-    //hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG_SPOTLIGHT);
     Transformation t = new Transformation();
     t.addScale(1);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
@@ -170,7 +171,6 @@ public class ShadowVolumeDemo extends CgApplication {
 
   @Override
   public void update(Observable o, Object arg) {
-
     if (o instanceof AnimationTimer) {
       lightSource
           .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
