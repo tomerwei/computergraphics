@@ -28,7 +28,7 @@ import java.util.Observable;
  */
 public class ShadowVolumeDemo extends CgApplication {
 
-  private LightSource lightSource = new LightSource(LightSource.Type.SPOT, LightSource.ShadowType.HARD);
+  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.HARD);
   private double alpha = 0;
 
   /**
@@ -98,7 +98,7 @@ public class ShadowVolumeDemo extends CgApplication {
     String texId = "tex_id_dhl_logo";
     ResourceManager.getTextureManagerInstance().addResource(texId, new CgTexture("textures/android.png"));
     room.getMaterial().setTextureId(texId);
-    room.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG_SPOTLIGHT);
+    room.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
 
     // Position environment into the middle
     Transformation t = new Transformation();
@@ -141,7 +141,7 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG_SPOTLIGHT);
+    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
     Transformation t = new Transformation();
     t.addScale(1);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));

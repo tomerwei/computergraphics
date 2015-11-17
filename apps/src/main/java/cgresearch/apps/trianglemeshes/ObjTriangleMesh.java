@@ -13,9 +13,11 @@ import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
+import cgresearch.graphics.datastructures.primitives.Plane;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.NodeMerger;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
@@ -23,6 +25,8 @@ import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
+import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.LightSource.Type;
 
 /**
  * Demo frame to work with triangle meshes clouds.
@@ -36,20 +40,46 @@ public class ObjTriangleMesh extends CgApplication {
    * Constructor.
    */
   public ObjTriangleMesh() {
+    // 3D Object
     // loadFenja();
     // loadLotrCubeWithTextureAtlas();
+    // loadScetchUp();
+    loadPlaneWithBunny();
 
-    loadScetchUp();
-
+    // Coordinate system
     getCgRootNode().addChild(new CoordinateSystem());
 
-    // getCgRootNode().clearLights();
-    // // Light source 1
-    // LightSource light1 = new
-    // LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(5,
-    // 10, 0))
-    // .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
-    // rootNode.addLight(light1);
+    // Lights
+    getCgRootNode().clearLights();
+    LightSource light = new LightSource(Type.SPOT);
+    light.setPosition(VectorMatrixFactory.newIVector3(1, 1, 1));
+    light.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
+    light.setSpotOpeningAngle(20);
+    getCgRootNode().addLight(light);
+  }
+
+  private void loadPlaneWithBunny() {
+    Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
+    plane.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR1);
+    plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    getCgRootNode().addChild(new CgNode(plane, "plane"));
+    // plane.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
+
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = reader.readFile("meshes/bunny.obj");
+    if (meshes.size() == 1) {
+      ITriangleMesh bunny = meshes.get(0);
+      bunny.fitToUnitBox();
+      TriangleMeshTransformation.scale(bunny, 0.5);
+      TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newIVector3(-1, 0.26, -1));
+      bunny.computeTriangleNormals();
+      bunny.computeVertexNormals();
+      bunny.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+      bunny.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR4);
+      CgNode bunnyNode = new CgNode(bunny, "bunny");
+      getCgRootNode().addChild(bunnyNode);
+    }
+
   }
 
   public void loadScetchUp() {

@@ -3,15 +3,15 @@
  * Hochschule f�r Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.core.math;
+package cgresearch.graphics.datastructures;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import cgresearch.core.math.IVector3;
-import cgresearch.core.math.Plane;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.primitives.Plane;
 
 /**
  * Test the Plane class.

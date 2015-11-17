@@ -43,12 +43,13 @@ public class Plane extends IPrimitive {
    */
   private IMatrix3 planeCoordinateSystem;
 
+  private static final double PARALLEL_THRESHOLD = 0.99;
+
   /**
    * Constructor.
    */
   public Plane() {
-    this(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory
-        .newIVector3(0, 1, 0));
+    this(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
   }
 
   /**
@@ -70,9 +71,7 @@ public class Plane extends IPrimitive {
     }
     tangentV = getNormal().cross(tangentU).getNormalized();
     tangentU = tangentV.cross(getNormal()).getNormalized();
-    planeCoordinateSystem =
-        VectorMatrixFactory.newIMatrix3(tangentU, tangentV, getNormal())
-            .getTransposed();
+    planeCoordinateSystem = VectorMatrixFactory.newIMatrix3(tangentU, tangentV, getNormal()).getTransposed();
   }
 
   /**
@@ -112,10 +111,7 @@ public class Plane extends IPrimitive {
 
     // DEBBUGGING CODE - REMOVE LATER!
     if (Math.abs(normal.getSqrNorm() - 1.0) > 1e-5) {
-      Logger
-          .getInstance()
-          .error(
-              "Attention - normal must be normalized for Plane.computeSignedDistance()");
+      Logger.getInstance().error("Attention - normal must be normalized for Plane.computeSignedDistance()");
     }
 
     return (p.subtract(getPoint()).multiply(getNormal()));
@@ -132,10 +128,8 @@ public class Plane extends IPrimitive {
   /**
    * Compute a checkerboard color for the plane at the given point.
    */
-  public IVector3 getReflectionDiffuseCheckerBoard(double checkerBoardCellSize,
-      IVector3 point) {
-    IVector3 pointInPlaneCoordinateSytem =
-        planeCoordinateSystem.multiply(point.subtract(getPoint()));
+  public IVector3 getReflectionDiffuseCheckerBoard(double checkerBoardCellSize, IVector3 point) {
+    IVector3 pointInPlaneCoordinateSytem = planeCoordinateSystem.multiply(point.subtract(getPoint()));
     double u = pointInPlaneCoordinateSytem.get(0);
     double v = pointInPlaneCoordinateSytem.get(1);
     if (u < 0) {
@@ -151,6 +145,43 @@ public class Plane extends IPrimitive {
     } else {
       return getMaterial().getReflectionDiffuse().multiply(0.5);
     }
+  }
 
+  /**
+   * Return true if the point is in the positive halfspace of the plane.
+   */
+  public boolean isInPositiveHalfSpace(IVector3 p) {
+    double distance = getDistance(p);
+    return distance > 0;
+  }
+
+  /**
+   * Project the point p onto the plane.
+   */
+  public IVector3 project(IVector3 p) {
+    return p.subtract(normal.multiply(getDistance(p)));
+  }
+
+  /**
+   * Compute the distance of the point from the plane.
+   */
+  public double getDistance(IVector3 p) {
+    IVector3 v = p.subtract(point);
+    return v.multiply(normal);
+  }
+
+  public IVector3 getTangentU() {
+    IVector3 helper = VectorMatrixFactory.newIVector3(1, 0, 0);
+    if (Math.abs(helper.multiply(normal)) > PARALLEL_THRESHOLD) {
+      helper = VectorMatrixFactory.newIVector3(0, 1, 0);
+    }
+    return normal.cross(helper).getNormalized();
+  }
+
+  /**
+   * Return a tangent vector which is perpendicular to normal and getTangentU().
+   */
+  public IVector3 getTangentV() {
+    return normal.cross(getTangentU());
   }
 }

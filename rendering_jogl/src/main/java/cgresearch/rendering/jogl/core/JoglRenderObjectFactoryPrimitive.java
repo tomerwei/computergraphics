@@ -28,8 +28,7 @@ import cgresearch.rendering.core.IRenderObjectsFactory;
  * @author Philipp Jenke
  * 
  */
-public class JoglRenderObjectFactoryPrimitive implements
-    IRenderObjectsFactory<JoglRenderNode> {
+public class JoglRenderObjectFactoryPrimitive implements IRenderObjectsFactory<JoglRenderNode> {
 
   /*
    * (nicht-Javadoc)
@@ -39,8 +38,7 @@ public class JoglRenderObjectFactoryPrimitive implements
    * .Object, edu.haw.cg.scenegraph.CgNode)
    */
   @Override
-  public JoglRenderNode createRenderObject(JoglRenderNode parentNode,
-      CgNode cgNode) {
+  public JoglRenderNode createRenderObject(JoglRenderNode parentNode, CgNode cgNode) {
 
     if (!(cgNode.getContent() instanceof IPrimitive)) {
       return null;
@@ -57,109 +55,92 @@ public class JoglRenderObjectFactoryPrimitive implements
     } else if (cgNode.getContent() instanceof Line3D) {
       return createLine3D(parentNode, cgNode, (Line3D) cgNode.getContent(), 10);
     } else if (cgNode.getContent() instanceof Tetrahedron) {
-      return createTetrahedron(parentNode, cgNode,
-          (Tetrahedron) cgNode.getContent());
+      return createTetrahedron(parentNode, cgNode, (Tetrahedron) cgNode.getContent());
     } else if (cgNode.getContent() instanceof Plane) {
       return createPlane(parentNode, cgNode, (Plane) cgNode.getContent());
     } else {
-      Logger.getInstance().message(
-          "Render object factory cannot handle primitive");
+      Logger.getInstance().message("Render object factory cannot handle primitive");
       return null;
     }
 
   }
 
-  private JoglRenderNode createPlane(JoglRenderNode parentNode, CgNode cgNode,
-      Plane plane) {
-    ITriangleMesh mesh =
-        TriangleMeshFactory.createPlane(plane.getPoint(), plane.getNormal(), 2);
+  private JoglRenderNode createPlane(JoglRenderNode parentNode, CgNode cgNode, Plane plane) {
+    ITriangleMesh mesh = TriangleMeshFactory.createPlane(plane.getPoint(), plane.getNormal(), 2);
     if (mesh == null) {
       Logger.getInstance().error("Failed to create cylinder mesh.");
       return null;
     }
     mesh.getMaterial().setRenderMode(Material.Normals.PER_FACET);
-    JoglRenderNode renderNode =
-        new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;
   }
 
-  private JoglRenderNode createCylinder(JoglRenderNode parentNode,
-      CgNode cgNode, Cylinder cylinder) {
+  private JoglRenderNode createCylinder(JoglRenderNode parentNode, CgNode cgNode, Cylinder cylinder) {
     ITriangleMesh mesh = TriangleMeshFactory.createCylinder(cylinder, 40);
     if (mesh == null) {
       Logger.getInstance().error("Failed to create cylinder mesh.");
       return null;
     }
     mesh.getMaterial().setRenderMode(Material.Normals.PER_FACET);
-    JoglRenderNode renderNode =
-        new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;
   }
 
   /**
    * Create a render node for a sphere.
    */
-  private JoglRenderNode createSphere(JoglRenderNode parentNode, CgNode cgNode,
-      Sphere sphere) {
+  private JoglRenderNode createSphere(JoglRenderNode parentNode, CgNode cgNode, Sphere sphere) {
     ITriangleMesh mesh = TriangleMeshFactory.createSphere(20);
     mesh.getMaterial().setRenderMode(Material.Normals.PER_FACET);
-    TriangleMeshTransformation.scale(mesh, VectorMatrixFactory.newIVector3(
-        sphere.getRadius(), sphere.getRadius(), sphere.getRadius()));
+    TriangleMeshTransformation.scale(mesh,
+        VectorMatrixFactory.newIVector3(sphere.getRadius(), sphere.getRadius(), sphere.getRadius()));
     TriangleMeshTransformation.translate(mesh, sphere.getCenter());
-    JoglRenderNode renderNode =
-        new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;
   }
 
   /**
    * Create a render node for a cuboid.
    */
-  private JoglRenderNode createCuboid(JoglRenderNode parentNode, CgNode cgNode,
-      Cuboid cuboid) {
+  private JoglRenderNode createCuboid(JoglRenderNode parentNode, CgNode cgNode, Cuboid cuboid) {
     ITriangleMesh mesh = TriangleMeshFactory.createCube();
     mesh.getMaterial().setShowSophisticatesMesh(true);
     mesh.getMaterial().setRenderMode(Material.Normals.PER_FACET);
     TriangleMeshTransformation.scale(mesh, cuboid.getDimensions());
     TriangleMeshTransformation.translate(mesh, cuboid.getCenter());
-    JoglRenderNode renderNode =
-        new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;
   }
 
   /**
    * Create a render node for a cuboid.
    */
-  private JoglRenderNode createTetrahedron(JoglRenderNode parentNode,
-      CgNode cgNode, Tetrahedron tetrahedron) {
+  private JoglRenderNode createTetrahedron(JoglRenderNode parentNode, CgNode cgNode, Tetrahedron tetrahedron) {
     ITriangleMesh mesh = TriangleMeshFactory.createTetrahedron();
     mesh.getMaterial().setRenderMode(Material.Normals.PER_FACET);
-    JoglRenderNode renderNode =
-        new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;
   }
 
   /**
    * Create a render node for an arrow.
    */
-  public static JoglRenderNode createArrow(JoglRenderNode parentNode,
-      CgNode cgNode, Arrow arrow) {
+  public static JoglRenderNode createArrow(JoglRenderNode parentNode, CgNode cgNode, Arrow arrow) {
     ITriangleMesh mesh = TriangleMeshFactory.createArrow(arrow);
     mesh.computeTriangleNormals();
+    mesh.invertFaceNormals();
     mesh.getMaterial().copyFrom(arrow.getMaterial());
-    JoglRenderNode renderNode =
-        new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;
   }
 
   /**
    * Create a render node for an arrow.
    */
-  private static JoglRenderNode createLine3D(JoglRenderNode parentNode,
-      CgNode cgNode, Line3D line, int resolution) {
-    ITriangleMesh mesh =
-        TriangleMeshFactory.createLine3D(line, resolution, 0.015);
-    JoglRenderNode renderNode =
-        new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+  private static JoglRenderNode createLine3D(JoglRenderNode parentNode, CgNode cgNode, Line3D line, int resolution) {
+    ITriangleMesh mesh = TriangleMeshFactory.createLine3D(line, resolution, 0.015);
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;
   }
 

@@ -61,7 +61,6 @@ public class JoglRenderer3D implements Observer {
   private static final float OPAQUE = 1.0f;
   private static final IVector3 CLEAR_COLOR = VectorMatrixFactory.newIVector3(1, 1, 1);
   private static final int JOGL_NUMBER_OF_LIGHTS = 8;
-  //private static final IVector3 CLEAR_COLOR = VectorMatrixFactory.newIVector3(0.9, 0.9, 0.9);
 
   /**
    * Screen aspect ration
@@ -213,45 +212,6 @@ public class JoglRenderer3D implements Observer {
     drawable.getAnimator().setUpdateFPSFrames(3, null);
   }
 
-  /*
-   * private void updateLights(GL2 gl) { if (updateLightsRequired) {
-   * Logger.getInstance().debug("Updated lights.");
-   * 
-   * // Disable inactive lights for (int i = 0; i < JOGL_NUMBER_OF_LIGHTS; i++)
-   * { gl.glDisable(getLightIndex(i)); int lightIndex = getLightIndex(i);
-   * gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, new float[] { -1, -1, -1, -1 },
-   * 0); }
-   * 
-   * // Set the active lights for (int i = 0; i < rootNode.getNumberOfLights();
-   * i++) { int lightIndex = getLightIndex(i); LightSource light =
-   * rootNode.getLight(i); float lightAmbient[] = { 1, 1, 1, 1 }; float
-   * lightSpecular[] = { 1, 1, 1, 1 }; float lightPosition[] = { 1, 1, 1, 1 };
-   * float lightDiffuse[] = { 1, 1, 1, 1 }; gl.glEnable(lightIndex);
-   * gl.glLightfv(lightIndex, GL2.GL_AMBIENT, lightAmbient, 0);
-   * gl.glLightfv(lightIndex, GL2.GL_SPECULAR, lightSpecular, 0); switch
-   * (light.getType()) { case DIRECTIONAL: lightPosition[0] = (float)
-   * light.getPosition().get(0); lightPosition[1] = (float)
-   * light.getPosition().get(1); lightPosition[2] = (float)
-   * light.getPosition().get(2); lightPosition[3] = 0; lightDiffuse[0] = (float)
-   * light.getDiffuseColor().get(0); lightDiffuse[1] = (float)
-   * light.getDiffuseColor().get(1); lightDiffuse[2] = (float)
-   * light.getDiffuseColor().get(2); lightDiffuse[3] = 1;
-   * gl.glEnable(lightIndex); gl.glLightfv(lightIndex, GL2.GL_POSITION,
-   * lightPosition, 0); gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse,
-   * 0);
-   * 
-   * break; case POINT: lightPosition[0] = (float) light.getPosition().get(0);
-   * lightPosition[1] = (float) light.getPosition().get(1); lightPosition[2] =
-   * (float) light.getPosition().get(2); lightPosition[3] = 1; lightDiffuse[0] =
-   * (float) light.getDiffuseColor().get(0); lightDiffuse[1] = (float)
-   * light.getDiffuseColor().get(1); lightDiffuse[2] = (float)
-   * light.getDiffuseColor().get(2); lightDiffuse[3] = 1;
-   * gl.glEnable(lightIndex); gl.glLightfv(lightIndex, GL2.GL_POSITION,
-   * lightPosition, 0); gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse,
-   * 0); break; default: Logger.getInstance().error("Unsupported light type: " +
-   * light.getType()); break; } } updateLightsRequired = false; } }
-   */
-
   /**
    * Set the current lights
    */
@@ -259,14 +219,12 @@ public class JoglRenderer3D implements Observer {
     if (updateLightsRequired) {
       Logger.getInstance().debug("Updated lights.");
 
-
       // Disable inactive lights
       for (int i = 0; i < JOGL_NUMBER_OF_LIGHTS; i++) {
         int lightIndex = getLightIndex(i);
         gl.glDisable(lightIndex);
-        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, new float[]{-1, -1, -1, -1}, 0);
+        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, new float[] { -1, -1, -1, -1 }, 0);
       }
-
 
       for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
         updateLight(gl, i, false);
@@ -288,9 +246,13 @@ public class JoglRenderer3D implements Observer {
 
   /**
    * Sets the current light
-   * @param gl GL object
-   * @param lightID Id of the light source
-   * @param drawShadows Has to be true if scene is drawn with shadows
+   * 
+   * @param gl
+   *          GL object
+   * @param lightID
+   *          Id of the light source
+   * @param drawShadows
+   *          Has to be true if scene is drawn with shadows
    */
   private void updateLight(GL2 gl, int lightID, boolean drawShadows) {
     int lightIndex = getLightIndex(lightID);
@@ -301,17 +263,16 @@ public class JoglRenderer3D implements Observer {
     float lightCount = 1f;
     if (drawShadows) {
       LightSource.ShadowType shadow = light.getShadowType();
-      if (shadow == LightSource.ShadowType.PLANE_X
-              || shadow == LightSource.ShadowType.PLANE_Y
-              || shadow == LightSource.ShadowType.PLANE_Z) {
+      if (shadow == LightSource.ShadowType.PLANE_X || shadow == LightSource.ShadowType.PLANE_Y
+          || shadow == LightSource.ShadowType.PLANE_Z) {
         lightCount = (float) softShadowPlaneCount;
       } else if (shadow == LightSource.ShadowType.SPHERE) {
         lightCount = (float) softShadowSphereCount;
       }
     }
 
-    float lightAmbient[] = { 1f/lightCount, 1f/lightCount, 1f/lightCount, 1f };
-    float lightSpecular[] = { 1f/lightCount, 1f/lightCount, 1f/lightCount, 1f };
+    float lightAmbient[] = { 1, 1, 1, 1 };
+    float lightSpecular[] = { 1, 1, 1, 1 };
     float lightPosition[] = { 1, 1, 1, 1 };
     float lightDiffuse[] = { 1, 1, 1, 1 };
     gl.glEnable(lightIndex);
@@ -323,36 +284,37 @@ public class JoglRenderer3D implements Observer {
         lightPosition[1] = (float) light.getPosition().get(1);
         lightPosition[2] = (float) light.getPosition().get(2);
         lightPosition[3] = 0;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0)/lightCount;
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1)/lightCount;
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2)/lightCount;
-        lightDiffuse[3] = 1;
+        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
+        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
+        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
+        lightDiffuse[3] = -1;
         gl.glEnable(lightIndex);
         gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
         gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
-
+        gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, 0);
         break;
       case POINT:
         lightPosition[0] = (float) light.getPosition().get(0);
         lightPosition[1] = (float) light.getPosition().get(1);
         lightPosition[2] = (float) light.getPosition().get(2);
         lightPosition[3] = 1;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0)/lightCount;
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1)/lightCount;
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2)/lightCount;
+        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
+        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
+        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
         lightDiffuse[3] = 1;
         gl.glEnable(lightIndex);
         gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
         gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
+        gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, 0);
         break;
       case SPOT:
         lightPosition[0] = (float) light.getPosition().get(0);
         lightPosition[1] = (float) light.getPosition().get(1);
         lightPosition[2] = (float) light.getPosition().get(2);
         lightPosition[3] = 1;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0)/lightCount;
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1)/lightCount;
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2)/lightCount;
+        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
+        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
+        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
         lightDiffuse[3] = 1;
         float lightDirection[] = { 1, 1, 1, 1 };
         lightDirection[0] = (float) light.getDirection().get(0);
@@ -362,7 +324,7 @@ public class JoglRenderer3D implements Observer {
         gl.glEnable(lightIndex);
         gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
         gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
-        gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, 45);
+        gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, (float) (Math.PI * light.getSpotLightAngle() / 180.0));
         gl.glLightfv(lightIndex, GL2.GL_SPOT_DIRECTION, lightDirection, 0);
         break;
       default:
@@ -438,13 +400,13 @@ public class JoglRenderer3D implements Observer {
 
     // clear the color buffer and the depth buffer
     GL2 gl = drawable.getGL().getGL2();
-    gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT );
+    gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 
-    //IntBuffer stencilBits = Buffers.newDirectIntBuffer(1);
-    //gl.glGetIntegerv(GL2.GL_STENCIL_BITS, stencilBits);
-    //if (stencilBits.get(0) < 1) {
-    //  Logger.getInstance().error("Life sucks without a stencil buffer.\n");
-    //}
+    // IntBuffer stencilBits = Buffers.newDirectIntBuffer(1);
+    // gl.glGetIntegerv(GL2.GL_STENCIL_BITS, stencilBits);
+    // if (stencilBits.get(0) < 1) {
+    // Logger.getInstance().error("Life sucks without a stencil buffer.\n");
+    // }
 
     // Update cam
     updateExtrinsicCameraParameters(drawable);
@@ -471,7 +433,7 @@ public class JoglRenderer3D implements Observer {
     for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
       disableLight(gl, i);
     }
-    float[] lightAmbientOn = {1f, 1f, 1f, 1f};
+    float[] lightAmbientOn = { 1f, 1f, 1f, 1f };
     gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmbientOn, 0);
 
     // Render the scene graph
@@ -485,7 +447,7 @@ public class JoglRenderer3D implements Observer {
     gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE);
 
     // "Disable" ambient light
-    float[] lightAmbientOff = {0, 0, 0, 0};
+    float[] lightAmbientOff = { 0, 0, 0, 0 };
     gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmbientOff, 0);
 
     // For all light sources
@@ -494,7 +456,8 @@ public class JoglRenderer3D implements Observer {
 
       if (!useTwoSidedStencil) {
         // Create a copy of the current light.
-        // This step is required if an animation is moving the current light source while drawing the shadows.
+        // This step is required if an animation is moving the current light
+        // source while drawing the shadows.
         light = light.copy();
       }
 
@@ -546,12 +509,15 @@ public class JoglRenderer3D implements Observer {
 
   /**
    * Generates additional lights required for plane based soft shadows
-   * @param light Current light source
-   * @param coord Positioning lights around this coordinate
+   * 
+   * @param light
+   *          Current light source
+   * @param coord
+   *          Positioning lights around this coordinate
    * @return Additional lights
    */
   private LightSource[] generateSoftShadowPlane(LightSource light, int coord) {
-    LightSource[] lights = new LightSource[softShadowPlaneCount-1];
+    LightSource[] lights = new LightSource[softShadowPlaneCount - 1];
 
     for (int i = 0; i < lights.length; i++) {
       lights[i] = new LightSource(light.getType(), light.getShadowType());
@@ -582,7 +548,7 @@ public class JoglRenderer3D implements Observer {
     } else {
       lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, 0)));
       lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, 0)));
-      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset,0)));
+      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, 0)));
       lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, 0)));
       lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, offset, 0)));
       lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, offset, 0)));
@@ -595,11 +561,13 @@ public class JoglRenderer3D implements Observer {
 
   /**
    * Generates additional lights required for plane sphere soft shadows
-   * @param light Current light source
+   * 
+   * @param light
+   *          Current light source
    * @return Additional lights
    */
   private LightSource[] generateSoftShadowSphere(LightSource light) {
-    LightSource[] lights = new LightSource[softShadowSphereCount-1];
+    LightSource[] lights = new LightSource[softShadowSphereCount - 1];
 
     for (int i = 0; i < lights.length; i++) {
       lights[i] = new LightSource(light.getType());
@@ -658,20 +626,22 @@ public class JoglRenderer3D implements Observer {
 
       renderNode(rootNode, gl, true, light);
     } else {
-      // Increment stencil buffer value for front-facing polygons that fail the depth test
+      // Increment stencil buffer value for front-facing polygons that fail the
+      // depth test
       gl.glCullFace(GL.GL_FRONT);
       gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR, GL.GL_KEEP);
       renderNode(rootNode, gl, true, light);
 
-      // Decrement stencil buffer value for back-facing polygons that fail the depth test
+      // Decrement stencil buffer value for back-facing polygons that fail the
+      // depth test
       gl.glCullFace(GL.GL_BACK);
       gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR, GL.GL_KEEP);
       renderNode(rootNode, gl, true, light);
     }
 
     // Debug
-    //updateLight(gl, lightID, false);
-    //gl.glColorMask(false, true, false, false);
+    // updateLight(gl, lightID, false);
+    // gl.glColorMask(false, true, false, false);
 
     // Enable current light source
     updateLight(gl, lightID, true);
@@ -680,8 +650,8 @@ public class JoglRenderer3D implements Observer {
     gl.glStencilFunc(GL.GL_EQUAL, 0, ~0);
     gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR);
     gl.glDepthFunc(GL.GL_EQUAL);
-    gl.glColorMask(true, true , true, true);
-    renderNode(rootNode, gl, false , null);
+    gl.glColorMask(true, true, true, true);
+    renderNode(rootNode, gl, false, null);
 
     // Restore depth test
     gl.glDepthFunc(GL.GL_LESS);
@@ -689,54 +659,56 @@ public class JoglRenderer3D implements Observer {
     gl.glDisable(GL.GL_STENCIL_TEST);
   }
 
-  private void drawBlackSquareFullscreen(GL2 gl) {
-    IVector3 dir = Camera.getInstance().getRef().subtract(Camera.getInstance().getEye()).getNormalized()
-        .multiply(nearClippingPlane * 1.5);
-    IVector3 center = Camera.getInstance().getEye().add(dir);
-    IVector3 x = VectorMatrixFactory.newIVector3(1, 1, 1).cross(dir).getNormalized();
-    IVector3 y = x.cross(dir).getNormalized();
-    double length = 10;
-    IVector3 p0 = center.add(x.multiply(length)).add(y.multiply(length));
-    IVector3 p1 = center.add(x.multiply(length)).add(y.multiply(-length));
-    IVector3 p2 = center.add(x.multiply(-length)).add(y.multiply(length));
-    IVector3 p3 = center.add(x.multiply(-length)).add(y.multiply(-length));
-    gl.glBegin(GL2.GL_QUADS);
-    gl.glVertex3fv(p0.floatData(), 0);
-    gl.glVertex3fv(p1.floatData(), 0);
-    gl.glVertex3fv(p3.floatData(), 0);
-    gl.glVertex3fv(p2.floatData(), 0);
-    gl.glEnd();
-  }
+  // private void drawBlackSquareFullscreen(GL2 gl) {
+  // IVector3 dir =
+  // Camera.getInstance().getRef().subtract(Camera.getInstance().getEye()).getNormalized()
+  // .multiply(nearClippingPlane * 1.5);
+  // IVector3 center = Camera.getInstance().getEye().add(dir);
+  // IVector3 x = VectorMatrixFactory.newIVector3(1, 1,
+  // 1).cross(dir).getNormalized();
+  // IVector3 y = x.cross(dir).getNormalized();
+  // double length = 10;
+  // IVector3 p0 = center.add(x.multiply(length)).add(y.multiply(length));
+  // IVector3 p1 = center.add(x.multiply(length)).add(y.multiply(-length));
+  // IVector3 p2 = center.add(x.multiply(-length)).add(y.multiply(length));
+  // IVector3 p3 = center.add(x.multiply(-length)).add(y.multiply(-length));
+  // gl.glBegin(GL2.GL_QUADS);
+  // gl.glVertex3fv(p0.floatData(), 0);
+  // gl.glVertex3fv(p1.floatData(), 0);
+  // gl.glVertex3fv(p3.floatData(), 0);
+  // gl.glVertex3fv(p2.floatData(), 0);
+  // gl.glEnd();
+  // }
 
   /**
    * Creates a projection matrix which has no far plane
    */
-   private IMatrix4 getProjectionInfinity() {
-   IMatrix4 pInf = VectorMatrixFactory.newIMatrix4();
-   // Field of view in radians
-   double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
-   // Cotangent of the field of view
-   double coTanFOV = 1.0 / Math.tan(rads);
+  private IMatrix4 getProjectionInfinity() {
+    IMatrix4 pInf = VectorMatrixFactory.newIMatrix4();
+    // Field of view in radians
+    double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
+    // Cotangent of the field of view
+    double coTanFOV = 1.0 / Math.tan(rads);
 
-   pInf.set(0, 0, coTanFOV / aspectRatio);
-   pInf.set(0, 1, 0);
-   pInf.set(0, 2, 0);
-   pInf.set(0, 3, 0);
-   pInf.set(1, 0, 0);
-   pInf.set(1, 1, coTanFOV);
-   pInf.set(1, 2, 0);
-   pInf.set(1, 3, 0);
-   pInf.set(2, 0, 0);
-   pInf.set(2, 1, 0);
-   pInf.set(2, 2, -1);
-   pInf.set(2, 3, -1);
-   pInf.set(3, 0, 0);
-   pInf.set(3, 1, 0);
-   pInf.set(3, 2, -2 * nearClippingPlane);
-   pInf.set(3, 3, 0);
+    pInf.set(0, 0, coTanFOV / aspectRatio);
+    pInf.set(0, 1, 0);
+    pInf.set(0, 2, 0);
+    pInf.set(0, 3, 0);
+    pInf.set(1, 0, 0);
+    pInf.set(1, 1, coTanFOV);
+    pInf.set(1, 2, 0);
+    pInf.set(1, 3, 0);
+    pInf.set(2, 0, 0);
+    pInf.set(2, 1, 0);
+    pInf.set(2, 2, -1);
+    pInf.set(2, 3, -1);
+    pInf.set(3, 0, 0);
+    pInf.set(3, 1, 0);
+    pInf.set(3, 2, -2 * nearClippingPlane);
+    pInf.set(3, 3, 0);
 
-   return pInf;
-   }
+    return pInf;
+  }
 
   /**
    * Update the intrinsic camera parameters.

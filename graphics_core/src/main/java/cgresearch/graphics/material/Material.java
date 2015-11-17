@@ -41,7 +41,6 @@ public class Material extends Observable {
   public static final String SHADER_COLOR = "SHADER_COLOR";
   public static final String SHADER_WIREFRAME = "SHADER_WIREFRAME";
   public static final String SHADER_GOURAUD_SHADING = "SHADER_GOURAUD_SHADING";
-  public static final String SHADER_TEXTURE_PHONG_SPOTLIGHT = "SHADER_TEXTURE_PHONG_SPOTLIGHT";
 
   public static final IVector3 PALETTE0_COLOR0 = VectorMatrixFactory.newIVector3(215 / 255.0, 129 / 255.0, 36 / 255.0);
   public static final IVector3 PALETTE0_COLOR1 = VectorMatrixFactory.newIVector3(226 / 255.0, 227 / 255.0, 163 / 255.0);

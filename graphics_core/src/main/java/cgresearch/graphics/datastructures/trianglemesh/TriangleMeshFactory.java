@@ -537,8 +537,8 @@ public class TriangleMeshFactory {
     mesh.addVertex(new Vertex(point.subtract(tangentU).add(tangentV)));
     mesh.addVertex(new Vertex(point.add(tangentU).add(tangentV)));
     mesh.addVertex(new Vertex(point.add(tangentU).subtract(tangentV)));
-    mesh.addTriangle(new Triangle(0, 1, 2));
-    mesh.addTriangle(new Triangle(0, 2, 3));
+    mesh.addTriangle(new Triangle(0, 2, 1));
+    mesh.addTriangle(new Triangle(0, 3, 2));
 
     mesh.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 

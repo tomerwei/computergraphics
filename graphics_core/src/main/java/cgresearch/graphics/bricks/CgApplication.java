@@ -21,52 +21,51 @@ import cgresearch.graphics.scenegraph.LightSource;
  */
 public abstract class CgApplication implements Observer {
 
-	/**
-	 * Root node of the scene
-	 */
-	protected final CgRootNode rootNode;
+  /**
+   * Root node of the scene
+   */
+  protected final CgRootNode rootNode;
 
-	/**
-	 * Constructor.
-	 */
-	public CgApplication() {
-		rootNode = new CgRootNode();
-		addLight();
-		AnimationTimer.getInstance().addObserver(this);
-	}
+  /**
+   * Constructor.
+   */
+  public CgApplication() {
+    rootNode = new CgRootNode();
+    addLight();
+    AnimationTimer.getInstance().addObserver(this);
+  }
 
-	/**
-	 * Add default lights.
-	 */
-	private void addLight() {
-		// Light source 1
-		LightSource light1 = new LightSource(LightSource.Type.POINT)
-				.setPosition(VectorMatrixFactory.newIVector3(2, 0, 0))
-				// .setColor(VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
-				.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
-		rootNode.addLight(light1);
-		// Light source 2
-		LightSource light2 = new LightSource(LightSource.Type.POINT)
-				.setPosition(VectorMatrixFactory.newIVector3(0, 2, 0))
-				// .setColor(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
-				.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
-		rootNode.addLight(light2);
-		// Light source 3
-		LightSource light3 = new LightSource(LightSource.Type.POINT)
-				.setPosition(VectorMatrixFactory.newIVector3(0, 0, 2))
-				// .setColor(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.75));
-				.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
-		rootNode.addLight(light3);
-	}
+  /**
+   * Add default lights.
+   */
+  private void addLight() {
+    // Light source 1
+    LightSource light1 = new LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(5, 5, 5))
+        // .setColor(VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
+        .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    rootNode.addLight(light1);
+    // // Light source 2
+    // LightSource light2 = new LightSource(LightSource.Type.POINT)
+    // .setPosition(VectorMatrixFactory.newIVector3(0, 2, 0))
+    // // .setColor(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
+    // .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    // rootNode.addLight(light2);
+    // // Light source 3
+    // LightSource light3 = new LightSource(LightSource.Type.POINT)
+    // .setPosition(VectorMatrixFactory.newIVector3(0, 0, 2))
+    // // .setColor(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.75));
+    // .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    // rootNode.addLight(light3);
+  }
 
-	/**
-	 * Getter.
-	 */
-	public CgRootNode getCgRootNode() {
-		return rootNode;
-	}
+  /**
+   * Getter.
+   */
+  public CgRootNode getCgRootNode() {
+    return rootNode;
+  }
 
-	@Override
-	public void update(Observable o, Object arg) {
-	}
+  @Override
+  public void update(Observable o, Object arg) {
+  }
 }

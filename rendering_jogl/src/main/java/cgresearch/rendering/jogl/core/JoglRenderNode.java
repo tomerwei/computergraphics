@@ -11,6 +11,7 @@ import java.util.Observer;
 import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
+import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.material.CgGlslShader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.ResourceManager;
@@ -25,6 +26,12 @@ import cgresearch.rendering.jogl.material.JoglShader;
  * 
  */
 public class JoglRenderNode implements Observer {
+
+  /**
+   * Shader attribute location.
+   */
+  private static final int ATTRIBUTE_LOCATION_BARYCENTRIC = 1;
+
   /**
    * Reference to the scene graph node.
    */
@@ -77,7 +84,6 @@ public class JoglRenderNode implements Observer {
     }
 
     if (cgNode.getContent() != null) {
-      // gl.glPushMatrix();
       // Material
       Material material = cgNode.getContent().getMaterial();
       setupMaterial(gl, material);
@@ -100,7 +106,6 @@ public class JoglRenderNode implements Observer {
           renderContent.draw3D(gl);
         }
       }
-      // gl.glPopMatrix();
     }
   }
 
@@ -121,14 +126,16 @@ public class JoglRenderNode implements Observer {
     String shaderId = material.getShaderId(shaderIndex);
     CgGlslShader shader = ResourceManager.getShaderManagerInstance().getResource(shaderId);
     if (shader != null) {
-
       if (material.getShaderId(shaderIndex) == Material.SHADER_WIREFRAME) {
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
       } else {
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
       }
-
       JoglShader.use(shader, gl);
+      gl.glBindAttribLocation(shader.getShaderProgram(), ATTRIBUTE_LOCATION_BARYCENTRIC, "barycentric");
+      int location = gl.glGetUniformLocation(shader.getShaderProgram(), "camera_position");
+      gl.glUniform3f(location, (float) Camera.getInstance().getEye().get(0),
+          (float) Camera.getInstance().getEye().get(1), (float) Camera.getInstance().getEye().get(2));
     }
 
   }

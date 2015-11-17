@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import cgresearch.core.math.IVector;
 import cgresearch.core.math.IVector3;
-import cgresearch.core.math.Plane;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.primitives.Plane;
 
 /**
  * Testing class for PCA
@@ -31,7 +31,7 @@ public class TestPCA {
 		double pz = Math.random();
 		IVector3 p = VectorMatrixFactory.newIVector3(px, py, pz);
 		IVector3 normal = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random()).getNormalized();
-		Plane plane = new Plane(p, normal);
+    Plane plane = new Plane(p, normal);
 
 		PCA pca = new PCA();
 		// Create some random points near to the plane

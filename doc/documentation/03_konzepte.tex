@@ -78,8 +78,16 @@ Der Wurzelknoten bietet Zugriff auf die Anzahl der Lichtquellen (\verb+int getNu
 
 Lichtquellen sind in der Klasse \verb+LightSource+ repräsentiert. Neben Position, Farbe und Richtung (falls benötigt) wird dort auch der Typ der Lichtquelle abgelegt. Aktuell sind folgende Typen umgesetzt:
 \begin{itemize}
-\item Punktlichtquelle (Position, Farbe)
-\item Richtungslichtquelle (Richtung, Farbe)
+\item Punktlichtquelle
+\item Richtungslichtquelle
+\item Spot-Lichtquellen
+\end{itemize}
+
+Die drei verschiedenen Lichtquellen werden dann im Renderer (Klasse\\ \verb+cgresearch.rendering.jogl.core.JoglRenderer3D+ an OpenGL übergeben. Dabei wird zur Unterscheidung der drei Typen folgenden Konvention verwendet:
+\begin{itemize}
+\item Punktlichtquelle: \verb+GL2.GL_SPOT_CUTOFF < 0+ und \verb+GL2.GL_POSITION.w = 1+
+\item Richtungslichtquelle: \verb+GL2.GL_SPOT_CUTOFF < 0+ und \verb+GL2.GL_POSITION.w < 1+ (die Richtung steht in \verb+GL2.GL_POSITION+
+\item Spot-Lichtquelle: \verb+GL2.GL_SPOT_CUTOFF > 0+, Position steht in \verb+GL2.GL_POSITION+, Richtung steht in \verb+GL2.GL_DIRECTION+
 \end{itemize}
 
 Im der Swing Benutzerschnittstelle lassen sich die Lichtquellen verwalten und dynamisch verändern. Den zugehörigen Editor findet man im Menü unter \emph{Rendering $\rightarrow$ Light}. Durch Doppelklick auf einen Wert kann dieser verändert werden.
