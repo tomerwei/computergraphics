@@ -1,16 +1,18 @@
-varying vec3 N;
-varying vec4 reflectionAmbient;
-varying vec4 reflectionDiffuse;
-varying vec4 reflectionSpecular;
-varying vec3 p;
-varying vec3 cam_pos;
+varying vec3 N; // Normal vector
+varying vec3 p; // Surface point
+uniform vec3 camera_position; // Set in Java application
 
 /**
- * Fragment shader used for phong shading. The lighting color 
- * value is computed for each pixel here.
+ * Fragment shader: Phong shading with Phong lighting model.
  */
 void main (void)
 {
+
+    // Read reflection material properties from OpenGL
+    vec4 reflectionAmbient = gl_FrontMaterial.ambient;
+    vec4 reflectionDiffuse = gl_FrontMaterial.diffuse;
+    vec4 reflectionSpecular = gl_FrontMaterial.specular;
+    
     // Determine number of active lights
     int numberOfLights = 0;
     for ( int i = 0; i < gl_MaxLights; i++ ){
@@ -26,7 +28,7 @@ void main (void)
     ambient.x = reflectionAmbient.x;
     ambient.y = reflectionAmbient.y;
     ambient.z = reflectionAmbient.z;
-    //gl_FragColor += ambient.xyz;
+    gl_FragColor.xyz += ambient;
    
     // Add diffuse and specular for each light
     for ( int i = 0; i < numberOfLights; i++ ){
@@ -55,7 +57,7 @@ void main (void)
         }
 
         // Specular
-        vec3 E = normalize( cam_pos - p );
+        vec3 E = normalize( camera_position - p );
         vec3 R = normalize( reflect( L, N) );
         vec3 specular;
         specular.x = reflectionSpecular.x * gl_LightSource[i].specular.x;

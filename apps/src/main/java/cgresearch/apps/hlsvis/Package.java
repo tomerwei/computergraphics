@@ -86,7 +86,7 @@ public class Package extends Movable {
 		ICgNodeContent content = node.get(0);
 		ITriangleMesh packageMesh = (ITriangleMesh) content;
 		packageMesh.getMaterial().setTextureId(DHL_TEXTURE_ID);
-		packageMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+		packageMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 		packageMesh.getMaterial().setRenderMode(Normals.PER_FACET);
 		TriangleMeshTransformation.scale(packageMesh, VectorMatrixFactory
 				.newIVector3(packageSize, packageSize, packageSize));

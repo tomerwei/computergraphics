@@ -191,7 +191,7 @@ public class ClothSimulation extends Simulation {
 		ResourceManager.getTextureManagerInstance().addResource(
 				TEXTURE_CLOTH_ID, new CgTexture("textures/cloth.png"));
 		clothRestMesh.getMaterial().setTextureId(TEXTURE_CLOTH_ID);
-		clothRestMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+		clothRestMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 	}
 
 	@Override

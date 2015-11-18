@@ -31,7 +31,6 @@ public class Material extends Observable {
   /**
    * Ids for the default shaders.
    */
-  public static final String SHADER_TEXTURE_PHONG = "SHADER_TEXTURE_PHONG";
   public static final String SHADER_TEXTURE = "SHADER_TEXTURE";
   public static final String SHADER_ENVIRONMENT_MAPPING = "SHADER_ENVIRONMENT_MAPPING";
   public static final String SHADER_PHONG_SHADING = "SHADER_PHONG_SHADING";

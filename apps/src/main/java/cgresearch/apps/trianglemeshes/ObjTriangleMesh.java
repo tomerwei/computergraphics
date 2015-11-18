@@ -44,24 +44,39 @@ public class ObjTriangleMesh extends CgApplication {
     // loadFenja();
     // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    loadPlaneWithBunny();
+    // loadPlaneWithBunny();
+    loadHulk();
 
     // Coordinate system
     getCgRootNode().addChild(new CoordinateSystem());
 
     // Lights
     getCgRootNode().clearLights();
-    LightSource light = new LightSource(Type.SPOT);
-    light.setPosition(VectorMatrixFactory.newIVector3(1, 1, 1));
+    LightSource light = new LightSource(Type.POINT);
+    light.setPosition(VectorMatrixFactory.newIVector3(5, 5, 5));
     light.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
     light.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light);
   }
 
-  private void loadPlaneWithBunny() {
+  public void loadHulk() {
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = reader.readFile("meshes/hulk/Hulk.obj");
+    meshes.forEach(mesh -> {
+      mesh.computeTriangleNormals();
+      mesh.computeVertexNormals();
+      mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+      CgNode hulkNode = new CgNode(mesh, "hulk");
+      getCgRootNode().addChild(hulkNode);
+    });
+  }
+
+  public void loadPlaneWithBunny() {
     Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
     plane.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR1);
     plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    plane.getMaterial().setSpecularShininess(100);
     getCgRootNode().addChild(new CgNode(plane, "plane"));
     // plane.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 
@@ -76,6 +91,7 @@ public class ObjTriangleMesh extends CgApplication {
       bunny.computeVertexNormals();
       bunny.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       bunny.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR4);
+      bunny.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
       CgNode bunnyNode = new CgNode(bunny, "bunny");
       getCgRootNode().addChild(bunnyNode);
     }
@@ -112,7 +128,7 @@ public class ObjTriangleMesh extends CgApplication {
       return;
     }
     ITriangleMesh mesh = meshes.get(0);
-    mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+    mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     String LOTR_TEXTURE_ATLAS = "LOTR_TEXTURE_ATLAS";
     ResourceManager.getTextureManagerInstance().addResource(LOTR_TEXTURE_ATLAS,
         new CgTexture("textures/lotr_texture_atlas.png"));

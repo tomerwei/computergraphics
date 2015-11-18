@@ -95,7 +95,7 @@ public class HeightField {
 		mesh.computeVertexNormals();
 
 		mesh.getMaterial().setTextureId(TEXTURE_ID);
-		mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+		mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 		mesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR2);
 
 		return mesh;

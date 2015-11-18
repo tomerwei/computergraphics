@@ -94,7 +94,7 @@ public class BuildingVisualizer implements Observer{
 			VirtualPoint position = shape.getPosition();
 			ITriangleMesh mesh = new TriangleMesh();
 			mesh.getMaterial().setTextureId(shape.getTexture());
-			mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+			mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 			mesh.getMaterial().setSpecularShininess(50);
 			IVector3 v1;
 			IVector3 v2;

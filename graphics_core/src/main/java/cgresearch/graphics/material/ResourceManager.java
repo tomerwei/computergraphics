@@ -45,8 +45,6 @@ public class ResourceManager {
   private static void createDefaultShaders() {
     shaderInstance.addResource(Material.SHADER_WIREFRAME,
         new CgGlslShader("shader/vertex_shader_wireframe.glsl", "shader/fragment_shader_wireframe.glsl"));
-    shaderInstance.addResource(Material.SHADER_TEXTURE_PHONG, new CgGlslShader(
-        "shader/vertex_shader_texture_phong_shading.glsl", "shader/fragment_shader_texture_phong_shading.glsl"));
     shaderInstance.addResource(Material.SHADER_TEXTURE,
         new CgGlslShader("shader/vertex_shader_texture.glsl", "shader/fragment_shader_texture.glsl"));
     shaderInstance.addResource(Material.SHADER_PHONG_SHADING,

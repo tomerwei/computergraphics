@@ -98,7 +98,7 @@ public class ShadowVolumeDemo extends CgApplication {
     String texId = "tex_id_dhl_logo";
     ResourceManager.getTextureManagerInstance().addResource(texId, new CgTexture("textures/android.png"));
     room.getMaterial().setTextureId(texId);
-    room.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+    room.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 
     // Position environment into the middle
     Transformation t = new Transformation();
@@ -112,7 +112,7 @@ public class ShadowVolumeDemo extends CgApplication {
     AnimationTimer.getInstance().startTimer(50);
   }
 
-  private void loadCube() {
+  public void loadCube() {
     String objFilename = "meshes/cube.obj";
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile(objFilename);
@@ -141,7 +141,7 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     Transformation t = new Transformation();
     t.addScale(1);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
@@ -151,7 +151,7 @@ public class ShadowVolumeDemo extends CgApplication {
     getCgRootNode().addChild(node);
   }
 
-  private void loadHulk() {
+  public void loadHulk() {
     String objFilename = "meshes/hulk/Hulk.obj";
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile(objFilename);
