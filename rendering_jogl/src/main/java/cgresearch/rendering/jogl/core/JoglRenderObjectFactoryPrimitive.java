@@ -92,7 +92,6 @@ public class JoglRenderObjectFactoryPrimitive implements IRenderObjectsFactory<J
    */
   private JoglRenderNode createSphere(JoglRenderNode parentNode, CgNode cgNode, Sphere sphere) {
     ITriangleMesh mesh = TriangleMeshFactory.createSphere(20);
-    mesh.getMaterial().setRenderMode(Material.Normals.PER_FACET);
     TriangleMeshTransformation.scale(mesh,
         VectorMatrixFactory.newIVector3(sphere.getRadius(), sphere.getRadius(), sphere.getRadius()));
     TriangleMeshTransformation.translate(mesh, sphere.getCenter());

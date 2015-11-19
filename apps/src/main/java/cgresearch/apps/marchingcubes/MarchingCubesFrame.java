@@ -15,7 +15,6 @@ import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.implicitfunction.IImplicitFunction3D;
-import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunction3DTorus;
 import cgresearch.graphics.datastructures.implicitfunction.ImplicitFunctionGourSat;
 import cgresearch.graphics.datastructures.implicitfunction.MarchingCubes;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
