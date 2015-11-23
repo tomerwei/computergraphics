@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cgresearch.core.math.BoundingBox;
 import cgresearch.graphics.datastructures.trianglemesh.Edge;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.scenegraph.LightSource;
@@ -308,7 +309,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
   @Override
   public void draw3D(GL2 gl, LightSource lightSource) {
-    if (triangleMesh.getMaterial().isThrowingShadow()) {
+    if (triangleMesh.getMaterial().isThrowingShadow() && isInRange(lightSource)) {
       if (edges == null) {
         createEdgeList();
       }
@@ -318,6 +319,19 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
       renderShadowPolygons(gl, lightPosition, lightSource.getType() == LightSource.Type.DIRECTIONAL);
     }
+  }
+
+  private boolean isInRange(LightSource lightSource) {
+    BoundingBox bb = triangleMesh.getBoundingBox();
+    IVector3[] distances = new IVector3[2];
+    distances[0] = bb.getLowerLeft().subtract(lightSource.getPosition());
+    distances[1] = bb.getUpperRight().subtract(lightSource.getPosition());
+    for (int i = 0; i < distances.length; i++) {
+      if (distances[i].getNorm() <= lightSource.getLightStrength()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

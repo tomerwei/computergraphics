@@ -28,7 +28,7 @@ import java.util.Observable;
  */
 public class ShadowVolumeDemo extends CgApplication {
 
-  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.HARD);
+  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.HARD, 2);
   private double alpha = 0;
 
   /**
@@ -93,9 +93,9 @@ public class ShadowVolumeDemo extends CgApplication {
     room.addTriangle(t3);
     room.addTriangle(t4);
     room.computeTriangleNormals();
-    room.getMaterial().setThrowsShadow(false);
+    room.getMaterial().setThrowsShadow(true);
 
-    String texId = "tex_id_dhl_logo";
+    String texId = "tex_id_android";
     ResourceManager.getTextureManagerInstance().addResource(texId, new CgTexture("textures/android.png"));
     room.getMaterial().setTextureId(texId);
     room.getMaterial().setShaderId(Material.SHADER_TEXTURE);

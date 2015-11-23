@@ -45,6 +45,11 @@ public class LightSource {
   private ShadowType shadow = ShadowType.HARD;
 
   /**
+   * Strength of the light in units. -1 equals infinite
+   */
+  private double lightStrength = -1.0;
+
+  /**
    * Opening angle of a slot light: Angle in degrees between the direction and
    * the light cone outer shell.
    */
@@ -61,9 +66,10 @@ public class LightSource {
   /**
    * Constructor
    */
-  public LightSource(Type type, ShadowType shadow) {
+  public LightSource(Type type, ShadowType shadow, double lightStrength) {
     this.type = type;
     this.shadow = shadow;
+    this.lightStrength = lightStrength;
   }
 
   public IVector3 getPosition() {
@@ -86,6 +92,10 @@ public class LightSource {
     return shadow;
   }
 
+  public double getLightStrength() {
+    return lightStrength;
+  }
+
   public LightSource setPosition(IVector3 position) {
     this.position = position;
     return this;
@@ -101,8 +111,12 @@ public class LightSource {
     return this;
   }
 
+  public void setLightStrength(double lightStrength) {
+    this.lightStrength = lightStrength;
+  }
+
   public LightSource copy() {
-    LightSource copy = new LightSource(type, shadow);
+    LightSource copy = new LightSource(type, shadow, lightStrength);
     copy.setColor(color);
     copy.setDirection(direction);
     copy.setPosition(position);

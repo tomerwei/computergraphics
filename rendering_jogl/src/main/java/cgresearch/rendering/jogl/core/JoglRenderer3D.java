@@ -520,7 +520,7 @@ public class JoglRenderer3D implements Observer {
     LightSource[] lights = new LightSource[softShadowPlaneCount - 1];
 
     for (int i = 0; i < lights.length; i++) {
-      lights[i] = new LightSource(light.getType(), light.getShadowType());
+      lights[i] = new LightSource(light.getType(), light.getShadowType(), light.getLightStrength());
       lights[i].setColor(light.getDiffuseColor());
       lights[i].setDirection(light.getDirection());
     }

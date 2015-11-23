@@ -38,6 +38,16 @@ public class TriangleMesh extends ITriangleMesh {
   private List<IVector3> textureCoordinates = new ArrayList<IVector3>();
 
   /**
+   * Bounding box
+   */
+  private BoundingBox boundingBox = new BoundingBox();
+
+  /**
+   * Update bounding box?
+   */
+  private boolean updateBoundingBox = true;
+
+  /**
    * Default constructor.
    */
   public TriangleMesh() {
@@ -100,6 +110,7 @@ public class TriangleMesh extends ITriangleMesh {
   @Override
   public int addVertex(IVertex v) {
     vertices.add(v);
+    updateBoundingBox = true;
     return vertices.size() - 1;
   }
 
@@ -157,6 +168,7 @@ public class TriangleMesh extends ITriangleMesh {
   public void clear() {
     vertices.clear();
     triangles.clear();
+    updateBoundingBox = true;
   }
 
   /*
@@ -284,11 +296,15 @@ public class TriangleMesh extends ITriangleMesh {
    */
   @Override
   public BoundingBox getBoundingBox() {
-    BoundingBox bbox = new BoundingBox();
-    for (IVertex vertex : vertices) {
-      bbox.add(vertex.getPosition());
+    if (updateBoundingBox) {
+      // Necessary if clear forced the update
+      boundingBox.setInitialized(false);
+      for (IVertex vertex : vertices) {
+        boundingBox.add(vertex.getPosition());
+      }
+      updateBoundingBox = false;
     }
-    return bbox;
+    return boundingBox;
   }
 
   /*
