@@ -322,6 +322,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
   }
 
   private boolean isInRange(LightSource lightSource) {
+    if (lightSource.getLightStrength() == -1) {
+      return true;
+    }
+
     BoundingBox bb = triangleMesh.getBoundingBox();
     IVector3[] distances = new IVector3[2];
     distances[0] = bb.getLowerLeft().subtract(lightSource.getPosition());

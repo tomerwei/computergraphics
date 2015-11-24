@@ -10,7 +10,6 @@ import java.util.List;
 import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
-import cgresearch.apps.trianglemeshes.OwnTestFrame;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;

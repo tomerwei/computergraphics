@@ -28,7 +28,7 @@ import java.util.Observable;
  */
 public class ShadowVolumeDemo extends CgApplication {
 
-  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.HARD, 2);
+  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.HARD, -1);
   private double alpha = 0;
 
   /**
@@ -47,10 +47,11 @@ public class ShadowVolumeDemo extends CgApplication {
     //loadHulk();
     //loadCube();
     loadObject();
+    loadObject2();
 
     // Set light source
-    lightSource.setPosition(VectorMatrixFactory.newIVector3(2, 5, 2));
-    lightSource.setDirection(VectorMatrixFactory.newIVector3(0, 0,1));
+    lightSource.setPosition(VectorMatrixFactory.newIVector3(0, 1, 0));
+    //lightSource.setDirection(VectorMatrixFactory.newIVector3(0, 0,1));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
   }
@@ -60,11 +61,11 @@ public class ShadowVolumeDemo extends CgApplication {
 
     // Corner points
     IVector3 pA = VectorMatrixFactory.newIVector3(0, 0, 0);
-    IVector3 pB = VectorMatrixFactory.newIVector3(0, 0, 1);
-    IVector3 pC = VectorMatrixFactory.newIVector3(1, 0, 1);
-    IVector3 pD = VectorMatrixFactory.newIVector3(1, 0, 0);
-    IVector3 pE = VectorMatrixFactory.newIVector3(0, 1, 0);
-    IVector3 pF = VectorMatrixFactory.newIVector3(1, 1, 0);
+    IVector3 pB = VectorMatrixFactory.newIVector3(0, 0, 4);
+    IVector3 pC = VectorMatrixFactory.newIVector3(4, 0, 4);
+    IVector3 pD = VectorMatrixFactory.newIVector3(4, 0, 0);
+    IVector3 pE = VectorMatrixFactory.newIVector3(0, 4, 0);
+    IVector3 pF = VectorMatrixFactory.newIVector3(4, 4, 0);
 
     // Add vertices to mesh
     room.addVertex(new Vertex(pA));
@@ -93,7 +94,7 @@ public class ShadowVolumeDemo extends CgApplication {
     room.addTriangle(t3);
     room.addTriangle(t4);
     room.computeTriangleNormals();
-    room.getMaterial().setThrowsShadow(true);
+    room.getMaterial().setThrowsShadow(false);
 
     String texId = "tex_id_android";
     ResourceManager.getTextureManagerInstance().addResource(texId, new CgTexture("textures/android.png"));
@@ -102,7 +103,7 @@ public class ShadowVolumeDemo extends CgApplication {
 
     // Position environment into the middle
     Transformation t = new Transformation();
-    t.addTranslation(VectorMatrixFactory.newIVector3(-0.5, 0, -0.5));
+    t.addTranslation(VectorMatrixFactory.newIVector3(-2, 0, -2));
 
     // Add Environment to the scene graph
     CgNode node = new CgNode(t, "Translation");
@@ -144,10 +145,29 @@ public class ShadowVolumeDemo extends CgApplication {
     hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     Transformation t = new Transformation();
     t.addScale(1);
-    t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
-    //t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0), 90));
+    t.addTranslation(VectorMatrixFactory.newIVector3(-1, 0.25, 0));
+    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0), 90));
     CgNode node = new CgNode(t, "Scale");
     node.addChild(new CgNode(hulk, "hulk"));
+    getCgRootNode().addChild(node);
+  }
+
+  private void loadObject2() {
+    String objFilename = "meshes/cow.obj";
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = reader.readFile(objFilename);
+    if (meshes == null) {
+      return;
+    }
+    ITriangleMesh hulk = meshes.get(0);
+    hulk.getMaterial().setThrowsShadow(true);
+    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    Transformation t = new Transformation();
+    t.addScale(1);
+    t.addTranslation(VectorMatrixFactory.newIVector3(1, 0.25, 0));
+    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0), 90));
+    CgNode node = new CgNode(t, "Scale2");
+    node.addChild(new CgNode(hulk, "hulk2"));
     getCgRootNode().addChild(node);
   }
 
@@ -171,11 +191,12 @@ public class ShadowVolumeDemo extends CgApplication {
 
   @Override
   public void update(Observable o, Object arg) {
+    /*
     if (o instanceof AnimationTimer) {
       lightSource
           .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
       alpha += 0.05;
-    }
+    }*/
   }
 
   /**
