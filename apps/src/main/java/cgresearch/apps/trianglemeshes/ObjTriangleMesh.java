@@ -52,11 +52,18 @@ public class ObjTriangleMesh extends CgApplication {
 
     // Lights
     getCgRootNode().clearLights();
+    
     LightSource light = new LightSource(Type.POINT);
     light.setPosition(VectorMatrixFactory.newIVector3(5, 5, 5));
     light.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
     light.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light);
+    
+    LightSource light2 = new LightSource(Type.POINT);
+    light2.setPosition(VectorMatrixFactory.newIVector3(5, 5, -5));
+    light2.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
+    light2.setSpotOpeningAngle(20);
+    getCgRootNode().addLight(light2);
   }
 
   public void loadHulk() {
