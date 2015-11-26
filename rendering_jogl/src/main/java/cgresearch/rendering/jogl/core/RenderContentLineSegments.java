@@ -6,6 +6,7 @@
 package cgresearch.rendering.jogl.core;
 
 import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.graphics.datastructures.linesegments.LineSegments;
@@ -45,7 +46,7 @@ public class RenderContentLineSegments implements IRenderContent {
   }
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
 
   }
 

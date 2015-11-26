@@ -92,6 +92,11 @@ public class Transformation extends ICgNodeContent {
 		updateTransposedTransformation();
 	}
 
+	public void multiplyTransformation(IMatrix4 transform) {
+		transformation = transformation.multiply(transform);
+		updateTransposedTransformation();
+	}
+
 	/**
 	 * @return
 	 */

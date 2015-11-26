@@ -27,14 +27,16 @@ public class RenderContentTransformation extends JoglRenderContent {
 
 	@Override
 	public void draw3D(GL2 gl) {
-		draw3D(gl, null);
+		draw3D(gl, null, null);
 	}
 
 	@Override
-	public void draw3D(GL2 gl, LightSource lightSource) {
+	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
 		gl.glPushMatrix();
-		if (transformation != null) {
-			gl.glMultMatrixd(transformation.getTransposedTransformation()
+		// If light source is null, we are rendering shadow volumes.
+		// No transformation required.
+		if (this.transformation != null && lightSource == null) {
+			gl.glMultMatrixd(this.transformation.getTransposedTransformation()
 					.data(), 0);
 		}
 	}

@@ -1,6 +1,7 @@
 package cgresearch.rendering.jogl.core;
 
 import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.IVector3;
@@ -39,7 +40,7 @@ public class RenderContentOctree implements IRenderContent {
 	}
 
 	@Override
-	public void draw3D(GL2 gl, LightSource lightSource) {
+	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
 
 	}
 

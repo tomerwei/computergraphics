@@ -1,6 +1,7 @@
 package cgresearch.rendering.jogl.core;
 
 import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.IMatrix3;
@@ -95,7 +96,7 @@ public class RenderContentMotionCaptureFrame extends JoglRenderContent {
 	}
 
 	@Override
-	public void draw3D(GL2 gl, LightSource lightSource) {
+	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
 
 	}
 

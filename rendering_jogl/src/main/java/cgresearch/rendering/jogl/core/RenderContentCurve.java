@@ -217,7 +217,7 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
   }
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
 
   }
 

@@ -4,6 +4,7 @@ import cgresearch.AppLauncher;
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.IVector3;
+import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
@@ -48,10 +49,12 @@ public class ShadowVolumeDemo extends CgApplication {
     //loadCube();
     loadObject();
     loadObject2();
+    loadObject3();
 
     // Set light source
-    lightSource.setPosition(VectorMatrixFactory.newIVector3(0, 1, 0));
+    lightSource.setPosition(VectorMatrixFactory.newIVector3(2, 5, 0));
     //lightSource.setDirection(VectorMatrixFactory.newIVector3(0, 0,1));
+    lightSource.setColor(VectorMatrixFactory.newIVector3(1,0,0));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
   }
@@ -125,7 +128,7 @@ public class ShadowVolumeDemo extends CgApplication {
     Transformation t = new Transformation();
     t.addScale(.3);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 1.5, -0.5));
-    //hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
+    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     hulk.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.9, 1.0));
     hulk.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.25));
     CgNode node = new CgNode(t, "Scale");
@@ -146,7 +149,8 @@ public class ShadowVolumeDemo extends CgApplication {
     Transformation t = new Transformation();
     t.addScale(1);
     t.addTranslation(VectorMatrixFactory.newIVector3(-1, 0.25, 0));
-    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0), 90));
+    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
+            MathHelpers.degree2radiens(270)));
     CgNode node = new CgNode(t, "Scale");
     node.addChild(new CgNode(hulk, "hulk"));
     getCgRootNode().addChild(node);
@@ -163,9 +167,30 @@ public class ShadowVolumeDemo extends CgApplication {
     hulk.getMaterial().setThrowsShadow(true);
     hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     Transformation t = new Transformation();
-    t.addScale(1);
+    //t.addScale(0.5);
     t.addTranslation(VectorMatrixFactory.newIVector3(1, 0.25, 0));
-    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0), 90));
+    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
+            MathHelpers.degree2radiens(90)));
+    CgNode node = new CgNode(t, "Scale2");
+    node.addChild(new CgNode(hulk, "hulk2"));
+    getCgRootNode().addChild(node);
+  }
+
+  private void loadObject3() {
+    String objFilename = "meshes/cow.obj";
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = reader.readFile(objFilename);
+    if (meshes == null) {
+      return;
+    }
+    ITriangleMesh hulk = meshes.get(0);
+    hulk.getMaterial().setThrowsShadow(true);
+    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    Transformation t = new Transformation();
+    t.addScale(0.5);
+    t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
+    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
+            MathHelpers.degree2radiens(135)));
     CgNode node = new CgNode(t, "Scale2");
     node.addChild(new CgNode(hulk, "hulk2"));
     getCgRootNode().addChild(node);
@@ -191,12 +216,12 @@ public class ShadowVolumeDemo extends CgApplication {
 
   @Override
   public void update(Observable o, Object arg) {
-    /*
+
     if (o instanceof AnimationTimer) {
       lightSource
           .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
       alpha += 0.05;
-    }*/
+    }
   }
 
   /**

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.logging.Logger;
@@ -170,7 +171,7 @@ public class RenderContentPointCloud extends JoglRenderContent {
   }
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
 
   }
 

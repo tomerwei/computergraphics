@@ -44,7 +44,7 @@ public class Matrix4 implements IMatrix4 {
 	@Override
 	public IVector4 multiply(final IVector4 other) {
 		IVector4 result = VectorMatrixFactory.newIVector4();
-		for (int i = 0; i < MathHelpers.DIMENSION_3; i++) {
+		for (int i = 0; i < MathHelpers.DIMENSION_4; i++) {
 			result.set(i, getRow(i).multiply(other));
 		}
 

@@ -23,11 +23,7 @@ import cgresearch.graphics.material.CgGlslShader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.misc.AnimationTimer;
-import cgresearch.graphics.scenegraph.Animation;
-import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.graphics.scenegraph.CgNodeStateChange;
-import cgresearch.graphics.scenegraph.CgRootNode;
-import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.*;
 import cgresearch.rendering.jogl.material.JoglShader;
 import cgresearch.rendering.jogl.misc.PickingRenderer;
 
@@ -379,7 +375,7 @@ public class JoglRenderer3D implements Observer {
     }
 
     // Render the scene graph
-    renderNode(rootNode, gl, false, null);
+    renderNode(rootNode, gl, false, null, null);
 
     // Render the current camera path
     renderCameraPath(gl);
@@ -437,7 +433,7 @@ public class JoglRenderer3D implements Observer {
     gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmbientOn, 0);
 
     // Render the scene graph
-    renderNode(rootNode, gl, false, null);
+    renderScene(gl, false, null);
 
     // Disable depth writes
     gl.glDepthMask(false);
@@ -461,7 +457,7 @@ public class JoglRenderer3D implements Observer {
         light = light.copy();
       }
 
-      drawShadows(gl, light, i);
+      drawShadowVolumes(gl, light, i);
 
       LightSource[] lights = null;
       switch (light.getShadowType()) {
@@ -483,7 +479,7 @@ public class JoglRenderer3D implements Observer {
       }
       if (lights != null) {
         for (int j = 0; j < lights.length; j++) {
-          drawShadows(gl, lights[j], i);
+          drawShadowVolumes(gl, lights[j], i);
         }
       }
     }
@@ -495,14 +491,14 @@ public class JoglRenderer3D implements Observer {
     checkTakeScreenshot(drawable);
 
     // Show framerate
-    CgGlslShader shaderTexture = ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_TEXTURE);
-    JoglShader.use(shaderTexture, gl);
+    //CgGlslShader shaderTexture = ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_TEXTURE);
+    //JoglShader.use(shaderTexture, gl);
 
-    renderer.setUseVertexArrays(false);
-    renderer.beginRendering(SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderer.setColor(0.0f, 0f, 0f, 0.8f);
-    renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0, SCREEN_HEIGHT - 20);
-    renderer.endRendering();
+    //renderer.setUseVertexArrays(false);
+    //renderer.beginRendering(SCREEN_WIDTH, SCREEN_HEIGHT);
+    //renderer.setColor(0f, 0f, 0f, 0.8f);
+    //renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0, SCREEN_HEIGHT - 20);
+    //renderer.endRendering();
 
     JoglHelper.hasGLError(gl, "GL rendering");
   }
@@ -598,7 +594,7 @@ public class JoglRenderer3D implements Observer {
   /**
    * Draws shadows into the scene in respect to the given light
    */
-  private void drawShadows(GL2 gl, LightSource light, int lightID) {
+  private void drawShadowVolumes(GL2 gl, LightSource light, int lightID) {
     // Clear the stencil buffer
     gl.glClear(GL.GL_STENCIL_BUFFER_BIT);
 
@@ -624,19 +620,19 @@ public class JoglRenderer3D implements Observer {
       gl.glStencilMask(~0);
       gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
 
-      renderNode(rootNode, gl, true, light);
+      renderScene(gl, true, light);
     } else {
       // Increment stencil buffer value for front-facing polygons that fail the
       // depth test
       gl.glCullFace(GL.GL_FRONT);
       gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR, GL.GL_KEEP);
-      renderNode(rootNode, gl, true, light);
+      renderScene(gl, true, light);
 
       // Decrement stencil buffer value for back-facing polygons that fail the
       // depth test
       gl.glCullFace(GL.GL_BACK);
       gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR, GL.GL_KEEP);
-      renderNode(rootNode, gl, true, light);
+      renderScene(gl, true, light);
     }
 
     // Debug
@@ -651,7 +647,7 @@ public class JoglRenderer3D implements Observer {
     gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR);
     gl.glDepthFunc(GL.GL_EQUAL);
     gl.glColorMask(true, true, true, true);
-    renderNode(rootNode, gl, false, null);
+    renderScene(gl, false, null);
 
     // Restore depth test
     gl.glDepthFunc(GL.GL_LESS);
@@ -782,10 +778,15 @@ public class JoglRenderer3D implements Observer {
     }
   }
 
+  private void renderScene(GL2 gl, boolean renderShadowVolume, LightSource lightSource) {
+    renderNode(rootNode, gl, renderShadowVolume, lightSource, new Transformation());
+  }
+
   /**
    * Recursive method to render nodes.
    */
-  private void renderNode(CgNode node, GL2 gl, boolean renderShadowVolume, LightSource lightSource) {
+  private void renderNode(CgNode node, GL2 gl, boolean renderShadowVolume, LightSource lightSource,
+                          Transformation transformation) {
     if (node == null) {
       return;
     }
@@ -803,20 +804,28 @@ public class JoglRenderer3D implements Observer {
       if (!renderShadowVolume) {
         renderNode.draw3D(gl);
       } else if (lightSource != null) {
-        renderNode.draw3D(gl, lightSource);
+        renderNode.draw3D(gl, lightSource, transformation);
       }
     }
 
     // Draw children
     for (int childIndex = 0; childIndex < node.getNumChildren(); childIndex++) {
-      if (node.getContent() instanceof Animation) {
+      if (renderShadowVolume && node.getContent() instanceof Transformation) {
+        Transformation t = (Transformation)node.getContent();
+        if (t != null) {
+          t.multiplyTransformation(transformation.getTransformation());
+          renderNode(node.getChildNode(childIndex), gl, renderShadowVolume, lightSource, t);
+        } else {
+          Logger.getInstance().error("Transformation node is null.");
+        }
+      } else if (node.getContent() instanceof Animation) {
         // Special case: animation node, only render current time step.
         if (AnimationTimer.getInstance().getValue() == childIndex) {
-          renderNode(node.getChildNode(childIndex), gl, renderShadowVolume, lightSource);
+          renderNode(node.getChildNode(childIndex), gl, renderShadowVolume, lightSource, transformation);
         }
       } else {
         // Non-animation node
-        renderNode(node.getChildNode(childIndex), gl, renderShadowVolume, lightSource);
+        renderNode(node.getChildNode(childIndex), gl, renderShadowVolume, lightSource, transformation);
       }
     }
 
