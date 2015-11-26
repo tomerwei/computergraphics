@@ -17,6 +17,7 @@ import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.points.PointCloud;
 import cgresearch.graphics.datastructures.points.PointCloudFactory;
+import cgresearch.graphics.datastructures.points.TriangleMeshSampler;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.CgTexture;
@@ -34,8 +35,8 @@ import cgresearch.studentprojects.shapegrammar.gui.menu.BuilderMenu;
  */
 public class RegistrationFrame extends CgApplication {
 
-  public static IPointCloud pointCloud = new PointCloud();
-  public static IPointCloud pointCloud2 = new PointCloud();
+	public static IPointCloud Base = new PointCloud();
+	  public static IPointCloud Register = new PointCloud();
 
   /**
    * Constructor
@@ -45,53 +46,60 @@ public class RegistrationFrame extends CgApplication {
     // ObjFileReader reader = new ObjFileReader();
     // List<ITriangleMesh> meshes = reader.readFile("meshes/bunny.obj");
     // getCgRootNode().addChild(new CgNode(meshes.get(0), "mesh"));
-    loadIPointCloud();
+   loadIPointCloud();
 
   }
+	public void loadIPointCloud() {
+	    IVector3 position1 = VectorMatrixFactory.newIVector3(0, 0, 0);
+	    IVector3 position2 = VectorMatrixFactory.newIVector3(0, 0, 2);
+	    IVector3 position3 = VectorMatrixFactory.newIVector3(2, 0, 2);
+	    IVector3 position4 = VectorMatrixFactory.newIVector3(2, 0, 0);
 
-  public void loadIPointCloud() {
-    IVector3 position1 = VectorMatrixFactory.newIVector3(0, 0, 0);
-    IVector3 position2 = VectorMatrixFactory.newIVector3(0, 0, 2);
-    IVector3 position3 = VectorMatrixFactory.newIVector3(2, 0, 2);
-    IVector3 position4 = VectorMatrixFactory.newIVector3(2, 0, 0);
+	    IVector3 position5 = VectorMatrixFactory.newIVector3(0, 0, 2);
+	    IVector3 position6 = VectorMatrixFactory.newIVector3(0, 2, 0);
+	    IVector3 position7 = VectorMatrixFactory.newIVector3(0, 2, 2);
+	    IVector3 position8 = VectorMatrixFactory.newIVector3(0, 0, 0);
 
-    IVector3 position5 = VectorMatrixFactory.newIVector3(0, 0, 0);
-    IVector3 position6 = VectorMatrixFactory.newIVector3(0, 0, 2);
-    IVector3 position7 = VectorMatrixFactory.newIVector3(0, 2, 2);
-    IVector3 position8 = VectorMatrixFactory.newIVector3(0, 2, 0);
+	    IVector3 color = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random());
+	    IVector3 normal = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random());
 
-    IVector3 color = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random());
-    IVector3 normal = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random());
+	    // IPointCloud pointCloud = new PointCloud();
+	    Base.addPoint(new Point(position1, color, normal));
+	    Base.addPoint(new Point(position2, color, normal));
+	    Base.addPoint(new Point(position3, color, normal));
+	    Base.addPoint(new Point(position4, color, normal));
 
-    // IPointCloud pointCloud = new PointCloud();
-    pointCloud.addPoint(new Point(position1, color, normal));
-    pointCloud.addPoint(new Point(position2, color, normal));
-    pointCloud.addPoint(new Point(position3, color, normal));
-    pointCloud.addPoint(new Point(position4, color, normal));
+	    // IPointCloud pointCloud2 = new PointCloud();
+	    Register.addPoint(new Point(position5, color, normal));
+	    Register.addPoint(new Point(position6, color, normal));
+	    Register.addPoint(new Point(position7, color, normal));
+	    Register.addPoint(new Point(position8, color, normal));
 
-    // IPointCloud pointCloud2 = new PointCloud();
-    pointCloud2.addPoint(new Point(position5, color, normal));
-    pointCloud2.addPoint(new Point(position6, color, normal));
-    pointCloud2.addPoint(new Point(position7, color, normal));
-    pointCloud2.addPoint(new Point(position8, color, normal));
+//	     ObjFileReader reader = new ObjFileReader();
+//	     List<ITriangleMesh> meshes = reader.readFile("meshes/cube.obj");
+//	     IPointCloud pointCloud3 = PointCloudFactory.createDummyPointCloud();
+//	     ITriangleMesh mesh = meshes.get(0);
+//	     pointCloud3 = TriangleMeshSampler.sample(mesh, 5000);
+//	     
+//	     //verschobener Würfel...leider noch nicht verschoben.
+//	     ObjFileReader reader1 = new ObjFileReader();
+//	     List<ITriangleMesh> meshes1 = reader.readFile("meshes/cube.obj");
+//	     IPointCloud pointCloud4 = PointCloudFactory.createDummyPointCloud();
+//	     ITriangleMesh mesh1 = meshes.get(0);
+//	     pointCloud4 = TriangleMeshSampler.sample(mesh, 5000);
+	     
+	    //
+	    CgNode pointCloudNode = new CgNode(Base, "pointCloud");
+	    getCgRootNode().addChild(pointCloudNode);
 
-    // IcpDistanceFunction icp = new IcpDistanceFunction(pointCloud);
-    // icp.startAlgorithm(pointCloud2);
+	    CgNode pointCloudNode2 = new CgNode(Register, "pointCloud2");
+	    getCgRootNode().addChild(pointCloudNode2);
+	    
+//	    CgNode pointCloudNode3 = new CgNode(pointCloud3, "pointCloud3");
+//	    getCgRootNode().addChild(pointCloudNode3);
 
-    // ObjFileReader reader = new ObjFileReader();
-    // List<ITriangleMesh> meshes = reader.readFile("meshes/square.obj");
-    // IPointCloud pointCloud3 = PointCloudFactory.createDummyPointCloud();
-    // ITriangleMesh mesh = meshes.get(0);
-    // pointCloud3 = MeshSampler.sample(mesh, 5000);
-
-    //
-    CgNode pointCloudNode = new CgNode(pointCloud, "pointCloud");
-    getCgRootNode().addChild(pointCloudNode);
-
-    CgNode pointCloudNode2 = new CgNode(pointCloud2, "pointCloud2");
-    getCgRootNode().addChild(pointCloudNode2);
-
-  }
+	  }
+  
 
   public static void main(String[] args) {
     // ResourcesLocator.getInstance().parseIniFile("resources.ini");
