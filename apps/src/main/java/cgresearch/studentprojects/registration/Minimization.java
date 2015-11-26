@@ -24,21 +24,22 @@ public class Minimization {
 	}
 	
 	public IPointCloud calculate(IPointCloud Register, IPointCloud closestPoints, int k){
+		//umbauen hier nur methoden, die aus der REstriationButton aufgerufen werdedn. REgistrationButton wird die Hauptklasse.
 		
 		
-		Point upCloudRegister = centerOfMass(Register);
-		Point uxCloudClosest = centerOfMass(closestPoints);
+//		Point upCloudRegister = centerOfMassyBase(Register);
+//		Point uxCloudClosest = centerOfMassyRegister(closestPoints);
 		
-		Matrix3 covarianceMatrix = this.getCrossCovarianceMatrix(Register, closestPoints, upCloudRegister, uxCloudClosest);
-		Matrix4 q = this.getQ(covarianceMatrix);
-		Vector4 eigenVector = getMaxEigenVector(q);
-		Matrix3 rotationMatrix = getRotationMatrix(eigenVector);
-		Vector3 translationVector = translationVector(rotationMatrix, upCloudRegister, uxCloudClosest);
-		
-		Register = computeNewPointCloud(Register, rotationMatrix, translationVector);
-		double dk = computeDk(rotationMatrix, translationVector, Register, closestPoints);
-		this.print(dk, eigenVector, translationVector, k);
-		
+//		Matrix3 covarianceMatrix = this.getCrossCovarianceMatrix(Register, closestPoints, upCloudRegister, uxCloudClosest);
+//		Matrix4 q = this.getQ(covarianceMatrix);
+//		Vector4 eigenVector = getMaxEigenVector(q);
+//		Matrix3 rotationMatrix = getRotationMatrix(eigenVector);
+//		Vector3 translationVector = translationVector(rotationMatrix, upCloudRegister, uxCloudClosest);
+//		
+//		Register = computeNewPointCloud(Register, rotationMatrix, translationVector);
+//		double dk = computeDk(rotationMatrix, translationVector, Register, closestPoints);
+//		this.print(dk, eigenVector, translationVector, k);
+//		
 		
 		
 		
@@ -55,9 +56,10 @@ public class Minimization {
 	}
 	
 	
-private Point centerOfMass(IPointCloud ipc){
+public Point centerOfMassyBase(IPointCloud ipc){
 		
 		
+	
 		IVector3 newPoint = VectorMatrixFactory.newIVector3(0,0,0);
 		
 				
@@ -68,6 +70,8 @@ private Point centerOfMass(IPointCloud ipc){
 			newPoint.set(z, (newPoint.get(z) + ipc.getPoint(i).getPosition().get(z)));
 //			System.out.println("i centerofmass "+ i);
 		}
+		
+		
 		newPoint.set(x, (newPoint.get(x) / ipc.getNumberOfPoints()));
 		newPoint.set(y, (newPoint.get(y) / ipc.getNumberOfPoints()));
 		newPoint.set(z, (newPoint.get(z) / ipc.getNumberOfPoints()));
@@ -75,9 +79,32 @@ private Point centerOfMass(IPointCloud ipc){
 		
 	}
 
+public Point centerOfMassyRegister(IPointCloud ipc, int[] next){
 	
 	
-	/*
+	
+	IVector3 newPoint = VectorMatrixFactory.newIVector3(0,0,0);
+	
+			
+	for(int i = 0; i < ipc.getNumberOfPoints(); i++)
+	{
+		newPoint.set(x, (newPoint.get(x) + ipc.getPoint(i).getPosition().get(x)));
+		newPoint.set(y, (newPoint.get(y) + ipc.getPoint(i).getPosition().get(y)));
+		newPoint.set(z, (newPoint.get(z) + ipc.getPoint(i).getPosition().get(z)));
+//		System.out.println("i centerofmass "+ i);
+	}
+	
+	
+	newPoint.set(x, (newPoint.get(x) / ipc.getNumberOfPoints()));
+	newPoint.set(y, (newPoint.get(y) / ipc.getNumberOfPoints()));
+	newPoint.set(z, (newPoint.get(z) / ipc.getNumberOfPoints()));
+	return new Point(newPoint);
+	
+}
+
+	
+	
+	/**
 	 * Calculate the cross Covariance Matrix
 	 */
 	
