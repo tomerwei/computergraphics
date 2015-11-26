@@ -68,12 +68,14 @@ public class RegistrationFrame extends CgApplication {
       basePointCloud.getPoint(i).getColor().copy(Material.PALETTE2_COLOR0);
     }
 
+    // Transform mesh for second cube
     // Rotation of the second point cloud: 10 degrees in degrees - transformed
     // to radiens. Rotation axis: (1,1,1)
     double rotationAngle = 10 * Math.PI / 180;
-    // Transform mesh for second cube
     TriangleMeshTransformation.transform(cubeMesh,
         VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(1, 1, 1), rotationAngle));
+    // Optional: translation
+    //TriangleMeshTransformation.translate(cubeMesh, VectorMatrixFactory.newIVector3(0.2, 0.2, 0.2));
     IPointCloud registerPointCloud = TriangleMeshSampler.sample(cubeMesh, 500);
     registerPointCloud.getMaterial().setShaderId(Material.SHADER_COLOR);
     // Set point color
