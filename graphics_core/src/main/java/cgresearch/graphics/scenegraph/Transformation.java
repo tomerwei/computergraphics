@@ -5,10 +5,7 @@
  */
 package cgresearch.graphics.scenegraph;
 
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IMatrix4;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.*;
 
 /**
  * Tranformation representation for transformations in the scene graph.
@@ -111,4 +108,17 @@ public class Transformation extends ICgNodeContent {
 		return transposedTransformation;
 	}
 
+	/**
+	 * Returns the transformed vector as a Vector 4
+     */
+	public IVector4 getTransformedVector4(IVector3 vector3) {
+		return transformation.multiply(vector3.getHomogenious());
+	}
+
+	/**
+	 * Returns the transformed vector as a Vector 3
+	 */
+	public IVector3 getTransformedVector3(IVector3 vector3) {
+		return getTransformedVector4(vector3).toVector3();
+	}
 }

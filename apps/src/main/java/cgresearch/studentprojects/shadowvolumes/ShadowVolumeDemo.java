@@ -46,15 +46,15 @@ public class ShadowVolumeDemo extends CgApplication {
     // Load elements
     createEnvironment();
     //loadHulk();
-    //loadCube();
+    loadCube();
     loadObject();
     loadObject2();
     loadObject3();
 
     // Set light source
-    lightSource.setPosition(VectorMatrixFactory.newIVector3(2, 5, 0));
+    lightSource.setPosition(VectorMatrixFactory.newIVector3(0, 2, 0));
     //lightSource.setDirection(VectorMatrixFactory.newIVector3(0, 0,1));
-    lightSource.setColor(VectorMatrixFactory.newIVector3(1,0,0));
+    lightSource.setColor(VectorMatrixFactory.newIVector3(1,1,1));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
   }
@@ -128,7 +128,7 @@ public class ShadowVolumeDemo extends CgApplication {
     Transformation t = new Transformation();
     t.addScale(.3);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 1.5, -0.5));
-    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     hulk.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.9, 1.0));
     hulk.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.25));
     CgNode node = new CgNode(t, "Scale");
@@ -145,7 +145,7 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     Transformation t = new Transformation();
     t.addScale(1);
     t.addTranslation(VectorMatrixFactory.newIVector3(-1, 0.25, 0));
@@ -165,7 +165,7 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     Transformation t = new Transformation();
     //t.addScale(0.5);
     t.addTranslation(VectorMatrixFactory.newIVector3(1, 0.25, 0));
@@ -185,7 +185,7 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     Transformation t = new Transformation();
     t.addScale(0.5);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
@@ -216,11 +216,10 @@ public class ShadowVolumeDemo extends CgApplication {
 
   @Override
   public void update(Observable o, Object arg) {
-
     if (o instanceof AnimationTimer) {
-      lightSource
-          .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
-      alpha += 0.05;
+    //  lightSource
+    //      .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
+    //  alpha += 0.05;
     }
   }
 

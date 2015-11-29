@@ -137,7 +137,7 @@ public class JoglRenderer3D implements Observer {
   /**
    * Defines whether the two sided stencil buffer is used
    */
-  private boolean useTwoSidedStencil = true;
+  private boolean useTwoSidedStencil = false;
 
   /**
    * Constructor.
@@ -625,19 +625,15 @@ public class JoglRenderer3D implements Observer {
       // Increment stencil buffer value for front-facing polygons that fail the
       // depth test
       gl.glCullFace(GL.GL_FRONT);
-      gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR, GL.GL_KEEP);
+      gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR_WRAP, GL.GL_KEEP);
       renderScene(gl, true, light);
 
       // Decrement stencil buffer value for back-facing polygons that fail the
       // depth test
       gl.glCullFace(GL.GL_BACK);
-      gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR, GL.GL_KEEP);
+      gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR_WRAP, GL.GL_KEEP);
       renderScene(gl, true, light);
     }
-
-    // Debug
-    // updateLight(gl, lightID, false);
-    // gl.glColorMask(false, true, false, false);
 
     // Enable current light source
     updateLight(gl, lightID, true);
@@ -738,8 +734,16 @@ public class JoglRenderer3D implements Observer {
       final float upY = (float) Camera.getInstance().getUp().get(1);
       final float upZ = (float) Camera.getInstance().getUp().get(2);
       glu.gluLookAt(eyeX, eyeY, eyeZ, refX, refY, refZ, upX, upY, upZ);
+      updateNearPlaneInformation();
       updateExtrinsicCameraParametersRequired = false;
     }
+  }
+
+  private void updateNearPlaneInformation() {
+    IVector3 cPos = Camera.getInstance().getEye();
+    IVector3 dRef = Camera.getInstance().getRef().subtract(cPos);
+    IVector3 dNear = dRef.multiply(nearClippingPlane / dRef.getNorm());
+    IVector3 middleNear = cPos.add(dNear);
   }
 
   /**

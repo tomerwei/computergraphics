@@ -304,33 +304,39 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
   @Override
   public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
-    IMatrix4 transMatrix = transformation.getTransformation();
-    if (triangleMesh.getMaterial().isThrowingShadow() && isInRange(lightSource, transMatrix)) {
+    if (triangleMesh.getMaterial().isThrowingShadow() && isInRange(lightSource, transformation)) {
       if (edges == null) {
         createEdgeList();
       }
 
       IVector3 lightPosition = lightSource.getPosition();
-      updateBackFacingInformation(lightPosition, transMatrix);
+      updateBackFacingInformation(lightPosition, transformation);
 
-      renderShadowPolygons(gl, lightPosition, lightSource.getType() == LightSource.Type.DIRECTIONAL, transMatrix);
+      drawShadowPolygons(gl, lightPosition, lightSource.getType() == LightSource.Type.DIRECTIONAL, transformation);
     }
   }
 
-  private boolean isInRange(LightSource lightSource, IMatrix4 transformation) {
+  /**
+   * Checks if object is in range of the light's radius
+   */
+  private boolean isInRange(LightSource lightSource, Transformation transformation) {
+    // Light has no range defined, object is in range
     if (lightSource.getLightStrength() == -1) {
       return true;
     }
 
+    // Get all corner points of the bounding box
     BoundingBox bb = triangleMesh.getBoundingBox();
-    IVector3[] distances = new IVector3[2];
-    IVector4 ll = transformation.multiply(bb.getLowerLeft().getHomogenious());
-    IVector4 ur = transformation.multiply(bb.getUpperRight().getHomogenious());
-    distances[0] = ll.toVector3().subtract(lightSource.getPosition());
-    distances[1] = ur.toVector3().subtract(lightSource.getPosition());
-    for (int i = 0; i < distances.length; i++) {
-      if (distances[i].getNorm() <= lightSource.getLightStrength()) {
-        System.out.println(distances[i].getNorm());
+    IVector3[] corners = getBoundingBoxCorners(bb);
+
+    // Check if any of the corner points is in range of the light
+    for (int i = 0; i < corners.length; i++) {
+      // Get the distance of the transformed point
+      IVector3 transformedPoint = transformation.getTransformedVector3(corners[i]);
+      IVector3 distance = transformedPoint.subtract(lightSource.getPosition());
+
+      // Is point in range?
+      if (distance.getNorm() <= lightSource.getLightStrength()) {
         return true;
       }
     }
@@ -340,7 +346,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
   /**
    * Draws the shadow polygons
    */
-  private void renderShadowPolygons(GL2 gl, IVector3 lightPosition, boolean isDirectional, IMatrix4 transformation) {
+  private void drawShadowPolygons(GL2 gl, IVector3 lightPosition, boolean isDirectional,
+                                  Transformation transformation) {
     int lW = isDirectional ? 0 : 1;
 
     gl.glBegin(GL2GL3.GL_QUADS);
@@ -359,55 +366,33 @@ public class RenderContentTriangleMesh implements IRenderContent {
           b = triangleMesh.getVertex(e.getB());
         }
 
-        IVector4 vA = transformation.multiply(a.getPosition().getHomogenious());
-        IVector4 vB = transformation.multiply(b.getPosition().getHomogenious());
-        float[] aInf = { (float) (vA.get(0)*lW - lightPosition.get(0)), (float) (vA.get(1)*lW - lightPosition.get(1)),
-            (float) (vA.get(2)*lW - lightPosition.get(2)), 0.0f };
-        float[] bInf = { (float) (vB.get(0)*lW - lightPosition.get(0)), (float) (vB.get(1)*lW - lightPosition.get(1)),
-            (float) (vB.get(2)*lW - lightPosition.get(2)), 0.0f };
+        IVector4 vA = transformation.getTransformedVector4(a.getPosition());
+        IVector4 vB = transformation.getTransformedVector4(b.getPosition());
+        float[] aInf = {(float) (vA.get(0) * lW - lightPosition.get(0)), (float) (vA.get(1) * lW - lightPosition.get(1)),
+                (float) (vA.get(2) * lW - lightPosition.get(2)), 0.0f};
+        float[] bInf = {(float) (vB.get(0) * lW - lightPosition.get(0)), (float) (vB.get(1) * lW - lightPosition.get(1)),
+                (float) (vB.get(2) * lW - lightPosition.get(2)), 0.0f};
 
         gl.glVertex4fv(vB.floatData(), 0);
         gl.glVertex4fv(vA.floatData(), 0);
         gl.glVertex4fv(aInf, 0);
         gl.glVertex4fv(bInf, 0);
       }
-
     }
-    // region old
-    /*
-     * for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) { Triangle
-     * t = triangleMesh.getTriangle(i); if (!backFacing.get(t)) { // Get all
-     * three edges List<Edge> triangleEdges = edges.stream().filter(e ->
-     * e.isTriangleUsingEdge(t)) .collect(Collectors.toList());
-     * 
-     * for (Edge e : triangleEdges) { Triangle neighbor = e.getNeighbor(t);
-     * System.out.println(neighbor == null); if (neighbor == null ||
-     * backFacing.get(neighbor)) { // Possible silhouette edge found Vertex a =
-     * triangleMesh.getVertex(e.getA()); Vertex b =
-     * triangleMesh.getVertex(e.getB());
-     * 
-     * IVector3 vA = a.getPosition(); IVector3 vB = b.getPosition();
-     * 
-     * gl.glVertex3fv(vB.floatData(), 0); gl.glVertex3fv(vA.floatData(), 0);
-     * gl.glVertex4d(vA.get(0) - lightPosition.get(0), vA.get(1) -
-     * lightPosition.get(1), vA.get(2) - lightPosition.get(2), 1);
-     * gl.glVertex4d(vB.get(0) - lightPosition.get(0), vB.get(1) -
-     * lightPosition.get(1), vB.get(2) - lightPosition.get(2), 1); } } } }
-     */
-    // endregion
     gl.glEnd();
 
+    gl.glDepthFunc(GL.GL_NEVER);
     gl.glBegin(GL.GL_TRIANGLES);
     for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
       ITriangle t = triangleMesh.getTriangle(i);
       for (int j = 0; j < 3; j++) {
         int vIndex = t.get(j);
         IVertex v = triangleMesh.getVertex(vIndex);
-        IVector4 vPos = transformation.multiply(v.getPosition().getHomogenious());
-        if (!backFacing.get(t)) {
-          float[] vInf = { (float) (vPos.get(0)*lW - lightPosition.get(0)),
-                  (float) (vPos.get(1)*lW - lightPosition.get(1)),
-                  (float) (vPos.get(2)*lW - lightPosition.get(2)), 0.0f };
+        IVector4 vPos = transformation.getTransformedVector4(v.getPosition());
+        if (backFacing.get(t)) {
+          float[] vInf = {(float) (vPos.get(0) * lW - lightPosition.get(0)),
+                  (float) (vPos.get(1) * lW - lightPosition.get(1)),
+                  (float) (vPos.get(2) * lW - lightPosition.get(2)), 0.0f};
           gl.glVertex4fv(vInf, 0);
         } else {
           gl.glVertex4fv(vPos.floatData(), 0);
@@ -415,6 +400,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
       }
     }
     gl.glEnd();
+    gl.glDepthFunc(GL.GL_LESS);
   }
 
   /**
@@ -440,9 +426,9 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
   /**
    * Updates back-facing information in respect to the given light
-   * @param lightPosition Current light's postion
+   * @param lightPosition Current light's position
    */
-  private void updateBackFacingInformation(IVector3 lightPosition, IMatrix4 transformation) {
+  private void updateBackFacingInformation(IVector3 lightPosition, Transformation transformation) {
     boolean init = false;
     if (backFacing == null) {
       backFacing = new HashMap<>();
@@ -457,13 +443,15 @@ public class RenderContentTriangleMesh implements IRenderContent {
       triangleVertices[1] = triangleMesh.getVertex(t.getB());
       triangleVertices[2] = triangleMesh.getVertex(t.getC());
 
-      IVector4[] positions = new IVector4[vertexCount];
+      // Transform vertices
+      IVector3[] positions = new IVector3[vertexCount];
       for (int j = 0; j < vertexCount; j++) {
-        positions[j] = transformation.multiply(triangleVertices[j].getPosition().getHomogenious());
+        positions[j] = transformation.getTransformedVector3(triangleVertices[j].getPosition());
       }
 
-      IVector3 tMiddle = positions[0].toVector3().add(positions[1].toVector3());
-      tMiddle = tMiddle.add(positions[2].toVector3());
+      // Get the middle of the triangle
+      IVector3 tMiddle = positions[0].add(positions[1]);
+      tMiddle = tMiddle.add(positions[2]);
       tMiddle.set(0, tMiddle.get(0) / 3.0);
       tMiddle.set(1, tMiddle.get(1) / 3.0);
       tMiddle.set(2, tMiddle.get(2) / 3.0);
@@ -471,16 +459,52 @@ public class RenderContentTriangleMesh implements IRenderContent {
       // Get the direction vector to L
       IVector3 l = lightPosition.subtract(tMiddle);
       // Get Transformed normal
-      IVector3 v1 = positions[1].subtract(positions[0]).toVector3();
-      IVector3 v2 = positions[2].subtract(positions[0]).toVector3();
-      IVector3 n = v1.cross(v2);
-      n.normalize();
+      IVector3 n = getNormal(positions[0], positions[1], positions[2]);
 
+      // Update back-face information
       if (init)
         backFacing.put(t, l.multiply(n) < 0);
       else
         backFacing.replace(t, l.multiply(n) < 0);
     }
+  }
+
+  /**
+   * Computes the face normal for the given points
+   */
+  private IVector3 getNormal(IVector3 a, IVector3 b, IVector3 c) {
+    IVector3 v1 = b.subtract(a);
+    IVector3 v2 = c.subtract(a);
+    IVector3 n = v1.cross(v2);
+    n.normalize();
+    return n;
+  }
+
+  /**
+   * Returns all corners of the given Bounding box in the following schema:
+   * 0 = Left-side lower left
+   * 1 = Left-side upper left
+   * 2 = Left-side upper right
+   * 3 = Left-side lower right
+   * 4 = Right-side lower left
+   * 5 = Right-side upper left
+   * 6 = Right-side upper right
+   * 7 = Right-side lower right
+   */
+  private IVector3[] getBoundingBoxCorners(BoundingBox bb) {
+    int pointCount = 8;
+    IVector3[] corners = new IVector3[pointCount];
+    IVector3 diag = bb.getUpperRight().subtract(bb.getLowerLeft());
+    corners[0] = bb.getLowerLeft(); // Left-side lower left
+    corners[1] = corners[0].add(VectorMatrixFactory.newIVector3(0, diag.get(1), 0)); // Left-side upper left
+    corners[2] = corners[0].add(VectorMatrixFactory.newIVector3(0, diag.get(1), diag.get(2))); // Left-side upper right
+    corners[3] = corners[0].add(VectorMatrixFactory.newIVector3(0, 0, diag.get(2))); // Left-side lower right
+    corners[4] = corners[0].add(VectorMatrixFactory.newIVector3(diag.get(0), 0, 0)); // Right-side lower left
+    corners[5] = corners[0].add(VectorMatrixFactory.newIVector3(diag.get(0), diag.get(1), 0)); // Right-side upper left
+    corners[6] = bb.getUpperRight(); // Right-side upper right
+    corners[7] = corners[0].add(VectorMatrixFactory.newIVector3(diag.get(0), 0, diag.get(2))); // Right-side lower right
+
+    return corners;
   }
 
   @Override
