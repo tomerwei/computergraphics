@@ -43,10 +43,10 @@ public class FrustumTestFrame extends CgApplication {
         ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance());
 //        ViewFrustumCulling test = new ViewFrustumCulling();
 //        test = test.getTest();
-        ITriangleMesh frustum = vfc.getFrustumMesh(vfc.get_corners());
-        frustum.computeTriangleNormals();
+        ITriangleMesh frustum = vfc.getFrustumMesh(vfc.getCorners());
+//        frustum.computeTriangleNormals();
         frustum.getMaterial().setRenderMode(Normals.PER_FACET);
-//        getCgRootNode().addChild(new CgNode(frustum, "frustum"));
+        getCgRootNode().addChild(new CgNode(frustum, "frustum"));
         
         
         // Lade meshes
@@ -56,13 +56,13 @@ public class FrustumTestFrame extends CgApplication {
         ITriangleMesh fenjaDown = loadMesh("meshes/fenja02.obj");
         ITriangleMesh fenjaUp = loadMesh("meshes/fenja02.obj");
         ITriangleMesh pumpkin = loadMesh("meshes/pumpkin.obj");
-        getCgRootNode().addChild(new CgNode(cow, "cow"));
-        getCgRootNode().addChild(new CgNode(bunny, "bunny"));
-        getCgRootNode().addChild(new CgNode(fenja, "fenja"));
-        getCgRootNode().addChild(new CgNode(fenjaDown, "fenjaDown"));
-        getCgRootNode().addChild(new CgNode(fenjaUp, "fenjaUp"));
+//        getCgRootNode().addChild(new CgNode(cow, "cow"));
+//        getCgRootNode().addChild(new CgNode(bunny, "bunny"));
+//        getCgRootNode().addChild(new CgNode(fenja, "fenja"));
+//        getCgRootNode().addChild(new CgNode(fenjaDown, "fenjaDown"));
+//        getCgRootNode().addChild(new CgNode(fenjaUp, "fenjaUp"));
 //        getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
-        
+//        
         
         //############### Transformation ###############
         TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newIVector3(1.2, 1.0, -0.9));
@@ -73,6 +73,7 @@ public class FrustumTestFrame extends CgApplication {
         TriangleMeshTransformation.translate(fenjaDown, VectorMatrixFactory.newIVector3(0.0, -4.0, -0.5));
         TriangleMeshTransformation.scale(fenjaUp, 0.1);
         TriangleMeshTransformation.translate(fenjaUp, VectorMatrixFactory.newIVector3(0.0, 2.0, -0.5));
+        TriangleMeshTransformation.scale(pumpkin, 0.01);
       //############### Transformation ###############
         
       //############### Transformation fuer Testfrustum ###############
@@ -96,37 +97,33 @@ public class FrustumTestFrame extends CgApplication {
         
         OctreeNode<Integer> octreeFenjaUp = createMeshOctree(fenjaUp);
         
-        OctreeNode<Integer> octreeScene = createSceneOctree(getCgRootNode());
-        getCgRootNode().addChild(new CgNode(octreeScene, "octreeScene"));
-        
-        System.out.println("NUMBER OF CHILDREN OF SCENE OCTREE= " + octreeScene.getNumberOfChildren());
+//        OctreeNode<Integer> octreeScene = createSceneOctree(getCgRootNode());
+//        getCgRootNode().addChild(new CgNode(octreeScene, "octreeScene"));
         
         
-        Camera.getInstance().setEye(VectorMatrixFactory.newIVector3(0.0, 0.0, 20.0));
+        Camera.getInstance().setEye(VectorMatrixFactory.newIVector3(0.0, 0.0, 10.0));
        
-        
-//        scenegraph_traversal(getCgRootNode());
-        
-        
 //        ITriangleMesh frustum_parallel = test.getFrustumMesh(test.get_corners());
         
 //        getCgRootNode().addChild(new CgNode(frustum_parallel, "frustum_parallel"));
         
-//        addVisibleElementsToScene(vfc, octreeCow, cow);
-//        addVisibleElementsToScene(vfc, octreeBunny, bunny);
-//        addVisibleElementsToScene(vfc, octreeFenja, fenja);
-//        addVisibleElementsToScene(vfc, octreeFenjaDown, fenjaDown);
-//        addVisibleElementsToScene(vfc, octreeFenjaUp, fenjaUp);
+//        addVisibleElementsToScene(vfc, octreeCow, cow, octreeScene);
+//        addVisibleElementsToScene(vfc, octreeBunny, bunny, octreeScene);
+//        addVisibleElementsToScene(vfc, octreeFenja, fenja, octreeScene);
+//        addVisibleElementsToScene(vfc, octreeFenjaDown, fenjaDown, octreeScene);
+//        addVisibleElementsToScene(vfc, octreeFenjaUp, fenjaUp, octreeScene);
         
         //##########################################################################################################
-        System.out.println("cow is in View Frustum is "+ vfc.isObjectInFrustum(cow));
+//        System.out.println("cow is in View Frustum is "+ vfc.isObjectInFrustum(cow));
 //        System.out.println("bunny is in View Frustum is "+ vfc.isObjectInFrustum(bunny));
 //        System.out.println("fenja is in View Frustum is "+ vfc.isObjectInFrustum(fenja));
 //        System.out.println("fenjaDown is in View Frustum is "+ vfc.isObjectInFrustum(fenjaDown));
 //        System.out.println("fenjaUp is in View Frustum is "+ vfc.isObjectInFrustum(fenjaUp));
     }
     
-    public void addVisibleElementsToScene(ViewFrustumCulling vfc, OctreeNode<Integer> tree, ICgNodeContent content ){
+    
+    
+    public void addVisibleElementsToScene(ViewFrustumCulling vfc, OctreeNode<Integer> tree, ICgNodeContent content, OctreeNode<Integer> scene ){
         ArrayList<OctreeNode<Integer>> to_draw = new ArrayList<OctreeNode<Integer>>();
         ICgNodeContent visible = vfc.extractMesh(vfc.checkOctree(tree, to_draw), content);
         if(visible != null){
@@ -151,7 +148,7 @@ public class FrustumTestFrame extends CgApplication {
     public OctreeNode<Integer> createSceneOctree(CgNode root){
         OctreeFactoryStrategyScene octreeFactoryStrategyScene = new OctreeFactoryStrategyScene(root);
         OctreeFactory<Integer> octreeFactoryScene = new OctreeFactory<Integer>(octreeFactoryStrategyScene);
-        OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 20);
+        OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 1);
         return octreeSceneRoot;
     }
     
