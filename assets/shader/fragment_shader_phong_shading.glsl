@@ -49,12 +49,12 @@ void main (void)
             
         // Diffuse
         vec3 diffuse = vec3(0,0,0);
-        if ( dot( N, L ) > 0.0 ){
+        //if ( dot( N, L ) > 0.0 ){
             diffuse.x = reflectionDiffuse.x * gl_LightSource[i].diffuse.x;
             diffuse.y = reflectionDiffuse.y * gl_LightSource[i].diffuse.y;
             diffuse.z = reflectionDiffuse.z * gl_LightSource[i].diffuse.z;
-            diffuse = diffuse * dot( N, L ) / float(numberOfLights);
-        }
+            diffuse = diffuse * clamp( abs(dot( N, L )), 0.0, 1.0 ) / float(numberOfLights);
+        //}
 
         // Specular
         vec3 E = normalize( camera_position - p );

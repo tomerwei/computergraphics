@@ -15,10 +15,10 @@ public class GroundPlan extends CgApplication
 
 	private void run()
 	{
-		// LightSource light = new LightSource(LightSource.Type.POINT);
-		// light.setColor(new Vector3(3.0, 3.0 , 3.0));
-		// light.setPosition(new Vector3(15.0, 15.0 , 5.0));
-		// getCgRootNode().addLight(light);
+		LightSource light = new LightSource(LightSource.Type.DIRECTIONAL);
+		light.setColor(new Vector3(1.0, 1.0 , -1.0));
+		light.setPosition(new Vector3(15.0, 15.0 , 5.0));
+		getCgRootNode().addLight(light);
 		renderTestRaum();
 		// renderProjektHORA();
 		// renderHaus02();
