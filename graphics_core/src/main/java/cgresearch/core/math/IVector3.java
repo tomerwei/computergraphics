@@ -120,4 +120,9 @@ public interface IVector3 extends Serializable {
    * Return a homogenious version of the vector.
    */
   public IVector4 getHomogenious();
+
+  /**
+   * Set all three coordinates.
+   */
+  void set(double x, double y, double z);
 }

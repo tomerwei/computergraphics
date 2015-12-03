@@ -21,6 +21,11 @@ public abstract class ICgNodeContent extends Observable {
   private boolean needsUpdateRenderStructures = false;
 
   /**
+   * Update bounding box?
+   */
+  protected boolean updateBoundingBox = true;
+
+  /**
    * Material for the mesh.
    */
   protected Material material = new Material();
@@ -57,5 +62,12 @@ public abstract class ICgNodeContent extends Observable {
     } else {
       return false;
     }
+  }
+
+  /**
+   * The bounding box needs to be recalculated.
+   */
+  public void setUpdateBoundingBox() {
+    updateBoundingBox = true;
   }
 }

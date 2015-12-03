@@ -152,7 +152,7 @@ public class Plane extends IPrimitive {
    */
   public boolean isInPositiveHalfSpace(IVector3 p) {
     double distance = getDistance(p);
-    return distance > 0;
+    return distance >= 0;
   }
 
   /**

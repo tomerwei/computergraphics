@@ -239,4 +239,11 @@ public class Vector3 implements IVector3 {
   public IVector4 getHomogenious() {
     return VectorMatrixFactory.newIVector4(get(0), get(1), get(2), 1);
   }
+
+  @Override
+  public void set(double x, double y, double z) {
+    set(0, x);
+    set(1, y);
+    set(2, z);
+  }
 }

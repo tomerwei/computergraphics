@@ -43,11 +43,6 @@ public class TriangleMesh extends ITriangleMesh {
   private BoundingBox boundingBox = new BoundingBox();
 
   /**
-   * Update bounding box?
-   */
-  private boolean updateBoundingBox = true;
-
-  /**
    * Default constructor.
    */
   public TriangleMesh() {
@@ -287,6 +282,7 @@ public class TriangleMesh extends ITriangleMesh {
     for (int i = 0; i < vertices.size(); i++) {
       vertices.get(i).getPosition().copy(vertices.get(i).getPosition().subtract(center).multiply(1.0 / scale));
     }
+    setUpdateBoundingBox();
   }
 
   /*

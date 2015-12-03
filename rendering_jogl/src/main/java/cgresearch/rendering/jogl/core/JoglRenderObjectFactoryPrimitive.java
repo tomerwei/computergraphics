@@ -66,7 +66,8 @@ public class JoglRenderObjectFactoryPrimitive implements IRenderObjectsFactory<J
   }
 
   private JoglRenderNode createPlane(JoglRenderNode parentNode, CgNode cgNode, Plane plane) {
-    ITriangleMesh mesh = TriangleMeshFactory.createPlane(plane.getPoint(), plane.getNormal(), 2);
+    double SIZE = 0.5;
+    ITriangleMesh mesh = TriangleMeshFactory.createPlane(plane.getPoint(), plane.getNormal(), SIZE);
     if (mesh == null) {
       Logger.getInstance().error("Failed to create cylinder mesh.");
       return null;
