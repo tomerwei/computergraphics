@@ -60,13 +60,14 @@ public class OctreeFactory<T> {
       node.addElement(elementIndex);
       return checkNodeSplitRequired(node, level, maxDepth, splitSize);
     } else {
+      boolean success = false;
       for (int childIndex = 0; childIndex < 8; childIndex++) {
         if (strategy.elementFitsInNode(elementIndex, node.getChild(childIndex))) {
           insertElement(node.getChild(childIndex), elementIndex, level + 1, maxDepth, splitSize);
-          return true;
+          success = true;
         }
       }
-      return false;
+      return success;
     }
   }
 
