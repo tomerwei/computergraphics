@@ -904,21 +904,77 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void generateFromData() {
 
-		Car car = new Car(this.data.getX().get(29), this.data.getY().get(29), this.data.getZ().get(29));
+		Car car = new Car(this.data.getX().get(0), this.data.getY().get(0), this.data.getZ().get(0));
 
-		IVector x = new Vector(28);
-		IVector y = new Vector(28);
-		IVector z = new Vector(28);
+		// EigenAuto
+		IVector x = new Vector(10);
+		IVector y = new Vector(10);
+
+		IVector xc = new Vector(28);
+		IVector yc = new Vector(28);
 
 		for (int i = 0; i < 28; i++) {
-			x.set(i, Math.random() * 6);
-			y.set(i, Math.random() * 3);
-			z.set(i, 0);
+			xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
+			yc.set(i, car.getY().get(i) - analyzer.getPcaY().getCentroid().get(i));
 		}
 
-		// Car car = new Car(x, y, z);
+		for (int i = 0; i < 10; i++) {
+			double xx = 0;
+			double yy = 0;
 
-		CgNode father = new CgNode(null, "auto");
+			for (int j = 0; j < 28; j++) {
+				xx += analyzer.getBtx().get(j).get(i) * xc.get(j);
+				yy += analyzer.getBty().get(j).get(i) * yc.get(j);
+			}
+
+			x.set(i, xx);
+			y.set(i, yy);
+		}
+
+		// Eigen Auto new
+
+		IVector xn = new Vector(28);
+		IVector yn = new Vector(28);
+
+		for (int i = 0; i < 28; i++) {
+			double xx = 0;
+			double yy = 0;
+
+			for (int j = 0; j < 10; j++) {
+				xx += analyzer.getEigenX().get(27 - j).get(i) * x.get(j);
+				yy += analyzer.getEigenY().get(27 - j).get(i) * y.get(j);
+			}
+
+			xn.set(i, xx);
+			yn.set(i, yy);
+		}
+
+		// New Auto
+
+		IVector ax = new Vector(28);
+		IVector ay = new Vector(28);
+		IVector az = new Vector(28);
+
+		for (int i = 0; i < 28; i++) {
+			double xx = 0;
+			double yy = 0;
+
+			for (int j = 0; j < 10; j++) {
+				xx += analyzer.getBtx().get(j).get(i) * xn.get(j);
+				yy += analyzer.getBty().get(j).get(i) * yn.get(j);
+			}
+
+			ax.set(i, xx);
+			ay.set(i, yy);
+		}
+
+		for (int i = 0; i < 28; i++) {
+			az.set(i, 0);
+		}
+
+		Car carnew = new Car(ax, ay, az);
+
+		CgNode father = new CgNode(null, "auto1");
 
 		int i = 1;
 		for (BezierCurve c : car.getCurves()) {
@@ -929,6 +985,18 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		}
 
 		getRootNode().addChild(father);
+
+		CgNode father2 = new CgNode(null, "auto2");
+
+		int i2 = 1;
+		for (BezierCurve c : carnew.getCurves()) {
+			CgNode node = new CgNode(c, "BezierCurve2 " + i2);
+
+			father.addChild(node);
+			i++;
+		}
+
+		getRootNode().addChild(father2);
 
 		fromData.setEnabled(false);
 

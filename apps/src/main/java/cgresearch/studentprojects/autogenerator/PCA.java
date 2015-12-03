@@ -151,4 +151,28 @@ public class PCA {
 
 	}
 
+	public IVector getCentroid() {
+		return centroid;
+	}
+
+	public void setCentroid(IVector centroid) {
+		this.centroid = centroid;
+	}
+
+	public cgresearch.core.math.jama.Matrix getV() {
+		return V;
+	}
+
+	public void setV(cgresearch.core.math.jama.Matrix v) {
+		V = v;
+	}
+
+	public cgresearch.core.math.jama.Matrix getD() {
+		return D;
+	}
+
+	public void setD(cgresearch.core.math.jama.Matrix d) {
+		D = d;
+	}
+
 }
