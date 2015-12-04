@@ -175,9 +175,38 @@ public class Analyzer {
 			Bz.add(eigenZ.get(dimension - j - 1));
 		}
 
+		Btx.clear();
+		for (int j = 0; j < dimension; j++) {
+			IVector v = new Vector(28);
+			for (int k = 0; k < 28; k++) {
+				v.set(k, Bx.get(k).get(j));
+			}
+			Btx.add(v);
+		}
+		Bty.clear();
+		for (int j = 0; j < dimension; j++) {
+			IVector v = new Vector(28);
+			for (int k = 0; k < 28; k++) {
+				v.set(k, By.get(k).get(j));
+			}
+			Bty.add(v);
+		}
+		Btz.clear();
+		for (int j = 0; j < dimension; j++) {
+			IVector v = new Vector(28);
+			for (int k = 0; k < 28; k++) {
+				v.set(k, Bz.get(k).get(j));
+			}
+			Btz.add(v);
+		}
+
 		System.out.println("Bx dim: " + Bx.size());
 		System.out.println("By dim: " + By.size());
 		System.out.println("Bz dim: " + Bz.size());
+
+		System.out.println("Btx dim: " + Btx.size());
+		System.out.println("Bty dim: " + Bty.size());
+		System.out.println("Btz dim: " + Btz.size());
 
 	}
 

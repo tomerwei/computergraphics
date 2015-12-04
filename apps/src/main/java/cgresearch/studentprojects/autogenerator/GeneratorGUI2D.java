@@ -904,7 +904,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void generateFromData() {
 
-		Car car = new Car(this.data.getX().get(29), this.data.getY().get(29), this.data.getZ().get(29));
+		Car car = new Car(this.data.getX().get(0), this.data.getY().get(0), this.data.getZ().get(0));
 
 		// EigenAuto
 
@@ -971,11 +971,11 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			double yy = 0;
 
 			for (int j = 0; j < 28; j++) {
-//				xx += analyzer.getBx().get(j).get(i) * xn.get(j);
-//				yy += analyzer.getBy().get(j).get(i) * yn.get(j);
+				// xx += analyzer.getBx().get(j).get(i) * xn.get(j);
+				// yy += analyzer.getBy().get(j).get(i) * yn.get(j);
 
-				 xx += analyzer.getBx().get(j).get(i) * x.get(j);
-				 yy += analyzer.getBy().get(j).get(i) * y.get(j);
+				xx += analyzer.getBx().get(j).get(i) * x.get(j);
+				yy += analyzer.getBy().get(j).get(i) * y.get(j);
 			}
 
 			ax.set(i, xx);
@@ -1028,20 +1028,115 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void testPCA() {
-		PCA pca = new PCA();
-		pca.testPCA();
-		List<IVector> eigenVektor = new ArrayList<IVector>();
-		List<Double> eigenValue = new ArrayList<Double>();
-		for (int i = 0; i < 3; i++) {
-			eigenVektor.add(pca.getEigenVector(i));
-			eigenValue.add(pca.getEigenValue(i));
+
+		List<IVector> alphasX = new ArrayList<IVector>();
+		List<IVector> alphasY = new ArrayList<IVector>();
+		IVector xs = new Vector(28);
+		IVector ys = new Vector(28);
+
+		for (int num = 0; num < 30; num++) {
+			Car car = new Car(this.data.getX().get(num), this.data.getY().get(num), this.data.getZ().get(num));
+
+			IVector x = new Vector(28);
+			IVector y = new Vector(28);
+
+			IVector xc = new Vector(28);
+			IVector yc = new Vector(28);
+
+			for (int i = 0; i < 28; i++) {
+				xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
+				yc.set(i, car.getY().get(i) - analyzer.getPcaY().getCentroid().get(i));
+			}
+
+			for (int i = 0; i < 28; i++) {
+
+				double xx = 0;
+				double yy = 0;
+
+				for (int j = 0; j < 28; j++) {
+					xx += analyzer.getBtx().get(j).get(i) * xc.get(j);
+					yy += analyzer.getBty().get(j).get(i) * yc.get(j);
+				}
+
+				// System.out.println(xx);
+
+				x.set(i, xx);
+				y.set(i, yy);
+			}
+
+			alphasX.add(x);
+			alphasY.add(y);
+
 		}
-		for (IVector v : eigenVektor) {
-			System.out.println("Eigenvekor " + eigenVektor.indexOf(v) + ": " + v);
+
+		double xxx = 0;
+		double yyy = 0;
+
+		for (int i = 0; i < 28; i++) {
+
+			for (IVector v : alphasX) {
+				xxx += v.get(i);
+			}
+			for (IVector v : alphasY) {
+				yyy += v.get(i);
+			}
+			xxx = xxx / 30.0;
+			yyy = yyy / 30.0;
+
+			xs.set(i, xxx);
+			ys.set(i, yyy);
 		}
-		for (Double d : eigenValue) {
-			System.out.println("Eigenvalue " + eigenValue.indexOf(d) + ": " + d);
+
+		// xs und ys Mittelwerte
+
+		IVector ax = new Vector(28);
+		IVector ay = new Vector(28);
+		IVector az = new Vector(28);
+
+		for (int i = 0; i < 28; i++) {
+			double xx = 0;
+			double yy = 0;
+
+			for (int j = 0; j < 28; j++) {
+
+				// System.out.println("Sehr klen? " + xs.get(j));
+
+				xx += analyzer.getBx().get(j).get(i) * xs.get(j);
+				yy += analyzer.getBy().get(j).get(i) * ys.get(j);
+			}
+
+			ax.set(i, xx);
+			ay.set(i, yy);
 		}
+
+		for (int i = 0; i < 28; i++) {
+			double xi = 0;
+			double yi = 0;
+
+			xi = ax.get(i) + analyzer.getPcaX().getCentroid().get(i);
+			yi = ay.get(i) + analyzer.getPcaY().getCentroid().get(i);
+
+			ax.set(i, xi);
+			ay.set(i, yi);
+		}
+
+		for (int i = 0; i < 28; i++) {
+			az.set(i, 0);
+		}
+
+		Car newcar = new Car(ax, ay, az);
+
+		CgNode father2 = new CgNode(null, "auto2");
+
+		int i2 = 1;
+		for (BezierCurve c : newcar.getCurves()) {
+			CgNode node = new CgNode(c, "BezierCurve2 " + i2);
+
+			father2.addChild(node);
+			i2++;
+		}
+
+		getRootNode().addChild(father2);
 
 	}
 
