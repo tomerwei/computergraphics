@@ -904,11 +904,15 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void generateFromData() {
 
-		Car car = new Car(this.data.getX().get(0), this.data.getY().get(0), this.data.getZ().get(0));
+		Car car = new Car(this.data.getX().get(29), this.data.getY().get(29), this.data.getZ().get(29));
 
 		// EigenAuto
-		IVector x = new Vector(10);
-		IVector y = new Vector(10);
+
+		// IVector x = new Vector(10);
+		// IVector y = new Vector(10);
+
+		IVector x = new Vector(28);
+		IVector y = new Vector(28);
 
 		IVector xc = new Vector(28);
 		IVector yc = new Vector(28);
@@ -919,6 +923,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		}
 
 		for (int i = 0; i < 10; i++) {
+
 			double xx = 0;
 			double yy = 0;
 
@@ -931,6 +936,11 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			y.set(i, yy);
 		}
 
+		for (int i = 10; i < 28; i++) {
+			x.set(i, 0);
+			y.set(i, 0);
+		}
+
 		// Eigen Auto new
 
 		IVector xn = new Vector(28);
@@ -941,6 +951,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			double yy = 0;
 
 			for (int j = 0; j < 10; j++) {
+
 				xx += analyzer.getEigenX().get(27 - j).get(i) * x.get(j);
 				yy += analyzer.getEigenY().get(27 - j).get(i) * y.get(j);
 			}
@@ -959,13 +970,27 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			double xx = 0;
 			double yy = 0;
 
-			for (int j = 0; j < 10; j++) {
-				xx += analyzer.getBtx().get(j).get(i) * xn.get(j);
-				yy += analyzer.getBty().get(j).get(i) * yn.get(j);
+			for (int j = 0; j < 28; j++) {
+//				xx += analyzer.getBx().get(j).get(i) * xn.get(j);
+//				yy += analyzer.getBy().get(j).get(i) * yn.get(j);
+
+				 xx += analyzer.getBx().get(j).get(i) * x.get(j);
+				 yy += analyzer.getBy().get(j).get(i) * y.get(j);
 			}
 
 			ax.set(i, xx);
 			ay.set(i, yy);
+		}
+
+		for (int i = 0; i < 28; i++) {
+			double xi = 0;
+			double yi = 0;
+
+			xi = ax.get(i) + analyzer.getPcaX().getCentroid().get(i);
+			yi = ay.get(i) + analyzer.getPcaY().getCentroid().get(i);
+
+			ax.set(i, xi);
+			ay.set(i, yi);
 		}
 
 		for (int i = 0; i < 28; i++) {
@@ -992,8 +1017,8 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		for (BezierCurve c : carnew.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve2 " + i2);
 
-			father.addChild(node);
-			i++;
+			father2.addChild(node);
+			i2++;
 		}
 
 		getRootNode().addChild(father2);

@@ -161,6 +161,24 @@ public class Analyzer {
 		System.out.println(By.get(9).get(0));
 		System.out.println("Bty");
 		System.out.println(Bty.get(0).get(9));
+
+		Bx.clear();
+		for (int j = 0; j < 28; j++) {
+			Bx.add(eigenX.get(dimension - j - 1));
+		}
+		By.clear();
+		for (int j = 0; j < 28; j++) {
+			By.add(eigenY.get(dimension - j - 1));
+		}
+		Bz.clear();
+		for (int j = 0; j < 28; j++) {
+			Bz.add(eigenZ.get(dimension - j - 1));
+		}
+
+		System.out.println("Bx dim: " + Bx.size());
+		System.out.println("By dim: " + By.size());
+		System.out.println("Bz dim: " + Bz.size());
+
 	}
 
 	public List<IVector> getEigenX() {
