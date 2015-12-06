@@ -56,6 +56,11 @@ public class Camera extends Observable {
   private IVector3 up;
 
   /**
+   * Right-vector of the camera.
+   */
+  private IVector3 right;
+
+  /**
    * Singleton instance.
    */
   private static Camera instance = null;
@@ -106,6 +111,7 @@ public class Camera extends Observable {
     eye = VectorMatrixFactory.newIVector3(0, 0, 5);
     ref = VectorMatrixFactory.newIVector3(0, 0, 0);
     up = VectorMatrixFactory.newIVector3(0, 1, 0);
+    right = VectorMatrixFactory.newIVector3(1, 0, 0);
 
     setChanged();
     notifyObservers();
@@ -162,6 +168,13 @@ public class Camera extends Observable {
   }
 
   /**
+   * Getter
+   */
+  public IVector3 getRight() {
+    return right;
+  }
+
+  /**
    * Setter.
    */
   public void setEye(IVector3 e) {
@@ -186,6 +199,16 @@ public class Camera extends Observable {
    */
   public void setUp(IVector3 e) {
     up = VectorMatrixFactory.newIVector3(e);
+
+    setChanged();
+    notifyObservers();
+  }
+
+  /**
+   * Setter
+   */
+  public void setRight(IVector3 e) {
+    right = VectorMatrixFactory.newIVector3(e);
 
     setChanged();
     notifyObservers();
@@ -254,6 +277,7 @@ public class Camera extends Observable {
 
     // Compute rotation axis
     IVector3 axis = oldDirection.cross(up).getNormalized();
+    IVector3 axisR = oldDirection.cross(right).getNormalized();
 
     // Apply rotation
     IMatrix3 rotationMatrix =
@@ -268,6 +292,8 @@ public class Camera extends Observable {
     setEye(newEye);
     setUp(VectorMatrixFactory.newIVector3(
         axis.cross(newDirection)).getNormalized());
+    setRight(VectorMatrixFactory.newIVector3(
+            axisR.cross(newDirection)).getNormalized());
   }
 
   /**
@@ -303,6 +329,7 @@ public class Camera extends Observable {
 
     // Compute rotation axis
     IVector3 axis = oldDirection.cross(up).getNormalized();
+    IVector3 axisR = oldDirection.cross(right).getNormalized();
 
     // Apply rotation
     IMatrix3 rotationMatrix =
@@ -317,6 +344,8 @@ public class Camera extends Observable {
     setRef(newRef);
     setUp(VectorMatrixFactory.newIVector3(
         axis.cross(newDirection)).getNormalized());
+    setRight(VectorMatrixFactory.newIVector3(
+            axisR.cross(newDirection)).getNormalized());
   }
 
   /**
