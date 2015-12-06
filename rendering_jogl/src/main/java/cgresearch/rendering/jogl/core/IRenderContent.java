@@ -5,6 +5,7 @@
  */
 package cgresearch.rendering.jogl.core;
 
+import cgresearch.core.math.IVector3;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
@@ -23,7 +24,8 @@ public interface IRenderContent {
 	/**
 	 * All drawing functionality is called here
 	 */
-	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation);
+	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners,
+					   boolean cameraPositionChanged);
 
 	/**
 	 * This method if called after all children are drawn.

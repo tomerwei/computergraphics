@@ -8,6 +8,7 @@ package cgresearch.rendering.jogl.core;
 import java.util.Observable;
 import java.util.Observer;
 
+import cgresearch.core.math.IVector3;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
@@ -73,13 +74,14 @@ public class JoglRenderNode implements Observer {
    * @param gl
    */
   public void draw3D(GL2 gl) {
-    draw3D(gl, null, null);
+    draw3D(gl, null, null, null, false);
   }
 
   /**
    * Draw the content
    */
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners,
+                     boolean cameraPositionChanged) {
     if (cgNode == null || !cgNode.isVisible()) {
       return;
     }
@@ -94,7 +96,7 @@ public class JoglRenderNode implements Observer {
         for (int shaderIndex = 0; shaderIndex < material.getNumberOfShaders(); shaderIndex++) {
           setupShader(gl, material, shaderIndex);
           if (lightSource != null) {
-            renderContent.draw3D(gl, lightSource, transformation);
+            renderContent.draw3D(gl, lightSource, transformation, nearPlaneCorners, cameraPositionChanged);
           } else {
             renderContent.draw3D(gl);
           }
@@ -102,7 +104,7 @@ public class JoglRenderNode implements Observer {
       } else {
         // No shader specified - fixed function pipeline
         if (lightSource != null) {
-          renderContent.draw3D(gl, lightSource, transformation);
+          renderContent.draw3D(gl, lightSource, transformation, nearPlaneCorners, cameraPositionChanged);
         } else {
           renderContent.draw3D(gl);
         }

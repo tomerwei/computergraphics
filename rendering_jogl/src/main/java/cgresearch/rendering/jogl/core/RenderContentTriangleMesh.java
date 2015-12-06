@@ -9,12 +9,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cgresearch.core.math.*;
+import cgresearch.graphics.datastructures.tree.Intersection;
 import cgresearch.graphics.datastructures.trianglemesh.*;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.Transformation;
@@ -80,6 +78,11 @@ public class RenderContentTriangleMesh implements IRenderContent {
    * Temporary data structures containing the index information.
    */
   private IntBuffer indexBuffer = null;
+
+  /**
+   * Defines if zFail testing is required
+   */
+  private boolean zFailRequired = false;
 
   private static final int NUMBER_OF_FLOATS_PER_VERTEX = 3;
   private static final int NUMBER_OF_TEX_COORDS_PER_VERTEX = 2;
@@ -302,18 +305,86 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
   }
 
+  IVector3 light;
+  Transformation t;
+  IVector3[] near;
+
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners, boolean cameraPositionChanged) {
+    light = lightSource.getPosition();
+    t = transformation;
+    near = nearPlaneCorners;
+
     if (triangleMesh.getMaterial().isThrowingShadow() && isInRange(lightSource, transformation)) {
       if (edges == null) {
         createEdgeList();
       }
 
+      if (cameraPositionChanged) {
+        zFailRequired = setTestingMethod(lightSource.getPosition(), transformation, nearPlaneCorners);
+        System.out.println("Using z-Fail: " + zFailRequired);
+      }
+
       IVector3 lightPosition = lightSource.getPosition();
       updateBackFacingInformation(lightPosition, transformation);
 
+
+      if (zFailRequired) {
+        gl.glActiveStencilFaceEXT(GL.GL_BACK);
+        gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR_WRAP, GL.GL_KEEP);
+        gl.glStencilMask(~0);
+        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+
+        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
+        gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR_WRAP, GL.GL_KEEP);
+        gl.glStencilMask(~0);
+        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+      } else {
+        gl.glActiveStencilFaceEXT(GL.GL_BACK);
+        gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR_WRAP);
+        gl.glStencilMask(~0);
+        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+
+        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
+        gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_DECR_WRAP);
+        gl.glStencilMask(~0);
+        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+      }
       drawShadowPolygons(gl, lightPosition, lightSource.getType() == LightSource.Type.DIRECTIONAL, transformation);
     }
+  }
+
+  private boolean  setTestingMethod(IVector3 lightPos, Transformation transformation, IVector3[] nearPlaneCorners) {
+    BoundingBox bb = new BoundingBox(triangleMesh.getBoundingBox().getLowerLeft(),
+            triangleMesh.getBoundingBox().getUpperRight());
+    bb.transform(transformation);
+
+    if (Intersection.intersect(bb, lightPos, nearPlaneCorners[1], nearPlaneCorners[0]))
+      return true;
+    if (Intersection.intersect(bb, lightPos, nearPlaneCorners[2], nearPlaneCorners[1]))
+      return true;
+    if (Intersection.intersect(bb, lightPos, nearPlaneCorners[3], nearPlaneCorners[2]))
+      return true;
+    if (Intersection.intersect(bb, lightPos, nearPlaneCorners[0], nearPlaneCorners[3]))
+      return true;
+    if (Intersection.intersect(bb, nearPlaneCorners[0], nearPlaneCorners[2], nearPlaneCorners[1]))
+      return true;
+
+    return false;
+//    zFailRequired = false;
+//    for (IVector3 v : bbPoints) {
+//      IVector3 transformedCorner = transformation.getTransformedVector3(v);
+//      int inFront = 0;
+//      for (int j = 0; j < pyramidNormals.length - 1; j++) {
+//        if (transformedCorner.subtract(lightPos).multiply(pyramidNormals[j]) > 0) {
+//          inFront++;
+//        }
+//      }
+//      if (inFront == pyramidNormals.length - 1) {
+//        zFailRequired = true;
+//        return;
+//      }
+//    }
   }
 
   /**
@@ -327,12 +398,13 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
     // Get all corner points of the bounding box
     BoundingBox bb = triangleMesh.getBoundingBox();
-    IVector3[] corners = getBoundingBoxCorners(bb);
+    List<IVector3> corners = bb.computeCornerPoints();
+    corners.add(bb.getCenter());
 
     // Check if any of the corner points is in range of the light
-    for (int i = 0; i < corners.length; i++) {
+    for (IVector3 corner : corners) {
       // Get the distance of the transformed point
-      IVector3 transformedPoint = transformation.getTransformedVector3(corners[i]);
+      IVector3 transformedPoint = transformation.getTransformedVector3(corner);
       IVector3 distance = transformedPoint.subtract(lightSource.getPosition());
 
       // Is point in range?
@@ -381,26 +453,28 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
     gl.glEnd();
 
-    gl.glDepthFunc(GL.GL_NEVER);
-    gl.glBegin(GL.GL_TRIANGLES);
-    for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
-      ITriangle t = triangleMesh.getTriangle(i);
-      for (int j = 0; j < 3; j++) {
-        int vIndex = t.get(j);
-        IVertex v = triangleMesh.getVertex(vIndex);
-        IVector4 vPos = transformation.getTransformedVector4(v.getPosition());
-        if (backFacing.get(t)) {
-          float[] vInf = {(float) (vPos.get(0) * lW - lightPosition.get(0)),
-                  (float) (vPos.get(1) * lW - lightPosition.get(1)),
-                  (float) (vPos.get(2) * lW - lightPosition.get(2)), 0.0f};
-          gl.glVertex4fv(vInf, 0);
-        } else {
-          gl.glVertex4fv(vPos.floatData(), 0);
+    if (zFailRequired) {
+      gl.glDepthFunc(GL.GL_NEVER);
+      gl.glBegin(GL.GL_TRIANGLES);
+      for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
+        ITriangle t = triangleMesh.getTriangle(i);
+        for (int j = 0; j < 3; j++) {
+          int vIndex = t.get(j);
+          IVertex v = triangleMesh.getVertex(vIndex);
+          IVector4 vPos = transformation.getTransformedVector4(v.getPosition());
+          if (backFacing.get(t)) {
+            float[] vInf = {(float) (vPos.get(0) * lW - lightPosition.get(0)),
+                    (float) (vPos.get(1) * lW - lightPosition.get(1)),
+                    (float) (vPos.get(2) * lW - lightPosition.get(2)), 0.0f};
+            gl.glVertex4fv(vInf, 0);
+          } else {
+            gl.glVertex4fv(vPos.floatData(), 0);
+          }
         }
       }
+      gl.glEnd();
+      gl.glDepthFunc(GL.GL_LESS);
     }
-    gl.glEnd();
-    gl.glDepthFunc(GL.GL_LESS);
   }
 
   /**
@@ -449,15 +523,15 @@ public class RenderContentTriangleMesh implements IRenderContent {
         positions[j] = transformation.getTransformedVector3(triangleVertices[j].getPosition());
       }
 
-      // Get the middle of the triangle
-      IVector3 tMiddle = positions[0].add(positions[1]);
-      tMiddle = tMiddle.add(positions[2]);
-      tMiddle.set(0, tMiddle.get(0) / 3.0);
-      tMiddle.set(1, tMiddle.get(1) / 3.0);
-      tMiddle.set(2, tMiddle.get(2) / 3.0);
+//      // Get the middle of the triangle
+//      IVector3 tMiddle = positions[0].add(positions[1]);
+//      tMiddle = tMiddle.add(positions[2]);
+//      tMiddle.set(0, tMiddle.get(0) / 3.0);
+//      tMiddle.set(1, tMiddle.get(1) / 3.0);
+//      tMiddle.set(2, tMiddle.get(2) / 3.0);
 
       // Get the direction vector to L
-      IVector3 l = lightPosition.subtract(tMiddle);
+      IVector3 l = lightPosition.subtract(positions[0]);
       // Get Transformed normal
       IVector3 n = getNormal(positions[0], positions[1], positions[2]);
 
@@ -478,33 +552,6 @@ public class RenderContentTriangleMesh implements IRenderContent {
     IVector3 n = v1.cross(v2);
     n.normalize();
     return n;
-  }
-
-  /**
-   * Returns all corners of the given Bounding box in the following schema:
-   * 0 = Left-side lower left
-   * 1 = Left-side upper left
-   * 2 = Left-side upper right
-   * 3 = Left-side lower right
-   * 4 = Right-side lower left
-   * 5 = Right-side upper left
-   * 6 = Right-side upper right
-   * 7 = Right-side lower right
-   */
-  private IVector3[] getBoundingBoxCorners(BoundingBox bb) {
-    int pointCount = 8;
-    IVector3[] corners = new IVector3[pointCount];
-    IVector3 diag = bb.getUpperRight().subtract(bb.getLowerLeft());
-    corners[0] = bb.getLowerLeft(); // Left-side lower left
-    corners[1] = corners[0].add(VectorMatrixFactory.newIVector3(0, diag.get(1), 0)); // Left-side upper left
-    corners[2] = corners[0].add(VectorMatrixFactory.newIVector3(0, diag.get(1), diag.get(2))); // Left-side upper right
-    corners[3] = corners[0].add(VectorMatrixFactory.newIVector3(0, 0, diag.get(2))); // Left-side lower right
-    corners[4] = corners[0].add(VectorMatrixFactory.newIVector3(diag.get(0), 0, 0)); // Right-side lower left
-    corners[5] = corners[0].add(VectorMatrixFactory.newIVector3(diag.get(0), diag.get(1), 0)); // Right-side upper left
-    corners[6] = bb.getUpperRight(); // Right-side upper right
-    corners[7] = corners[0].add(VectorMatrixFactory.newIVector3(diag.get(0), 0, diag.get(2))); // Right-side lower right
-
-    return corners;
   }
 
   @Override
