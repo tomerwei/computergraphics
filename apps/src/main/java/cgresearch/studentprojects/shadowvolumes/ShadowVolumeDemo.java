@@ -44,76 +44,28 @@ public class ShadowVolumeDemo extends CgApplication {
     getCgRootNode().clearLights();
 
     // Load elements
-    createEnvironment();
-    //loadHulk();
-    loadCube();
+    loadRoom();
+//  createEnvironment();
+//    //loadHulk();
+//    loadCube();
     loadObject();
     loadObject2();
     loadObject3();
 
     // Set light source
-    lightSource.setPosition(VectorMatrixFactory.newIVector3(0, 2, 0));
+    lightSource.setPosition(VectorMatrixFactory.newIVector3(0, 30, 0));
     //lightSource.setDirection(VectorMatrixFactory.newIVector3(0, 0,1));
     lightSource.setColor(VectorMatrixFactory.newIVector3(1,1,1));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
   }
 
-  private void createEnvironment() {
-    ITriangleMesh room = new TriangleMesh();
-
-    // Corner points
-    IVector3 pA = VectorMatrixFactory.newIVector3(0, 0, 0);
-    IVector3 pB = VectorMatrixFactory.newIVector3(0, 0, 4);
-    IVector3 pC = VectorMatrixFactory.newIVector3(4, 0, 4);
-    IVector3 pD = VectorMatrixFactory.newIVector3(4, 0, 0);
-    IVector3 pE = VectorMatrixFactory.newIVector3(0, 4, 0);
-    IVector3 pF = VectorMatrixFactory.newIVector3(4, 4, 0);
-
-    // Add vertices to mesh
-    room.addVertex(new Vertex(pA));
-    room.addVertex(new Vertex(pB));
-    room.addVertex(new Vertex(pC));
-    room.addVertex(new Vertex(pD));
-    room.addVertex(new Vertex(pE));
-    room.addVertex(new Vertex(pF));
-
-    room.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 0, 0));
-    room.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 1, 0));
-    room.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 0, 0));
-    room.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 1, 0));
-
-    // Create floor
-    Triangle t1 = new Triangle(0, 1, 2, 0, 1, 3);
-    Triangle t2 = new Triangle(0, 2, 3, 0, 3, 2);
-
-    // Create wall
-    Triangle t3 = new Triangle(0, 5, 4, 0, 3, 2);
-    Triangle t4 = new Triangle(0, 3, 5, 0, 1, 3);
-
-    // Add triangles to mesh and compute normals
-    room.addTriangle(t1);
-    room.addTriangle(t2);
-    room.addTriangle(t3);
-    room.addTriangle(t4);
-    room.computeTriangleNormals();
-    room.getMaterial().setThrowsShadow(false);
-
-    String texId = "tex_id_android";
-    ResourceManager.getTextureManagerInstance().addResource(texId, new CgTexture("textures/android.png"));
-    room.getMaterial().setTextureId(texId);
-    room.getMaterial().setShaderId(Material.SHADER_TEXTURE);
-
-    // Position environment into the middle
-    Transformation t = new Transformation();
-    t.addTranslation(VectorMatrixFactory.newIVector3(-2, 0, -2));
-
-    // Add Environment to the scene graph
-    CgNode node = new CgNode(t, "Translation");
-    node.addChild(new CgNode(room, "room"));
-    getCgRootNode().addChild(node);
-
-    AnimationTimer.getInstance().startTimer(50);
+  private void loadRoom() {
+    ITriangleMesh mesh = loadObject("meshes/scene_room/room_01.obj");
+    if (mesh != null) {
+      CgNode node = new CgNode(mesh, "room");
+      getCgRootNode().addChild(node);
+    }
   }
 
   public void loadCube() {
@@ -126,11 +78,11 @@ public class ShadowVolumeDemo extends CgApplication {
     ITriangleMesh hulk = meshes.get(0);
     hulk.getMaterial().setThrowsShadow(true);
     Transformation t = new Transformation();
-    t.addScale(.3);
+    t.addScale(20);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 1.5, -0.5));
     hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    hulk.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.9, 1.0));
-    hulk.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.25));
+    //hulk.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.9, 1.0));
+    //hulk.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.25));
     CgNode node = new CgNode(t, "Scale");
     node.addChild(new CgNode(hulk, "cube"));
     getCgRootNode().addChild(node);
@@ -147,8 +99,8 @@ public class ShadowVolumeDemo extends CgApplication {
     hulk.getMaterial().setThrowsShadow(true);
     hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     Transformation t = new Transformation();
-    t.addScale(1);
-    t.addTranslation(VectorMatrixFactory.newIVector3(-1, 0.25, 0));
+    t.addScale(25);
+    t.addTranslation(VectorMatrixFactory.newIVector3(-0.5, 0.25, 0));
     t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
             MathHelpers.degree2radiens(270)));
     CgNode node = new CgNode(t, "Scale");
@@ -167,8 +119,8 @@ public class ShadowVolumeDemo extends CgApplication {
     hulk.getMaterial().setThrowsShadow(true);
     hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     Transformation t = new Transformation();
-    //t.addScale(0.5);
-    t.addTranslation(VectorMatrixFactory.newIVector3(1, 0.25, 0));
+    t.addScale(25);
+    t.addTranslation(VectorMatrixFactory.newIVector3(0.5, 0.25, 0));
     t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
             MathHelpers.degree2radiens(90)));
     CgNode node = new CgNode(t, "Scale2");
@@ -187,7 +139,7 @@ public class ShadowVolumeDemo extends CgApplication {
     hulk.getMaterial().setThrowsShadow(true);
     hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     Transformation t = new Transformation();
-    t.addScale(0.5);
+    t.addScale(20);
     t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
     t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
             MathHelpers.degree2radiens(135)));
@@ -212,6 +164,17 @@ public class ShadowVolumeDemo extends CgApplication {
     CgNode node = new CgNode(t, "Scale");
     node.addChild(new CgNode(hulk, "hulk"));
     getCgRootNode().addChild(node);
+  }
+
+  private ITriangleMesh loadObject(String file) {
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = reader.readFile(file);
+    if (meshes == null) {
+      return null;
+    }
+    ITriangleMesh mesh = meshes.get(0);
+    mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    return mesh;
   }
 
   @Override
