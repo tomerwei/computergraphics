@@ -535,7 +535,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			}
 
 		});
-		add(serialize);
+//		add(serialize);
 
 		JButton deserialize = new JButton("Deserialisieren");
 		deserialize.addActionListener(new ActionListener() {
@@ -904,7 +904,9 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void generateFromData() {
 
-		Car car = new Car(this.data.getX().get(0), this.data.getY().get(0), this.data.getZ().get(0));
+		int autozahl = 5; //5
+		Car car = new Car(this.data.getX().get(autozahl), this.data.getY().get(autozahl),
+				this.data.getZ().get(autozahl));
 
 		// EigenAuto
 
