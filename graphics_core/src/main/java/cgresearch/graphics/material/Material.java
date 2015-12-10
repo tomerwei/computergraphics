@@ -126,6 +126,12 @@ public class Material extends Observable {
   private boolean throwsShadow = false;
 
   /**
+   * Transparency of the object, 0 = completely transparent, 1 = completely
+   * opaque.
+   */
+  private double transparency = 1;
+
+  /**
    * Constructor
    */
   public Material() {
@@ -364,5 +370,13 @@ public class Material extends Observable {
    */
   public void setThrowsShadow(boolean throwsShadow) {
     this.throwsShadow = throwsShadow;
+  }
+
+  public void setTransparency(double transparency) {
+    this.transparency = transparency;
+  }
+
+  public double getTransparency() {
+    return transparency;
   }
 }

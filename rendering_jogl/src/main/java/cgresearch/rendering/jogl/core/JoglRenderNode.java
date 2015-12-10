@@ -81,7 +81,7 @@ public class JoglRenderNode implements Observer {
    * Draw the content
    */
   public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners,
-                     boolean cameraPositionChanged) {
+      boolean cameraPositionChanged) {
     if (cgNode == null || !cgNode.isVisible()) {
       return;
     }
@@ -136,9 +136,8 @@ public class JoglRenderNode implements Observer {
       }
       JoglShader.use(shader, gl);
       gl.glBindAttribLocation(shader.getShaderProgram(), ATTRIBUTE_LOCATION_BARYCENTRIC, "barycentric");
-      int location = gl.glGetUniformLocation(shader.getShaderProgram(), "camera_position");
-      gl.glUniform3f(location, (float) Camera.getInstance().getEye().get(0),
-          (float) Camera.getInstance().getEye().get(1), (float) Camera.getInstance().getEye().get(2));
+      ShaderVariables.setCameraPosition(gl, shader, Camera.getInstance().getEye());
+      ShaderVariables.setTransparency(gl, shader, material.getTransparency());
     }
 
   }
@@ -150,12 +149,10 @@ public class JoglRenderNode implements Observer {
     if (cgNode != null && !cgNode.isVisible() && material != null) {
       return;
     }
-
     gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, material.getSpecularShininess());
     gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, material.getReflectionAmbient().floatData(), 0);
     gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, material.getReflectionDiffuse().floatData(), 0);
     gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, material.getReflectionSpecular().floatData(), 0);
-
   }
 
   /**

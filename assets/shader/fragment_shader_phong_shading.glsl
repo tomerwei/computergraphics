@@ -1,13 +1,13 @@
 varying vec3 N; // Normal vector
 varying vec3 p; // Surface point
 uniform vec3 camera_position; // Set in Java application
+uniform float transparency; 
 
 /**
  * Fragment shader: Phong shading with Phong lighting model.
  */
 void main (void)
 {
-
     // Read reflection material properties from OpenGL
     vec4 reflectionAmbient = gl_FrontMaterial.ambient;
     vec4 reflectionDiffuse = gl_FrontMaterial.diffuse;
@@ -79,4 +79,5 @@ void main (void)
     }
     
     gl_FragColor = clamp( gl_FragColor, 0.0, 1.0 );
+    gl_FragColor.a = transparency;
 }

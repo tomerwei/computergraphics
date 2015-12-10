@@ -3,6 +3,7 @@ varying vec3 p; // Surface point
 uniform vec3 camera_position; // Set in Java application
 varying vec2 texture_coordinate; // Texture coordinate
 uniform sampler2D my_color_texture; // Texture object
+uniform float transparency; 
 
 /**
  * Fragment shader: textured surface, lighting: Phong shading with Phong model.
@@ -81,4 +82,5 @@ void main (void)
     }
     
     gl_FragColor = clamp( gl_FragColor, 0.0, 1.0 );
+    gl_FragColor.a = transparency;
 }

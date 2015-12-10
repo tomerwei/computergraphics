@@ -12,72 +12,85 @@ import java.util.List;
  */
 public class CgRootNode extends CgNode {
 
-	/**
-	 * List of lights
-	 */
-	private List<LightSource> lights = new ArrayList<LightSource>();
+  /**
+   * List of lights
+   */
+  private List<LightSource> lights = new ArrayList<LightSource>();
 
-	/**
-	 * Defines whether shadows are allowed in this scene
-	 */
-	private boolean allowShadows = false;
+  /**
+   * Defines whether shadows are allowed in this scene
+   */
+  private boolean allowShadows = false;
 
-	/**
-	 * Constructor.
-	 */
-	public CgRootNode() {
-		super(null, "root");
-	}
+  /**
+   * Use blending in the scene.
+   */
+  private boolean useBlending = false;
 
-	/**
-	 * Setter
-	 */
-	public void clearLights() {
-		lights.clear();
-		lightingChanged();
-	}
+  /**
+   * Constructor.
+   */
+  public CgRootNode() {
+    super(null, "root");
+  }
 
-	/**
-	 * Setter.
-	 */
-	public void addLight(LightSource light) {
-		lights.add(light);
-		lightingChanged();
-	}
+  /**
+   * Setter
+   */
+  public void clearLights() {
+    lights.clear();
+    lightingChanged();
+  }
 
-	/**
-	 * Getter.
-	 */
-	public int getNumberOfLights() {
-		return lights.size();
-	}
+  /**
+   * Setter.
+   */
+  public void addLight(LightSource light) {
+    lights.add(light);
+    lightingChanged();
+  }
 
-	/**
-	 * Getter.
-	 */
-	public LightSource getLight(int index) {
-		return lights.get(index);
-	}
+  /**
+   * Getter.
+   */
+  public int getNumberOfLights() {
+    return lights.size();
+  }
 
-	/**
-	 * Lighting situation changed.
-	 */
-	public void lightingChanged() {
-		setChanged();
-		notifyObservers();
-	}
+  /**
+   * Getter.
+   */
+  public LightSource getLight(int index) {
+    return lights.get(index);
+  }
 
-	/**
-	 * Getter
-	 */
-	public boolean areShadowsAllowed() {
-		return allowShadows;
-	}
+  /**
+   * Lighting situation changed.
+   */
+  public void lightingChanged() {
+    setChanged();
+    notifyObservers();
+  }
 
-	/**
-	 * Setter
-	 */
-	public void setAllowShadows(boolean allowShadows) {
-		this.allowShadows = allowShadows;
-	}
+  /**
+   * Getter
+   */
+  public boolean areShadowsAllowed() {
+    return allowShadows;
+  }
+
+  /**
+   * Setter
+   */
+  public void setAllowShadows(boolean allowShadows) {
+    this.allowShadows = allowShadows;
+  }
+
+  public boolean getUseBlending() {
+    return useBlending;
+  }
+
+  public void setUseBlending(boolean useBlending) {
+    this.useBlending = useBlending;
+  }
 }

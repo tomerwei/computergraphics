@@ -44,21 +44,21 @@ public class ObjTriangleMesh extends CgApplication {
     // loadFenja();
     // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    // loadPlaneWithBunny();
-    loadHulk();
+    loadPlaneWithBunny();
+    // loadHulk();
 
     // Coordinate system
     getCgRootNode().addChild(new CoordinateSystem());
 
     // Lights
     getCgRootNode().clearLights();
-    
+
     LightSource light = new LightSource(Type.POINT);
     light.setPosition(VectorMatrixFactory.newIVector3(5, 5, 5));
     light.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
     light.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light);
-    
+
     LightSource light2 = new LightSource(Type.POINT);
     light2.setPosition(VectorMatrixFactory.newIVector3(5, 5, -5));
     light2.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
@@ -67,6 +67,7 @@ public class ObjTriangleMesh extends CgApplication {
   }
 
   public void loadHulk() {
+    // getCgRootNode().setUseBlending(true);
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile("meshes/hulk/Hulk.obj");
     meshes.forEach(mesh -> {
@@ -74,16 +75,19 @@ public class ObjTriangleMesh extends CgApplication {
       mesh.computeVertexNormals();
       mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
       mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+      mesh.getMaterial().setTransparency(0.9);
       CgNode hulkNode = new CgNode(mesh, "hulk");
       getCgRootNode().addChild(hulkNode);
     });
   }
 
   public void loadPlaneWithBunny() {
+    // getCgRootNode().setUseBlending(true);
     Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
     plane.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR1);
     plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     plane.getMaterial().setSpecularShininess(100);
+    plane.getMaterial().setTransparency(1);
     getCgRootNode().addChild(new CgNode(plane, "plane"));
     // plane.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 
@@ -99,6 +103,7 @@ public class ObjTriangleMesh extends CgApplication {
       bunny.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       bunny.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR4);
       bunny.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+      bunny.getMaterial().setTransparency(0.5);
       CgNode bunnyNode = new CgNode(bunny, "bunny");
       getCgRootNode().addChild(bunnyNode);
     }

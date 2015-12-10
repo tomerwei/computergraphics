@@ -183,3 +183,21 @@ In den Picking-Modus wechselt man, indem man auf das entsprechende Icon in der S
 \vspace{0.5cm}
 
 \emph{Verschieben} Das aktuell selektierte Picking-Item kann in $x$-, $y$- und $z$-Richtung verschoben werden. Die Richtungen sind durch die entsprechenden Pfeile angegeben. Zum Verschieben in eine Richtung drückt man die zugehörige Taste auf der Tastatur, hält die linke Maustaste gedrückt und bewegt die Maus nach links bzw. nach rechts. Eine Mausbewegung nach links bewegt das Picking-Item gegen die Pfeilrichtung, eine Mausbewegung nach rechts bewegt das Picking-Item in Pfeilrichtung. Zur Bewegung in die $x$-Richtung drückt man die $x$-Taste, analog $y$ und $z$.
+
+\subsection{Alpha-Blending}
+
+In jeder Szene kann Alpha-Blending (Transparenz) verwendet werden. Zunächst muss man dazu in dem Szenen-Wurzelknoten \verb+CgRootNode+ Blending aktivieren: 
+
+\begin{verbatim}
+getCgRootNode().setUseBlending(true);
+\end{verbatim}
+
+Für jedes Objekt der Szene, das Alpha-Blending verwendet soll, setzt man die Transparenz individuell in dessen Material:
+
+\begin{verbatim}
+<Objekt>.getMaterial().setTransparency(0.5);
+\end{verbatim}
+
+Gültig sind alle Werte zwischen 0 (vollständig transparent) und 1 (vollständig opaque).
+
+Um Transparenzen verwenden zu können, muss das Blending vom verwendeten Shader unterstützt werden. Dies ist aktuell für die Shader \emph{Phong Shading} und \emph{Textur} der Fall.
