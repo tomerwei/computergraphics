@@ -3,8 +3,9 @@ package smarthomevis.architecture;
 import org.bson.types.ObjectId;
 import org.junit.*;
 import org.mongodb.morphia.Datastore;
-import smarthomevis.architecture.logic.DataSource;
-import smarthomevis.architecture.persistence.Connector;
+import smarthomevis.architecture.entities.Device;
+import smarthomevis.architecture.logic.Connector;
+import smarthomevis.architecture.logic.DeviceController;
 import smarthomevis.architecture.persistence.Repository;
 
 import java.util.ArrayList;
@@ -14,119 +15,100 @@ import java.util.List;
 @Ignore
 public class RepositoryTest {
 
-    private static final String NAME_FOR_TEST_DB = "testDB";
+    private static final String NAME_FOR_TEST_DB = "smarthome";
 
+    private static DeviceController controller;
     private static Datastore datastore;
-    private static Repository<DataSource> dataSourceRepository;
 
-    private DataSource dataSource;
+    private static Repository<Device> deviceRepository;
+    private Device device;
 
     @BeforeClass
     public static void initialize() {
-        connectToMongoDB();
+        controller = new DeviceController();
+        deviceRepository = controller.getRepository();
+        datastore = Connector.getInstance().connectToMongoDB(NAME_FOR_TEST_DB);
     }
 
     @Before
     public void setUp() {
-        deleteDataSources();
-        dataSource = new DataSource();
-        dataSource.setName("setUp");
-        dataSource.setData("Hello MongoDB");
+        deleteDevices();
+        device = new Device();
+        device.setName("setUp");
     }
 
     @AfterClass
     public static void clear() {
-        deleteDataSources();
+        deleteDevices();
     }
 
     @Test
     public void testSaveAndFind() {
-        String before = dataSource.getName();
-        ObjectId id = dataSourceRepository.save(dataSource);
-        DataSource dataSource2 = dataSourceRepository.get(DataSource.class, id);
-        String after = dataSource2.getName();
+        String before = device.getName();
+        ObjectId id = deviceRepository.save(device);
+        Device device2 = deviceRepository.get(id);
+        String after = device2.getName();
         Assert.assertEquals(before, after);
     }
 
     @Test
     public void testFindAll() {
-        List<DataSource> list = new ArrayList<>();
+        List<Device> list = new ArrayList<>();
 
-        DataSource dataSource1 = new DataSource();
-        dataSource1.setName("Source1");
-        dataSource1.setData("a bunch of data");
-        dataSourceRepository.save(dataSource1);
-        list.add(dataSource1);
+        Device device1 = new Device();
+        device1.setName("Source1");
+        deviceRepository.save(device1);
+        list.add(device1);
 
-        DataSource dataSource2 = new DataSource();
-        dataSource2.setName("Source2");
-        dataSource2.setData("a bunch of data");
-        ObjectId id = dataSourceRepository.save(dataSource2);
-        list.add(dataSource2);
+        Device device2 = new Device();
+        device2.setName("Source2");
+        ObjectId id = deviceRepository.save(device2);
+        list.add(device2);
 
-        DataSource dataSource3 = new DataSource();
-        dataSource3.setName("Source3");
-        dataSource3.setData("a bunch of data");
-        dataSourceRepository.save(dataSource3);
-        list.add(dataSource3);
+        Device device3 = new Device();
+        device3.setName("Source3");
+        deviceRepository.save(device3);
+        list.add(device3);
 
-        Assert.assertEquals(3,
-                dataSourceRepository.getAll(DataSource.class).size());
-        Assert.assertEquals("Source2",
-                dataSourceRepository.get(DataSource.class, id).getName());
-        list.forEach(DataSource::getName);
+        Assert.assertEquals(3, deviceRepository.getAll().size());
+        Assert.assertEquals("Source2", deviceRepository.get(id).getName());
+        list.forEach(Device::getName);
     }
 
     @Test
-    public void testDelete() {
-        ObjectId id = dataSourceRepository.save(dataSource);
-        Assert.assertEquals(1, dataSourceRepository.count(DataSource.class));
-        dataSourceRepository.delete(DataSource.class, id);
-        Assert.assertEquals(0, dataSourceRepository.count(DataSource.class));
+    public void testDeleteWithHas() {
+        ObjectId id = deviceRepository.save(device);
+        Assert.assertTrue(deviceRepository.has(id));
+        deviceRepository.delete(id);
+        Assert.assertFalse(deviceRepository.has(id));
     }
 
     @Test
     public void testCountWithMultipleSameObjectSaves() {
         for (int i = 0; i < 5; i++) {
-            dataSourceRepository.save(dataSource);
+            deviceRepository.save(device);
         }
-        Assert.assertEquals(1, dataSourceRepository.count(DataSource.class));
+        Assert.assertEquals(1, deviceRepository.count());
     }
 
     @Test
     public void testCountWithDifferentObjectSaves() {
-        DataSource dataSource1 = new DataSource();
-        dataSource1.setName("Source1");
-        dataSource1.setData("a bunch of data");
-        dataSourceRepository.save(dataSource1);
+        Device device1 = new Device();
+        device1.setName("Source1");
+        deviceRepository.save(device1);
 
-        DataSource dataSource2 = new DataSource();
-        dataSource2.setName("Source2");
-        dataSource2.setData("a bunch of data");
-        dataSourceRepository.save(dataSource2);
+        Device device2 = new Device();
+        device2.setName("Source2");
+        deviceRepository.save(device2);
 
-        DataSource dataSource3 = new DataSource();
-        dataSource3.setName("Source3");
-        dataSource3.setData("a bunch of data");
-        dataSourceRepository.save(dataSource3);
+        Device device3 = new Device();
+        device3.setName("Source3");
+        deviceRepository.save(device3);
 
-        Assert.assertEquals(3, dataSourceRepository.count(DataSource.class));
+        Assert.assertEquals(3, deviceRepository.count());
     }
 
-    @Test
-    public void testEquals() {
-        ObjectId id = dataSourceRepository.save(dataSource);
-        DataSource dataSource2 = dataSourceRepository.get(DataSource.class, id);
-        Assert.assertTrue(dataSource.equals(dataSource2));
-    }
-
-    private static void connectToMongoDB() {
-        Connector connector = new Connector();
-        datastore = connector.connectToMongoDB(NAME_FOR_TEST_DB);
-        dataSourceRepository = new Repository<>(datastore, DataSource.class);
-    }
-
-    private static void deleteDataSources() {
-        datastore.delete(datastore.createQuery(DataSource.class));
+    private static void deleteDevices() {
+        datastore.delete(datastore.createQuery(Device.class));
     }
 }

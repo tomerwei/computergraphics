@@ -2,18 +2,25 @@ package smarthomevis.architecture.persistence;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
-import smarthomevis.architecture.logic.BaseEntity;
 
 import java.util.List;
 
 public class Repository<E extends BaseEntity> {
 
+    private final Class<E> type;
     private Datastore datastore;
-    private Class<E> type;
 
     public Repository(Datastore datastore, Class<E> type) {
         this.datastore = datastore;
         this.type = type;
+    }
+
+    public E get(final ObjectId id) {
+        return datastore.find(type).field("id").equal(id).get();
+    }
+
+    public List<E> getAll() {
+        return datastore.find(type).asList();
     }
 
     public ObjectId save(E entity) {
@@ -21,21 +28,17 @@ public class Repository<E extends BaseEntity> {
         return entity.getId();
     }
 
-    public E get(Class<E> objectClass, final ObjectId id) {
-        return datastore.find(objectClass).field("id").equal(id).get();
-    }
-
-    public List<E> getAll(Class<E> objectClass) {
-        return datastore.find(objectClass).asList();
-    }
-
-    public void delete(Class<E> objectClass, final ObjectId id) {
-        E entity = datastore.find(objectClass).field("id").equal(id).get();
+    public void delete(final ObjectId id) {
+        E entity = datastore.find(type).field("id").equal(id).get();
         datastore.delete(entity);
     }
 
-    public long count(Class<E> objectClass) {
-        return datastore.find(objectClass).countAll();
+    public boolean has(final ObjectId id) {
+        return get(id) != null;
+    }
+
+    public long count() {
+        return datastore.find(type).countAll();
     }
 
 }

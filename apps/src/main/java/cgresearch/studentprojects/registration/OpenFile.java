@@ -21,18 +21,17 @@ public class OpenFile {
     	String file = "";
     	
     	FileFilter filter = new FileNameExtensionFilter("Pointcloud", "points");
-    	String path = ResourcesLocator.getInstance().getPathToResource("pointclouds");
+    	String path = ResourcesLocator.getInstance().getPathToResource("meshes");
     	JFileChooser chooser = new JFileChooser(path);
     	  	 
     	chooser.addChoosableFileFilter(filter);
-    	JFrame JFrame = new JFrame("Open Pointcloud");
-    	JFrame.setSize(450,300);
-    	JFrame.getContentPane().add(chooser);
-    	JFrame.setVisible(true); 
     	int temp = chooser.showOpenDialog(null);
     	if(temp == JFileChooser.APPROVE_OPTION)
     	{   
-    	    file = chooser.getSelectedFile().getAbsolutePath();     
+    	    file = chooser.getSelectedFile().getAbsolutePath();  
+    	    int index = file.indexOf("assets\\");
+    	    file = file.substring(index+7);
+    	    
     	}else{
     		   Logger.getInstance().error("File not found");
     	   }

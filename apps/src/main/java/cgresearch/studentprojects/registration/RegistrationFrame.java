@@ -39,6 +39,8 @@ public class RegistrationFrame extends CgApplication {
 
   public static IPointCloud Base = new PointCloud();
   public static IPointCloud Register = new PointCloud();
+  public static IPointCloud basePointCloud = new PointCloud();
+  public static IPointCloud registerPointCloud = new PointCloud();
 
   /**
    * Constructor
@@ -61,7 +63,7 @@ public class RegistrationFrame extends CgApplication {
     ObjFileReader reader = new ObjFileReader();
     ITriangleMesh cubeMesh = reader.readFile("meshes/cube.obj").get(0);
     // Created point cloud from cube
-    IPointCloud basePointCloud = TriangleMeshSampler.sample(cubeMesh, 500);
+    basePointCloud = TriangleMeshSampler.sample(cubeMesh, 1000);
     basePointCloud.getMaterial().setShaderId(Material.SHADER_COLOR);
     // Set point color
     for (int i = 0; i < basePointCloud.getNumberOfPoints(); i++) {
@@ -75,8 +77,8 @@ public class RegistrationFrame extends CgApplication {
     TriangleMeshTransformation.transform(cubeMesh,
         VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(1, 1, 1), rotationAngle));
     // Optional: translation
-    //TriangleMeshTransformation.translate(cubeMesh, VectorMatrixFactory.newIVector3(0.2, 0.2, 0.2));
-    IPointCloud registerPointCloud = TriangleMeshSampler.sample(cubeMesh, 500);
+    TriangleMeshTransformation.translate(cubeMesh, VectorMatrixFactory.newIVector3(2, 2, 2));
+    registerPointCloud = TriangleMeshSampler.sample(cubeMesh, 1000);
     registerPointCloud.getMaterial().setShaderId(Material.SHADER_COLOR);
     // Set point color
     for (int i = 0; i < registerPointCloud.getNumberOfPoints(); i++) {
