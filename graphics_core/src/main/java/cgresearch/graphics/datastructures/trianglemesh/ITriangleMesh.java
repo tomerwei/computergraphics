@@ -137,12 +137,11 @@ public abstract class ITriangleMesh extends ICgNodeContent {
    */
   public abstract void unite(ITriangleMesh createSphere);
 
-  // /**
-  // * Set the color for all vertices
-  // */
-  // public void setColor(IVector3 diffuseColor) {
-  // for (int i = 0; i < getNumberOfVertices(); i++) {
-  // getVertex(i).setColor(diffuseColor);
-  // }
-  // }
+  /**
+   * Remove the triangle.
+   * 
+   * @param triangleIndex
+   *          Triangle index.
+   */
+  public abstract void removeTriangle(int triangleIndex);
 }

@@ -323,4 +323,9 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
   public void unite(ITriangleMesh otherMesh) {
     throw new UnsupportedOperationException("Method not implemented.", null);
   }
+
+  @Override
+  public void removeTriangle(int triangleIndex) {
+    throw new UnsupportedOperationException("Method removeTriangle() bnot implemente yet fir HalfEdgeTriangleMesh.");
+  }
 }

@@ -19,6 +19,7 @@ import cgresearch.graphics.datastructures.tree.OctreeNode;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTools;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
@@ -59,12 +60,13 @@ public class OctreeTest extends CgApplication {
 
     // Read mesh
     ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile("meshes/bunny.obj");
+    List<ITriangleMesh> meshes = reader.readFile("meshes/fenja02.obj");
     mesh = null;
     if (meshes.size() == 0) {
       return;
     }
     mesh = meshes.get(0);
+    TriangleMeshTools.cleanup(mesh);
     mesh.fitToUnitBox();
     // TriangleMeshTransformation.scale(mesh, 2);
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
@@ -77,21 +79,25 @@ public class OctreeTest extends CgApplication {
     octreeRootNode = octreeFactory.create(5, 5);
     octreeRootNode.getMaterial().setShaderId(Material.SHADER_BLACK);
     CgNode octreeNode = new CgNode(octreeRootNode, "octree");
-    octreeNode.setVisible(false);
+    octreeNode.setVisible(true);
     getCgRootNode().addChild(octreeNode);
 
     // Create plane
     plane.getMaterial().setReflectionDiffuse(Material.PALETTE1_COLOR3);
     plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     plane.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
-    getCgRootNode().addChild(new CgNode(plane, "clipping plane"));
+    CgNode clippingPlaneNode = new CgNode(plane, "clipping plane");
+    clippingPlaneNode.setVisible(true);
+    getCgRootNode().addChild(clippingPlaneNode);
 
     // Triangle mesh for visible elements
     visibleElementsMesh = new TriangleMesh();
     visibleElementsMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     visibleElementsMesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR0);
     computeVisibleElements();
-    getCgRootNode().addChild(new CgNode(visibleElementsMesh, "visible elements"));
+    CgNode visibleElementsNode = new CgNode(visibleElementsMesh, "visible elements");
+    visibleElementsNode.setVisible(true);
+    getCgRootNode().addChild(visibleElementsNode);
 
     // Coordinate system
     CgNode coordinateSystem = new CoordinateSystem();

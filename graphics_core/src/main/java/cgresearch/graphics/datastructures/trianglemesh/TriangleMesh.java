@@ -346,4 +346,9 @@ public class TriangleMesh extends ITriangleMesh {
   public void addTriangle(int indexA, int indexB, int indexC) {
     addTriangle(new Triangle(indexA, indexB, indexC));
   }
+
+  @Override
+  public void removeTriangle(int triangleIndex) {
+    triangles.remove(triangleIndex);
+  }
 }

@@ -58,4 +58,23 @@ public class TriangleMeshTools {
     }
     mesh.updateRenderStructures();
   }
+
+  /**
+   * Cleanup data structure: 1) remove all deprectated triangles.
+   * 
+   * @param mesh
+   *          Mesh to be cleaned.
+   */
+  public static void cleanup(ITriangleMesh mesh) {
+    for (int triangleIndex = 0; triangleIndex < mesh.getNumberOfTriangles(); triangleIndex++) {
+      IVector3 a = mesh.getVertex(mesh.getTriangle(triangleIndex).getA()).getPosition();
+      IVector3 b = mesh.getVertex(mesh.getTriangle(triangleIndex).getB()).getPosition();
+      IVector3 c = mesh.getVertex(mesh.getTriangle(triangleIndex).getC()).getPosition();
+      if (a.equals(b) || b.equals(c) || c.equals(a)) {
+        mesh.removeTriangle(triangleIndex);
+        triangleIndex--;
+      }
+    }
+
+  }
 }
