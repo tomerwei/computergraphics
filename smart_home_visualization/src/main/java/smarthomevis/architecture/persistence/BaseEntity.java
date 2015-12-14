@@ -1,4 +1,4 @@
-package smarthomevis.architecture.logic;
+package smarthomevis.architecture.persistence;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;

@@ -9,12 +9,8 @@ import org.restlet.routing.Router;
 public class Server extends Application {
 
     public static void main(String[] args) throws Exception {
-        runServer(8182);
-    }
-
-    public static void runServer(int port) throws Exception {
         Component component = new Component();
-        component.getServers().add(Protocol.HTTP, port);
+        component.getServers().add(Protocol.HTTP, 8183);
         Application application = new Server();
         String contextRoot = "/smarthome";
         component.getDefaultHost().attach(contextRoot, application);
@@ -24,8 +20,13 @@ public class Server extends Application {
     @Override
     public Restlet createInboundRoot() {
         Router router = new Router(getContext());
-        router.attach("/datasources", DataSourceResource.class);
-        router.attach("/datasources/{objectId}", DataSourceResource.class);
+        router.attach("/devices", DeviceResource.class);
+        router.attach("/devices/{id}", DeviceResource.class);
+
+        router.attach("/layers", LayerResource.class);
+        router.attach("/layers/{id}", LayerResource.class);
+
+        router.attach("/layers/{layerId}/devices/{deviceId}", LayerDeviceResource.class);
         return router;
     }
 }
