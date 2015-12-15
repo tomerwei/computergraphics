@@ -22,10 +22,15 @@ import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.Material;
+import cgresearch.graphics.material.Material.Normals;
+import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 import cgresearch.core.math.VectorMatrixFactory;
 
 public class ViewFrustumCulling {
+    
+    //merkt sich, welche OctreeNodes schon gecheckt wurden, um mehrere Aufrufe mit demselben OctreeNode zu vermeiden
+    private ArrayList<OctreeNode<Integer>> checked = new ArrayList<OctreeNode<Integer>>();
 
   // Kameraparameter
   private IVector3 eye;
@@ -71,7 +76,7 @@ public class ViewFrustumCulling {
     cornerPoints = new Vector3[8];
 
     calcPlanesOfFrustum(-8.8, -4.9, 1.0); // is in view frustum
-    // calc_planes_of_frustum(1, 3, 0.1); // is not in view frustum
+//    calcPlanesOfFrustum(1, 3, 0.1); // is not in view frustum
 
   }
 
@@ -123,7 +128,7 @@ public class ViewFrustumCulling {
   /**
    * Getter
    */
-  public IVector3[] get_corners() {
+  public IVector3[] getCorners() {
     return cornerPoints;
   }
 
@@ -343,6 +348,7 @@ public class ViewFrustumCulling {
     } else {
       bb = obj.getBoundingBox();
     }
+    
     IVector3[] corner_points = calcCornerPointsOfBoundingBox(bb);
 
     for (int i = 0; i < frustum.length; i++) {
@@ -400,6 +406,8 @@ public class ViewFrustumCulling {
     for (int i = 0; i < corner_points.length; i++) {
       mesh.addVertex(new Vertex(corner_points[i], VectorMatrixFactory.newIVector3(1, 0, 0)));
     }
+    mesh.getMaterial().setRenderMode(Normals.PER_FACET);
+    mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     mesh.computeTriangleNormals();
     mesh.computeVertexNormals();
 
@@ -470,7 +478,9 @@ public class ViewFrustumCulling {
   }
 
   /**
-   * prueft, welche OctreeNodes eines Octrees im View Frustum liegen
+   * prueft, welche OctreeNodes eines Octrees im View Frustum liegen,
+   * in Kombination mit Scenegraph-Nodes: wenn sich sceneOctree und octreeMesh schneiden, wird diese Funktion aufgerufen,
+   * um "genau zu gucken" welche nodes des Meshes im Frustum liegen oder es schneidet
    * 
    * @param octreeNode
    *          der zu pruefende Octree
@@ -481,13 +491,22 @@ public class ViewFrustumCulling {
    */
   public ArrayList<OctreeNode<Integer>> checkOctree(OctreeNode<Integer> octreeNode,
       ArrayList<OctreeNode<Integer>> toDraw) {
-    if (isObjectInFrustum(octreeNode) == 1) {
-      // drauï¿½en
-      return null;
-    }
+      if(checked.contains(octreeNode)){
+          return null;
+      }
+      else{ 
+          checked.add(octreeNode);
+      }
+   // diese Abfrage ist nun uberflussig, da octreeNode aufgrund der vorherigen Abfrage auf 
+   // Intersections mit der sceneBoundingBox das Frustum sowieso schneidet und nicht mehr 
+   // komplett außerhalb liegen kan
+//        
+//    if (isObjectInFrustum(octreeNode) == 1) { 
+//      return null;
+//    }
     if (isObjectInFrustum(octreeNode) == 0) {
       if (octreeNode.getNumberOfChildren() > 0) {
-        // drinnen, ueberpruefe Kindknoten
+        // komplett drinnen, also hole die leafNodes, weitere Ueberpruefung auf Intersection ueberflussig
         traversalOctreeNode(octreeNode, toDraw);
       }
       if (octreeNode.getNumberOfChildren() == 0) {
@@ -495,38 +514,41 @@ public class ViewFrustumCulling {
         toDraw.add(octreeNode);// (octree_node, to_draw);
       }
     }
-    if (isObjectInFrustum(octreeNode) == 2 && octreeNode.getNumberOfChildren() > 0) {
+    if (isObjectInFrustum(octreeNode) == 2) {
+        if(octreeNode.getNumberOfChildren() > 0){
       // geschnitten und noch Kindknoten, also ueberpruefe diese
       for (int i = 0; i < octreeNode.getNumberOfChildren(); i++) {
         checkOctree(octreeNode.getChild(i), toDraw);
       }
-    }
-    if (isObjectInFrustum(octreeNode) == 2 && octreeNode.getNumberOfChildren() == 0) {
-      // geschnitten und keine Kinder, also fuege diesen Knoten nicht hinzu
-      return null;
+      }
+        if (octreeNode.getNumberOfChildren() == 0) {
+            // geschnitten und keine Kinder, also fuege diesen Knoten hinzu
+            toDraw.add(octreeNode);// (octree_node, to_draw);
+        }
     }
     return toDraw;
   }
 
   /**
-   * wird aufgerufen, wenn ein OctreeNode innerhalb des Frustums liegt, um an
-   * seine Leaf Nodes zu kommen
+   * wird aufgerufen, wenn ein OctreeNode komplett innerhalb des Frustums liegt, um an
+   * seine Leafnodes zu kommen
    * 
    * @param node
    *          der OctreeNode, der komplett im Frustum liegt
    * @param toDraw
-   *          ArrayList, der die leaf nodes hinzugefuegt werden
+   *          ArrayList, der die leafnodes hinzugefuegt werden
    * @return
    */
   public ArrayList<OctreeNode<Integer>> traversalOctreeNode(OctreeNode<Integer> node,
       ArrayList<OctreeNode<Integer>> toDraw) {
-    if (node.getNumberOfChildren() > 0) {
-      for (int i = 0; i < node.getNumberOfChildren(); i++) {
-        traversalOctreeNode(node.getChild(i), toDraw);
+      if (node.getNumberOfChildren() > 0) {
+          for (int i = 0; i < node.getNumberOfChildren(); i++) {
+              traversalOctreeNode(node.getChild(i), toDraw);
+          }
       }
-    } else {
-      toDraw.add(node);
-    }
+      else{
+          toDraw.add(node);
+      }
     return toDraw;
   }
 
@@ -540,39 +562,77 @@ public class ViewFrustumCulling {
    *          der Content, von dem extrahiert werden soll
    * @return sichtbare Elemente
    */
-  public ICgNodeContent extractMesh(ArrayList<OctreeNode<Integer>> nodesInFrustum, ICgNodeContent content) {
-    if (nodesInFrustum == null) {
-      System.out.println("BIN HIER");
-      return null;
-    }
-    if (content.getClass() == TriangleMesh.class) {
-      TriangleMesh meshToDraw = new TriangleMesh();
-      for (int m = 0; m < ((TriangleMesh) content).getNumberOfVertices(); m++) {
-        meshToDraw.addVertex(((TriangleMesh) content).getVertex(m));
-      }
-      for (int i = 0; i < nodesInFrustum.size(); i++) {
-        for (int j = 0; j < nodesInFrustum.get(i).getNumberOfElements(); j++) {
-          ITriangle t = ((TriangleMesh) content).getTriangle(nodesInFrustum.get(i).getElement(j));
-          meshToDraw.addTriangle(t);
+  public ICgNodeContent extractNodeContent(OctreeNode<Integer> tree, ICgNodeContent content, OctreeNode<Integer> scene) {
+    if(boxesIntersect(tree.getBoundingBox(), scene.getBoundingBox())){
+        ArrayList<OctreeNode<Integer>> toDraw = new ArrayList<OctreeNode<Integer>>();
+        ICgNodeContent contentToDraw = null;
+        checkOctree(tree,toDraw);
+        if (toDraw.size() == 0){
+            return null;
         }
-      }
-      meshToDraw.computeVertexNormals();
-      meshToDraw.computeTriangleNormals();
-      meshToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-      return meshToDraw;
-    }
+        if (content.getClass() == TriangleMesh.class) {
+            contentToDraw = new TriangleMesh();
+            for (int m = 0; m < ((TriangleMesh) content).getNumberOfVertices(); m++) {
+                ((ITriangleMesh) contentToDraw).addVertex(((TriangleMesh) content).getVertex(m));
+            }
+            for (int i = 0; i < toDraw.size(); i++) {
+                for (int j = 0; j < toDraw.get(i).getNumberOfElements(); j++) {
+                    ITriangle t = ((TriangleMesh) content).getTriangle(toDraw.get(i).getElement(j));
+                    ((ITriangleMesh) contentToDraw).addTriangle(t);
+                }
+            }
+            ((ITriangleMesh) contentToDraw).computeVertexNormals();
+            ((ITriangleMesh) contentToDraw).computeTriangleNormals();
+            contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+        }
 
-    if (content.getClass() == PointCloud.class) {
-      PointCloud pCloudToDraw = new PointCloud();
-      for (int i = 0; i < nodesInFrustum.size(); i++) {
-        if (nodesInFrustum.get(i).getNumberOfChildren() == 0) {
-          for (int j = 0; j < nodesInFrustum.get(i).getNumberOfElements(); j++) {
-            pCloudToDraw.addPoint(((PointCloud) content).getPoint(j));
-          }
+        if (content.getClass() == PointCloud.class) {
+            contentToDraw = new PointCloud();
+            for (int i = 0; i < toDraw.size(); i++) {
+                 for (int j = 0; j < toDraw.get(i).getNumberOfElements(); j++) {
+                     ((PointCloud) contentToDraw).addPoint(((PointCloud) content).getPoint(toDraw.get(i).getElement(j)));
+               }
+             }
+            contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
         }
-      }
-      return pCloudToDraw;
-    }
-    return null;
+        return contentToDraw;
+   }
+
+   return null;
+ }
+  
+  /**
+   * ueberprueft, ob die Boundingboxes sich schneiden
+   * @param one erste Boundingbox
+   * @param two zweite Boundingbox
+   * @return ob Schnitt stattfindet
+   */
+  public boolean boxesIntersect(BoundingBox one, BoundingBox two){
+
+//          return (cur.getUpperRight().get(X) >= node.getLowerLeft().get(X) && cur.getLowerLeft().get(X) <= nodeUpperRight.get(X))
+//              && (cur.getUpperRight().get(Y) >= node.getLowerLeft().get(Y) && cur.getLowerLeft().get(Y) <= nodeUpperRight.get(Y))
+//              && (cur.getUpperRight().get(Z) >= node.getLowerLeft().get(Z) && cur.getLowerLeft().get(Z) <= nodeUpperRight.get(Z));
+          
+          if(two.getUpperRight().get(X) < one.getLowerLeft().get(X)){ 
+              return false;
+          }
+          if(two.getLowerLeft().get(X) > one.getUpperRight().get(X)){
+              return false;
+          }
+          if(two.getUpperRight().get(Y) < one.getLowerLeft().get(Y)){
+              return false;
+          }
+          if(two.getLowerLeft().get(Y) > one.getUpperRight().get(Y)){
+              return false;
+          }
+          if(two.getUpperRight().get(Z) < one.getLowerLeft().get(Z)){
+              return false;
+          }
+          if(two.getLowerLeft().get(Z) > one.getUpperRight().get(Z)){
+              return false;
+          }
+          return true;
+                
   }
 }
+
