@@ -411,16 +411,9 @@ public class JoglRenderer3D implements Observer {
       gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    // IntBuffer stencilBits = Buffers.newDirectIntBuffer(1);
-    // gl.glGetIntegerv(GL2.GL_STENCIL_BITS, stencilBits);
-    // if (stencilBits.get(0) < 1) {
-    // Logger.getInstance().error("Life sucks without a stencil buffer.\n");
-    // }
-
     // Update cam
     updateExtrinsicCameraParameters(drawable);
 
-    // Clear buffers
     // Load projection infinite matrix
     IMatrix4 pInf = getProjectionInfinity();
     gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
@@ -463,12 +456,12 @@ public class JoglRenderer3D implements Observer {
     for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
       LightSource light = rootNode.getLight(i);
 
-      if (!useTwoSidedStencil) {
-        // Create a copy of the current light.
-        // This step is required if an animation is moving the current light
-        // source while drawing the shadows.
-        light = light.copy();
-      }
+//      if (!useTwoSidedStencil) {
+//        // Create a copy of the current light.
+//        // This step is required if an animation is moving the current light
+//        // source while drawing the shadows.
+//        light = light.copy();
+//      }
 
       drawShadowVolumes(gl, light, i);
 
@@ -514,6 +507,7 @@ public class JoglRenderer3D implements Observer {
     // renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0,
     // SCREEN_HEIGHT - 20);
     // renderer.endRendering();
+    System.out.println("FPS: " + drawable.getAnimator().getLastFPS());
 
     cameraPositionChanged = false;
     JoglHelper.hasGLError(gl, "GL rendering");
@@ -742,6 +736,10 @@ public class JoglRenderer3D implements Observer {
       cameraPositionChanged = true;
       updateExtrinsicCameraParametersRequired = false;
     }
+    // if animations are used, we can't use this tweak
+    if (AnimationTimer.getInstance().isRunning()) {
+      cameraPositionChanged = true;
+    }
   }
 
   private void updateNearPlaneInformation(GL2 gl) {
@@ -749,8 +747,8 @@ public class JoglRenderer3D implements Observer {
     double fieldOfViewY = Math.toRadians(Camera.getInstance().getOpeningAngle());
     IVector3 cPos = Camera.getInstance().getEye();
     IVector3 cUp = Camera.getInstance().getUp();
-    IVector3 cRight = Camera.getInstance().getRight();
     IVector3 dRef = Camera.getInstance().getRef().subtract(cPos);
+    IVector3 cRight = cUp.cross(dRef).multiply(-1).getNormalized();
     IVector3 dNear = dRef.multiply(nearClippingPlane / dRef.getNorm());
     // Middle of the near plane
     IVector3 nearMiddle = cPos.add(dNear);
@@ -773,48 +771,48 @@ public class JoglRenderer3D implements Observer {
     nearPlaneCorners[3] = heightDown.add(widthRight).add(nearMiddle); // lower
                                                                       // right
 
-    // IVector3[] pyramidNormals = new IVector3[5];
-    // pyramidNormals[0] = getNormal(rootNode.getLight(0).getPosition(),
-    // nearPlaneCorners[1], nearPlaneCorners[0]);
-    // pyramidNormals[1] = getNormal(rootNode.getLight(0).getPosition(),
-    // nearPlaneCorners[2], nearPlaneCorners[1]);
-    // pyramidNormals[2] = getNormal(rootNode.getLight(0).getPosition(),
-    // nearPlaneCorners[3], nearPlaneCorners[2]);
-    // pyramidNormals[3] = getNormal(rootNode.getLight(0).getPosition(),
-    // nearPlaneCorners[0], nearPlaneCorners[3]);
-    // pyramidNormals[4] = getNormal(nearPlaneCorners[0], nearPlaneCorners[2],
-    // nearPlaneCorners[1]);
-    //
-    // CgGlslShader shaderTexture =
-    // ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_PHONG_SHADING);
-    // JoglShader.use(shaderTexture, gl);
-    // gl.glBegin(GL2.GL_TRIANGLES);
-    // gl.glNormal3fv(pyramidNormals[0].floatData(), 0);
-    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
-    // gl.glNormal3fv(pyramidNormals[1].floatData(), 0);
-    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
-    // gl.glNormal3fv(pyramidNormals[2].floatData(), 0);
-    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
-    // gl.glNormal3fv(pyramidNormals[3].floatData(), 0);
-    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
-    // gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
-    // gl.glEnd();
+//     IVector3[] pyramidNormals = new IVector3[5];
+//     pyramidNormals[0] = getNormal(rootNode.getLight(0).getPosition(),
+//     nearPlaneCorners[1], nearPlaneCorners[0]);
+//     pyramidNormals[1] = getNormal(rootNode.getLight(0).getPosition(),
+//     nearPlaneCorners[2], nearPlaneCorners[1]);
+//     pyramidNormals[2] = getNormal(rootNode.getLight(0).getPosition(),
+//     nearPlaneCorners[3], nearPlaneCorners[2]);
+//     pyramidNormals[3] = getNormal(rootNode.getLight(0).getPosition(),
+//     nearPlaneCorners[0], nearPlaneCorners[3]);
+//     pyramidNormals[4] = getNormal(nearPlaneCorners[0], nearPlaneCorners[2],
+//     nearPlaneCorners[1]);
+//
+//     CgGlslShader shaderTexture =
+//     ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_PHONG_SHADING);
+//     JoglShader.use(shaderTexture, gl);
+//     gl.glBegin(GL2.GL_TRIANGLES);
+//     gl.glNormal3fv(pyramidNormals[0].floatData(), 0);
+//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
+//     gl.glNormal3fv(pyramidNormals[1].floatData(), 0);
+//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
+//     gl.glNormal3fv(pyramidNormals[2].floatData(), 0);
+//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
+//     gl.glNormal3fv(pyramidNormals[3].floatData(), 0);
+//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
+//     gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
+//     gl.glEnd();
   }
 
-  // private IVector3 getNormal(IVector3 a, IVector3 b, IVector3 c) {
-  // IVector3 v1 = b.subtract(a);
-  // IVector3 v2 = c.subtract(a);
-  // IVector3 n = v1.cross(v2);
-  // n.normalize();
-  // return n;
-  // }
+//   private IVector3 getNormal(IVector3 a, IVector3 b, IVector3 c) {
+//   IVector3 v1 = b.subtract(a);
+//   IVector3 v2 = c.subtract(a);
+//   IVector3 n = v1.cross(v2);
+//   n.normalize();
+//   return n;
+//   }
 
   /**
    * Check if a screenshot needs to be taken, do so if yes.

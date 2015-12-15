@@ -43,130 +43,73 @@ public class ShadowVolumeDemo extends CgApplication {
     // Remove existing light sources
     getCgRootNode().clearLights();
 
-    // Load elements
-    loadRoom();
-//  createEnvironment();
-//    //loadHulk();
-//    loadCube();
-    loadObject();
-    loadObject2();
-    loadObject3();
+    // Load room
+    CgNode node = loadRoom();
+    // Add objects
+    if (node != null) {
+      loadTable("Table", VectorMatrixFactory.newIVector3(), 0, node);
+      loadChair("Chair 1", VectorMatrixFactory.newIVector3(-5, 0, 0), 90, node);
+      loadChair("Chair 2", VectorMatrixFactory.newIVector3(5, 0, 0), 270, node);
+    }
 
     // Set light source
     lightSource.setPosition(VectorMatrixFactory.newIVector3(0, 30, 0));
-    //lightSource.setDirection(VectorMatrixFactory.newIVector3(0, 0,1));
     lightSource.setColor(VectorMatrixFactory.newIVector3(1,1,1));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
+    getCgRootNode().setUseBlending(true);
+    //AnimationTimer.getInstance().startTimer(200);
   }
 
-  private void loadRoom() {
-    ITriangleMesh mesh = loadObject("meshes/scene_room/room_01.obj");
+  private CgNode loadRoom() {
+    ITriangleMesh mesh = getObject("meshes/scene_room/room_01.obj");
     if (mesh != null) {
-      CgNode node = new CgNode(mesh, "room");
+      mesh.getMaterial().setThrowsShadow(false);
+      CgNode node = new CgNode(mesh, "Room");
       getCgRootNode().addChild(node);
+      return node;
     }
+    return null;
   }
 
-  public void loadCube() {
-    String objFilename = "meshes/cube.obj";
-    ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile(objFilename);
-    if (meshes == null) {
-      return;
-    }
-    ITriangleMesh hulk = meshes.get(0);
-    hulk.getMaterial().setThrowsShadow(true);
-    Transformation t = new Transformation();
-    t.addScale(20);
-    t.addTranslation(VectorMatrixFactory.newIVector3(0, 1.5, -0.5));
-    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    //hulk.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.9, 1.0));
-    //hulk.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.25));
-    CgNode node = new CgNode(t, "Scale");
-    node.addChild(new CgNode(hulk, "cube"));
-    getCgRootNode().addChild(node);
+  private boolean loadChair(String name, IVector3 translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_room/chair_01.obj", translate, rotation, parent);
   }
 
-  private void loadObject() {
-    String objFilename = "meshes/cow.obj";
-    ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile(objFilename);
-    if (meshes == null) {
-      return;
-    }
-    ITriangleMesh hulk = meshes.get(0);
-    hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    Transformation t = new Transformation();
-    t.addScale(25);
-    t.addTranslation(VectorMatrixFactory.newIVector3(-0.5, 0.25, 0));
-    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
-            MathHelpers.degree2radiens(270)));
-    CgNode node = new CgNode(t, "Scale");
-    node.addChild(new CgNode(hulk, "hulk"));
-    getCgRootNode().addChild(node);
+  private boolean loadTable(String name, IVector3 translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_room/table_01.obj", translate, rotation, parent);
   }
 
-  private void loadObject2() {
-    String objFilename = "meshes/cow.obj";
-    ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile(objFilename);
-    if (meshes == null) {
-      return;
+  private boolean loadObject(String name, String path, IVector3 translate, int rotation, CgNode parent) {
+    CgNode node = getCgNode(path, translate, rotation);
+    if (node != null) {
+      node.getChildNode(0).setName(name);
+      parent.addChild(node);
+      return true;
     }
-    ITriangleMesh hulk = meshes.get(0);
-    hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    Transformation t = new Transformation();
-    t.addScale(25);
-    t.addTranslation(VectorMatrixFactory.newIVector3(0.5, 0.25, 0));
-    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
-            MathHelpers.degree2radiens(90)));
-    CgNode node = new CgNode(t, "Scale2");
-    node.addChild(new CgNode(hulk, "hulk2"));
-    getCgRootNode().addChild(node);
+    return false;
   }
 
-  private void loadObject3() {
-    String objFilename = "meshes/cow.obj";
-    ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile(objFilename);
-    if (meshes == null) {
-      return;
+  private CgNode getCgNode(String meshPath, IVector3 translate, int rotation) {
+    ITriangleMesh mesh = getObject(meshPath);
+    if (mesh != null) {
+      mesh.getMaterial().setThrowsShadow(true);
+      Transformation t = new Transformation();
+      if (translate != null) {
+        t.addTranslation(translate);
+      }
+      if (rotation != 0) {
+        t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
+                MathHelpers.degree2radiens(rotation)));
+      }
+      CgNode transformation = new CgNode(t, "Transformation");
+      transformation.addChild(new CgNode(mesh, "Mesh"));
+      return transformation;
     }
-    ITriangleMesh hulk = meshes.get(0);
-    hulk.getMaterial().setThrowsShadow(true);
-    hulk.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    Transformation t = new Transformation();
-    t.addScale(20);
-    t.addTranslation(VectorMatrixFactory.newIVector3(0, 0.25, 0));
-    t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
-            MathHelpers.degree2radiens(135)));
-    CgNode node = new CgNode(t, "Scale2");
-    node.addChild(new CgNode(hulk, "hulk2"));
-    getCgRootNode().addChild(node);
+    return null;
   }
 
-  public void loadHulk() {
-    String objFilename = "meshes/hulk/Hulk.obj";
-    ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile(objFilename);
-    if (meshes == null) {
-      return;
-    }
-    ITriangleMesh hulk = meshes.get(0);
-    hulk.getMaterial().setThrowsShadow(true);
-    //hulk.getMaterial().setShaderId(Material.SHADER_TEXTURE);
-    Transformation t = new Transformation();
-    t.addScale(.1);
-    // t.addTranslation(VectorMatrixFactory.newIVector3(0, 0, -3.5));
-    CgNode node = new CgNode(t, "Scale");
-    node.addChild(new CgNode(hulk, "hulk"));
-    getCgRootNode().addChild(node);
-  }
-
-  private ITriangleMesh loadObject(String file) {
+  private ITriangleMesh getObject(String file) {
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile(file);
     if (meshes == null) {
@@ -174,15 +117,16 @@ public class ShadowVolumeDemo extends CgApplication {
     }
     ITriangleMesh mesh = meshes.get(0);
     mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+    mesh.getMaterial().setTransparency(1);
     return mesh;
   }
 
   @Override
   public void update(Observable o, Object arg) {
     if (o instanceof AnimationTimer) {
-    //  lightSource
-    //      .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
-    //  alpha += 0.05;
+      lightSource
+          .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
+      alpha += 0.05;
     }
   }
 
