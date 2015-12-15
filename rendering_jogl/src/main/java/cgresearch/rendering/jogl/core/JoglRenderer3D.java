@@ -456,12 +456,12 @@ public class JoglRenderer3D implements Observer {
     for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
       LightSource light = rootNode.getLight(i);
 
-      if (!useTwoSidedStencil) {
-        // Create a copy of the current light.
-        // This step is required if an animation is moving the current light
-        // source while drawing the shadows.
-        light = light.copy();
-      }
+//      if (!useTwoSidedStencil) {
+//        // Create a copy of the current light.
+//        // This step is required if an animation is moving the current light
+//        // source while drawing the shadows.
+//        light = light.copy();
+//      }
 
       drawShadowVolumes(gl, light, i);
 
@@ -735,6 +735,10 @@ public class JoglRenderer3D implements Observer {
       updateNearPlaneInformation(gl);
       cameraPositionChanged = true;
       updateExtrinsicCameraParametersRequired = false;
+    }
+    // if animations are used, we can't use this tweak
+    if (AnimationTimer.getInstance().isRunning()) {
+      cameraPositionChanged = true;
     }
   }
 
