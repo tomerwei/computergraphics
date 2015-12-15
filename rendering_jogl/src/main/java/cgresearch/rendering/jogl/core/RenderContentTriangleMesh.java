@@ -454,7 +454,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
     gl.glEnd();
 
     if (zFailRequired) {
-      //gl.glDepthFunc(GL.GL_NEVER);
+      gl.glDepthFunc(GL.GL_NEVER);
       gl.glBegin(GL.GL_TRIANGLES);
       for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
         ITriangle t = triangleMesh.getTriangle(i);
@@ -473,7 +473,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
         }
       }
       gl.glEnd();
-      //gl.glDepthFunc(GL.GL_LESS);
+      gl.glDepthFunc(GL.GL_LESS);
     }
   }
 
