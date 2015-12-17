@@ -19,7 +19,6 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
-import cgresearch.graphics.scenegraph.CoordinateSystem;
 import smarthomevis.groundplan.config.GPDataType;
 import smarthomevis.groundplan.config.GPLine;
 
@@ -68,7 +67,6 @@ public class GPRenderer
 	return rootNode;
 	}
 	
-
 	private CgRootNode renderScaled3DMeshViewOfLayer(CgRootNode rootNode,
 		String layerName, List<GPLine> lineList, double scale)
 	{
@@ -111,13 +109,15 @@ public class GPRenderer
 		double scale)
 	{
 	IVector3 start = l.getScaledStart(scale);
+	System.out.println("StartPoint: " + start.toString(3));
 	IVector3 end = l.getScaledEnd(scale);
+	System.out.println("EndPoint: " + end.toString(3));
 	
 	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWallTopHeight());
+		start.get(2) + this.data.getScaledWallTopHeight());
 		
 	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWallTopHeight());
+		end.get(2) + this.data.getScaledWallTopHeight());
 		
 	int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
 	int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
@@ -142,10 +142,10 @@ public class GPRenderer
 	IVector3 end = l.getScaledEnd(scale);
 	
 	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWallTopHeight());
+		start.get(2) + this.data.getScaledWallTopHeight());
 		
 	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWallTopHeight());
+		end.get(2) + this.data.getScaledWallTopHeight());
 		
 	int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
 	int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
@@ -154,14 +154,14 @@ public class GPRenderer
 	
 	// Die oberen und unteren Ortsvektoren des Fensters erzeugen
 	IVector3 bottomWindowStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWindowBottomHeight());
+		start.get(2) + this.data.getScaledWindowBottomHeight());
 	IVector3 bottomWindowEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWindowBottomHeight());
+		end.get(2) + this.data.getScaledWindowBottomHeight());
 		
 	IVector3 topWindowStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWindowTopHeight());
+		start.get(2) + this.data.getScaledWindowTopHeight());
 	IVector3 topWindowEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWindowTopHeight());
+		end.get(2) + this.data.getScaledWindowTopHeight());
 		
 	int windowBottomStartIndex = mesh.addVertex(new Vertex(bottomWindowStart));
 	int windowBottomEndIndex = mesh.addVertex(new Vertex(bottomWindowEnd));
@@ -193,15 +193,15 @@ public class GPRenderer
 	
 	// Die oberen Ortsvektoren der Wand erzeugen
 	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWallTopHeight());
+		start.get(2) + this.data.getScaledWallTopHeight());
 	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWallTopHeight());
+		end.get(2) + this.data.getScaledWallTopHeight());
 		
 	// Die Ortsvektoren der Tuer erzeugen
 	IVector3 doorStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getDoorTopHeight());
+		start.get(2) + this.data.getScaledDoorTopHeight());
 	IVector3 doorEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getDoorTopHeight());
+		end.get(2) + this.data.getScaledDoorTopHeight());
 		
 	int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
 	int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));

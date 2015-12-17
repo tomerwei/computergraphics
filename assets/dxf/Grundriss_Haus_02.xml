@@ -13,6 +13,9 @@
 		<door_top_height>
 			28.0
 		</door_top_height>
+		<groundplan_scaling_scalar>
+			0.01
+		</groundplan_scaling_scalar>
 	</config>
 	<layer name="Schnittkanten" type="WALL">
 	

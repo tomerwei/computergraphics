@@ -2,17 +2,20 @@
  <groundplan name="4H-HORA Projext1">
 	<config>
 		<wall_top_height>
-			100.0
+			120.0
 		</wall_top_height>
 		<window_bottom_height>
-			40.0
+			20.0
 		</window_bottom_height>
 		<window_top_height>
-			75.0
+			90.0
 		</window_top_height>
 		<door_top_height>
-			80.0
+			105.0
 		</door_top_height>
+		<groundplan_scaling_scalar>
+			0.006
+		</groundplan_scaling_scalar>
 	</config>
 	<layer name="VOM$SYSTEM$VORDEFINIERT" type="WALL">
 	

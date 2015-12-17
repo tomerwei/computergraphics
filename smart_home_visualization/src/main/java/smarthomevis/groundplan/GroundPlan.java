@@ -17,8 +17,8 @@ public class GroundPlan extends CgApplication
 	// light.setColor(new Vector3(1.0, 1.0 , -1.0));
 	// light.setPosition(new Vector3(15.0, 15.0 , 5.0));
 	// getCgRootNode().addLight(light);
-	renderTestRaum();
-	// renderProjektHORA();
+	// renderTestRaum();
+	renderProjektHORA();
 	// renderHaus02();
 	}
 	

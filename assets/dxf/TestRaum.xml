@@ -2,17 +2,21 @@
  <groundplan name="TestRaum">
 	<config>
 		<wall_top_height>
-			200.0
+			160
 		</wall_top_height>
 		<window_bottom_height>
-			80.0
+			70
 		</window_bottom_height>
 		<window_top_height>
-			150.0
+			130
 		</window_top_height>
 		<door_top_height>
-			170.0
+			140
 		</door_top_height>
+		<groundplan_scaling_scalar>
+			0.01
+		</groundplan_scaling_scalar>
+
 	</config>
 	<layer name="WALLS" type="WALL">
 	

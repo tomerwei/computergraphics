@@ -12,7 +12,7 @@ import java.util.Map.Entry;
  * zu rendernden Grundrisses.
  * 
  * @author Leonard Opitz
- *		
+ * 		
  */
 public class GPDataType implements Serializable
 {
@@ -62,6 +62,26 @@ public class GPDataType implements Serializable
 	public synchronized double getDoorTopHeight()
 	{
 	return door_top_height;
+	}
+	
+	public synchronized double getScaledWallTopHeight()
+	{
+	return scaling_scalar * wall_top_height;
+	}
+	
+	public synchronized double getScaledWindowBottomHeight()
+	{
+	return scaling_scalar * window_bottom_height;
+	}
+	
+	public synchronized double getScaledWindowTopHeight()
+	{
+	return scaling_scalar * window_top_height;
+	}
+	
+	public synchronized double getScaledDoorTopHeight()
+	{
+	return scaling_scalar * door_top_height;
 	}
 	
 	public synchronized double getScalingScalar()
