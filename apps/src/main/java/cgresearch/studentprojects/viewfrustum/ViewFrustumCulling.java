@@ -20,6 +20,7 @@ import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTools;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
@@ -63,8 +64,14 @@ public class ViewFrustumCulling {
    * 
    * @param cam
    *          Kamera
+   * @param nearDistance
+   *          Distanz der nahen Ebene zur Kamera, ausgehend vom Augpunkt (0,0,5)
+   * @param farDistance
+   *          Distanz der fernen Ebene zur Kamera, ausgehend vom Augpunkt (0,0,5)
+   *          merke: die nahe Ebene ist immer hinter und dichter als die ferne Ebene, nearDistance 
+   *          muss also immer kleiner sein als farDistance
    */
-  public ViewFrustumCulling(Camera cam) {
+  public ViewFrustumCulling(Camera cam, double nearDistance, double farDistance) {
     super();
     this.eye = cam.getEye();
     this.angle = cam.getOpeningAngle();
@@ -75,8 +82,10 @@ public class ViewFrustumCulling {
     frustum = new Plane[6];
     cornerPoints = new Vector3[8];
 
-    calcPlanesOfFrustum(-8.8, -4.9, 1.0); // is in view frustum
-//    calcPlanesOfFrustum(1, 3, 0.1); // is not in view frustum
+    //dritter Parameter beeinflusst die Breite des Frustums
+//    calcPlanesOfFrustum(-8.0, -3.0, 1.0); //
+//    calcPlanesOfFrustum(3.0, -1.0, 1.0); // 
+    calcPlanesOfFrustum(nearDistance, farDistance, 1.0); //
 
   }
 
@@ -210,82 +219,117 @@ public class ViewFrustumCulling {
     farCenter = this.eye.subtract(this.refPoint.multiply(farDistance));
 
     // Berechne Breite und Hoehe der nahen und fernen Ebene
-    nearHeight = 2 * Math.tan(this.angle / 2) * nearDistance;
-    farHeight = 2 * Math.tan(this.angle / 2) * farDistance;
+    // Sonderfall, vertausche die Hoehen
+    if(Math.abs(nearDistance) > Math.abs(farDistance) && !(nearDistance >0 && farDistance>0 ||  nearDistance <0 && farDistance<0)){
+        farHeight = 2 * Math.tan(this.angle / 2) * nearDistance;
+        nearHeight = 2 * Math.tan(this.angle / 2) * farDistance;
+    }
+    else{
+        nearHeight = 2 * Math.tan(this.angle / 2) * nearDistance;
+        farHeight = 2 * Math.tan(this.angle / 2) * farDistance;
+    }
     nearWidth = nearHeight * viewRatio;
     farWidth = farHeight * viewRatio;
 
     // Berechne Eckpunkte der Ebenen
+
     farBottomRight =
         farCenter.add(this.up.multiply(farHeight * 0.5).subtract(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[fbr] = farBottomRight;
-    // System.out.println("farBottomRight = " + farBottomRight);
-    farBottomLeft = farCenter.add(this.up.multiply(farHeight * 0.5).add(this.cameraRight.multiply(farWidth * 0.5)));
+    
+    farBottomLeft = 
+        farCenter.add(this.up.multiply(farHeight * 0.5).add(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[fbl] = farBottomLeft;
-    // System.out.println("farBottomLeft = " + farBottomLeft);
-    farTopRight = farCenter.subtract(this.up.multiply(farHeight * 0.5).add(this.cameraRight.multiply(farWidth * 0.5)));
+    
+    farTopRight =
+        farCenter.subtract(this.up.multiply(farHeight * 0.5).add(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[ftr] = farTopRight;
-    // System.out.println("farTopRight = " + farTopRight);
+    
     farTopLeft =
         farCenter.subtract(this.up.multiply(farHeight * 0.5).subtract(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[ftl] = farTopLeft;
-    // System.out.println("farTopLeft = " + farTopLeft);
 
+     
     nearBottomRight =
         nearCenter.add(this.up.multiply(nearHeight * 0.5).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[nbr] = nearBottomRight;
-    // System.out.println("nearBottomRight = " + nearBottomRight);
-    nearBottomLeft = nearCenter.add(this.up.multiply(nearHeight * 0.5).add(this.cameraRight.multiply(nearWidth * 0.5)));
+    
+    nearBottomLeft = 
+        nearCenter.add(this.up.multiply(nearHeight * 0.5).add(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[nbl] = nearBottomLeft;
-    // System.out.println("nearBottomLeft = " + nearBottomLeft);
+    
     nearTopRight =
         nearCenter.subtract(this.up.multiply(nearHeight * 0.5).add(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[ntr] = nearTopRight;
-    // System.out.println("nearTopRight = " + nearTopRight);
+    
     nearTopleft =
         nearCenter.subtract(this.up.multiply(nearHeight * 0.5).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[ntl] = nearTopleft;
-    // System.out.println("nearTopleft = " + nearTopleft);
+     
+     if((nearDistance > 0 && farDistance < 0) ||
+             (nearDistance < 0 && farDistance > 0)){
+         //bei negativem Vorzeichen werden top/bottom und links rechts vertauscht, rueckgaengig
+         cornerPoints[fbr]  = cornerPoints[fbr].multiply(-1.0);
+         cornerPoints[fbl]  = cornerPoints[fbl].multiply(-1.0);
+         cornerPoints[ftr]  = cornerPoints[ftr].multiply(-1.0);
+         cornerPoints[ftl]  = cornerPoints[ftl].multiply(-1.0);
+         
+         //near- und farDistance muessen aber bleiben
+         for(int i = 0; i < 4; i++){
+             double tmp  = cornerPoints[i].get(Z);
+             cornerPoints[i].set(Z, tmp * -1);
+             
+         }
+//         cornerPoints[nbr]  = cornerPoints[nbr].multiply(-1.0);
+//         cornerPoints[nbl]  = cornerPoints[nbl].multiply(-1.0);
+//         cornerPoints[ntr]  = cornerPoints[ntr].multiply(-1.0);
+//         cornerPoints[ntl]  = cornerPoints[ntl].multiply(-1.0);
+     }
+//     System.out.println("farBottomRight = " + cornerPoints[fbr]);
+//     System.out.println("farBottomLeft = " + cornerPoints[fbl]);
+//     System.out.println("farTopRight = " + cornerPoints[ftr]);
+//     System.out.println("farTopLeft = " + cornerPoints[ftl]);
+//     System.out.println("nearBottomRight = " + cornerPoints[nbr]);
+//     System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
+//     System.out.println("nearTopRight = " + cornerPoints[ntr]);
+//     System.out.println("nearTopleft = " + cornerPoints[ntl]);
 
     // Berechne Ebene
     // nah
-    nearPlane = calcPlane(nearTopRight, nearBottomRight, nearTopleft);
+    nearPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ntl]);
+    nearPlane.setNormal(nearPlane.getNormal().multiply(-1.0)); // the normals must point inwards the frustum, so they have to be inverted
     this.frustum[near] = nearPlane;
-    // System.out.println("near_plane normal = "+ near_plane.getNormal() );
+//     System.out.println("near_plane normal = "+ nearPlane.getNormal() );
 
     // fern
-    farPlane = calcPlane(farTopRight, farBottomRight, farTopLeft);
-    farPlane.setNormal(farPlane.getNormal().multiply(-1.0)); // the normals must
-                                                             // point inwards
-                                                             // the frustum, so
-                                                             // they have to be
-                                                             // inverted
+    farPlane = calcPlane(cornerPoints[ftr], cornerPoints[fbr], cornerPoints[ftl]);
+//    farPlane.setNormal(farPlane.getNormal().multiply(-1.0)); // the normals must point inwards the frustum, so they have to be inverted
     this.frustum[far] = farPlane;
-    // System.out.println("far_plane normal = "+ far_plane.getNormal() );
+//     System.out.println("far_plane normal = "+ farPlane.getNormal() );
 
     // links
-    leftPlane = calcPlane(nearTopRight, nearBottomRight, farTopRight);
-    leftPlane.setNormal(leftPlane.getNormal().multiply(-1.0));
+    leftPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ftr]);
+//    leftPlane.setNormal(leftPlane.getNormal().multiply(-1.0));
     this.frustum[left] = leftPlane;
-    // System.out.println("left_plane normal = "+ left_plane.getNormal() );
+//     System.out.println("left_plane normal = "+ leftPlane.getNormal() );
 
     // rechts
-    rightPlane = calcPlane(nearTopleft, nearBottomLeft, farTopLeft);
-    // right_plane.setNormal(right_plane.getNormal().multiply(-1.0));
+    rightPlane = calcPlane(cornerPoints[ntl], cornerPoints[nbl], cornerPoints[ftl]);
+    rightPlane.setNormal(rightPlane.getNormal().multiply(-1.0));
     this.frustum[right] = rightPlane;
-    // System.out.println("right_plane normal = "+ right_plane.getNormal() );
+//     System.out.println("right_plane normal = "+ rightPlane.getNormal() );
 
     // oben
-    topPlane = calcPlane(nearBottomRight, farBottomRight, nearBottomLeft);
-    // top_plane.setNormal(top_plane.getNormal().multiply(-1.0));
+    topPlane = calcPlane(cornerPoints[nbr], cornerPoints[fbr], cornerPoints[nbl]);
+    topPlane.setNormal(topPlane.getNormal().multiply(-1.0));
     this.frustum[top] = topPlane;
-    // System.out.println("top_plane normal = "+ top_plane.getNormal() );
+//    System.out.println("top_plane normal = "+ topPlane.getNormal() );
 
     // unten
-    bottomPlane = calcPlane(nearTopRight, farTopRight, nearTopleft);
-    bottomPlane.setNormal(bottomPlane.getNormal().multiply(-1.0));
+    bottomPlane = calcPlane(cornerPoints[ntr], cornerPoints[ftr], cornerPoints[ntl]);
+//    bottomPlane.setNormal(bottomPlane.getNormal().multiply(-1.0));
     this.frustum[bottom] = bottomPlane;
-    // System.out.println("bottom_plane normal = "+ bottom_plane.getNormal() );
+//    System.out.println("bottom_plane normal = "+ bottomPlane.getNormal() );
 
   }
 
@@ -358,7 +402,7 @@ public class ViewFrustumCulling {
       for (int j = 0; j < corner_points.length && (in == 0 || out == 0); j++) {
         // fuer jede Ecke der Bounding Box
         // pruefe, ob sie innerhalb oder au�erhalb liegt
-        if (frustum[i].computeSignedDistance(corner_points[j]) < 0) {
+        if (frustum[i].computeSignedDistance(corner_points[j]) > 0) {
           out++;
         } else {
           in++;
@@ -564,6 +608,7 @@ public class ViewFrustumCulling {
    */
   public ICgNodeContent extractNodeContent(OctreeNode<Integer> tree, ICgNodeContent content, OctreeNode<Integer> scene) {
     if(boxesIntersect(tree.getBoundingBox(), scene.getBoundingBox())){
+//        System.out.println("INTERSECT");
         ArrayList<OctreeNode<Integer>> toDraw = new ArrayList<OctreeNode<Integer>>();
         ICgNodeContent contentToDraw = null;
         checkOctree(tree,toDraw);
@@ -584,6 +629,7 @@ public class ViewFrustumCulling {
             ((ITriangleMesh) contentToDraw).computeVertexNormals();
             ((ITriangleMesh) contentToDraw).computeTriangleNormals();
             contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+            TriangleMeshTools.cleanup((ITriangleMesh)contentToDraw);
         }
 
         if (content.getClass() == PointCloud.class) {
@@ -593,8 +639,8 @@ public class ViewFrustumCulling {
                      ((PointCloud) contentToDraw).addPoint(((PointCloud) content).getPoint(toDraw.get(i).getElement(j)));
                }
              }
-            contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
         }
+        contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
         return contentToDraw;
    }
 
@@ -609,10 +655,6 @@ public class ViewFrustumCulling {
    */
   public boolean boxesIntersect(BoundingBox one, BoundingBox two){
 
-//          return (cur.getUpperRight().get(X) >= node.getLowerLeft().get(X) && cur.getLowerLeft().get(X) <= nodeUpperRight.get(X))
-//              && (cur.getUpperRight().get(Y) >= node.getLowerLeft().get(Y) && cur.getLowerLeft().get(Y) <= nodeUpperRight.get(Y))
-//              && (cur.getUpperRight().get(Z) >= node.getLowerLeft().get(Z) && cur.getLowerLeft().get(Z) <= nodeUpperRight.get(Z));
-          
           if(two.getUpperRight().get(X) < one.getLowerLeft().get(X)){ 
               return false;
           }
@@ -632,7 +674,6 @@ public class ViewFrustumCulling {
               return false;
           }
           return true;
-                
   }
 }
 
