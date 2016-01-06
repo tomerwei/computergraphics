@@ -13,8 +13,9 @@ void main (void)
     
     // Read reflection material properties from OpenGL
     vec4 reflectionAmbient = gl_FrontMaterial.ambient;
-    vec4 reflectionDiffuse = texture2D(my_color_texture, texture_coordinate); // Use texture color
+    vec4 reflectionDiffuse = gl_FrontMaterial.diffuse;
     vec4 reflectionSpecular = gl_FrontMaterial.specular;
+    vec4 textureColor = texture2D(my_color_texture, texture_coordinate);
     
     // Determine number of active lights
     int numberOfLights = 0;
@@ -26,11 +27,12 @@ void main (void)
     
     gl_FragColor = vec4(0,0,0,1);
     
-   	// Ambient color
-   	vec3 ambient;
-    ambient.x = reflectionAmbient.x;
-    ambient.y = reflectionAmbient.y;
-    ambient.z = reflectionAmbient.z;
+    // Ambient color
+    vec3 ambient;
+    float ambientFactor = 0.2;
+    ambient.x = reflectionAmbient.x * textureColor.x * ambientFactor;
+    ambient.y = reflectionAmbient.y * textureColor.y * ambientFactor;
+    ambient.z = reflectionAmbient.z * textureColor.z * ambientFactor;
     gl_FragColor.xyz += ambient;
     
     // Add diffuse and specular for each light
@@ -53,10 +55,10 @@ void main (void)
         // Diffuse
         vec3 diffuse = vec3(0,0,0);
         if ( dot( N, L ) > 0.0 ){
-            diffuse.x = reflectionDiffuse.x * gl_LightSource[i].diffuse.x;
-            diffuse.y = reflectionDiffuse.y * gl_LightSource[i].diffuse.y;
-            diffuse.z = reflectionDiffuse.z * gl_LightSource[i].diffuse.z;
-            diffuse = diffuse * dot( N, L ) / float(numberOfLights);
+            diffuse.x = reflectionDiffuse.x * gl_LightSource[i].diffuse.x * textureColor.x;
+            diffuse.y = reflectionDiffuse.y * gl_LightSource[i].diffuse.y * textureColor.y;
+            diffuse.z = reflectionDiffuse.z * gl_LightSource[i].diffuse.z * textureColor.z;
+            diffuse = diffuse * dot( N, L );// / float(numberOfLights);
         }
         
         // Specular
@@ -66,18 +68,18 @@ void main (void)
         specular.x = reflectionSpecular.x * gl_LightSource[i].specular.x;
         specular.y = reflectionSpecular.y * gl_LightSource[i].specular.y;
         specular.z = reflectionSpecular.z * gl_LightSource[i].specular.z;
-        specular = specular * pow(abs(dot(R,E)), gl_FrontMaterial.shininess) / float(numberOfLights);
+        specular = specular * pow(abs(dot(R,E)), gl_FrontMaterial.shininess);// / float(numberOfLights);
         
         if ( isSpot ){
             float distance = dot( p, gl_LightSource[i].spotDirection) - dot(gl_LightSource[i].position.xyz, gl_LightSource[i].spotDirection);
             bool isInSpot = dot(-L, normalize(gl_LightSource[i].spotDirection)) > cos(gl_LightSource[i].spotCutoff);
             if ( isInSpot && distance > 0.0 ){
-                gl_FragColor.xyz += diffuse + specular;
+                gl_FragColor.xyz += ambient + diffuse + specular;
             }
         } else if ( isDirectionalLight ){
-            gl_FragColor.xyz += diffuse + specular;
+            gl_FragColor.xyz += ambient + diffuse + specular;
         } else if (isPointLight ){
-            gl_FragColor.xyz += diffuse + specular;
+            gl_FragColor.xyz += ambient + diffuse + specular;
         }
     }
     

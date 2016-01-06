@@ -25,9 +25,10 @@ void main (void)
    
    	// Ambient color
    	vec3 ambient;
-    ambient.x = reflectionAmbient.x;
-    ambient.y = reflectionAmbient.y;
-    ambient.z = reflectionAmbient.z;
+	float ambientFactor = 0.2;
+    ambient.x = reflectionAmbient.x * ambientFactor;
+    ambient.y = reflectionAmbient.y * ambientFactor;
+    ambient.z = reflectionAmbient.z * ambientFactor;
     gl_FragColor.xyz += ambient;
    
     // Add diffuse and specular for each light
@@ -69,12 +70,12 @@ void main (void)
             float distance = dot( p, gl_LightSource[i].spotDirection) - dot(gl_LightSource[i].position.xyz, gl_LightSource[i].spotDirection);
             bool isInSpot = dot(-L, normalize(gl_LightSource[i].spotDirection)) > cos(gl_LightSource[i].spotCutoff);
             if ( isInSpot && distance > 0.0 ){
-                gl_FragColor.xyz += diffuse + specular;
+                gl_FragColor.xyz += ambient + diffuse + specular;
             }
         } else if ( isDirectionalLight ){
-            gl_FragColor.xyz += diffuse + specular;
+            gl_FragColor.xyz += ambient + diffuse + specular;
         } else if (isPointLight ){
-            gl_FragColor.xyz += diffuse + specular;
+            gl_FragColor.xyz += ambient + diffuse + specular;
         }
     }
     
