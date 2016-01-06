@@ -25,7 +25,7 @@ void main (void)
    
    	// Ambient color
    	vec3 ambient;
-	float ambientFactor = 0.2;
+	float ambientFactor = 0.5;
     ambient.x = reflectionAmbient.x * ambientFactor;
     ambient.y = reflectionAmbient.y * ambientFactor;
     ambient.z = reflectionAmbient.z * ambientFactor;
@@ -54,7 +54,7 @@ void main (void)
             diffuse.x = reflectionDiffuse.x * gl_LightSource[i].diffuse.x;
             diffuse.y = reflectionDiffuse.y * gl_LightSource[i].diffuse.y;
             diffuse.z = reflectionDiffuse.z * gl_LightSource[i].diffuse.z;
-            diffuse = diffuse * clamp( abs(dot( N, L )), 0.0, 1.0 ) / float(numberOfLights);
+            diffuse = diffuse * clamp( abs(dot( N, L )), 0.0, 1.0 );// / float(numberOfLights);
         //}
 
         // Specular
@@ -64,18 +64,18 @@ void main (void)
         specular.x = reflectionSpecular.x * gl_LightSource[i].specular.x;
         specular.y = reflectionSpecular.y * gl_LightSource[i].specular.y;
         specular.z = reflectionSpecular.z * gl_LightSource[i].specular.z;
-        specular = specular * pow(abs(dot(R,E)), gl_FrontMaterial.shininess) / float(numberOfLights);
+        specular = specular * pow(abs(dot(R,E)), gl_FrontMaterial.shininess);// / float(numberOfLights);
 
         if ( isSpot ){
             float distance = dot( p, gl_LightSource[i].spotDirection) - dot(gl_LightSource[i].position.xyz, gl_LightSource[i].spotDirection);
             bool isInSpot = dot(-L, normalize(gl_LightSource[i].spotDirection)) > cos(gl_LightSource[i].spotCutoff);
             if ( isInSpot && distance > 0.0 ){
-                gl_FragColor.xyz += ambient + diffuse + specular;
+                gl_FragColor.xyz += diffuse + specular;
             }
         } else if ( isDirectionalLight ){
-            gl_FragColor.xyz += ambient + diffuse + specular;
+            gl_FragColor.xyz +=  diffuse + specular;
         } else if (isPointLight ){
-            gl_FragColor.xyz += ambient + diffuse + specular;
+            gl_FragColor.xyz += diffuse + specular;
         }
     }
     

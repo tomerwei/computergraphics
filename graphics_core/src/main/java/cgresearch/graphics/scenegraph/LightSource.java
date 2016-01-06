@@ -83,6 +83,10 @@ public class LightSource {
   public IVector3 getDiffuseColor() {
     return color;
   }
+  
+  public IVector3 getSpecularColor() {
+    return color;
+  }
 
   public Type getType() {
     return type;
