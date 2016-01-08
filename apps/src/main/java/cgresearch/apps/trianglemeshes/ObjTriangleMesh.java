@@ -56,14 +56,14 @@ public class ObjTriangleMesh extends CgApplication {
     LightSource light = new LightSource(Type.POINT);
     light.setPosition(VectorMatrixFactory.newIVector3(5, 5, 5));
     light.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
-    light.setColor(VectorMatrixFactory.newIVector3(1, 1, 0));
+    light.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
     // light.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light);
 
     LightSource light2 = new LightSource(Type.POINT);
     light2.setPosition(VectorMatrixFactory.newIVector3(5, 5, -5));
     light2.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
-    light2.setColor(VectorMatrixFactory.newIVector3(0, 1, 0));
+    light2.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
     // light2.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light2);
   }
@@ -119,10 +119,10 @@ public class ObjTriangleMesh extends CgApplication {
       bunny.computeTriangleNormals();
       bunny.computeVertexNormals();
       bunny.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-      bunny.getMaterial().setReflectionAmbient(Material.PALETTE2_COLOR4);
+      bunny.getMaterial().setReflectionAmbient(Material.PALETTE1_COLOR2);
       // bunny.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0,
       // 0, 0));
-      bunny.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR4);
+      bunny.getMaterial().setReflectionDiffuse(Material.PALETTE1_COLOR2);
       bunny.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0.2, 0.2, 0.2));
       bunny.getMaterial().setTransparency(0.5);
       CgNode bunnyNode = new CgNode(bunny, "bunny");

@@ -39,8 +39,6 @@ public class JoglRenderer3D implements Observer {
   /**
    * Constants
    */
-  private static final double NEAR_CLIPPING_PLANE_DEFAULT = 0.1;
-  private static final double FAR_CLIPPING_PLANE_DEFAULT = 10.0;
   private static final double NEAR_CLIPPING_FACTOR = 0.1;
   private static final double FAR_CLIPPING_FACTOR = 3.0;
   private static final int SCREEN_WIDTH = 640;
@@ -53,16 +51,6 @@ public class JoglRenderer3D implements Observer {
    * Screen aspect ration
    */
   private double aspectRatio = 1;
-
-  /**
-   * Near clipping plane.
-   */
-  private double nearClippingPlane = NEAR_CLIPPING_PLANE_DEFAULT;
-
-  /**
-   * Far clipping plane.
-   */
-  private double farClippingPlane = FAR_CLIPPING_PLANE_DEFAULT;
 
   /**
    * Screenshot filename. A screenshot is saved, when this variable is not the
@@ -118,7 +106,8 @@ public class JoglRenderer3D implements Observer {
   /**
    * Render used for FPS display
    */
-  //private TextRenderer renderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18), true);
+  // private TextRenderer renderer = new TextRenderer(new Font("SansSerif",
+  // Font.PLAIN, 18), true);
 
   /**
    * Number of required light sources for plane based soft shadow
@@ -138,7 +127,7 @@ public class JoglRenderer3D implements Observer {
   /**
    * Defines whether the two sided stencil buffer is used
    */
-  //private boolean useTwoSidedStencil = false;
+  // private boolean useTwoSidedStencil = false;
 
   /**
    * Constructor.
@@ -161,11 +150,10 @@ public class JoglRenderer3D implements Observer {
     final int width = SCREEN_WIDTH;
     final int height = SCREEN_HEIGHT;
     aspectRatio = (float) width / (float) height;
-    glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, nearClippingPlane, farClippingPlane);
+    setPerspectiveProjection(gl);
 
     // Viewport
     gl.glViewport(0, 0, width, height);
-    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 
     // Depth
     gl.glEnable(GL2.GL_DEPTH_TEST);
@@ -324,11 +312,8 @@ public class JoglRenderer3D implements Observer {
   public void resize(GLAutoDrawable drawable, int w, int h) {
     GL2 gl = drawable.getGL().getGL2();
     gl.glViewport(0, 0, w, h);
-    gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-    gl.glLoadIdentity();
     aspectRatio = (float) w / (float) h;
-    glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, nearClippingPlane, farClippingPlane);
-    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+    setPerspectiveProjection(gl);
     updateExtrinsicCameraParameters(drawable);
   }
 
@@ -683,7 +668,7 @@ public class JoglRenderer3D implements Observer {
     pInf.set(2, 3, -1);
     pInf.set(3, 0, 0);
     pInf.set(3, 1, 0);
-    pInf.set(3, 2, -2 * nearClippingPlane);
+    pInf.set(3, 2, -2 * Camera.getInstance().getNearClippingPlane());
     pInf.set(3, 3, 0);
 
     return pInf;
@@ -694,14 +679,23 @@ public class JoglRenderer3D implements Observer {
    */
   private void updateIntrinsicCameraParameters(GL2 gl) {
     if (updateIntrinsicCameraParametersRequired) {
-      if (gl != null) {
-        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, nearClippingPlane, farClippingPlane);
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
-      }
-      updateIntrinsicCameraParametersRequired = false;
+      setPerspectiveProjection(gl);
     }
+    updateIntrinsicCameraParametersRequired = false;
+  }
+
+  /**
+   * Set the perspective projection matrix based on the current settings.
+   */
+  public void setPerspectiveProjection(GL2 gl) {
+    if (gl == null) {
+      return;
+    }
+    gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+    gl.glLoadIdentity();
+    glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, Camera.getInstance().getNearClippingPlane(),
+        Camera.getInstance().getFarClippingPlane());
+    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
   }
 
   /**
@@ -738,16 +732,16 @@ public class JoglRenderer3D implements Observer {
     IVector3 cUp = Camera.getInstance().getUp();
     IVector3 dRef = Camera.getInstance().getRef().subtract(cPos);
     IVector3 cRight = cUp.cross(dRef).multiply(-1).getNormalized();
-    IVector3 dNear = dRef.multiply(nearClippingPlane / dRef.getNorm());
+    IVector3 dNear = dRef.multiply(Camera.getInstance().getNearClippingPlane() / dRef.getNorm());
     // Middle of the near plane
     IVector3 nearMiddle = cPos.add(dNear);
 
-    double halfHeight = Math.tan(fieldOfViewY / 2.0) * nearClippingPlane;
+    double halfHeight = Math.tan(fieldOfViewY / 2.0) * Camera.getInstance().getNearClippingPlane();
     IVector3 heightUp = cUp.multiply(halfHeight);
     IVector3 heightDown = heightUp.multiply(-1);
 
     double fieldOfViewX = 2 * Math.atan(Math.tan(fieldOfViewY * 0.5) * aspectRatio);
-    double halfWidth = Math.tan(fieldOfViewX / 2.0) * nearClippingPlane;
+    double halfWidth = Math.tan(fieldOfViewX / 2.0) * Camera.getInstance().getNearClippingPlane();
     IVector3 widthRight = cRight.multiply(halfWidth);
     IVector3 widthLeft = widthRight.multiply(-1);
 
@@ -899,8 +893,7 @@ public class JoglRenderer3D implements Observer {
   }
 
   public void setClipplingPlanes(double near, double far) {
-    nearClippingPlane = near;
-    farClippingPlane = far;
+    Camera.getInstance().setClipping(near, far);
     updateIntrinsicCameraParametersRequired = true;
   }
 

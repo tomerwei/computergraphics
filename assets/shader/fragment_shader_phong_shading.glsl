@@ -1,7 +1,7 @@
 varying vec3 N; // Normal vector
 varying vec3 p; // Surface point
 uniform vec3 camera_position; // Set in Java application
-uniform float transparency; 
+uniform float transparency; // Set in Java application
 
 /**
  * Fragment shader: Phong shading with Phong lighting model.
