@@ -11,7 +11,7 @@ import cgresearch.core.math.Vector3;
  * 
  * 
  * @author Leonard Opitz
- *		
+ * 		
  */
 public class GPLine implements Serializable
 {
@@ -66,8 +66,8 @@ public class GPLine implements Serializable
 	
 	public IVector3 getScaledEnd(double scale)
 	{
-		return new Vector3(end.get(0) * scale, end.get(1) * scale,
-				end.get(2) * scale);
+	return new Vector3(end.get(0) * scale, end.get(1) * scale,
+		end.get(2) * scale);
 	}
 	
 	public String toString()
@@ -81,4 +81,14 @@ public class GPLine implements Serializable
 		WALL, DOOR, WINDOW;
 	}
 	
+	public GPLine clone()
+	{
+	GPLine gpLine = new GPLine(new String(name),
+		new Vector3(new Double(start.get(0)), new Double(start.get(1)),
+			new Double(start.get(2))),
+		new Vector3(new Double(end.get(0)), new Double(end.get(1)),
+			new Double(end.get(2))));
+	gpLine.setLineType(lineType);
+	return gpLine;
+	}
 }
