@@ -6,7 +6,6 @@
 
 package cgresearch.rendering.jogl.core;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.fixedfunc.GLPointerFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.GLReadBufferUtil;
-import com.jogamp.opengl.util.awt.TextRenderer;
 
 /**
  * Implements the 3D rendering functionality.
@@ -41,8 +39,6 @@ public class JoglRenderer3D implements Observer {
   /**
    * Constants
    */
-  private static final double NEAR_CLIPPING_PLANE_DEFAULT = 0.1;
-  private static final double FAR_CLIPPING_PLANE_DEFAULT = 10.0;
   private static final double NEAR_CLIPPING_FACTOR = 0.1;
   private static final double FAR_CLIPPING_FACTOR = 3.0;
   private static final int SCREEN_WIDTH = 640;
@@ -55,16 +51,6 @@ public class JoglRenderer3D implements Observer {
    * Screen aspect ration
    */
   private double aspectRatio = 1;
-
-  /**
-   * Near clipping plane.
-   */
-  private double nearClippingPlane = NEAR_CLIPPING_PLANE_DEFAULT;
-
-  /**
-   * Far clipping plane.
-   */
-  private double farClippingPlane = FAR_CLIPPING_PLANE_DEFAULT;
 
   /**
    * Screenshot filename. A screenshot is saved, when this variable is not the
@@ -120,7 +106,8 @@ public class JoglRenderer3D implements Observer {
   /**
    * Render used for FPS display
    */
-  private TextRenderer renderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 18), true);
+  // private TextRenderer renderer = new TextRenderer(new Font("SansSerif",
+  // Font.PLAIN, 18), true);
 
   /**
    * Number of required light sources for plane based soft shadow
@@ -140,7 +127,7 @@ public class JoglRenderer3D implements Observer {
   /**
    * Defines whether the two sided stencil buffer is used
    */
-  private boolean useTwoSidedStencil = false;
+  // private boolean useTwoSidedStencil = false;
 
   /**
    * Constructor.
@@ -163,11 +150,10 @@ public class JoglRenderer3D implements Observer {
     final int width = SCREEN_WIDTH;
     final int height = SCREEN_HEIGHT;
     aspectRatio = (float) width / (float) height;
-    glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, nearClippingPlane, farClippingPlane);
+    setPerspectiveProjection(gl);
 
     // Viewport
     gl.glViewport(0, 0, width, height);
-    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 
     // Depth
     gl.glEnable(GL2.GL_DEPTH_TEST);
@@ -270,61 +256,52 @@ public class JoglRenderer3D implements Observer {
       }
     }
 
-    float lightAmbient[] = { 1, 1, 1, 1 };
-    float lightSpecular[] = { 1, 1, 1, 1 };
     float lightPosition[] = { 1, 1, 1, 1 };
-    float lightDiffuse[] = { 1, 1, 1, 1 };
+    lightPosition[0] = (float) light.getPosition().get(0);
+    lightPosition[1] = (float) light.getPosition().get(1);
+    lightPosition[2] = (float) light.getPosition().get(2);
+    lightPosition[3] = 0;
+    float lightAmbient[] = { 0, 0, 0, 0 };
+    float lightSpecular[] = { 0, 0, 0, 0 };
+    lightSpecular[0] = (float) light.getSpecularColor().get(0);
+    lightSpecular[1] = (float) light.getSpecularColor().get(1);
+    lightSpecular[2] = (float) light.getSpecularColor().get(2);
+    lightSpecular[3] = 0;
+    float lightDiffuse[] = { 0, 0, 0, 0 };
+    lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
+    lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
+    lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
+    lightDiffuse[3] = 0;
+
     gl.glEnable(lightIndex);
+    gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
     gl.glLightfv(lightIndex, GL2.GL_AMBIENT, lightAmbient, 0);
     gl.glLightfv(lightIndex, GL2.GL_SPECULAR, lightSpecular, 0);
+    gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
+
     switch (light.getType()) {
       case DIRECTIONAL:
-        lightPosition[0] = (float) light.getPosition().get(0);
-        lightPosition[1] = (float) light.getPosition().get(1);
-        lightPosition[2] = (float) light.getPosition().get(2);
-        lightPosition[3] = 0;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
-        lightDiffuse[3] = -1;
-        gl.glEnable(lightIndex);
+        lightPosition[3] = -1;
         gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
-        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
         gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, 0);
         break;
       case POINT:
-        lightPosition[0] = (float) light.getPosition().get(0);
-        lightPosition[1] = (float) light.getPosition().get(1);
-        lightPosition[2] = (float) light.getPosition().get(2);
         lightPosition[3] = 1;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
-        lightDiffuse[3] = 1;
-        gl.glEnable(lightIndex);
         gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
-        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
         gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, 0);
         break;
       case SPOT:
-        lightPosition[0] = (float) light.getPosition().get(0);
-        lightPosition[1] = (float) light.getPosition().get(1);
-        lightPosition[2] = (float) light.getPosition().get(2);
         lightPosition[3] = 1;
-        lightDiffuse[0] = (float) light.getDiffuseColor().get(0);
-        lightDiffuse[1] = (float) light.getDiffuseColor().get(1);
-        lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
-        lightDiffuse[3] = 1;
+        gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
+
         float lightDirection[] = { 1, 1, 1, 1 };
         lightDirection[0] = (float) light.getDirection().get(0);
         lightDirection[1] = (float) light.getDirection().get(1);
         lightDirection[2] = (float) light.getDirection().get(2);
         lightDirection[3] = 1;
-        gl.glEnable(lightIndex);
-        gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
-        gl.glLightfv(lightIndex, GL2.GL_DIFFUSE, lightDiffuse, 0);
-        gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, (float) (Math.PI * light.getSpotLightAngle() / 180.0));
         gl.glLightfv(lightIndex, GL2.GL_SPOT_DIRECTION, lightDirection, 0);
+
+        gl.glLightf(lightIndex, GL2.GL_SPOT_CUTOFF, (float) (Math.PI * light.getSpotLightAngle() / 180.0));
         break;
       default:
         Logger.getInstance().error("Unsupported light type: " + light.getType());
@@ -335,11 +312,8 @@ public class JoglRenderer3D implements Observer {
   public void resize(GLAutoDrawable drawable, int w, int h) {
     GL2 gl = drawable.getGL().getGL2();
     gl.glViewport(0, 0, w, h);
-    gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-    gl.glLoadIdentity();
     aspectRatio = (float) w / (float) h;
-    glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, nearClippingPlane, farClippingPlane);
-    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+    setPerspectiveProjection(gl);
     updateExtrinsicCameraParameters(drawable);
   }
 
@@ -456,12 +430,12 @@ public class JoglRenderer3D implements Observer {
     for (int i = 0; i < rootNode.getNumberOfLights(); i++) {
       LightSource light = rootNode.getLight(i);
 
-//      if (!useTwoSidedStencil) {
-//        // Create a copy of the current light.
-//        // This step is required if an animation is moving the current light
-//        // source while drawing the shadows.
-//        light = light.copy();
-//      }
+      // if (!useTwoSidedStencil) {
+      // // Create a copy of the current light.
+      // // This step is required if an animation is moving the current light
+      // // source while drawing the shadows.
+      // light = light.copy();
+      // }
 
       drawShadowVolumes(gl, light, i);
 
@@ -694,7 +668,7 @@ public class JoglRenderer3D implements Observer {
     pInf.set(2, 3, -1);
     pInf.set(3, 0, 0);
     pInf.set(3, 1, 0);
-    pInf.set(3, 2, -2 * nearClippingPlane);
+    pInf.set(3, 2, -2 * Camera.getInstance().getNearClippingPlane());
     pInf.set(3, 3, 0);
 
     return pInf;
@@ -705,14 +679,23 @@ public class JoglRenderer3D implements Observer {
    */
   private void updateIntrinsicCameraParameters(GL2 gl) {
     if (updateIntrinsicCameraParametersRequired) {
-      if (gl != null) {
-        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, nearClippingPlane, farClippingPlane);
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
-      }
-      updateIntrinsicCameraParametersRequired = false;
+      setPerspectiveProjection(gl);
     }
+    updateIntrinsicCameraParametersRequired = false;
+  }
+
+  /**
+   * Set the perspective projection matrix based on the current settings.
+   */
+  public void setPerspectiveProjection(GL2 gl) {
+    if (gl == null) {
+      return;
+    }
+    gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+    gl.glLoadIdentity();
+    glu.gluPerspective(Camera.getInstance().getOpeningAngle(), aspectRatio, Camera.getInstance().getNearClippingPlane(),
+        Camera.getInstance().getFarClippingPlane());
+    gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
   }
 
   /**
@@ -749,16 +732,16 @@ public class JoglRenderer3D implements Observer {
     IVector3 cUp = Camera.getInstance().getUp();
     IVector3 dRef = Camera.getInstance().getRef().subtract(cPos);
     IVector3 cRight = cUp.cross(dRef).multiply(-1).getNormalized();
-    IVector3 dNear = dRef.multiply(nearClippingPlane / dRef.getNorm());
+    IVector3 dNear = dRef.multiply(Camera.getInstance().getNearClippingPlane() / dRef.getNorm());
     // Middle of the near plane
     IVector3 nearMiddle = cPos.add(dNear);
 
-    double halfHeight = Math.tan(fieldOfViewY / 2.0) * nearClippingPlane;
+    double halfHeight = Math.tan(fieldOfViewY / 2.0) * Camera.getInstance().getNearClippingPlane();
     IVector3 heightUp = cUp.multiply(halfHeight);
     IVector3 heightDown = heightUp.multiply(-1);
 
     double fieldOfViewX = 2 * Math.atan(Math.tan(fieldOfViewY * 0.5) * aspectRatio);
-    double halfWidth = Math.tan(fieldOfViewX / 2.0) * nearClippingPlane;
+    double halfWidth = Math.tan(fieldOfViewX / 2.0) * Camera.getInstance().getNearClippingPlane();
     IVector3 widthRight = cRight.multiply(halfWidth);
     IVector3 widthLeft = widthRight.multiply(-1);
 
@@ -771,48 +754,48 @@ public class JoglRenderer3D implements Observer {
     nearPlaneCorners[3] = heightDown.add(widthRight).add(nearMiddle); // lower
                                                                       // right
 
-//     IVector3[] pyramidNormals = new IVector3[5];
-//     pyramidNormals[0] = getNormal(rootNode.getLight(0).getPosition(),
-//     nearPlaneCorners[1], nearPlaneCorners[0]);
-//     pyramidNormals[1] = getNormal(rootNode.getLight(0).getPosition(),
-//     nearPlaneCorners[2], nearPlaneCorners[1]);
-//     pyramidNormals[2] = getNormal(rootNode.getLight(0).getPosition(),
-//     nearPlaneCorners[3], nearPlaneCorners[2]);
-//     pyramidNormals[3] = getNormal(rootNode.getLight(0).getPosition(),
-//     nearPlaneCorners[0], nearPlaneCorners[3]);
-//     pyramidNormals[4] = getNormal(nearPlaneCorners[0], nearPlaneCorners[2],
-//     nearPlaneCorners[1]);
-//
-//     CgGlslShader shaderTexture =
-//     ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_PHONG_SHADING);
-//     JoglShader.use(shaderTexture, gl);
-//     gl.glBegin(GL2.GL_TRIANGLES);
-//     gl.glNormal3fv(pyramidNormals[0].floatData(), 0);
-//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
-//     gl.glNormal3fv(pyramidNormals[1].floatData(), 0);
-//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
-//     gl.glNormal3fv(pyramidNormals[2].floatData(), 0);
-//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
-//     gl.glNormal3fv(pyramidNormals[3].floatData(), 0);
-//     gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
-//     gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
-//     gl.glEnd();
+    // IVector3[] pyramidNormals = new IVector3[5];
+    // pyramidNormals[0] = getNormal(rootNode.getLight(0).getPosition(),
+    // nearPlaneCorners[1], nearPlaneCorners[0]);
+    // pyramidNormals[1] = getNormal(rootNode.getLight(0).getPosition(),
+    // nearPlaneCorners[2], nearPlaneCorners[1]);
+    // pyramidNormals[2] = getNormal(rootNode.getLight(0).getPosition(),
+    // nearPlaneCorners[3], nearPlaneCorners[2]);
+    // pyramidNormals[3] = getNormal(rootNode.getLight(0).getPosition(),
+    // nearPlaneCorners[0], nearPlaneCorners[3]);
+    // pyramidNormals[4] = getNormal(nearPlaneCorners[0], nearPlaneCorners[2],
+    // nearPlaneCorners[1]);
+    //
+    // CgGlslShader shaderTexture =
+    // ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_PHONG_SHADING);
+    // JoglShader.use(shaderTexture, gl);
+    // gl.glBegin(GL2.GL_TRIANGLES);
+    // gl.glNormal3fv(pyramidNormals[0].floatData(), 0);
+    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
+    // gl.glNormal3fv(pyramidNormals[1].floatData(), 0);
+    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[1].floatData(), 0);
+    // gl.glNormal3fv(pyramidNormals[2].floatData(), 0);
+    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[2].floatData(), 0);
+    // gl.glNormal3fv(pyramidNormals[3].floatData(), 0);
+    // gl.glVertex3fv(rootNode.getLight(0).getPosition().floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[0].floatData(), 0);
+    // gl.glVertex3fv(nearPlaneCorners[3].floatData(), 0);
+    // gl.glEnd();
   }
 
-//   private IVector3 getNormal(IVector3 a, IVector3 b, IVector3 c) {
-//   IVector3 v1 = b.subtract(a);
-//   IVector3 v2 = c.subtract(a);
-//   IVector3 n = v1.cross(v2);
-//   n.normalize();
-//   return n;
-//   }
+  // private IVector3 getNormal(IVector3 a, IVector3 b, IVector3 c) {
+  // IVector3 v1 = b.subtract(a);
+  // IVector3 v2 = c.subtract(a);
+  // IVector3 n = v1.cross(v2);
+  // n.normalize();
+  // return n;
+  // }
 
   /**
    * Check if a screenshot needs to be taken, do so if yes.
@@ -910,8 +893,7 @@ public class JoglRenderer3D implements Observer {
   }
 
   public void setClipplingPlanes(double near, double far) {
-    nearClippingPlane = near;
-    farClippingPlane = far;
+    Camera.getInstance().setClipping(near, far);
     updateIntrinsicCameraParametersRequired = true;
   }
 

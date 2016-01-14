@@ -39,11 +39,10 @@ import cgresearch.graphics.scenegraph.Transformation;
 
 public class FrustumTestFrame extends CgApplication {
     
-  public static OctreeFactoryStrategyScene scene;
-
   public FrustumTestFrame(CgNode root, double nearDistance, double farDistance) {
       
       ArrayList<CgNode> objects = new ArrayList<CgNode>();
+      objects = traversalOctreeNode(root, objects);
 
     // berechne View Frustum und zeichne Ebenen
       
@@ -55,8 +54,8 @@ public class FrustumTestFrame extends CgApplication {
     
 
      //hole leafNodes
-     objects = traversalOctreeNode(root, objects);
-
+     
+     buildSceneGraph(root);
 
     // ############### Transformation fuer Testfrustum ###############
     // TriangleMeshTransformation.scale(cow, 4.5);
@@ -78,26 +77,104 @@ public class FrustumTestFrame extends CgApplication {
      }
 
      //erzeuge Octree fuer Szene und extrahiere Nodes, die im Frustum liegen
-    OctreeNode<Integer> octreeScene = createSceneOctree(objects);
-    ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
-    extractNodesOfFrustum(vfc, octreeScene, visibleNodes);
-   
-//    for(int i = 0; i < visibleNodes.size(); i++){
-//        getCgRootNode().addChild(new CgNode(visibleNodes.get(i), "octreeScene"));
-//    }
-//    getCgRootNode().addChild(new CgNode(octreeScene, "octreeScene"));
-
-    // ITriangleMesh frustum_parallel = test.getFrustumMesh(test.get_corners());
-
-    // getCgRootNode().addChild(new CgNode(frustum_parallel,
-    // "frustum_parallel"));
-
-    //fuege sichtbare Elemente der Szene hinzu
-    for(int j = 0; j < objects.size(); j++){
-        for(int k = 0; k < visibleNodes.size(); k++){
-            addVisibleElementsToScene(vfc, octrees.get(j), objects.get(j).getContent(), visibleNodes.get(k));
+    if(objects.size() > 0){
+        OctreeNode<Integer> octreeScene = createSceneOctree(objects);
+        ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
+        extractNodesOfFrustum(vfc, octreeScene, visibleNodes);
+        
+        // alles zuerst invisible setzen
+        for(int i = 0; i < objects.size(); i++){
+            objects.get(i).setVisible(false);
         }
-    }
+        
+    
+       
+    //    for(int i = 0; i < visibleNodes.size(); i++){
+    //        getCgRootNode().addChild(new CgNode(visibleNodes.get(i), "octreeScene"));
+    //    }
+    
+        // ITriangleMesh frustum_parallel = test.getFrustumMesh(test.get_corners());
+    
+        // getCgRootNode().addChild(new CgNode(frustum_parallel,
+        // "frustum_parallel"));
+    
+        //fuege sichtbare Elemente der Szene hinzu
+        for(int j = 0; j < objects.size(); j++){
+            for(int k = 0; k < visibleNodes.size(); k++){
+    //            System.out.println("HIER");
+                addVisibleElementsToScene(vfc, octrees.get(j), objects.get(j), visibleNodes.get(k));
+            }
+        }
+     }
+  }
+  
+public FrustumTestFrame(CgNode root) {
+      
+      ArrayList<CgNode> objects = new ArrayList<CgNode>();
+      objects = traversalOctreeNode(root, objects);
+
+    // berechne View Frustum und zeichne Ebenen
+      
+      ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance());
+//     ViewFrustumCulling vfc = new ViewFrustumCulling();
+//     vfc = vfc.getTest();
+    ITriangleMesh frustum = vfc.getFrustumMesh(vfc.getCorners());
+     getCgRootNode().addChild(new CgNode(frustum, "frustum"));
+    
+
+     //hole leafNodes
+     
+     buildSceneGraph(root);
+
+    // ############### Transformation fuer Testfrustum ###############
+    // TriangleMeshTransformation.scale(cow, 4.5);
+    // TriangleMeshTransformation.transform(cow,
+    // VectorMatrixFactory.newIMatrix3(Math.cos(-0.6108), 0.0,
+    // Math.sin(-0.6108), 0.0, 1.0, 0.0, -(Math.sin(-0.6108)), 0.0,
+    // Math.cos(-0.6108)));
+    // TriangleMeshTransformation.translate(cow,
+    // VectorMatrixFactory.newIVector3(1.0, 1.0, -0.9));
+    // System.out.println("BB = " + cow.getBoundingBox());
+    // ############### Transformation fuer Testfrustum ###############
+     
+     //erzeuge Octrees fuer jedes Mesh
+    ArrayList<OctreeNode<Integer>> octrees = new ArrayList<OctreeNode<Integer>>();
+     for(int i = 0; i < objects.size(); i++){
+         ITriangleMesh mesh = (ITriangleMesh) objects.get(i).getContent();
+         TriangleMeshTools.cleanup(mesh);
+         octrees.add(createMeshOctree((TriangleMesh)objects.get(i).getContent()));
+     }
+
+     //erzeuge Octree fuer Szene und extrahiere Nodes, die im Frustum liegen
+    if(objects.size() > 0){
+        OctreeNode<Integer> octreeScene = createSceneOctree(objects);
+        ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
+        extractNodesOfFrustum(vfc, octreeScene, visibleNodes);
+        
+        // alles zuerst invisible setzen
+        for(int i = 0; i < objects.size(); i++){
+            objects.get(i).setVisible(false);
+        }
+        
+    
+       
+    //    for(int i = 0; i < visibleNodes.size(); i++){
+    //        getCgRootNode().addChild(new CgNode(visibleNodes.get(i), "octreeScene"));
+    //    }
+    
+        // ITriangleMesh frustum_parallel = test.getFrustumMesh(test.get_corners());
+    
+        // getCgRootNode().addChild(new CgNode(frustum_parallel,
+        // "frustum_parallel"));
+    
+        //fuege sichtbare Elemente der Szene hinzu
+        for(int j = 0; j < objects.size(); j++){
+            for(int k = 0; k < visibleNodes.size(); k++){
+    //            System.out.println("HIER");
+                addVisibleElementsToScene(vfc, octrees.get(j), objects.get(j), visibleNodes.get(k));
+            }
+        }
+     }
   }
   
   /**
@@ -124,12 +201,35 @@ public class FrustumTestFrame extends CgApplication {
       }
     return objects;
   }
+  
+  /**
+   * einmalig den Szenegraph aufbauen
+   * @param root Wurzelknoten
+   */
+  public void buildSceneGraph(CgNode root){
+      getCgRootNode().addChild(root);
+      if(root.getNumChildren()>0){
+          for(int i = 0; i < root.getNumChildren(); i++){
+              buildSceneGraph(root.getChildNode(i));
+          }
+      }
+  }
 
-  public void addVisibleElementsToScene(ViewFrustumCulling vfc, OctreeNode<Integer> tree, ICgNodeContent content, OctreeNode<Integer> scene) {
-    ICgNodeContent visible = vfc.extractNodeContent(tree, content, scene);
-    if (visible != null) {
-        getCgRootNode().addChild(new CgNode(visible, "visible_object"));
+  public void addVisibleElementsToScene(ViewFrustumCulling vfc, OctreeNode<Integer> tree, CgNode node, OctreeNode<Integer> scene) {
+    ICgNodeContent partlyVisible = vfc.extractNodeContent(tree, node, scene);
+//    System.out.println("8");
+    if (vfc.isObjectInFrustum(node.getContent()) == 2 ) {
+        CgNode newNode = new CgNode(partlyVisible, "partyVisible_object");
+        getCgRootNode().addChild(newNode);
+//        
+//        node.setVisible(true);
+//        System.out.println("VISIBLE AUF TRUE GESETZT");
     }
+//    else{
+//        node.setVisible(false);
+//        System.out.println("VISIBLE AUF FALSE GESETZT");
+//    }
+    partlyVisible = null;
   }
   
   /**
@@ -149,9 +249,8 @@ public class FrustumTestFrame extends CgApplication {
    */
   public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
     OctreeFactoryStrategyScene octreeFactoryStrategyScene = new OctreeFactoryStrategyScene(objects);
-    scene = octreeFactoryStrategyScene;
     OctreeFactory<Integer> octreeFactoryScene = new OctreeFactory<Integer>(octreeFactoryStrategyScene);
-    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 1);
+    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 20);
     return octreeSceneRoot;
   }
 

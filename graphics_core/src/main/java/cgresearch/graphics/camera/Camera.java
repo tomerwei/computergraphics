@@ -29,6 +29,9 @@ import cgresearch.core.math.VectorMatrixFactory;
  */
 public class Camera extends Observable {
 
+  private static final double NEAR_CLIPPING_PLANE_DEFAULT = 0.1;
+  private static final double FAR_CLIPPING_PLANE_DEFAULT = 10.0;
+
   /**
    * Constants
    */
@@ -56,6 +59,16 @@ public class Camera extends Observable {
   private IVector3 up;
 
   /**
+   * Near clipping plane.
+   */
+  private double nearClippingPlane = NEAR_CLIPPING_PLANE_DEFAULT;
+
+  /**
+   * Far clipping plane.
+   */
+  private double farClippingPlane = FAR_CLIPPING_PLANE_DEFAULT;
+
+  /**
    * Singleton instance.
    */
   private static Camera instance = null;
@@ -64,10 +77,7 @@ public class Camera extends Observable {
    * Possible camera controllers.
    */
   public enum ControllerType {
-    INSPECTION,
-    MOVEABLE_INSPECTION,
-    CAMERA_PATH,
-    FIRST_PERSON
+    INSPECTION, MOVEABLE_INSPECTION, CAMERA_PATH, FIRST_PERSON
   };
 
   /**
@@ -79,20 +89,17 @@ public class Camera extends Observable {
   /**
    * The controller is implemented using the strategy pattern.
    */
-  private Map<ControllerType, CameraController> controller =
-      new HashMap<ControllerType, CameraController>();
+  private Map<ControllerType, CameraController> controller = new HashMap<ControllerType, CameraController>();
 
   /**
    * Currently selected controller.
    */
-  private ControllerType currentControllerType =
-      ControllerType.INSPECTION;
+  private ControllerType currentControllerType = ControllerType.INSPECTION;
 
   /**
    * Interpolator for a camera path.
    */
-  private CameraPathInterpolator cameraPath =
-      new CameraPathInterpolator();
+  private CameraPathInterpolator cameraPath = new CameraPathInterpolator();
 
   /**
    * Set this flag to true if the camera should center the complete scene.
@@ -111,8 +118,7 @@ public class Camera extends Observable {
     notifyObservers();
   }
 
-  public void registerController(ControllerType type,
-      CameraController controlle) {
+  public void registerController(ControllerType type, CameraController controlle) {
     controller.put(type, controlle);
   }
 
@@ -196,8 +202,7 @@ public class Camera extends Observable {
    */
   public void translateVertically(double distance) {
     // up/down
-    IVector3 movement =
-        up.getNormalized().multiply(distance);
+    IVector3 movement = up.getNormalized().multiply(distance);
 
     // apply translation
     setRef(ref.add(movement));
@@ -212,9 +217,7 @@ public class Camera extends Observable {
   public void translateHorizontally(double distance) {
     // left/right
     IVector3 direction = eye.subtract(ref);
-    IVector3 movement =
-        direction.cross(up).getNormalized()
-            .multiply(distance);
+    IVector3 movement = direction.cross(up).getNormalized().multiply(distance);
 
     // apply translation
     setRef(ref.add(movement));
@@ -231,13 +234,9 @@ public class Camera extends Observable {
     oldDirection = oldDirection.multiply(1.0 / length);
 
     // Apply rotation
-    IMatrix3 rotationMatrix =
-        VectorMatrixFactory.getRotationMatrix(up, angle);
-    IVector3 newDirection =
-        rotationMatrix.multiply(oldDirection)
-            .getNormalized();
-    IVector3 newEye =
-        ref.add(newDirection.multiply(length));
+    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
+    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    IVector3 newEye = ref.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setEye(newEye);
@@ -256,18 +255,13 @@ public class Camera extends Observable {
     IVector3 axis = oldDirection.cross(up).getNormalized();
 
     // Apply rotation
-    IMatrix3 rotationMatrix =
-        VectorMatrixFactory.getRotationMatrix(axis, angle);
-    IVector3 newDirection =
-        rotationMatrix.multiply(oldDirection)
-            .getNormalized();
-    IVector3 newEye =
-        ref.add(newDirection.multiply(length));
+    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
+    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    IVector3 newEye = ref.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setEye(newEye);
-    setUp(VectorMatrixFactory.newIVector3(
-        axis.cross(newDirection)).getNormalized());
+    setUp(VectorMatrixFactory.newIVector3(axis.cross(newDirection)).getNormalized());
   }
 
   /**
@@ -280,13 +274,9 @@ public class Camera extends Observable {
     oldDirection = oldDirection.multiply(1.0 / length);
 
     // Apply rotation
-    IMatrix3 rotationMatrix =
-        VectorMatrixFactory.getRotationMatrix(up, angle);
-    IVector3 newDirection =
-        rotationMatrix.multiply(oldDirection)
-            .getNormalized();
-    IVector3 newRef =
-        eye.add(newDirection.multiply(length));
+    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
+    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    IVector3 newRef = eye.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setRef(newRef);
@@ -305,18 +295,13 @@ public class Camera extends Observable {
     IVector3 axis = oldDirection.cross(up).getNormalized();
 
     // Apply rotation
-    IMatrix3 rotationMatrix =
-        VectorMatrixFactory.getRotationMatrix(axis, angle);
-    IVector3 newDirection =
-        rotationMatrix.multiply(oldDirection)
-            .getNormalized();
-    IVector3 newRef =
-        eye.add(newDirection.multiply(length));
+    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
+    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    IVector3 newRef = eye.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setRef(newRef);
-    setUp(VectorMatrixFactory.newIVector3(
-        axis.cross(newDirection)).getNormalized());
+    setUp(VectorMatrixFactory.newIVector3(axis.cross(newDirection)).getNormalized());
   }
 
   /**
@@ -326,11 +311,9 @@ public class Camera extends Observable {
    */
   public void zoom(double d) {
     if (d > 0) {
-      setEye(eye.add(ref.subtract(eye)
-          .multiply(ZOOM_FACTOR)));
+      setEye(eye.add(ref.subtract(eye).multiply(ZOOM_FACTOR)));
     } else if (d < 0) {
-      setEye(eye.subtract(ref.subtract(eye).multiply(
-          ZOOM_FACTOR)));
+      setEye(eye.subtract(ref.subtract(eye).multiply(ZOOM_FACTOR)));
     }
   }
 
@@ -351,8 +334,7 @@ public class Camera extends Observable {
   /**
    * Append a new key point at the end of the key points list.
    */
-  public void appendKeyPoint(IVector3 pos, IVector3 up,
-      IVector3 ref) {
+  public void appendKeyPoint(IVector3 pos, IVector3 up, IVector3 ref) {
     cameraPath.addKeyPoint(pos, up, ref);
   }
 
@@ -404,25 +386,18 @@ public class Camera extends Observable {
   public void saveCameraPathToFile(String filename) {
     ObjectOutputStream outputStream = null;
     try {
-      outputStream =
-          new ObjectOutputStream(new FileOutputStream(
-              filename));
+      outputStream = new ObjectOutputStream(new FileOutputStream(filename));
       outputStream.writeObject(cameraPath.getCameraPath());
-      Logger.getInstance().message(
-          "Successfully saved camera path to file "
-              + filename);
+      Logger.getInstance().message("Successfully saved camera path to file " + filename);
     } catch (FileNotFoundException e) {
-      Logger.getInstance().exception(
-          "Failed to writre camera path", e);
+      Logger.getInstance().exception("Failed to writre camera path", e);
     } catch (IOException e) {
-      Logger.getInstance().exception(
-          "Failed to writre camera path", e);
+      Logger.getInstance().exception("Failed to writre camera path", e);
     } finally {
       try {
         outputStream.close();
       } catch (IOException e) {
-        Logger.getInstance().exception(
-            "Failed to writre camera path", e);
+        Logger.getInstance().exception("Failed to writre camera path", e);
       }
     }
   }
@@ -433,34 +408,25 @@ public class Camera extends Observable {
   public void loadCameraPathFromFile(String filename) {
     ObjectInputStream inputStream = null;
     try {
-      inputStream =
-          new ObjectInputStream(new FileInputStream(
-              filename));
+      inputStream = new ObjectInputStream(new FileInputStream(filename));
       Object o = inputStream.readObject();
       if (o instanceof CameraPath) {
         cameraPath.setCameraPath((CameraPath) o);
       } else {
-        Logger.getInstance().error(
-            "Invalid object file for camera path import");
+        Logger.getInstance().error("Invalid object file for camera path import");
       }
-      Logger.getInstance().message(
-          "Successfully loaded camera path from file "
-              + filename);
+      Logger.getInstance().message("Successfully loaded camera path from file " + filename);
     } catch (FileNotFoundException e) {
-      Logger.getInstance().exception(
-          "Failed to writre camera path", e);
+      Logger.getInstance().exception("Failed to writre camera path", e);
     } catch (IOException e) {
-      Logger.getInstance().exception(
-          "Failed to writre camera path", e);
+      Logger.getInstance().exception("Failed to writre camera path", e);
     } catch (ClassNotFoundException e) {
-      Logger.getInstance().exception(
-          "Failed to writre camera path", e);
+      Logger.getInstance().exception("Failed to writre camera path", e);
     } finally {
       try {
         inputStream.close();
       } catch (IOException e) {
-        Logger.getInstance().exception(
-            "Failed to writre camera path", e);
+        Logger.getInstance().exception("Failed to writre camera path", e);
       }
     }
   }
@@ -493,5 +459,18 @@ public class Camera extends Observable {
    */
   public double getOpeningAngle() {
     return openingAngle;
+  }
+
+  public double getNearClippingPlane() {
+    return nearClippingPlane;
+  }
+
+  public double getFarClippingPlane() {
+    return farClippingPlane;
+  }
+
+  public void setClipping(double near, double far) {
+    nearClippingPlane = near;
+    farClippingPlane = far;
   }
 }

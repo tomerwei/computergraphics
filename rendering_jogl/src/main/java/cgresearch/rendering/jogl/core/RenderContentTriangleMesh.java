@@ -330,12 +330,12 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
 
       if (zFailRequired) {
-        gl.glActiveStencilFaceEXT(GL.GL_BACK);
+        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
         gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR_WRAP, GL.GL_KEEP);
         gl.glStencilMask(~0);
         gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
 
-        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
+        gl.glActiveStencilFaceEXT(GL.GL_BACK);
         gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR_WRAP, GL.GL_KEEP);
         gl.glStencilMask(~0);
         gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
@@ -454,7 +454,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
     gl.glEnd();
 
     if (zFailRequired) {
-      gl.glDepthFunc(GL.GL_NEVER);
+      //gl.glDepthFunc(GL.GL_NEVER);
       gl.glBegin(GL.GL_TRIANGLES);
       for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
         ITriangle t = triangleMesh.getTriangle(i);
@@ -473,7 +473,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
         }
       }
       gl.glEnd();
-      gl.glDepthFunc(GL.GL_LESS);
+      //gl.glDepthFunc(GL.GL_LESS);
     }
   }
 
