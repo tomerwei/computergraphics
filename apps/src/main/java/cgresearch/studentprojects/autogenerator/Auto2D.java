@@ -4,6 +4,8 @@ import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
 
 public class Auto2D {
+	
+	private final int carVektor = 28;
 
 	private Chassis2D chassis;
 	private Front2D front;

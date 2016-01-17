@@ -47,14 +47,15 @@ import cgresearch.ui.IApplicationControllerGui;
 
 public class GeneratorGUI2D extends IApplicationControllerGui implements ActionListener {
 
-	/**
-	 * 
-	 */
+	private final int carVektor = 18;
+	private final int skalar = 7;
+
 	private static final long serialVersionUID = 1L;
 
 	ITriangleMesh triangleMesh = new TriangleMesh();
 	Analyzer analyzer = new Analyzer();
 	Data2D data = new Data2D();
+	Data2D18 data18 = new Data2D18();
 
 	JPanel size = new JPanel(new GridLayout(0, 1));
 	TitledBorder sizeBorder = BorderFactory.createTitledBorder("Abmessungen");
@@ -535,7 +536,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			}
 
 		});
-//		add(serialize);
+		// add(serialize);
 
 		JButton deserialize = new JButton("Deserialisieren");
 		deserialize.addActionListener(new ActionListener() {
@@ -892,11 +893,91 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		}
 		this.data = null;
 		this.data = d;
-		System.out.println(this.data.getX().get(0).get(0) + "/" + this.data.getY().get(0).get(0) + "/"
-				+ this.data.getZ().get(0).get(0));
-		System.out.println("Size " + this.data.getX().size());
-		System.out.println("Size " + this.data.getY().size());
-		System.out.println("Size " + this.data.getZ().size());
+		// System.out.println(this.data.getX().get(0).get(0) + "/" +
+		// this.data.getY().get(0).get(0) + "/"
+		// + this.data.getZ().get(0).get(0));
+		// System.out.println("Size " + this.data.getX().size());
+		// System.out.println("Size " + this.data.getY().size());
+		// System.out.println("Size " + this.data.getZ().size());
+
+		IVector newX = new Vector(carVektor);
+		IVector newY = new Vector(carVektor);
+		IVector newZ = new Vector(carVektor);
+
+		for (IVector iv : data.getX()) {
+			newX = null;
+			newX = new Vector(carVektor);
+			newX.set(0, iv.get(0));
+			newX.set(1, iv.get(1));
+			newX.set(2, iv.get(2));
+			newX.set(3, iv.get(4));
+			newX.set(4, iv.get(5));
+			newX.set(5, iv.get(7));
+			newX.set(6, iv.get(8));
+			newX.set(7, iv.get(10));
+			newX.set(8, iv.get(12));
+			newX.set(9, iv.get(13));
+			newX.set(10, iv.get(15));
+			newX.set(11, iv.get(16));
+			newX.set(12, iv.get(18));
+			newX.set(13, iv.get(19));
+			newX.set(14, iv.get(21));
+			newX.set(15, iv.get(22));
+			newX.set(16, iv.get(24));
+			newX.set(17, iv.get(26));
+
+			data18.getX().add(newX);
+		}
+
+		for (IVector iv : data.getY()) {
+			newY = null;
+			newY = new Vector(carVektor);
+			newY.set(0, iv.get(0));
+			newY.set(1, iv.get(1));
+			newY.set(2, iv.get(2));
+			newY.set(3, iv.get(4));
+			newY.set(4, iv.get(5));
+			newY.set(5, iv.get(7));
+			newY.set(6, iv.get(8));
+			newY.set(7, iv.get(10));
+			newY.set(8, iv.get(12));
+			newY.set(9, iv.get(13));
+			newY.set(10, iv.get(15));
+			newY.set(11, iv.get(16));
+			newY.set(12, iv.get(18));
+			newY.set(13, iv.get(19));
+			newY.set(14, iv.get(21));
+			newY.set(15, iv.get(22));
+			newY.set(16, iv.get(24));
+			newY.set(17, iv.get(26));
+
+			data18.getY().add(newY);
+		}
+
+		for (IVector iv : data.getZ()) {
+			newZ = null;
+			newZ = new Vector(carVektor);
+			newZ.set(0, iv.get(0));
+			newZ.set(1, iv.get(1));
+			newZ.set(2, iv.get(2));
+			newZ.set(3, iv.get(4));
+			newZ.set(4, iv.get(5));
+			newZ.set(5, iv.get(7));
+			newZ.set(6, iv.get(8));
+			newZ.set(7, iv.get(10));
+			newZ.set(8, iv.get(12));
+			newZ.set(9, iv.get(13));
+			newZ.set(10, iv.get(15));
+			newZ.set(11, iv.get(16));
+			newZ.set(12, iv.get(18));
+			newZ.set(13, iv.get(19));
+			newZ.set(14, iv.get(21));
+			newZ.set(15, iv.get(22));
+			newZ.set(16, iv.get(24));
+			newZ.set(17, iv.get(26));
+
+			data18.getZ().add(newZ);
+		}
 
 		fromData.setEnabled(true);
 
@@ -904,58 +985,68 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void generateFromData() {
 
-		int autozahl = 5; //5
-		Car car = new Car(this.data.getX().get(autozahl), this.data.getY().get(autozahl),
-				this.data.getZ().get(autozahl));
+		int autozahl = 3;
+		Car car = new Car(this.data18.getX().get(autozahl), this.data18.getY().get(autozahl),
+				this.data18.getZ().get(autozahl));
 
 		// EigenAuto
 
-		// IVector x = new Vector(10);
-		// IVector y = new Vector(10);
+		// Reduziert
 
-		IVector x = new Vector(28);
-		IVector y = new Vector(28);
+		IVector x = new Vector(skalar);
+		IVector y = new Vector(skalar);
 
-		IVector xc = new Vector(28);
-		IVector yc = new Vector(28);
+		// Nicht reduziert
 
-		for (int i = 0; i < 28; i++) {
+		// IVector x = new Vector(carVektor);
+		// IVector y = new Vector(carVektor);
+
+		IVector xc = new Vector(carVektor);
+		IVector yc = new Vector(carVektor);
+
+		for (int i = 0; i < carVektor; i++) {
 			xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
 			yc.set(i, car.getY().get(i) - analyzer.getPcaY().getCentroid().get(i));
 		}
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < skalar; i++) {
 
 			double xx = 0;
 			double yy = 0;
 
-			for (int j = 0; j < 28; j++) {
+			for (int j = 0; j < carVektor; j++) {
 				xx += analyzer.getBtx().get(j).get(i) * xc.get(j);
 				yy += analyzer.getBty().get(j).get(i) * yc.get(j);
 			}
 
 			x.set(i, xx);
 			y.set(i, yy);
+
+			System.out.println("Alpha x " + i + ": " + x.get(i));
 		}
 
-		for (int i = 10; i < 28; i++) {
-			x.set(i, 0);
-			y.set(i, 0);
-		}
+		System.out.println();
+
+		// Nicht reduziert
+
+		// for (int i = skalar; i < carVektor; i++) {
+		// x.set(i, 0);
+		// y.set(i, 0);
+		// }
 
 		// Eigen Auto new
 
-		IVector xn = new Vector(28);
-		IVector yn = new Vector(28);
+		IVector xn = new Vector(carVektor);
+		IVector yn = new Vector(carVektor);
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 			double xx = 0;
 			double yy = 0;
 
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < skalar; j++) {
 
-				xx += analyzer.getEigenX().get(27 - j).get(i) * x.get(j);
-				yy += analyzer.getEigenY().get(27 - j).get(i) * y.get(j);
+				xx += analyzer.getEigenX().get(carVektor - 1 - j).get(i) * x.get(j);
+				yy += analyzer.getEigenY().get(carVektor - 1 - j).get(i) * y.get(j);
 			}
 
 			xn.set(i, xx);
@@ -964,27 +1055,43 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		// New Auto
 
-		IVector ax = new Vector(28);
-		IVector ay = new Vector(28);
-		IVector az = new Vector(28);
+		IVector ax = new Vector(carVektor);
+		IVector ay = new Vector(carVektor);
+		IVector az = new Vector(carVektor);
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 			double xx = 0;
 			double yy = 0;
 
-			for (int j = 0; j < 28; j++) {
-				// xx += analyzer.getBx().get(j).get(i) * xn.get(j);
-				// yy += analyzer.getBy().get(j).get(i) * yn.get(j);
+			// Nicht reduziert
+
+			// for (int j = 0; j < carVektor; j++) {
+
+			// Reduziert
+
+			for (int j = 0; j < skalar; j++) {
+
+				// New Auto
+
+//				 xx += analyzer.getBx().get(j).get(i) * xn.get(j);
+//				 yy += analyzer.getBy().get(j).get(i) * yn.get(j);
+
+				// Dasselbe Auto
 
 				xx += analyzer.getBx().get(j).get(i) * x.get(j);
 				yy += analyzer.getBy().get(j).get(i) * y.get(j);
+
+				if (i == 0) {
+					// System.out.println("Alpha x " + j + ": " + x.get(j));
+					System.out.println("Alpha y " + j + ": " + y.get(j));
+				}
 			}
 
 			ax.set(i, xx);
 			ay.set(i, yy);
 		}
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 			double xi = 0;
 			double yi = 0;
 
@@ -995,7 +1102,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			ay.set(i, yi);
 		}
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 			az.set(i, 0);
 		}
 
@@ -1006,7 +1113,6 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		int i = 1;
 		for (BezierCurve c : car.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve " + i);
-
 			father.addChild(node);
 			i++;
 		}
@@ -1033,34 +1139,34 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		List<IVector> alphasX = new ArrayList<IVector>();
 		List<IVector> alphasY = new ArrayList<IVector>();
-		IVector xs = new Vector(28);
-		IVector ys = new Vector(28);
+		IVector xs = new Vector(carVektor);
+		IVector ys = new Vector(carVektor);
 
 		for (int num = 0; num < 30; num++) {
 			Car car = new Car(this.data.getX().get(num), this.data.getY().get(num), this.data.getZ().get(num));
 
-			IVector x = new Vector(28);
-			IVector y = new Vector(28);
+			IVector x = new Vector(carVektor);
+			IVector y = new Vector(carVektor);
 
-			IVector xc = new Vector(28);
-			IVector yc = new Vector(28);
+			IVector xc = new Vector(carVektor);
+			IVector yc = new Vector(carVektor);
 
-			for (int i = 0; i < 28; i++) {
+			for (int i = 0; i < carVektor; i++) {
 				xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
 				yc.set(i, car.getY().get(i) - analyzer.getPcaY().getCentroid().get(i));
 			}
 
-			for (int i = 0; i < 28; i++) {
+			for (int i = 0; i < carVektor; i++) {
 
 				double xx = 0;
 				double yy = 0;
 
-				for (int j = 0; j < 28; j++) {
+				for (int j = 0; j < carVektor; j++) {
 					xx += analyzer.getBtx().get(j).get(i) * xc.get(j);
 					yy += analyzer.getBty().get(j).get(i) * yc.get(j);
 				}
 
-				// System.out.println(xx);
+				// System.out.println("XX: " + xx);
 
 				x.set(i, xx);
 				y.set(i, yy);
@@ -1074,34 +1180,40 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		double xxx = 0;
 		double yyy = 0;
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 
 			for (IVector v : alphasX) {
+
 				xxx += v.get(i);
+				System.out.println(v.get(i) + "+" + "     (" + xxx + ")");
 			}
 			for (IVector v : alphasY) {
 				yyy += v.get(i);
 			}
+
+			System.out.println("= " + xxx);
+
 			xxx = xxx / 30.0;
 			yyy = yyy / 30.0;
 
 			xs.set(i, xxx);
 			ys.set(i, yyy);
+
 		}
 
 		// xs und ys Mittelwerte
 
-		IVector ax = new Vector(28);
-		IVector ay = new Vector(28);
-		IVector az = new Vector(28);
+		IVector ax = new Vector(carVektor);
+		IVector ay = new Vector(carVektor);
+		IVector az = new Vector(carVektor);
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 			double xx = 0;
 			double yy = 0;
 
-			for (int j = 0; j < 28; j++) {
+			for (int j = 0; j < carVektor; j++) {
 
-				// System.out.println("Sehr klen? " + xs.get(j));
+				// System.out.println("Sehr klein? " + xs.get(j));
 
 				xx += analyzer.getBx().get(j).get(i) * xs.get(j);
 				yy += analyzer.getBy().get(j).get(i) * ys.get(j);
@@ -1111,18 +1223,21 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			ay.set(i, yy);
 		}
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 			double xi = 0;
 			double yi = 0;
 
 			xi = ax.get(i) + analyzer.getPcaX().getCentroid().get(i);
 			yi = ay.get(i) + analyzer.getPcaY().getCentroid().get(i);
 
+			// ax.set(i, analyzer.getPcaX().getCentroid().get(i));
+			// ay.set(i, analyzer.getPcaY().getCentroid().get(i));
+
 			ax.set(i, xi);
 			ay.set(i, yi);
 		}
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < carVektor; i++) {
 			az.set(i, 0);
 		}
 
@@ -1143,7 +1258,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void applyPCA() {
-		analyzer.applyPCA(data);
+		analyzer.applyPCA(data18);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

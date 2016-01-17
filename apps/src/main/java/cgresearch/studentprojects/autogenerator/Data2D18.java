@@ -1,16 +1,13 @@
 package cgresearch.studentprojects.autogenerator;
 
-import java.io.Serializable;
-
 import cgresearch.core.math.IVector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Data2D implements Serializable {
+public class Data2D18 {
 
-	private final int carVektor = 28;
-	
-	private static final long serialVersionUID = 1L;
+	private final int carVektor = 18;
+
 	private List<IVector> x = new ArrayList<IVector>();
 	private List<IVector> y = new ArrayList<IVector>();
 	private List<IVector> z = new ArrayList<IVector>();
