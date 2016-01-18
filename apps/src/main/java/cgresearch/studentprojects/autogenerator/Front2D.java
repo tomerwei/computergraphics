@@ -10,6 +10,8 @@ import cgresearch.graphics.datastructures.primitives.Line3D;
 
 public class Front2D {
 
+	private final int carVektor = 28;
+	
 	private IVector3 center;
 
 	private IVector3 A;

@@ -4,6 +4,8 @@ import cgresearch.core.math.IVector3;
 import cgresearch.graphics.datastructures.primitives.Cuboid;
 
 public class Gast extends Cuboid {
+	
+	private final int carVektor = 28;
 
 	private IVector3 center;
 	private double breite;

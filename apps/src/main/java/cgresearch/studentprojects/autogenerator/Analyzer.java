@@ -8,15 +8,18 @@ import cgresearch.core.math.Vector;
 
 public class Analyzer {
 
+	private final int carVektor = 18;
+	private final int skalar = 7;
+
 	private PCA pcaX = new PCA();
 	private PCA pcaY = new PCA();
 	private PCA pcaZ = new PCA();
 	private List<IVector> eigenX = new ArrayList<IVector>();
 	private List<IVector> eigenY = new ArrayList<IVector>();
 	private List<IVector> eigenZ = new ArrayList<IVector>();
-	private IVector valueX = new Vector(28);
-	private IVector valueY = new Vector(28);
-	private IVector valueZ = new Vector(28);
+	private IVector valueX = new Vector(carVektor);
+	private IVector valueY = new Vector(carVektor);
+	private IVector valueZ = new Vector(carVektor);
 	private List<IVector> Bx = new ArrayList<IVector>();
 	private List<IVector> By = new ArrayList<IVector>();
 	private List<IVector> Bz = new ArrayList<IVector>();
@@ -25,7 +28,8 @@ public class Analyzer {
 	private List<IVector> Btz = new ArrayList<IVector>();
 	private int dimension;
 
-	public void applyPCA(Data2D data) {
+//	 public void applyPCA(Data2D data) {
+	public void applyPCA(Data2D18 data) {
 		int i;
 		dimension = data.getX().get(0).getDimension();
 
@@ -49,15 +53,15 @@ public class Analyzer {
 		}
 
 		Bx.clear();
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < skalar; j++) {
 			Bx.add(eigenX.get(dimension - j - 1));
 		}
 		System.out.println("Bx dimension: " + Bx.size());
 
 		Btx.clear();
 		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(10);
-			for (int k = 0; k < 10; k++) {
+			IVector v = new Vector(skalar);
+			for (int k = 0; k < skalar; k++) {
 				v.set(k, Bx.get(k).get(j));
 			}
 			Btx.add(v);
@@ -87,15 +91,15 @@ public class Analyzer {
 		}
 
 		By.clear();
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < skalar; j++) {
 			By.add(eigenX.get(dimension - j - 1));
 		}
 		System.out.println("By dimension: " + By.size());
 
 		Bty.clear();
 		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(10);
-			for (int k = 0; k < 10; k++) {
+			IVector v = new Vector(skalar);
+			for (int k = 0; k < skalar; k++) {
 				v.set(k, By.get(k).get(j));
 			}
 			Bty.add(v);
@@ -125,15 +129,15 @@ public class Analyzer {
 		}
 
 		Bz.clear();
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < skalar; j++) {
 			Bz.add(eigenX.get(dimension - j - 1));
 		}
 		System.out.println("Bz dimension: " + Bz.size());
 
 		Btz.clear();
 		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(10);
-			for (int k = 0; k < 10; k++) {
+			IVector v = new Vector(skalar);
+			for (int k = 0; k < skalar; k++) {
 				v.set(k, Bz.get(k).get(j));
 			}
 			Btz.add(v);
@@ -154,51 +158,53 @@ public class Analyzer {
 		System.out.println(valueZ);
 
 		System.out.println("Bx");
-		System.out.println(Bx.get(9).get(0));
+		System.out.println(Bx.get(6).get(0));
 		System.out.println("Btx");
-		System.out.println(Btx.get(0).get(9));
+		System.out.println(Btx.get(0).get(6));
 		System.out.println("By");
-		System.out.println(By.get(9).get(0));
+		System.out.println(By.get(6).get(0));
 		System.out.println("Bty");
-		System.out.println(Bty.get(0).get(9));
+		System.out.println(Bty.get(0).get(6));
 
 		Bx.clear();
-		for (int j = 0; j < 28; j++) {
+		for (int j = 0; j < carVektor; j++) {
 			Bx.add(eigenX.get(dimension - j - 1));
 		}
 		By.clear();
-		for (int j = 0; j < 28; j++) {
+		for (int j = 0; j < carVektor; j++) {
 			By.add(eigenY.get(dimension - j - 1));
 		}
 		Bz.clear();
-		for (int j = 0; j < 28; j++) {
+		for (int j = 0; j < carVektor; j++) {
 			Bz.add(eigenZ.get(dimension - j - 1));
 		}
 
-		Btx.clear();
-		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(28);
-			for (int k = 0; k < 28; k++) {
-				v.set(k, Bx.get(k).get(j));
-			}
-			Btx.add(v);
-		}
-		Bty.clear();
-		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(28);
-			for (int k = 0; k < 28; k++) {
-				v.set(k, By.get(k).get(j));
-			}
-			Bty.add(v);
-		}
-		Btz.clear();
-		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(28);
-			for (int k = 0; k < 28; k++) {
-				v.set(k, Bz.get(k).get(j));
-			}
-			Btz.add(v);
-		}
+		// Einkommentieren wenn nicht reduziert
+
+//		 Btx.clear();
+//		 for (int j = 0; j < dimension; j++) {
+//		 IVector v = new Vector(carVektor);
+//		 for (int k = 0; k < carVektor; k++) {
+//		 v.set(k, Bx.get(k).get(j));
+//		 }
+//		 Btx.add(v);
+//		 }
+//		 Bty.clear();
+//		 for (int j = 0; j < dimension; j++) {
+//		 IVector v = new Vector(carVektor);
+//		 for (int k = 0; k < carVektor; k++) {
+//		 v.set(k, By.get(k).get(j));
+//		 }
+//		 Bty.add(v);
+//		 }
+//		 Btz.clear();
+//		 for (int j = 0; j < dimension; j++) {
+//		 IVector v = new Vector(carVektor);
+//		 for (int k = 0; k < carVektor; k++) {
+//		 v.set(k, Bz.get(k).get(j));
+//		 }
+//		 Btz.add(v);
+//		 }
 
 		System.out.println("Bx dim: " + Bx.size());
 		System.out.println("By dim: " + By.size());

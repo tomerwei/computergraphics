@@ -9,6 +9,8 @@ import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 
 public class Gast2D {
+	
+	private final int carVektor = 28;
 
 	private IVector3 center;
 
