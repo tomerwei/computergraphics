@@ -311,14 +311,14 @@ public class ViewFrustumCulling {
 //         cornerPoints[ntr]  = cornerPoints[ntr].multiply(-1.0);
 //         cornerPoints[ntl]  = cornerPoints[ntl].multiply(-1.0);
      }
-//     System.out.println("farBottomRight = " + cornerPoints[fbr]);
-//     System.out.println("farBottomLeft = " + cornerPoints[fbl]);
-//     System.out.println("farTopRight = " + cornerPoints[ftr]);
-//     System.out.println("farTopLeft = " + cornerPoints[ftl]);
-//     System.out.println("nearBottomRight = " + cornerPoints[nbr]);
-//     System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
-//     System.out.println("nearTopRight = " + cornerPoints[ntr]);
-//     System.out.println("nearTopleft = " + cornerPoints[ntl]);
+     System.out.println("farBottomRight = " + cornerPoints[fbr]);
+     System.out.println("farBottomLeft = " + cornerPoints[fbl]);
+     System.out.println("farTopRight = " + cornerPoints[ftr]);
+     System.out.println("farTopLeft = " + cornerPoints[ftl]);
+     System.out.println("nearBottomRight = " + cornerPoints[nbr]);
+     System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
+     System.out.println("nearTopRight = " + cornerPoints[ntr]);
+     System.out.println("nearTopleft = " + cornerPoints[ntl]);
 
     // Berechne Ebene
     // nah
@@ -476,6 +476,7 @@ public class ViewFrustumCulling {
     for (int i = 0; i < corner_points.length; i++) {
       mesh.addVertex(new Vertex(corner_points[i], VectorMatrixFactory.newIVector3(1, 0, 0)));
     }
+    mesh.getMaterial().setTransparency(0.1);
     mesh.getMaterial().setRenderMode(Normals.PER_FACET);
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     mesh.computeTriangleNormals();
@@ -672,6 +673,7 @@ public class ViewFrustumCulling {
                }
              }
         }
+        contentToDraw.getMaterial().setTransparency(0.5);
         contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
         return contentToDraw;
         }

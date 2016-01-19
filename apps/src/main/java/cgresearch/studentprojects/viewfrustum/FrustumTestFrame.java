@@ -41,6 +41,7 @@ public class FrustumTestFrame extends CgApplication {
     
   public FrustumTestFrame(CgNode root, double nearDistance, double farDistance) {
       
+      getCgRootNode().setUseBlending(true);
       ArrayList<CgNode> objects = new ArrayList<CgNode>();
       objects = traversalOctreeNode(root, objects);
 
@@ -84,9 +85,10 @@ public class FrustumTestFrame extends CgApplication {
         
         // alles zuerst invisible setzen
         for(int i = 0; i < objects.size(); i++){
-            objects.get(i).setVisible(false);
+            objects.get(i).setVisible(false); //TODO hier muss eigentlich false stehen, true nur fuer Debugging
         }
         
+//        getCgRootNode().addChild(new CgNode(octreeScene, "oScene"));
     
        
     //    for(int i = 0; i < visibleNodes.size(); i++){
@@ -101,7 +103,6 @@ public class FrustumTestFrame extends CgApplication {
         //fuege sichtbare Elemente der Szene hinzu
         for(int j = 0; j < objects.size(); j++){
             for(int k = 0; k < visibleNodes.size(); k++){
-    //            System.out.println("HIER");
                 addVisibleElementsToScene(vfc, octrees.get(j), objects.get(j), visibleNodes.get(k));
             }
         }
@@ -118,8 +119,10 @@ public FrustumTestFrame(CgNode root) {
       ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance());
 //     ViewFrustumCulling vfc = new ViewFrustumCulling();
 //     vfc = vfc.getTest();
-    ITriangleMesh frustum = vfc.getFrustumMesh(vfc.getCorners());
-     getCgRootNode().addChild(new CgNode(frustum, "frustum"));
+      ITriangleMesh frustum = vfc.getFrustumMesh(vfc.getCorners());
+      frustum.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+      frustum.getMaterial().setTransparency(0.1);
+      getCgRootNode().addChild(new CgNode(frustum, "frustum"));
     
 
      //hole leafNodes
@@ -196,6 +199,7 @@ public FrustumTestFrame(CgNode root) {
       }
       else{
           if(node.getContent() != null && (node.getContent().getClass()== TriangleMesh.class || node.getContent().getClass() == PointCloud.class)){
+              node.getContent().getMaterial().setTransparency(0.5);;
               objects.add(node);
           }
       }
@@ -250,7 +254,7 @@ public FrustumTestFrame(CgNode root) {
   public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
     OctreeFactoryStrategyScene octreeFactoryStrategyScene = new OctreeFactoryStrategyScene(objects);
     OctreeFactory<Integer> octreeFactoryScene = new OctreeFactory<Integer>(octreeFactoryStrategyScene);
-    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 20);
+    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 10);
     return octreeSceneRoot;
   }
 
