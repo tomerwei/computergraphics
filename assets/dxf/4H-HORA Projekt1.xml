@@ -16,6 +16,9 @@
 		<groundplan_scaling_scalar>
 			0.006
 		</groundplan_scaling_scalar>
+		<angle_tolerance>
+			1.0
+		</angle_tolerance>
 	</config>
 	<layer name="VOM$SYSTEM$VORDEFINIERT" type="WALL">
 	

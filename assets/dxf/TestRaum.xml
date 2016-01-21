@@ -16,7 +16,9 @@
 		<groundplan_scaling_scalar>
 			0.01
 		</groundplan_scaling_scalar>
-
+		<angle_tolerance>
+			0.0001
+		</angle_tolerance>
 	</config>
 	<layer name="WALLS" type="WALL">
 	
