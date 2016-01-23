@@ -40,7 +40,9 @@ import cgresearch.graphics.scenegraph.Transformation;
 public class FrustumTestFrame extends CgApplication {
 
   public static OctreeFactoryStrategyScene scene;
-  private ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
+  private ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();  
+
+  public static final double objectsTransparency = 0.5;
 
   public FrustumTestFrame(CgNode root, double nearDistance, double farDistance) {
 
@@ -207,17 +209,17 @@ public class FrustumTestFrame extends CgApplication {
    * @return
    */
   public ArrayList<CgNode> traversalOctreeNode(CgNode node, ArrayList<CgNode> objects) {
-    if (node.getNumChildren() > 0) {
-      for (int i = 0; i < node.getNumChildren(); i++) {
-        traversalOctreeNode(node.getChildNode(i), objects);
-      }
-    } else if (node.getContent() != null
-        && (node.getContent().getClass() == TriangleMesh.class || node.getContent().getClass() == PointCloud.class)) {
-      node.getContent().getMaterial().setTransparency(0.5);
-      objects.add(node);
+      if (node.getNumChildren() > 0) {
+          for (int i = 0; i < node.getNumChildren(); i++) {
+              traversalOctreeNode(node.getChildNode(i), objects);
+          }
+      } else {
+          if(node.getContent() != null && (node.getContent().getClass()== TriangleMesh.class || node.getContent().getClass() == PointCloud.class)){
+              node.getContent().getMaterial().setTransparency(objectsTransparency);
+              objects.add(node);
+          }
     }
     return objects;
-
   }
 
   /**

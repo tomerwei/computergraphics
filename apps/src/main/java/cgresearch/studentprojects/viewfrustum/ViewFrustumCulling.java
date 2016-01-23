@@ -30,6 +30,9 @@ import cgresearch.core.math.VectorMatrixFactory;
 
 public class ViewFrustumCulling {
     
+    public static final double frustumTransparency = 0.5;
+    public static final double objectsTransparency = 0.5;
+    
     
     //merkt sich, welche OctreeNodes schon gecheckt wurden, um mehrere Aufrufe mit demselben OctreeNode zu vermeiden
     private ArrayList<OctreeNode<Integer>> checked = new ArrayList<OctreeNode<Integer>>();
@@ -476,7 +479,7 @@ public class ViewFrustumCulling {
     for (int i = 0; i < corner_points.length; i++) {
       mesh.addVertex(new Vertex(corner_points[i], VectorMatrixFactory.newIVector3(1, 0, 0)));
     }
-    mesh.getMaterial().setTransparency(0.1);
+    mesh.getMaterial().setTransparency(frustumTransparency);
     mesh.getMaterial().setRenderMode(Normals.PER_FACET);
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     mesh.computeTriangleNormals();
@@ -673,7 +676,7 @@ public class ViewFrustumCulling {
                }
              }
         }
-        contentToDraw.getMaterial().setTransparency(0.5);
+        contentToDraw.getMaterial().setTransparency(objectsTransparency);
         contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
         return contentToDraw;
         }
