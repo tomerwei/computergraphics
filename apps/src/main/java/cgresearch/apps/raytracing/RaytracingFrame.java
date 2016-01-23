@@ -63,7 +63,7 @@ public class RaytracingFrame extends CgApplication {
     plane.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.8, 0.8));
     plane.getMaterial().setReflection(0.5);
     plane.getMaterial().setRefraction(0.0);
-    plane.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
+    plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     CgNode planeNode = new CgNode(plane, "plane");
     getCgRootNode().addChild(planeNode);
   }

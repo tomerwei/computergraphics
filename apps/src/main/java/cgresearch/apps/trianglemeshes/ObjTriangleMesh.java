@@ -11,6 +11,8 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
+import cgresearch.core.logging.Logger;
+import cgresearch.core.logging.Logger.VerboseMode;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.primitives.Plane;
@@ -19,6 +21,7 @@ import cgresearch.graphics.datastructures.trianglemesh.NodeMerger;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.fileio.ObjFileReader;
+import cgresearch.graphics.fileio.StlFileReader;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
@@ -43,9 +46,11 @@ public class ObjTriangleMesh extends CgApplication {
     // loadFenja();
     // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    loadPlaneWithBunny();
+    // loadPlaneWithBunny();
     // loadMedivalHouse();
     // loadHulk();
+    loadNofretete();
+    Logger.getInstance().setVerboseMode(VerboseMode.DEBUG);
 
     // Coordinate system
     // getCgRootNode().addChild(new CoordinateSystem());
@@ -66,6 +71,18 @@ public class ObjTriangleMesh extends CgApplication {
     light2.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
     // light2.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light2);
+  }
+
+  private void loadNofretete() {
+    StlFileReader reader = new StlFileReader();
+    ITriangleMesh mesh = reader.read("meshes/nofretete/nofretete.stl");
+    if (mesh != null) {
+      mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+      mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(Material.PALETTE0_COLOR3));
+      mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE0_COLOR3));
+      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(1, 1, 1));
+      getCgRootNode().addChild(new CgNode(mesh, "Nofretete"));
+    }
   }
 
   public void loadHulk() {

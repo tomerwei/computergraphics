@@ -4,11 +4,14 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
+import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.Animation;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
+import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.LightSource.Type;
 import cgresearch.projects.simulation.Simulation;
 
 public class SimulationFrame extends CgApplication {
@@ -23,6 +26,12 @@ public class SimulationFrame extends CgApplication {
    */
   public SimulationFrame() {
     AnimationTimer.getInstance().setMaxValue(500);
+
+    LightSource light = new LightSource(Type.POINT);
+    light.setPosition(VectorMatrixFactory.newIVector3(10, 10, 10));
+    light.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    //getCgRootNode().clearLights();
+    getCgRootNode().addLight(light);
 
     CgNode animationNode = new CgNode(new Animation(), "simulation");
     CgNode supplementNode = new CgNode(null, "simulation_supplement");
