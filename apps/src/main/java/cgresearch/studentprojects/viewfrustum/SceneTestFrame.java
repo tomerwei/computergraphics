@@ -15,11 +15,13 @@ public class SceneTestFrame extends CgApplication{
     public static void main(String[] args){
         ResourcesLocator.getInstance().parseIniFile("resources.ini");
 
-        UrbanScene us = new UrbanScene();
+//        UrbanScene us = new UrbanScene();
         
-        CgApplication app =  new FrustumTestFrame(new UrbanScene().getCgRootNode(),  -5.0, 230.0);
+//        CgApplication app =  new FrustumTestFrame(new UrbanScene().getCgRootNode(),  -5.0, 230.0);
         
-//        CgApplication app =  new FrustumTestFrame(new SceneFactory().getCgRootNode(), -8.0, -2.0);
+//        CgApplication app =  new FrustumTestFrame(new UrbanScene().getCgRootNode());
+        
+        CgApplication app =  new FrustumTestFrame(new SceneFactory().getCgRootNode(), -8.0, -2.0);
         
         
 

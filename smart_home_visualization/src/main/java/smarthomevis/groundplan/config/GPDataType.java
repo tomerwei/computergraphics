@@ -21,13 +21,6 @@ public class GPDataType implements Serializable
 	// Ordnet die GPLine-Objekte anhand ihres eindeutigen Namens einem Layer zu
 	private Map<String, List<String>> layers = null;
 	
-	// die Konfigurationsparameter fuer das Rendern der einzelnen Elemente
-	private double wall_top_height = 0.0;
-	private double window_bottom_height = 0.0;
-	private double window_top_height = 0.0;
-	private double door_top_height = 0.0;
-	
-	private double scaling_scalar = 1.0;
 	
 	/**
 	 * 
@@ -43,52 +36,7 @@ public class GPDataType implements Serializable
 	/*
 	 * Getters
 	 */
-	
-	public synchronized double getWallTopHeight()
-	{
-	return wall_top_height;
-	}
-	
-	public synchronized double getWindowBottomHeight()
-	{
-	return window_bottom_height;
-	}
-	
-	public synchronized double getWindowTopHeight()
-	{
-	return window_top_height;
-	}
-	
-	public synchronized double getDoorTopHeight()
-	{
-	return door_top_height;
-	}
-	
-	public synchronized double getScaledWallTopHeight()
-	{
-	return scaling_scalar * wall_top_height;
-	}
-	
-	public synchronized double getScaledWindowBottomHeight()
-	{
-	return scaling_scalar * window_bottom_height;
-	}
-	
-	public synchronized double getScaledWindowTopHeight()
-	{
-	return scaling_scalar * window_top_height;
-	}
-	
-	public synchronized double getScaledDoorTopHeight()
-	{
-	return scaling_scalar * door_top_height;
-	}
-	
-	public synchronized double getScalingScalar()
-	{
-	return scaling_scalar;
-	}
-	
+		
 	public GPLine getLine(String name)
 	{
 	return this.lines.get(name);
@@ -134,30 +82,6 @@ public class GPDataType implements Serializable
 	 * Setters
 	 */
 	
-	public synchronized void setWallTopHeight(double wall_top_height)
-	{
-	this.wall_top_height = wall_top_height;
-	}
-	
-	public synchronized void setWindowBottomHeight(double window_bottom_height)
-	{
-	this.window_bottom_height = window_bottom_height;
-	}
-	
-	public synchronized void setWindowTopHeight(double window_top_height)
-	{
-	this.window_top_height = window_top_height;
-	}
-	
-	public synchronized void setDoorTopHeight(double door_top_height)
-	{
-	this.door_top_height = door_top_height;
-	}
-	
-	public synchronized void setScalingScalar(double scaling_scalar)
-	{
-	this.scaling_scalar = scaling_scalar;
-	}
 	
 	public void addLine(String id, GPLine line)
 	{

@@ -330,12 +330,12 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
 
       if (zFailRequired) {
-        gl.glActiveStencilFaceEXT(GL.GL_BACK);
+        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
         gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR_WRAP, GL.GL_KEEP);
         gl.glStencilMask(~0);
         gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
 
-        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
+        gl.glActiveStencilFaceEXT(GL.GL_BACK);
         gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR_WRAP, GL.GL_KEEP);
         gl.glStencilMask(~0);
         gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);

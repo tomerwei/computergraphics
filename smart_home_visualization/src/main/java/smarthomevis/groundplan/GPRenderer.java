@@ -19,6 +19,7 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
+import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPDataType;
 import smarthomevis.groundplan.config.GPLine;
 
@@ -36,9 +37,12 @@ public class GPRenderer
 	
 	private final GPDataType data;
 	
-	public GPRenderer(GPDataType data)
+	private GPConfig config;
+	
+	public GPRenderer(GPDataType data, GPConfig config)
 	{
 		this.data = data;
+		this.config = config;
 	}
 	
 	/*
@@ -50,7 +54,7 @@ public class GPRenderer
 	
 	public CgNode render3DMeshViewFromGPDataType()
 	{
-	CgRootNode rootNode = new CgRootNode();
+	CgNode rootNode = new CgRootNode();
 	Map<String, List<GPLine>> layersMap = this.data.getLayers();
 	
 	for (Entry<String, List<GPLine>> e : layersMap.entrySet())
@@ -58,31 +62,32 @@ public class GPRenderer
 		String layerName = e.getKey();
 		logger.debug("Rendering " + e.getValue().size() + " elements of layer "
 			+ layerName);
+		System.out.println("Rendering " + e.getValue().size()
+			+ " elements of layer " + layerName);
 			
-		rootNode = renderScaled3DMeshViewOfLayer(rootNode, layerName,
-			e.getValue(), data.getScalingScalar());
+		rootNode.addChild(renderScaled3DMeshViewOfLayer(layerName, e.getValue(),
+			config.getConfig(GPConfig.GROUNDPLAN_SCALING_FACTOR)));
 		}
 	// rootNode.addChild(new CoordinateSystem());
 	
 	return rootNode;
 	}
 	
-	private CgRootNode renderScaled3DMeshViewOfLayer(CgRootNode rootNode,
-		String layerName, List<GPLine> lineList, double scale)
+	private CgNode renderScaled3DMeshViewOfLayer(String layerName,
+		List<GPLine> lineList, double scale)
 	{
 	
 	ITriangleMesh mesh = new TriangleMesh();
+	
 	for (GPLine l : lineList)
 		{
 		switch (l.getLineType())
 			{
 			case WALL:
 			render3DMeshWall(mesh, l, scale);
-			// render3DMeshWallDirectional(mesh, l);
 			break;
 			case WINDOW:
 			render3DMeshWindow(mesh, l, scale);
-			// render3DMeshWindowDirectional(mesh, l);
 			break;
 			case DOOR:
 			render3DMeshDoor(mesh, l, scale);
@@ -93,16 +98,15 @@ public class GPRenderer
 			}
 		}
 		
-	mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+	mesh.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	// mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 	mesh.getMaterial().setReflectionDiffuse(
 		VectorMatrixFactory.newIVector3(Material.PALETTE1_COLOR3));
 	mesh.getMaterial().setRenderMode(Normals.PER_FACET);
 	mesh.computeTriangleNormals();
 	mesh.computeVertexNormals();
-	rootNode.addChild(new CgNode(mesh, layerName));
 	
-	return rootNode;
+	return new CgNode(mesh, layerName);
 	}
 	
 	private ITriangleMesh render3DMeshWall(ITriangleMesh mesh, GPLine l,
@@ -113,11 +117,11 @@ public class GPRenderer
 	IVector3 end = l.getScaledEnd(scale);
 	System.out.println("EndPoint: " + end.toString(3));
 	
-	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getScaledWallTopHeight());
+	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 		
-	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getScaledWallTopHeight());
+	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 		
 	int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
 	int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
@@ -141,11 +145,11 @@ public class GPRenderer
 	IVector3 start = l.getScaledStart(scale);
 	IVector3 end = l.getScaledEnd(scale);
 	
-	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getScaledWallTopHeight());
+	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 		
-	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getScaledWallTopHeight());
+	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 		
 	int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
 	int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
@@ -154,14 +158,16 @@ public class GPRenderer
 	
 	// Die oberen und unteren Ortsvektoren des Fensters erzeugen
 	IVector3 bottomWindowStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getScaledWindowBottomHeight());
-	IVector3 bottomWindowEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getScaledWindowBottomHeight());
+		start.get(2) + this.config
+			.getScaledConfig(GPConfig.WINDOW_BOTTOM_HEIGHT, scale));
+	IVector3 bottomWindowEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WINDOW_BOTTOM_HEIGHT, scale));
 		
 	IVector3 topWindowStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getScaledWindowTopHeight());
-	IVector3 topWindowEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getScaledWindowTopHeight());
+		start.get(2)
+			+ this.config.getScaledConfig(GPConfig.WINDOW_TOP_HEIGHT, scale));
+	IVector3 topWindowEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WINDOW_TOP_HEIGHT, scale));
 		
 	int windowBottomStartIndex = mesh.addVertex(new Vertex(bottomWindowStart));
 	int windowBottomEndIndex = mesh.addVertex(new Vertex(bottomWindowEnd));
@@ -192,16 +198,16 @@ public class GPRenderer
 	IVector3 end = l.getScaledEnd(scale);
 	
 	// Die oberen Ortsvektoren der Wand erzeugen
-	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getScaledWallTopHeight());
-	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getScaledWallTopHeight());
+	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
+	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 		
 	// Die Ortsvektoren der Tuer erzeugen
-	IVector3 doorStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getScaledDoorTopHeight());
-	IVector3 doorEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getScaledDoorTopHeight());
+	IVector3 doorStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.DOOR_TOP_HEIGHT, scale));
+	IVector3 doorEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.DOOR_TOP_HEIGHT, scale));
 		
 	int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
 	int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
@@ -235,14 +241,15 @@ public class GPRenderer
 		logger.debug("Rendering " + e.getValue().size() + " elements of layer "
 			+ layerName);
 			
-		rootNode.addChild(render3DGridViewOfLayer(layerName, e.getValue()));
+		rootNode.addChild(render3DGridViewOfLayer(layerName, e.getValue(),
+			config.getConfig(GPConfig.GROUNDPLAN_SCALING_FACTOR)));
 		}
 		
 	return rootNode;
 	}
 	
 	private CgNode render3DGridViewOfLayer(String layerName,
-		List<GPLine> lineList)
+		List<GPLine> lineList, Double scale)
 	{
 	LineSegments segment = new LineSegments();
 	
@@ -251,13 +258,13 @@ public class GPRenderer
 		switch (l.getLineType())
 			{
 			case WALL:
-			segment = render3DGridWall(segment, l);
+			segment = render3DGridWall(segment, l, scale);
 			break;
 			case WINDOW:
-			segment = render3DGridWindow(segment, l);
+			segment = render3DGridWindow(segment, l, scale);
 			break;
 			case DOOR:
-			segment = render3DGridDoor(segment, l);
+			segment = render3DGridDoor(segment, l, scale);
 			break;
 			
 			default:
@@ -272,25 +279,26 @@ public class GPRenderer
 	return new CgNode(segment, layerName);
 	}
 	
-	private LineSegments render3DGridWall(LineSegments segment, GPLine line)
+	private LineSegments render3DGridWall(LineSegments segment, GPLine line,
+		Double scale)
 	{
 	logger.debug("\trendering wall " + line.getName());
 	
 	// zuerst die Bodenlinie erzeugen
-	IVector3 start = line.getStart();
+	IVector3 start = line.getScaledStart(scale);
 	int a = segment.addPoint(start);
-	IVector3 end = line.getEnd();
+	IVector3 end = line.getScaledEnd(scale);
 	int b = segment.addPoint(end);
 	
 	segment.addLine(a, b);
 	
 	// die obere Wandlinie erzeugen
 	
-	IVector3 upperStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWallTopHeight());
+	IVector3 upperStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 		
-	IVector3 upperEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWallTopHeight());
+	IVector3 upperEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 		
 	int c = segment.addPoint(upperStart);
 	int d = segment.addPoint(upperEnd);
@@ -304,23 +312,25 @@ public class GPRenderer
 	return segment;
 	}
 	
-	private LineSegments render3DGridWindow(LineSegments segment, GPLine line)
+	private LineSegments render3DGridWindow(LineSegments segment, GPLine line,
+		Double scale)
 	{
 	logger.debug("\trendering window " + line.getName());
 	
 	// zuerst die untere Wandlinie erzeugen
-	IVector3 start = line.getStart();
+	IVector3 start = line.getScaledStart(scale);
 	int bottomWallStartIndex = segment.addPoint(start);
-	IVector3 end = line.getEnd();
+	IVector3 end = line.getScaledEnd(scale);
 	int bottomWallEndIndex = segment.addPoint(end);
 	
 	segment.addLine(bottomWallStartIndex, bottomWallEndIndex);
 	
 	// die untere Linie des Fensters erzeugen
 	IVector3 bottomWindowStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWindowBottomHeight());
-	IVector3 bottomWindowEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWindowBottomHeight());
+		start.get(2) + this.config
+			.getScaledConfig(GPConfig.WINDOW_BOTTOM_HEIGHT, scale));
+	IVector3 bottomWindowEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WINDOW_BOTTOM_HEIGHT, scale));
 	int bottomWindowStartIndex = segment.addPoint(bottomWindowStart);
 	int bottomWindowEndIndex = segment.addPoint(bottomWindowEnd);
 	
@@ -328,20 +338,21 @@ public class GPRenderer
 	
 	// die obere Linie des Fensters erzeugen
 	IVector3 topWindowStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWindowTopHeight());
-	IVector3 topWindowEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWindowTopHeight());
+		start.get(2)
+			+ this.config.getScaledConfig(GPConfig.WINDOW_TOP_HEIGHT, scale));
+	IVector3 topWindowEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WINDOW_TOP_HEIGHT, scale));
 	int topWindowStartIndex = segment.addPoint(topWindowStart);
 	int topWindowEndIndex = segment.addPoint(topWindowEnd);
 	
 	segment.addLine(topWindowStartIndex, topWindowEndIndex);
 	
 	// die obere Linie der Wand erzeugen
-	IVector3 topWallStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWallTopHeight());
+	IVector3 topWallStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 	int topWallStartIndex = segment.addPoint(topWallStart);
-	IVector3 topWallEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWallTopHeight());
+	IVector3 topWallEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 	int topWallEndIndex = segment.addPoint(topWallEnd);
 	
 	segment.addLine(topWallStartIndex, topWallEndIndex);
@@ -353,28 +364,29 @@ public class GPRenderer
 	return segment;
 	}
 	
-	private LineSegments render3DGridDoor(LineSegments segment, GPLine line)
+	private LineSegments render3DGridDoor(LineSegments segment, GPLine line,
+		Double scale)
 	{
-	IVector3 start = line.getStart();
+	IVector3 start = line.getScaledStart(scale);
 	int startIndex = segment.addPoint(start);
-	IVector3 end = line.getEnd();
+	IVector3 end = line.getScaledEnd(scale);
 	int endIndex = segment.addPoint(end);
 	
 	// die obere Tuerlinie erzeugen
-	IVector3 topDoorStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getDoorTopHeight());
-	IVector3 topDoorEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getDoorTopHeight());
+	IVector3 topDoorStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.DOOR_TOP_HEIGHT, scale));
+	IVector3 topDoorEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.DOOR_TOP_HEIGHT, scale));
 	int topDoorStartIndex = segment.addPoint(topDoorStart);
 	int topDoorEndIndex = segment.addPoint(topDoorEnd);
 	
 	segment.addLine(topDoorStartIndex, topDoorEndIndex);
 	
 	// die obere Wandlinie erzeugen
-	IVector3 topWallStart = new Vector3(start.get(0), start.get(1),
-		start.get(2) + this.data.getWallTopHeight());
-	IVector3 topWallEnd = new Vector3(end.get(0), end.get(1),
-		end.get(2) + this.data.getWallTopHeight());
+	IVector3 topWallStart = new Vector3(start.get(0), start.get(1), start.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
+	IVector3 topWallEnd = new Vector3(end.get(0), end.get(1), end.get(2)
+		+ this.config.getScaledConfig(GPConfig.WALL_TOP_HEIGHT, scale));
 	int topWallStartIndex = segment.addPoint(topWallStart);
 	int topWallEndIndex = segment.addPoint(topWallEnd);
 	

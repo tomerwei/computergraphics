@@ -30,9 +30,10 @@ import cgresearch.core.math.VectorMatrixFactory;
 
 public class ViewFrustumCulling {
     
+    
     //merkt sich, welche OctreeNodes schon gecheckt wurden, um mehrere Aufrufe mit demselben OctreeNode zu vermeiden
     private ArrayList<OctreeNode<Integer>> checked = new ArrayList<OctreeNode<Integer>>();
-
+    
   // Kameraparameter
   private IVector3 eye;
   double angle;
@@ -75,9 +76,9 @@ public class ViewFrustumCulling {
     super();
     this.eye = cam.getEye();
     this.angle = cam.getOpeningAngle();
-    this.refPoint = VectorMatrixFactory.newIVector3(0.0, 0.0, -1.0);
+    this.refPoint = cam.getRef();
     this.up = cam.getUp();
-    this.cameraRight = (this.refPoint.cross(this.up));
+    this.cameraRight =VectorMatrixFactory.newIVector3(1.0, 0.0, 0.0);
     this.cameraRight.normalize();
     frustum = new Plane[6];
     cornerPoints = new Vector3[8];
@@ -86,6 +87,36 @@ public class ViewFrustumCulling {
 //    calcPlanesOfFrustum(-8.0, -3.0, 1.0); //
 //    calcPlanesOfFrustum(3.0, -1.0, 1.0); // 
     calcPlanesOfFrustum(nearDistance, farDistance, 1.0); //
+
+  }
+  
+  /**
+   * Konstruktor
+   * 
+   * @param cam
+   *          Kamera
+   * @param nearDistance
+   *          Distanz der nahen Ebene zur Kamera, ausgehend vom Augpunkt (0,0,5)
+   * @param farDistance
+   *          Distanz der fernen Ebene zur Kamera, ausgehend vom Augpunkt (0,0,5)
+   *          merke: die nahe Ebene ist immer hinter und dichter als die ferne Ebene, nearDistance 
+   *          muss also immer kleiner sein als farDistance
+   */
+  public ViewFrustumCulling(Camera cam) {
+    super();
+    this.eye = cam.getEye();
+    this.angle = cam.getOpeningAngle();
+    this.refPoint = cam.getRef();
+    this.up = cam.getUp();
+    this.cameraRight =VectorMatrixFactory.newIVector3(1.0, 0.0, 0.0);
+    this.cameraRight.normalize();
+    frustum = new Plane[6];
+    cornerPoints = new Vector3[8];
+
+    //dritter Parameter beeinflusst die Breite des Frustums
+//    calcPlanesOfFrustum(-8.0, -3.0, 1.0); //
+//    calcPlanesOfFrustum(3.0, -1.0, 1.0); // 
+    calcPlanesOfFrustum(cam.getNearClippingPlane(), cam.getFarClippingPlane(), 1.0); //
 
   }
 
@@ -215,22 +246,17 @@ public class ViewFrustumCulling {
     Plane nearPlane, farPlane, bottomPlane, topPlane, leftPlane, rightPlane; // planes
 
     // Berechne CenterPunkte fuer nahe und ferne Ebene
-    nearCenter = this.eye.subtract(this.refPoint.multiply(nearDistance));
-    farCenter = this.eye.subtract(this.refPoint.multiply(farDistance));
-
+    nearCenter = this.eye.add((this.refPoint.subtract(this.eye)).getNormalized()).multiply(nearDistance);
+    farCenter = this.eye.add((this.refPoint.subtract(this.eye)).getNormalized()).multiply(farDistance);
+    
     // Berechne Breite und Hoehe der nahen und fernen Ebene
     // Sonderfall, vertausche die Hoehen
-    if(Math.abs(nearDistance) > Math.abs(farDistance) && !(nearDistance >0 && farDistance>0 ||  nearDistance <0 && farDistance<0)){
-        farHeight = 2 * Math.tan(this.angle / 2) * nearDistance;
-        nearHeight = 2 * Math.tan(this.angle / 2) * farDistance;
-    }
-    else{
         nearHeight = 2 * Math.tan(this.angle / 2) * nearDistance;
         farHeight = 2 * Math.tan(this.angle / 2) * farDistance;
-    }
+        
     nearWidth = nearHeight * viewRatio;
     farWidth = farHeight * viewRatio;
-
+    
     // Berechne Eckpunkte der Ebenen
 
     farBottomRight =
@@ -285,14 +311,14 @@ public class ViewFrustumCulling {
 //         cornerPoints[ntr]  = cornerPoints[ntr].multiply(-1.0);
 //         cornerPoints[ntl]  = cornerPoints[ntl].multiply(-1.0);
      }
-//     System.out.println("farBottomRight = " + cornerPoints[fbr]);
-//     System.out.println("farBottomLeft = " + cornerPoints[fbl]);
-//     System.out.println("farTopRight = " + cornerPoints[ftr]);
-//     System.out.println("farTopLeft = " + cornerPoints[ftl]);
-//     System.out.println("nearBottomRight = " + cornerPoints[nbr]);
-//     System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
-//     System.out.println("nearTopRight = " + cornerPoints[ntr]);
-//     System.out.println("nearTopleft = " + cornerPoints[ntl]);
+     System.out.println("farBottomRight = " + cornerPoints[fbr]);
+     System.out.println("farBottomLeft = " + cornerPoints[fbl]);
+     System.out.println("farTopRight = " + cornerPoints[ftr]);
+     System.out.println("farTopLeft = " + cornerPoints[ftl]);
+     System.out.println("nearBottomRight = " + cornerPoints[nbr]);
+     System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
+     System.out.println("nearTopRight = " + cornerPoints[ntr]);
+     System.out.println("nearTopleft = " + cornerPoints[ntl]);
 
     // Berechne Ebene
     // nah
@@ -363,7 +389,7 @@ public class ViewFrustumCulling {
 
     boolean result = true;
     for (int i = 0; i < this.frustum.length; i++) {
-      if (frustum[i].computeSignedDistance(point) < 0)
+      if (frustum[i].computeSignedDistance(point) > 0)
         return false;
     }
     return result;
@@ -450,6 +476,7 @@ public class ViewFrustumCulling {
     for (int i = 0; i < corner_points.length; i++) {
       mesh.addVertex(new Vertex(corner_points[i], VectorMatrixFactory.newIVector3(1, 0, 0)));
     }
+    mesh.getMaterial().setTransparency(0.1);
     mesh.getMaterial().setRenderMode(Normals.PER_FACET);
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     mesh.computeTriangleNormals();
@@ -534,13 +561,14 @@ public class ViewFrustumCulling {
    * @return Liste mit den im Frustum liegenden OctreeNodes
    */
   public ArrayList<OctreeNode<Integer>> checkOctree(OctreeNode<Integer> octreeNode,
-      ArrayList<OctreeNode<Integer>> toDraw) {
-      if(checked.contains(octreeNode)){
-          return null;
-      }
-      else{ 
-          checked.add(octreeNode);
-      }
+      ArrayList<OctreeNode<Integer>> toDraw, CgNode node ) {
+      node.setVisible(false);
+//      if(checked.contains(octreeNode)){
+//          return null;
+//      }
+//      else{ 
+//          checked.add(octreeNode);
+//      }
    // diese Abfrage ist nun uberflussig, da octreeNode aufgrund der vorherigen Abfrage auf 
    // Intersections mit der sceneBoundingBox das Frustum sowieso schneidet und nicht mehr 
    // komplett außerhalb liegen kan
@@ -549,49 +577,54 @@ public class ViewFrustumCulling {
 //      return null;
 //    }
     if (isObjectInFrustum(octreeNode) == 0) {
-      if (octreeNode.getNumberOfChildren() > 0) {
         // komplett drinnen, also hole die leafNodes, weitere Ueberpruefung auf Intersection ueberflussig
-        traversalOctreeNode(octreeNode, toDraw);
-      }
-      if (octreeNode.getNumberOfChildren() == 0) {
-        // drinnen und keine Kindknoten, also fuege den Node hinzu
-        toDraw.add(octreeNode);// (octree_node, to_draw);
-      }
+//        traversalOctreeNode(octreeNode, toDraw, node);
+        node.setVisible(true);
+        return null;
     }
-    if (isObjectInFrustum(octreeNode) == 2) {
-        if(octreeNode.getNumberOfChildren() > 0){
-      // geschnitten und noch Kindknoten, also ueberpruefe diese
-      for (int i = 0; i < octreeNode.getNumberOfChildren(); i++) {
-        checkOctree(octreeNode.getChild(i), toDraw);
-      }
-      }
-        if (octreeNode.getNumberOfChildren() == 0) {
-            // geschnitten und keine Kinder, also fuege diesen Knoten hinzu
-            toDraw.add(octreeNode);// (octree_node, to_draw);
-        }
+//    if (isObjectInFrustum(octreeNode) == 2) {
+//        needToExtract = true;
+//    
+//        if(octreeNode.getNumberOfChildren() > 0){
+//      // geschnitten und noch Kindknoten, also ueberpruefe diese
+//            for (int i = 0; i < octreeNode.getNumberOfChildren(); i++) {
+//                checkOctree(octreeNode.getChild(i), toDraw, node);
+//            }
+//      }
+//        if (octreeNode.getNumberOfChildren() == 0) {
+//            // geschnitten und keine Kinder, also fuege diesen Knoten hinzu
+//            toDraw.add(octreeNode);// (octree_node, to_draw);
+////            node.setVisible(true);
+//        }
+//    }
+    if(isObjectInFrustum(octreeNode) == 2){
+        node.setVisible(false);
+        toDraw = traversalOctreeNodeIntersected(octreeNode, toDraw);
+        return toDraw;
     }
-    return toDraw;
+    return null;
   }
 
   /**
    * wird aufgerufen, wenn ein OctreeNode komplett innerhalb des Frustums liegt, um an
    * seine Leafnodes zu kommen
    * 
-   * @param node
+   * @param ocNode
    *          der OctreeNode, der komplett im Frustum liegt
    * @param toDraw
    *          ArrayList, der die leafnodes hinzugefuegt werden
    * @return
    */
-  public ArrayList<OctreeNode<Integer>> traversalOctreeNode(OctreeNode<Integer> node,
-      ArrayList<OctreeNode<Integer>> toDraw) {
-      if (node.getNumberOfChildren() > 0) {
-          for (int i = 0; i < node.getNumberOfChildren(); i++) {
-              traversalOctreeNode(node.getChild(i), toDraw);
+  public ArrayList<OctreeNode<Integer>> traversalOctreeNode(OctreeNode<Integer> ocNode,
+      ArrayList<OctreeNode<Integer>> toDraw, CgNode node) {
+      if (ocNode.getNumberOfChildren() > 0) {
+          for (int i = 0; i < ocNode.getNumberOfChildren(); i++) {
+              traversalOctreeNode(ocNode.getChild(i), toDraw, node);
           }
       }
       else{
-          toDraw.add(node);
+          toDraw.add(ocNode);
+          node.setVisible(true);
       }
     return toDraw;
   }
@@ -602,47 +635,49 @@ public class ViewFrustumCulling {
    * 
    * @param nodesInFrustum
    *          OctreeNodes im View Frustum
-   * @param content
+   * @param node
    *          der Content, von dem extrahiert werden soll
    * @return sichtbare Elemente
    */
-  public ICgNodeContent extractNodeContent(OctreeNode<Integer> tree, ICgNodeContent content, OctreeNode<Integer> scene) {
+  public ICgNodeContent extractNodeContent(OctreeNode<Integer> tree, CgNode node, OctreeNode<Integer> scene) {
     if(boxesIntersect(tree.getBoundingBox(), scene.getBoundingBox())){
-//        System.out.println("INTERSECT");
         ArrayList<OctreeNode<Integer>> toDraw = new ArrayList<OctreeNode<Integer>>();
         ICgNodeContent contentToDraw = null;
-        checkOctree(tree,toDraw);
-        if (toDraw.size() == 0){
-            return null;
-        }
-        if (content.getClass() == TriangleMesh.class) {
-            contentToDraw = new TriangleMesh();
-            for (int m = 0; m < ((TriangleMesh) content).getNumberOfVertices(); m++) {
-                ((ITriangleMesh) contentToDraw).addVertex(((TriangleMesh) content).getVertex(m));
-            }
-            for (int i = 0; i < toDraw.size(); i++) {
-                for (int j = 0; j < toDraw.get(i).getNumberOfElements(); j++) {
-                    ITriangle t = ((TriangleMesh) content).getTriangle(toDraw.get(i).getElement(j));
-                    ((ITriangleMesh) contentToDraw).addTriangle(t);
+        checkOctree(tree,toDraw, node);
+//        if (toDraw.size() == 0){
+//            return null;
+//        }
+        if(toDraw.size() > 0 ){
+            if (node.getContent().getClass() == TriangleMesh.class) {
+                contentToDraw = new TriangleMesh();
+                for (int m = 0; m < ((TriangleMesh) node.getContent()).getNumberOfVertices(); m++) {
+                    ((ITriangleMesh) contentToDraw).addVertex(((TriangleMesh) node.getContent()).getVertex(m));
                 }
+                for (int i = 0; i < toDraw.size(); i++) {
+                    for (int j = 0; j < toDraw.get(i).getNumberOfElements(); j++) {
+                        ITriangle t = ((TriangleMesh) node.getContent()).getTriangle(toDraw.get(i).getElement(j));
+                        ((ITriangleMesh) contentToDraw).addTriangle(t);
+                    }
+                }
+                ((ITriangleMesh) contentToDraw).computeVertexNormals();
+                ((ITriangleMesh) contentToDraw).computeTriangleNormals();
+                contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+                TriangleMeshTools.cleanup((ITriangleMesh)contentToDraw);
             }
-            ((ITriangleMesh) contentToDraw).computeVertexNormals();
-            ((ITriangleMesh) contentToDraw).computeTriangleNormals();
-            contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-            TriangleMeshTools.cleanup((ITriangleMesh)contentToDraw);
-        }
 
-        if (content.getClass() == PointCloud.class) {
+        if (node.getContent().getClass() == PointCloud.class) {
             contentToDraw = new PointCloud();
             for (int i = 0; i < toDraw.size(); i++) {
                  for (int j = 0; j < toDraw.get(i).getNumberOfElements(); j++) {
-                     ((PointCloud) contentToDraw).addPoint(((PointCloud) content).getPoint(toDraw.get(i).getElement(j)));
+                     ((PointCloud) contentToDraw).addPoint(((PointCloud) node.getContent()).getPoint(toDraw.get(i).getElement(j)));
                }
              }
         }
+        contentToDraw.getMaterial().setTransparency(0.5);
         contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
         return contentToDraw;
-   }
+        }
+    }
 
    return null;
  }
@@ -674,6 +709,20 @@ public class ViewFrustumCulling {
               return false;
           }
           return true;
+  }
+  
+  public ArrayList<OctreeNode<Integer>> traversalOctreeNodeIntersected(OctreeNode<Integer> oNode, ArrayList<OctreeNode<Integer>> toDraw){
+      if(oNode.getNumberOfChildren() > 0){
+          for(int i = 0; i < oNode.getNumberOfChildren(); i++){
+              traversalOctreeNodeIntersected(oNode.getChild(i), toDraw);
+          }
+      }
+      else{
+          if(isObjectInFrustum(oNode) == 0 || isObjectInFrustum(oNode) == 2){
+              toDraw.add(oNode);
+          }
+      }
+      return null;
   }
 }
 

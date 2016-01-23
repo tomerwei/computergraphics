@@ -6,6 +6,8 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
 import smarthomevis.groundplan.config.Converter;
+import smarthomevis.groundplan.config.GPConfig;
+import smarthomevis.groundplan.config.GPConfigXMLReader;
 import smarthomevis.groundplan.config.GPDataType;
 
 public class GroundPlan extends CgApplication
@@ -17,18 +19,22 @@ public class GroundPlan extends CgApplication
 	// light.setColor(new Vector3(1.0, 1.0 , -1.0));
 	// light.setPosition(new Vector3(15.0, 15.0 , 5.0));
 	// getCgRootNode().addLight(light);
-	// renderTestRaum();
-	renderProjektHORA();
+	renderTestRaum();
+	// renderProjektHORA();
 	// renderHaus02();
 	}
 	
 	private void renderTestRaum()
 	{
+	GPConfigXMLReader reader = new GPConfigXMLReader();
+	GPConfig config = reader.readConfig("dxf/TestRaum.xml");
+	System.out.println(config.toString());
+	
 	Converter converter = new Converter();
-	GPDataType renderData = converter.importData("dxf/TestRaum.dxf",
-		"dxf/TestRaum.xml");
-		
-	GPRenderer renderer = new GPRenderer(renderData);
+	GPDataType renderData = converter.importData("dxf/TestRaum.dxf", config);
+	System.out.println(renderData.toString());
+	
+	GPRenderer renderer = new GPRenderer(renderData, config);
 	// getCgRootNode().addChild(renderer.render2DViewFromGPDataType());
 	// getCgRootNode().addChild(renderer.render3DGridViewFromGPDataType());
 	getCgRootNode().addChild(renderer.render3DMeshViewFromGPDataType());
@@ -36,11 +42,15 @@ public class GroundPlan extends CgApplication
 	
 	private void renderProjektHORA()
 	{
+	GPConfigXMLReader reader = new GPConfigXMLReader();
+	GPConfig config = reader.readConfig("dxf/4H-HORA Projekt1.xml");
+	System.out.println(config.toString());
+	
 	Converter converter = new Converter();
 	GPDataType renderData = converter.importData("dxf/4H-HORA Projekt1.dxf",
-		"dxf/4H-HORA Projekt1.xml");
+		config);
 		
-	GPRenderer renderer = new GPRenderer(renderData);
+	GPRenderer renderer = new GPRenderer(renderData, config);
 	// getCgRootNode().addChild(renderer.render2DViewFromGPDataType());
 	// getCgRootNode().addChild(renderer.render3DGridViewFromGPDataType());
 	getCgRootNode().addChild(renderer.render3DMeshViewFromGPDataType());
@@ -48,11 +58,15 @@ public class GroundPlan extends CgApplication
 	
 	private void renderHaus02()
 	{
+	GPConfigXMLReader reader = new GPConfigXMLReader();
+	GPConfig config = reader.readConfig("dxf/Grundriss_Haus_02.xml");
+	System.out.println(config.toString());
+	
 	Converter converter = new Converter();
 	GPDataType renderData = converter.importData("dxf/Grundriss_Haus_02.dxf",
-		"dxf/Grundriss_Haus_02.xml");
+		config);
 		
-	GPRenderer renderer = new GPRenderer(renderData);
+	GPRenderer renderer = new GPRenderer(renderData, config);
 	// getCgRootNode().addChild(renderer.render2DViewFromGPDataType());
 	// getCgRootNode().addChild(renderer.render3DGridViewFromGPDataType());
 	getCgRootNode().addChild(renderer.render3DMeshViewFromGPDataType());

@@ -3,14 +3,11 @@ package smarthomevis.groundplan.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kabeja.dxf.DXFConstants;
 import org.kabeja.dxf.DXFDocument;
@@ -21,11 +18,6 @@ import org.kabeja.dxf.helpers.Point;
 import org.kabeja.parser.DXFParser;
 import org.kabeja.parser.Parser;
 import org.kabeja.parser.ParserBuilder;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.VectorMatrixFactory;
@@ -36,7 +28,7 @@ import smarthomevis.groundplan.config.GPLine.LineType;
  * diesen entsprechend ein GPDataType Object zu befuellen
  * 
  * @author Leonard.Opitz
- *		
+ * 		
  */
 public class Converter
 {
@@ -61,20 +53,19 @@ public class Converter
 	 * @param xmlDocURI
 	 *          Das XML-Dokument mit den Konfigurationsparamertern und den
 	 *          Strukturdefinitionen der DXF-Datei
-	 * @return ein GPDataType Obejct mit den extrahierten Vectorinformationen
+	 * @return ein GPDataType Object mit den extrahierten Vectorinformationen
 	 *         zum Erzeugen eines Renderings
 	 */
-	public GPDataType importData(String dxfDocURI, String xmlDocURI)
+	public GPDataType importData(String dxfDocURI, GPConfig config)
 	{
 	this.dxfDoc = readDXFDocument(dxfDocURI);
-	Document xmlDoc = readXMLDocument(xmlDocURI);
 	
-	if (dxfDoc != null && xmlDoc != null)
+	if (dxfDoc != null && config != null)
 		{
-		extractWalls(dxfDoc, xmlDoc);
+		extractWalls(dxfDoc, config);
 		}
 	else
-		System.err.println("Failed to import data. DXF or XML is missing!");
+		System.err.println("Failed to import data. DXF or Config is missing!");
 		
 	return this.resultData;
 	}
@@ -82,88 +73,42 @@ public class Converter
 	/*
 	 * 
 	 */
-	private void extractWalls(DXFDocument dxf, Document xmlDoc)
+	private void extractWalls(DXFDocument dxf, GPConfig config)
 	{
-	NodeList nodeList = xmlDoc.getDocumentElement().getChildNodes();
 	
-	for (int i = 0; i < nodeList.getLength(); i++)
+	Map<String, LineType> layers = config.getLayers();
+	if (!layers.isEmpty())
 		{
-		Node node = nodeList.item(i);
-		
-		// Kind-Knoten einer LayerNode des XMLs behandeln
-		if (node.getNodeName().equals("layer") && node.hasAttributes())
+		for (Entry<String, LineType> e : layers.entrySet())
 			{
-			// Namen und Typ fuer diese Ebene aus dem XML auslesen
-			String layerName = node.getAttributes().getNamedItem("name")
-				.getNodeValue();
-			String lineTypeString = node.getAttributes().getNamedItem("type")
-				.getNodeValue();
-				
-			if (layerName != null && lineTypeString != null
-				&& !layerName.isEmpty() && !lineTypeString.isEmpty())
+			String layerName = e.getKey();
+			LineType lineType = e.getValue();
+			System.out.println("Extracting " + lineType.toString().toLowerCase()
+				+ "s of layer '" + layerName + "'");
+			// das im xml definierte DXFLayer aus der dxf-Datei lesen
+			DXFLayer dxfLayer = dxf.getDXFLayer(layerName);
+			// den Typ-String in einen Enumerator umwandeln
+			
+			if (dxfLayer != null)
 				{
-				System.out.println("Extracting " + lineTypeString.toLowerCase()
-					+ "s of layer '" + layerName + "'");
-				// das im xml definierte DXFLayer aus der dxf-Datei lesen
-				DXFLayer dxfLayer = dxf.getDXFLayer(layerName);
-				// den Typ-String in einen Enumerator umwandeln
-				LineType lineType = defineLineTypeFromString(lineTypeString);
-				
-				if (dxfLayer != null)
-					{
-					List<DXFEntity> entityList = extractDXFLinesFromLayer(
-						dxfLayer);
-					System.out
-						.println("DXFEntityMap has size " + entityList.size());
-					// die DXFLines entsprechend dem Typ rendern
+				List<DXFEntity> entityList = extractDXFLinesFromLayer(dxfLayer);
+				System.out
+					.println("DXFEntityMap has size " + entityList.size());
+				// die DXFLines entsprechend dem Typ rendern
+				if (entityList.size() > 0)
 					handleLinesOfLayer(layerName, entityList, lineType);
-					}
 				else
 					System.out
-						.println("Failed loading dxfLayer '" + layerName + "'");
+						.println("Could not Load DXFEntities: List is empty");
 				}
 			else
-				System.out.println("LayerName is missing, please check xml");
-				
-			}
-		// Handelt es sich um eine config- statt um eine LayerNode, diese
-		// Auslesen und dem
-		// GPDataType uebergeben
-		else if (node.getNodeName().equals("config")
-			&& node.getNodeType() == Node.ELEMENT_NODE)
-			{
-			extractConfig(node);
+				System.out
+					.println("Failed loading dxfLayer '" + layerName + "'");
 			}
 		}
-	}
-	
-	private void extractConfig(Node node)
-	{
-	Element element = (Element) node;
-	this.resultData.setWallTopHeight(Double.valueOf(element
-		.getElementsByTagName("wall_top_height").item(0).getTextContent()));
-	this.resultData.setWindowBottomHeight(
-		Double.valueOf(element.getElementsByTagName("window_bottom_height")
-			.item(0).getTextContent()));
-	this.resultData.setWindowTopHeight(Double.valueOf(element
-		.getElementsByTagName("window_top_height").item(0).getTextContent()));
-	this.resultData.setDoorTopHeight(Double.valueOf(element
-		.getElementsByTagName("door_top_height").item(0).getTextContent()));
-	this.resultData.setScalingScalar(
-		Double.valueOf(element.getElementsByTagName("groundplan_scaling_scalar")
-			.item(0).getTextContent()));
-	}
-	
-	private LineType defineLineTypeFromString(String lineTypeString)
-	{
-	if (lineTypeString.equalsIgnoreCase("WALL"))
-		return LineType.WALL;
-	if (lineTypeString.equalsIgnoreCase("WINDOW"))
-		return LineType.WINDOW;
-	if (lineTypeString.equalsIgnoreCase("DOOR"))
-		return LineType.DOOR;
+	else
+		System.out.println("No Layers found, please check xml");
 		
-	return LineType.WALL;
 	}
 	
 	private List<DXFEntity> extractDXFLinesFromLayer(DXFLayer dxfLayer)
@@ -171,15 +116,20 @@ public class Converter
 	List<DXFEntity> lineList = new ArrayList<>();
 	
 	@SuppressWarnings("unchecked")
-	Iterator<DXFEntity> it = dxfLayer
-		.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE).iterator();
+	List<DXFEntity> dxfEntities = dxfLayer
+		.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE);
 		
-	for (; it.hasNext();)
+	if (dxfEntities != null && dxfEntities.size() > 0)
 		{
-		DXFEntity e = it.next();
+		Iterator<DXFEntity> it = dxfEntities.iterator();
 		
-		lineList.add(e);
-		
+		for (; it.hasNext();)
+			{
+			DXFEntity e = it.next();
+			
+			lineList.add(e);
+			
+			}
 		}
 	return lineList;
 	}
@@ -273,59 +223,6 @@ public class Converter
 		}
 		
 	return doc;
-	}
-	
-	/**
-	 * Hilfsmethode fuer das Einlesen des XMLDokuments
-	 * 
-	 * @param filename
-	 *          der Speicherort innerhalt des Asset-Ordners
-	 * @return ein Document Object, das saemtliche XML-Knoten zur Definition der
-	 *         (relevanten) Strukturen im DXF-Dokument enthaelt
-	 */
-	private Document readXMLDocument(String filename)
-	{
-	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	
-	Document xmlDoc = null;
-	
-	try
-		{
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		String absoluteFilename = ResourcesLocator.getInstance()
-			.getPathToResource(filename);
-		FileInputStream in = null;
-		
-		in = new FileInputStream(new File(absoluteFilename));
-		xmlDoc = builder.parse(in);
-		in.close();
-		
-		}
-	// FIXME replace syserr with exception logging
-	catch (ParserConfigurationException e)
-		{
-		System.err.println("Could not create a DocumentBuilder");
-		e.printStackTrace();
-		}
-	catch (FileNotFoundException e)
-		{
-		System.err.println("Could not load xml file");
-		e.printStackTrace();
-		}
-	catch (IOException e)
-		{
-		System.err.println("Failed to parse xmlFile or close InputStream");
-		e.printStackTrace();
-		}
-	catch (SAXException e)
-		{
-		System.err.println("Error occured while parsing xmlFile");
-		e.printStackTrace();
-		}
-		
-	// NodeList nodeList = xmlDoc.getDocumentElement().getChildNodes();
-	
-	return xmlDoc;
 	}
 	
 	private int getNextIndex()
