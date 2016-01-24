@@ -1,5 +1,6 @@
 package smarthomevis.groundplan.config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +9,14 @@ import java.util.Map.Entry;
 
 import smarthomevis.groundplan.config.GPLine.LineType;
 
-public class GPConfig
+public class GPConfig implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3014243451469832259L;
+	
+	
 	public static final String WALL_TOP_HEIGHT = "wall_top_height";
 	public static final String DOOR_TOP_HEIGHT = "door_top_height";
 	public static final String WINDOW_TOP_HEIGHT = "window_top_height";
@@ -53,18 +60,18 @@ public class GPConfig
 	return resultList;
 	}
 	
-	public synchronized Double getConfig(String key)
+	public synchronized Double getValue(String key)
 	{
 	return this.configValues.get(key);
 	}
 	
-	public synchronized Double getScaledConfig(String key)
+	public synchronized Double getScaledValue(String key)
 	{
 	return this.configValues.get(key)
 		* this.configValues.get(GROUNDPLAN_SCALING_FACTOR);
 	}
 	
-	public synchronized Double getScaledConfig(String key, double scale)
+	public synchronized Double getScaledValue(String key, double scale)
 	{
 	return this.configValues.get(key) * scale;
 	}
