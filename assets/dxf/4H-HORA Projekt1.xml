@@ -20,7 +20,7 @@
 			1.0
 		</angle_tolerance>
 		<distance_interval>
-			0.5
+			10.0
 		</distance_interval>
 	</config>
 	<layer name="VOM$SYSTEM$VORDEFINIERT" type="WALL">

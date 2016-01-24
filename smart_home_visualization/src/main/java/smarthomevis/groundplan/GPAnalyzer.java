@@ -85,6 +85,7 @@ public class GPAnalyzer
 	private Map<Double, Integer> countAllDistances(GPDataType type, Map<IVector3, List<GPLine>> directionMap)
 	{
 		Map<Double, Integer> distanceMap = new HashMap<>();
+		distanceMap.put(0.0, 0);
 
 		double distanceInterval = type.getGPConfig().getValue(GPConfig.DISTANCE_INTERVAL);
 
