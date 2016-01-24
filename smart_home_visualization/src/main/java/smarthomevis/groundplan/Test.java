@@ -86,8 +86,8 @@ public class Test extends CgApplication
 		// "result of GPUtility.substractOtherVector: " +
 		// testResult.toString(3));
 
-		BigDecimal interval = BigDecimal.valueOf(4.0);
-		BigDecimal value = BigDecimal.valueOf(8.25);
+		BigDecimal interval = BigDecimal.valueOf(5.0);
+		BigDecimal value = BigDecimal.valueOf(0.2);
 
 		BigDecimal remainder = value.remainder(interval);
 
@@ -127,8 +127,8 @@ public class Test extends CgApplication
 
 		Test test = new Test();
 
-		// test.runAnalyzer();
-		test.runTest();
+		test.runAnalyzer();
+		// test.runTest();
 	}
 
 }

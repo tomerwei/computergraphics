@@ -19,6 +19,9 @@
 		<angle_tolerance>
 			1.0
 		</angle_tolerance>
+		<distance_interval>
+			0.5
+		</distance_interval>
 	</config>
 	<layer name="Ebene_1" type="WALL">
 	

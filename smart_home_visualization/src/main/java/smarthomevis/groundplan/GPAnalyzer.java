@@ -1,10 +1,15 @@
 package smarthomevis.groundplan;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.print.attribute.standard.PDLOverrideSupported;
+
 import java.util.Set;
 
 import cgresearch.core.math.IVector3;
@@ -48,7 +53,7 @@ public class GPAnalyzer
 		for (Entry<IVector3, List<GPLine>> e : directionMap.entrySet())
 		System.out.println("\nMap of " + e.getKey().toString(5) + " contains " + e.getValue().size() + " lines");
 
-		Map<Double, Integer> distanceMap = countAllDistances(directionMap);
+		Map<Double, Integer> distanceMap = countAllDistances(type, directionMap);
 
 		// GPUtility.printDistanceMap(distanceMap);
 		GPUtility.saveDistanceMapToCSVFile(distanceMap);
@@ -77,9 +82,11 @@ public class GPAnalyzer
 		return null;
 	}
 
-	private Map<Double, Integer> countAllDistances(Map<IVector3, List<GPLine>> directionMap)
+	private Map<Double, Integer> countAllDistances(GPDataType type, Map<IVector3, List<GPLine>> directionMap)
 	{
 		Map<Double, Integer> distanceMap = new HashMap<>();
+
+		double distanceInterval = type.getGPConfig().getValue(GPConfig.DISTANCE_INTERVAL);
 
 		for (Entry<IVector3, List<GPLine>> e : directionMap.entrySet())
 		{
@@ -88,9 +95,8 @@ public class GPAnalyzer
 			for (GPLine line : e.getValue())
 			{
 				// zur Vermeidung von Problemen bei nebenläufigen Zugriffen
-				// (Löschen
-				// der
-				// Einträge innerhalb der Iteration) eine Kopie der Liste
+				// (Löschen der Einträge innerhalb der Iteration) eine Kopie der
+				// Liste
 				// verwenden
 				lineListCopy.remove(line);
 
@@ -100,14 +106,20 @@ public class GPAnalyzer
 
 					double dist = 0.0;
 					if (parallelOverlap > 0.0)
-					dist = GPUtility.roundDown3(distanceBetween(line, other));
+					dist = distanceBetween(line, other);
 
 					if (dist > 0.0)
 					{
-						if (!distanceMap.containsKey(dist))
-						distanceMap.put(dist, 0);
+						// den passenden Intervallwert fuer die aktuelle Distanz
+						// ermitteln
+						double distanceKey = calculateDistanceKey(dist, distanceInterval);
+						if (!distanceMap.containsKey(distanceKey))
+						{
+							expandDistanceMapToDistanceKey(distanceMap, distanceKey, distanceInterval);
+							System.out.println("# new amount of distances is " + distanceMap.size());
+						}
 
-						GPUtility.increaseDistanceCounter(distanceMap, dist);
+						increaseDistanceCounter(distanceMap, distanceKey);
 
 						// TODO speichern der gefundenen zueinander gehoerenden
 						// Liniengruppen
@@ -121,6 +133,62 @@ public class GPAnalyzer
 		return distanceMap;
 	}
 
+	private double calculateDistanceKey(double dist, double distanceInterval)
+	{
+		BigDecimal distance = BigDecimal.valueOf(dist);
+		BigDecimal interval = BigDecimal.valueOf(distanceInterval);
+
+		// den remainder (rest) von der Distanz abziehen, um einen glatten
+		// Quotient zu erhalten
+		BigDecimal remainder = distance.remainder(interval);
+
+		BigDecimal tmpDistance = distance.subtract(remainder);
+
+		BigDecimal distanceMultiplicator = tmpDistance.divide(interval, 5, RoundingMode.HALF_DOWN);
+		System.out.println("=== distance " + distance + "; interval " + interval + "; remainder " + remainder
+			+ ";\ntmpdistance = distance - remainder = " + distance + " - " + remainder + " = " + tmpDistance
+			+ "; distanceMultiplikator: " + distanceMultiplicator);
+		BigDecimal distanceKey = distanceMultiplicator.multiply(interval);
+		System.out.println("distanceKey = " + distanceKey);
+		return distanceKey.doubleValue();
+	}
+
+	private void expandDistanceMapToDistanceKey(Map<Double, Integer> distanceMap, double distanceKey,
+		double distanceInterval)
+	{
+		// zunaechst den bisher hoechsten Key ermitteln
+		double highestCurrentKey = findHighestCurrentDistanceKey(distanceMap);
+
+		BigDecimal current = BigDecimal.valueOf(highestCurrentKey);
+		BigDecimal target = BigDecimal.valueOf(distanceKey);
+		BigDecimal interval = BigDecimal.valueOf(distanceInterval);
+
+		BigDecimal currentQuotient = current.divide(interval, 5, RoundingMode.HALF_DOWN);
+		BigDecimal targetQuotient = target.divide(interval, 5, RoundingMode.HALF_DOWN);
+
+		double numberOfSteps = (targetQuotient.subtract(currentQuotient)).doubleValue();
+
+		for (int i = 1; i <= numberOfSteps; i++)
+		{
+			double additionalInterval = highestCurrentKey + (i * distanceInterval);
+			distanceMap.put(additionalInterval, 0);
+			System.out.println("## added distanceKey " + additionalInterval + " to distanceMap");
+		}
+
+	}
+
+	private double findHighestCurrentDistanceKey(Map<Double, Integer> distanceMap)
+	{
+		// geht alle Keys durch und findet den hoechsten
+		double currentHighest = 0.0;
+		for (Entry<Double, Integer> e : distanceMap.entrySet())
+		{
+			if (e.getKey() > currentHighest)
+			currentHighest = e.getKey();
+		}
+		return currentHighest;
+	}
+
 	public double distanceBetween(GPLine line, GPLine other)
 	{
 		IVector3 dirVector = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
@@ -132,6 +200,13 @@ public class GPAnalyzer
 		double temp2 = GPUtility.calcVectorLength(dirVector);
 
 		return temp / temp2;
+	}
+
+	private void increaseDistanceCounter(Map<Double, Integer> distanceMap, double distance)
+	{
+		System.out.println("Increasing distance counter for " + distance);
+		int currentCount = distanceMap.get(distance);
+		distanceMap.put(distance, currentCount + 1);
 	}
 
 	public double calculateParallelOverlapOf(GPLine line, GPLine other)
