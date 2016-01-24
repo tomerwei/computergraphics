@@ -16,7 +16,7 @@ import java.util.Map.Entry;
  */
 public class GPDataType implements Serializable
 {
-	//
+	// die aus der XML Datei ausgelesenen Konfigurationswerte
 	private GPConfig config = null;
 	// Speicherung von GPLine-Objekten, addressiert ueber eindeutige Namen
 	private Map<String, GPLine> lines = null;
