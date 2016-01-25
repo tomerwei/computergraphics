@@ -31,7 +31,8 @@ public class RightTopWing {
 	private Line3D[] lines = new Line3D[4];
 	private List<BezierCurve> curves = new ArrayList<BezierCurve>();
 
-	public RightTopWing(IVector3 center, double hoehe, double laenge, IVector3 tp, double wingMitteBreite) {
+	public RightTopWing(IVector3 center, double hoehe, double laenge, IVector3 tp, double wingMitteBreite, double twth,
+			double twtv, double twlrh, double twlrv, double twtph, double twtpv, double twbh, double twbv) {
 
 		setCenter(center);
 		setHoehe(hoehe);
@@ -45,9 +46,9 @@ public class RightTopWing {
 		setCD();
 		setDA();
 		setLines();
-		setTop(wingMitteBreite);
-		setRight();
-		setBottom(tp);
+		setTop(wingMitteBreite, twth, twtv);
+		setRight(twlrh, twlrv, twtph, twtpv);
+		setBottom(tp, twtph, twtpv, twbh, twbv);
 		setCurves(top, right, bottom);
 	}
 
@@ -162,7 +163,7 @@ public class RightTopWing {
 		return top;
 	}
 
-	public void setTop(double wingMitteBreite) {
+	public void setTop(double wingMitteBreite, double twth, double twtv) {
 
 		double breite = wingMitteBreite / 2;
 
@@ -170,7 +171,7 @@ public class RightTopWing {
 
 		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(A.get(0), A.get(1) + breite, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(B.get(0), B.get(1), 0));
+		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(B.get(0) + twth, B.get(1) + twtv, 0));
 
 		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(C.get(0), C.get(1), 0));
 
@@ -181,14 +182,15 @@ public class RightTopWing {
 		return right;
 	}
 
-	public void setRight() {
+	public void setRight(double twlrh, double twlrv, double twtph, double twtpv) {
 		BezierCurve curve = new BezierCurve(2);
 
 		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(C.get(0), C.get(1), 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(C.get(0), C.get(1) - hoehe / 4, 0));
+		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(C.get(0) + twlrh, C.get(1) - hoehe / 4 + twlrv, 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(D.get(0) - laenge / 4, D.get(1) + hoehe / 2, 0));
+		curve.setControlPoint(2,
+				VectorMatrixFactory.newIVector3(D.get(0) - laenge / 4 + twtph, D.get(1) + hoehe / 2 + twtpv, 0));
 
 		this.right = curve;
 	}
@@ -197,12 +199,13 @@ public class RightTopWing {
 		return bottom;
 	}
 
-	public void setBottom(IVector3 tp) {
+	public void setBottom(IVector3 tp, double twtph, double twtpv, double twbh, double twbv) {
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(D.get(0) - laenge / 4, D.get(1) + hoehe / 2, 0));
+		curve.setControlPoint(0,
+				VectorMatrixFactory.newIVector3(D.get(0) - laenge / 4 + twtph, D.get(1) + hoehe / 2 + twtpv, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(D.get(0), D.get(1) + hoehe / 4, 0));
+		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(D.get(0) + twbh, D.get(1) + hoehe / 4 + twbv, 0));
 
 		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(tp.get(0), tp.get(1), 0));
 

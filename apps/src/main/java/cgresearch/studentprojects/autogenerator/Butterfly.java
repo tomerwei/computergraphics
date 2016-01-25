@@ -12,7 +12,8 @@ public class Butterfly {
 	private RightBottomWing rightBottomWing;
 
 	public Butterfly(double bh, double bl, int wingProzent, double wingMitteBreite, double twh, double twl, double bwh,
-			double bwl) {
+			double bwl, double twth, double twtv, double twlrh, double twlrv, double twtph, double twtpv, double twbh,
+			double twbv, double bwlrh, double bwlrv, double bwbh, double bwbv) {
 
 		double wings = 0;
 
@@ -20,10 +21,12 @@ public class Butterfly {
 			wings = bh * (wingProzent - 50) / 100;
 		}
 
-		this.leftBottomWing = generateLeftBottomWing(bl, wings, bwh, bwl, wingMitteBreite);
-		this.leftTopWing = generateLeftTopWing(bl, wings, twh, twl, leftBottomWing.getB(), wingMitteBreite);
-		this.rightBottomWing = generateRightBottomWing(bl, wings, bwh, bwl, wingMitteBreite);
-		this.rightTopWing = generateRightTopWing(bl, wings, twh, twl, rightBottomWing.getC(), wingMitteBreite);
+		this.leftBottomWing = generateLeftBottomWing(bl, wings, bwh, bwl, wingMitteBreite, bwlrh, bwlrv, bwbh, bwbv);
+		this.leftTopWing = generateLeftTopWing(bl, wings, twh, twl, leftBottomWing.getB(), wingMitteBreite, twth, twtv,
+				twlrh, twlrv, twtph, twtpv, twbh, twbv);
+		this.rightBottomWing = generateRightBottomWing(bl, wings, bwh, bwl, wingMitteBreite, bwlrh, bwlrv, bwbh, bwbv);
+		this.rightTopWing = generateRightTopWing(bl, wings, twh, twl, rightBottomWing.getC(), wingMitteBreite, twth,
+				twtv, twlrh, twlrv, twtph, twtpv, twbh, twbv);
 		this.body = generateBody(bh, bl, leftTopWing.getD(), rightTopWing.getA(), wingMitteBreite);
 	}
 
@@ -37,7 +40,8 @@ public class Butterfly {
 	}
 
 	public LeftTopWing generateLeftTopWing(double bl, double wings, double twh, double twl, IVector3 tp,
-			double wingMitteBreite) {
+			double wingMitteBreite, double twth, double twtv, double twlrh, double twlrv, double twtph, double twtpv,
+			double twbh, double twbv) {
 
 		double x = 0 - bl / 2 - twl / 2;
 
@@ -45,13 +49,14 @@ public class Butterfly {
 
 		IVector3 c = VectorMatrixFactory.newIVector3(x, y, 0);
 
-		LeftTopWing erg = new LeftTopWing(c, twh, twl, tp, wingMitteBreite);
+		LeftTopWing erg = new LeftTopWing(c, twh, twl, tp, wingMitteBreite, twth, twtv, twlrh, twlrv, twtph, twtpv,
+				twbh, twbv);
 
 		return erg;
 	}
 
 	public LeftBottomWing generateLeftBottomWing(double bl, double wings, double bwh, double bwl,
-			double wingMitteBreite) {
+			double wingMitteBreite, double bwlrh, double bwlrv, double bwbh, double bwbv) {
 
 		double x = 0 - bl / 2 - bwl / 2;
 
@@ -59,13 +64,14 @@ public class Butterfly {
 
 		IVector3 c = VectorMatrixFactory.newIVector3(x, y, 0);
 
-		LeftBottomWing erg = new LeftBottomWing(c, bwh, bwl, wingMitteBreite);
+		LeftBottomWing erg = new LeftBottomWing(c, bwh, bwl, wingMitteBreite, bwlrh, bwlrv, bwbh, bwbv);
 
 		return erg;
 	}
 
 	public RightTopWing generateRightTopWing(double bl, double wings, double twh, double twl, IVector3 tp,
-			double wingMitteBreite) {
+			double wingMitteBreite, double twth, double twtv, double twlrh, double twlrv, double twtph, double twtpv,
+			double twbh, double twbv) {
 
 		double x = 0 + bl / 2 + twl / 2;
 
@@ -73,13 +79,14 @@ public class Butterfly {
 
 		IVector3 c = VectorMatrixFactory.newIVector3(x, y, 0);
 
-		RightTopWing erg = new RightTopWing(c, twh, twl, tp, wingMitteBreite);
+		RightTopWing erg = new RightTopWing(c, twh, twl, tp, wingMitteBreite, twth, twtv, twlrh, twlrv, twtph, twtpv,
+				twbh, twbv);
 
 		return erg;
 	}
 
 	public RightBottomWing generateRightBottomWing(double bl, double wings, double bwh, double bwl,
-			double wingMitteBreite) {
+			double wingMitteBreite, double bwlrh, double bwlrv, double bwbh, double bwbv) {
 
 		double x = 0 + bl / 2 + bwl / 2;
 
@@ -87,7 +94,7 @@ public class Butterfly {
 
 		IVector3 c = VectorMatrixFactory.newIVector3(x, y, 0);
 
-		RightBottomWing erg = new RightBottomWing(c, bwh, bwl, wingMitteBreite);
+		RightBottomWing erg = new RightBottomWing(c, bwh, bwl, wingMitteBreite, bwlrh, bwlrv, bwbh, bwbv);
 
 		return erg;
 	}

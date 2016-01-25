@@ -30,7 +30,8 @@ public class LeftBottomWing {
 	private Line3D[] lines = new Line3D[4];
 	private List<BezierCurve> curves = new ArrayList<BezierCurve>();
 
-	public LeftBottomWing(IVector3 center, double hoehe, double laenge, double wingMitteBreite) {
+	public LeftBottomWing(IVector3 center, double hoehe, double laenge, double wingMitteBreite, double bwlrh,
+			double bwlrv, double bwbh, double bwbv) {
 
 		setCenter(center);
 		setHoehe(hoehe);
@@ -44,8 +45,8 @@ public class LeftBottomWing {
 		setCD();
 		setDA();
 		setLines();
-		setLeft();
-		setBottom(wingMitteBreite);
+		setLeft(bwlrh, bwlrv);
+		setBottom(wingMitteBreite, bwbh, bwbv);
 		setCurves(bottom, left);
 	}
 
@@ -160,12 +161,12 @@ public class LeftBottomWing {
 		return left;
 	}
 
-	public void setLeft() {
+	public void setLeft(double bwlrh, double bwlrv) {
 		BezierCurve curve = new BezierCurve(2);
 
 		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(A.get(0), A.get(1), 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(A.get(0) - 0.2, A.get(1) + hoehe / 2, 0));
+		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(A.get(0) - bwlrh, A.get(1) + hoehe / 2 + bwlrv, 0));
 
 		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(B.get(0), B.get(1), 0));
 
@@ -176,7 +177,7 @@ public class LeftBottomWing {
 		return bottom;
 	}
 
-	public void setBottom(double wingMitteBreite) {
+	public void setBottom(double wingMitteBreite, double bwbh, double bwbv) {
 
 		double breite = wingMitteBreite / 2;
 
@@ -184,7 +185,7 @@ public class LeftBottomWing {
 
 		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(C.get(0), C.get(1) - breite, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(D.get(0), D.get(1), 0));
+		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(D.get(0) - bwbh, D.get(1) + bwbv, 0));
 
 		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(A.get(0), A.get(1), 0));
 
