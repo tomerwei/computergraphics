@@ -36,15 +36,23 @@ import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 import cgresearch.graphics.scenegraph.Transformation;
+import cgresearch.rendering.jogl.misc.OctreeFactoryStrategyScene;
+import cgresearch.rendering.jogl.misc.ViewFrustumCulling;
 
 public class FrustumTestFrame extends CgApplication {
 
   public static OctreeFactoryStrategyScene scene;
-  private ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();  
+  private ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
 
   public static final double objectsTransparency = 0.5;
 
   public FrustumTestFrame(CgNode root, double nearDistance, double farDistance) {
+
+    // 1) Stelle Testszene zusammen
+    //getCgRootNode().addChild(...);
+    
+    // 2 View frustum culling anschalten
+    getCgRootNode().setUseViewFrustumCulling(true);
 
     getCgRootNode().setUseBlending(true);
     ArrayList<CgNode> objects = new ArrayList<CgNode>();
@@ -61,7 +69,7 @@ public class FrustumTestFrame extends CgApplication {
     objects = traversalOctreeNode(root, objects);
     // hole leafNodes
 
-    buildSceneGraph(root);
+    //buildSceneGraph(root);
 
     // ############### Transformation fuer Testfrustum ###############
     // TriangleMeshTransformation.scale(cow, 4.5);
@@ -209,15 +217,16 @@ public class FrustumTestFrame extends CgApplication {
    * @return
    */
   public ArrayList<CgNode> traversalOctreeNode(CgNode node, ArrayList<CgNode> objects) {
-      if (node.getNumChildren() > 0) {
-          for (int i = 0; i < node.getNumChildren(); i++) {
-              traversalOctreeNode(node.getChildNode(i), objects);
-          }
-      } else {
-          if(node.getContent() != null && (node.getContent().getClass()== TriangleMesh.class || node.getContent().getClass() == PointCloud.class)){
-              node.getContent().getMaterial().setTransparency(objectsTransparency);
-              objects.add(node);
-          }
+    if (node.getNumChildren() > 0) {
+      for (int i = 0; i < node.getNumChildren(); i++) {
+        traversalOctreeNode(node.getChildNode(i), objects);
+      }
+    } else {
+      if (node.getContent() != null
+          && (node.getContent().getClass() == TriangleMesh.class || node.getContent().getClass() == PointCloud.class)) {
+        node.getContent().getMaterial().setTransparency(objectsTransparency);
+        objects.add(node);
+      }
     }
     return objects;
   }

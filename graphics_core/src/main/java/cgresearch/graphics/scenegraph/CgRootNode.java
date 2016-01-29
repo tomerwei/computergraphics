@@ -28,6 +28,11 @@ public class CgRootNode extends CgNode {
   private boolean useBlending = false;
 
   /**
+   * Indicates that view frustum culling should be used.
+   */
+  private boolean useViewFrustumCulling = false;
+
+  /**
    * Constructor.
    */
   public CgRootNode() {
@@ -92,5 +97,13 @@ public class CgRootNode extends CgNode {
 
   public void setUseBlending(boolean useBlending) {
     this.useBlending = useBlending;
+  }
+
+  public boolean useViewFrustumCulling() {
+    return useViewFrustumCulling;
+  }
+
+  public void setUseViewFrustumCulling(boolean value) {
+    useViewFrustumCulling = value;
   }
 }

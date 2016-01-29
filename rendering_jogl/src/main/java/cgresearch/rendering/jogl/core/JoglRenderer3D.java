@@ -18,6 +18,7 @@ import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.*;
 import cgresearch.rendering.jogl.misc.PickingRenderer;
+import cgresearch.rendering.jogl.misc.ViewFrustumCulling;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -128,6 +129,11 @@ public class JoglRenderer3D implements Observer {
    * Defines whether the two sided stencil buffer is used
    */
   // private boolean useTwoSidedStencil = false;
+
+  /**
+   * Handles the view frustum culling.
+   */
+  private final ViewFrustumCulling viewFrustum = new ViewFrustumCulling(Camera.getInstance());
 
   /**
    * Constructor.
@@ -847,6 +853,11 @@ public class JoglRenderer3D implements Observer {
     }
     if (!node.isVisible()) {
       return;
+    }
+
+    // Falls nicht im view frustum -> return
+    if (rootNode.useViewFrustumCulling()) {
+      viewFrustum.computeVisibleScenePart(rootNode);
     }
 
     if (Camera.getInstance().getCenterViewRequired()) {

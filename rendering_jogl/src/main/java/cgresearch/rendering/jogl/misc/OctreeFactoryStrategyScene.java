@@ -1,4 +1,4 @@
-package cgresearch.studentprojects.viewfrustum;
+package cgresearch.rendering.jogl.misc;
 
 import java.util.ArrayList;
 import java.util.HashMap;

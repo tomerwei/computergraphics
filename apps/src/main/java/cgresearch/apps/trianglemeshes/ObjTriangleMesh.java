@@ -47,8 +47,8 @@ public class ObjTriangleMesh extends CgApplication {
     // loadFenja();
     // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    // loadPlaneWithBunny();
-    loadMedivalHouse();
+    loadPlaneWithBunny();
+    // loadMedivalHouse();
     // loadHulk();
     // loadNofretete();
     Logger.getInstance().setVerboseMode(VerboseMode.DEBUG);
@@ -117,7 +117,7 @@ public class ObjTriangleMesh extends CgApplication {
   }
 
   public void loadPlaneWithBunny() {
-    // getCgRootNode().setUseBlending(true);
+    getCgRootNode().setUseBlending(true);
     Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
     plane.getMaterial().setReflectionAmbient(Material.PALETTE2_COLOR1);
     // plane.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR1);
