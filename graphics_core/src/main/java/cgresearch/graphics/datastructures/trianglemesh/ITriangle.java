@@ -53,4 +53,9 @@ public interface ITriangle {
    */
   public int get(int i);
 
+  /**
+   * Returns the index of the third (not provided) incident vertex
+   */
+  public int getOther(int a, int b);
+
 }

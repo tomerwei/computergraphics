@@ -50,22 +50,23 @@ void main (void)
             
         // Diffuse
         vec3 diffuse = vec3(0,0,0);
-        //if ( dot( N, L ) > 0.0 ){
+        vec3 specular = vec3(0,0,0);
+        if ( dot( N, L ) > 0.0 ){
             diffuse.x = reflectionDiffuse.x * gl_LightSource[i].diffuse.x;
             diffuse.y = reflectionDiffuse.y * gl_LightSource[i].diffuse.y;
             diffuse.z = reflectionDiffuse.z * gl_LightSource[i].diffuse.z;
             diffuse = diffuse * clamp( abs(dot( N, L )), 0.0, 1.0 );// / float(numberOfLights);
-        //}
-
-        // Specular
-        vec3 E = normalize( camera_position - p );
-        vec3 R = normalize( reflect( L, N) );
-        vec3 specular;
-        specular.x = reflectionSpecular.x * gl_LightSource[i].specular.x;
-        specular.y = reflectionSpecular.y * gl_LightSource[i].specular.y;
-        specular.z = reflectionSpecular.z * gl_LightSource[i].specular.z;
-        specular = specular * pow(abs(dot(R,E)), gl_FrontMaterial.shininess);// / float(numberOfLights);
-
+            
+            // Specular
+            vec3 E = normalize( camera_position - p );
+            vec3 R = normalize( reflect( L, N) );
+            
+            specular.x = reflectionSpecular.x * gl_LightSource[i].specular.x;
+            specular.y = reflectionSpecular.y * gl_LightSource[i].specular.y;
+            specular.z = reflectionSpecular.z * gl_LightSource[i].specular.z;
+            specular = specular * pow(abs(dot(R,E)), gl_FrontMaterial.shininess);// / float(numberOfLights);
+        }
+        
         if ( isSpot ){
             float distance = dot( p, gl_LightSource[i].spotDirection) - dot(gl_LightSource[i].position.xyz, gl_LightSource[i].spotDirection);
             bool isInSpot = dot(-L, normalize(gl_LightSource[i].spotDirection)) > cos(gl_LightSource[i].spotCutoff);

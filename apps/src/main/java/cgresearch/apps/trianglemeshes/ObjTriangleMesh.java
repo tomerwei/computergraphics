@@ -27,6 +27,7 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.LightSource.Type;
 
@@ -47,9 +48,9 @@ public class ObjTriangleMesh extends CgApplication {
     // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
     // loadPlaneWithBunny();
-    // loadMedivalHouse();
+    loadMedivalHouse();
     // loadHulk();
-    loadNofretete();
+    // loadNofretete();
     Logger.getInstance().setVerboseMode(VerboseMode.DEBUG);
 
     // Coordinate system
@@ -108,9 +109,11 @@ public class ObjTriangleMesh extends CgApplication {
       mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(1, 1, 1));
       mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(1, 1, 1));
       mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0.05, 0.05, 0.05));
+      mesh.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
       CgNode bunnyNode = new CgNode(mesh, "medival house");
       getCgRootNode().addChild(bunnyNode);
     }
+    getCgRootNode().addChild(new CoordinateSystem());
   }
 
   public void loadPlaneWithBunny() {

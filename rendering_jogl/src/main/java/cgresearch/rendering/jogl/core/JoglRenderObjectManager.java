@@ -39,6 +39,7 @@ public class JoglRenderObjectManager extends AbstractRenderObjectManager<JoglRen
     registerRenderObjectsFactory(new JoglRenderObjectFactoryMotionCaptureFrame());
     registerRenderObjectsFactory(new JoglRenderObjectFactoryTransformation());
     registerRenderObjectsFactory(new JoglRenderObjectFactoryLineSegments());
+    registerRenderObjectsFactory(new JoglRenderObjectFactoryPolygon());
   }
 
   /*

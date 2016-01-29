@@ -184,4 +184,31 @@ public class Triangle implements ITriangle {
       texCoordIndices[i] += texCoordOffset;
     }
   }
+
+  @Override
+  public int getOther(int a, int b) {
+    if (!contains(a) || !contains(b)) {
+      throw new IllegalArgumentException("Invalid indices.");
+    }
+
+    for (int i = 0; i < 3; i++) {
+      if (vertexIndices[i] != a && vertexIndices[i] != b) {
+        return vertexIndices[i];
+      }
+    }
+
+    throw new IllegalArgumentException("Invalid indices.");
+  }
+
+  /**
+   * Checks if the index is in the triangle index list.
+   */
+  private boolean contains(int index) {
+    for (int i = 0; i < 3; i++) {
+      if (vertexIndices[i] == index) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

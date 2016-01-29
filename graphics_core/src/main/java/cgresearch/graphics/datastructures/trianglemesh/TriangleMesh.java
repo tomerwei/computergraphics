@@ -13,6 +13,7 @@ import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.material.Material;
 
 /**
  * Datastructure to represent a triangle mesh.
@@ -62,27 +63,31 @@ public class TriangleMesh extends ITriangleMesh {
   /**
    * Copy all content (deep copy).
    */
-  public void copyFrom(TriangleMesh other) {
-    TriangleMesh otherTriangleMesh = (TriangleMesh) other;
-    getMaterial().copyFrom(other.getMaterial());
+  public void copyFrom(ITriangleMesh other) {
+    Material oldMaterial = new Material();
+    oldMaterial.copyFrom(getMaterial());
+
+    // getMaterial().copyFrom(other.getMaterial());
 
     triangles = new ArrayList<ITriangle>();
-    for (int i = 0; i < otherTriangleMesh.getNumberOfTriangles(); i++) {
+    for (int i = 0; i < other.getNumberOfTriangles(); i++) {
       ITriangle triangle = new Triangle(other.getTriangle(i));
       triangles.add(triangle);
     }
 
     vertices = new ArrayList<IVertex>();
-    for (int i = 0; i < otherTriangleMesh.getNumberOfVertices(); i++) {
+    for (int i = 0; i < other.getNumberOfVertices(); i++) {
       IVertex vertex = new Vertex(other.getVertex(i));
       vertices.add(vertex);
     }
 
     textureCoordinates = new ArrayList<IVector3>();
-    for (int i = 0; i < otherTriangleMesh.getNumberOfTextureCoordinates(); i++) {
+    for (int i = 0; i < other.getNumberOfTextureCoordinates(); i++) {
       IVector3 texCoord = VectorMatrixFactory.newIVector3(other.getTextureCoordinate(i));
       textureCoordinates.add(texCoord);
     }
+
+    getMaterial().copyFrom(oldMaterial);
   }
 
   /*
@@ -223,7 +228,7 @@ public class TriangleMesh extends ITriangleMesh {
    */
   @Override
   public IVector3 getTextureCoordinate(int index) {
-    if (textureCoordinates.size() == 0) {
+    if (textureCoordinates.size() == 0 || index < 0) {
       return VectorMatrixFactory.newIVector3(0, 0, 0);
     }
     if (index >= textureCoordinates.size()) {
@@ -339,7 +344,6 @@ public class TriangleMesh extends ITriangleMesh {
       addTriangle(copyTriangle);
     }
     textureCoordinates.clear();
-
   }
 
   @Override
@@ -350,5 +354,36 @@ public class TriangleMesh extends ITriangleMesh {
   @Override
   public void removeTriangle(int triangleIndex) {
     triangles.remove(triangleIndex);
+  }
+
+  @Override
+  public void split() {
+    Material oldMaterial = new Material();
+    oldMaterial.copyFrom(getMaterial());
+    ITriangleMesh newMesh = new TriangleMesh();
+    for (IVertex vertex : vertices) {
+      newMesh.addVertex(vertex);
+    }
+    for (int triangleIndex = 0; triangleIndex < getNumberOfTriangles(); triangleIndex++) {
+      ITriangle triangle = getTriangle(triangleIndex);
+      int a = triangle.getA();
+      int b = triangle.getB();
+      int c = triangle.getC();
+      IVector3 posAb = (vertices.get(a).getPosition().add(vertices.get(b).getPosition())).multiply(0.5);
+      IVector3 posBc = (vertices.get(b).getPosition().add(vertices.get(c).getPosition())).multiply(0.5);
+      IVector3 posCa = (vertices.get(c).getPosition().add(vertices.get(a).getPosition())).multiply(0.5);
+      int ab = newMesh.addVertex(new Vertex(posAb));
+      int bc = newMesh.addVertex(new Vertex(posBc));
+      int ca = newMesh.addVertex(new Vertex(posCa));
+      newMesh.addTriangle(new Triangle(a, ab, ca));
+      newMesh.addTriangle(new Triangle(ab, b, bc));
+      newMesh.addTriangle(new Triangle(ca, ab, bc));
+      newMesh.addTriangle(new Triangle(ca, bc, c));
+    }
+    newMesh = NodeMerger.merge(newMesh, 1e-5);
+    newMesh.computeTriangleNormals();
+    newMesh.computeVertexNormals();
+    newMesh.getMaterial().copyFrom(oldMaterial);
+    copyFrom((TriangleMesh) newMesh);
   }
 }

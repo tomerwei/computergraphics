@@ -144,4 +144,16 @@ public abstract class ITriangleMesh extends ICgNodeContent {
    *          Triangle index.
    */
   public abstract void removeTriangle(int triangleIndex);
+
+  /**
+   * Split each triangle of the mesh in 4 triangles.
+   */
+  public abstract void split();
+
+  /**
+   * Clone the other mesh.
+   * 
+   * @param mesh
+   */
+  public abstract void copyFrom(ITriangleMesh mesh);
 }

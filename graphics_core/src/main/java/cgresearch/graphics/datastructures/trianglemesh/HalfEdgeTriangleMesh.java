@@ -8,6 +8,7 @@ import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.material.Material;
 
 /**
  * A triangle mesh a a list of facets, a list of half edges and a list of
@@ -321,11 +322,47 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
 
   @Override
   public void unite(ITriangleMesh otherMesh) {
-    throw new UnsupportedOperationException("Method not implemented.", null);
+    Material oldMaterial = new Material();
+    oldMaterial.copyFrom(otherMesh.getMaterial());
+
+    otherMesh = NodeMerger.merge(otherMesh, 1e-5);
+
+    for (int i = 0; i < otherMesh.getNumberOfVertices(); i++) {
+      addVertex(new HalfEdgeVertex(otherMesh.getVertex(i).getPosition()));
+    }
+    for (int i = 0; i < otherMesh.getNumberOfTriangles(); i++) {
+      ITriangle t = otherMesh.getTriangle(i);
+      addTriangle(t.getA(), t.getB(), t.getC());
+    }
+    connectHalfEdges();
+    computeTriangleNormals();
+    // computeVertexNormals();
+
+    getMaterial().copyFrom(oldMaterial);
+  }
+
+  @Override
+  public void copyFrom(ITriangleMesh mesh) {
+    Material oldMaterial = new Material();
+    oldMaterial.copyFrom(getMaterial());
+    clear();
+    unite(mesh);
+    getMaterial().copyFrom(oldMaterial);
   }
 
   @Override
   public void removeTriangle(int triangleIndex) {
     throw new UnsupportedOperationException("Method removeTriangle() bnot implemente yet fir HalfEdgeTriangleMesh.");
+  }
+
+  @Override
+  public void split() {
+    Material oldMaterial = new Material();
+    oldMaterial.copyFrom(getMaterial());
+    TriangleMesh mesh = new TriangleMesh();
+    mesh.copyFrom(this);
+    mesh.split();
+    copyFrom(mesh);
+    getMaterial().copyFrom(oldMaterial);
   }
 }
