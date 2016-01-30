@@ -115,7 +115,7 @@ public class FrustumTestFrame extends CgApplication {
       ResourcesLocator.getInstance().parseIniFile("resources.ini");
       CgApplication app =  new FrustumTestFrame();
       ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), -8.0, -2.0); //TODO fuer den Live-Modus diese
-      vfc.computeVisibleScenePart(app.getCgRootNode());                                  //TODO  und diese Zeile einkommentieren
+      vfc.computeVisibleScenePart(app.getCgRootNode());                                  //TODO  und diese Zeile auskommentieren
       JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
 
       appLauncher.create(app);
