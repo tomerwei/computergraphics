@@ -3,10 +3,12 @@ package cgresearch.studentprojects.autogenerator;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -14,8 +16,16 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.Triangle;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.Vertex;
+import cgresearch.graphics.material.CgTexture;
+import cgresearch.graphics.material.Material;
+import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
 import cgresearch.ui.IApplicationControllerGui;
@@ -23,6 +33,8 @@ import cgresearch.ui.IApplicationControllerGui;
 public class GeneratorGUIBut extends IApplicationControllerGui implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+
+	ITriangleMesh triangleMesh = new TriangleMesh();
 
 	JPanel size = new JPanel(new GridLayout(0, 1));
 	TitledBorder sizeBorder = BorderFactory.createTitledBorder("Butterfly");
@@ -81,15 +93,44 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 	JLabel bwlrv = new JLabel("Bottom Wing Left/Right Vertical");
 	JSlider bwlrvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
 
+	JLabel bwlr2h = new JLabel("Bottom Wing Left/Right 2 Horizontal");
+	JSlider bwlr2hs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+
+	JLabel bwlr2v = new JLabel("Bottom Wing Left/Right 2 Vertical");
+	JSlider bwlr2vs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+
 	JLabel bwbh = new JLabel("Bottom Wing Bottom Horizontal");
 	JSlider bwbhs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
 
 	JLabel bwbv = new JLabel("Bottom Wing Bottom Vertical");
 	JSlider bwbvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
 
+	JLabel bwb2h = new JLabel("Bottom Wing Bottom 2 Horizontal");
+	JSlider bwb2hs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+
+	JLabel bwb2v = new JLabel("Bottom Wing Bottom 2 Vertical");
+	JSlider bwb2vs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+
+	JLabel bwtph = new JLabel("Bottom Wing Treffpunkt Horizontal");
+	JSlider bwtphs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+
+	JLabel bwtpv = new JLabel("Bottom Wing Treffpunkt Vertical");
+	JSlider bwtpvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+
+	JPanel bild = new JPanel(new GridLayout(0, 1));
+	TitledBorder bildBorder = BorderFactory.createTitledBorder("Bild Bewegen");
+
+	JButton up = new JButton("Up");
+	JButton down = new JButton("Down");
+	JButton left = new JButton("Left");
+	JButton right = new JButton("Right");
+
 	Butterfly butterfly;
 
 	public GeneratorGUIBut(CgRootNode rootNode) {
+
+		String BUTTER_BILD = "BUTTER_BILD";
+		ResourceManager.getTextureManagerInstance().addResource(BUTTER_BILD, new CgTexture(""));
 
 		setRootNode(rootNode);
 
@@ -185,6 +226,16 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		bwlrvs.setPaintTicks(true);
 		bwlrvs.setPaintLabels(true);
 
+		bwlr2hs.setMajorTickSpacing(100);
+		bwlr2hs.setMinorTickSpacing(10000);
+		bwlr2hs.setPaintTicks(true);
+		bwlr2hs.setPaintLabels(true);
+
+		bwlr2vs.setMajorTickSpacing(100);
+		bwlr2vs.setMinorTickSpacing(10000);
+		bwlr2vs.setPaintTicks(true);
+		bwlr2vs.setPaintLabels(true);
+
 		bwbhs.setMajorTickSpacing(100);
 		bwbhs.setMinorTickSpacing(10000);
 		bwbhs.setPaintTicks(true);
@@ -194,6 +245,55 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		bwbvs.setMinorTickSpacing(10000);
 		bwbvs.setPaintTicks(true);
 		bwbvs.setPaintLabels(true);
+
+		bwb2hs.setMajorTickSpacing(100);
+		bwb2hs.setMinorTickSpacing(10000);
+		bwb2hs.setPaintTicks(true);
+		bwb2hs.setPaintLabels(true);
+
+		bwb2vs.setMajorTickSpacing(100);
+		bwb2vs.setMinorTickSpacing(10000);
+		bwb2vs.setPaintTicks(true);
+		bwb2vs.setPaintLabels(true);
+
+		bwtphs.setMajorTickSpacing(100);
+		bwtphs.setMinorTickSpacing(10000);
+		bwtphs.setPaintTicks(true);
+		bwtphs.setPaintLabels(true);
+
+		bwtpvs.setMajorTickSpacing(100);
+		bwtpvs.setMinorTickSpacing(10000);
+		bwtpvs.setPaintTicks(true);
+		bwtpvs.setPaintLabels(true);
+
+		up.setEnabled(false);
+		down.setEnabled(false);
+		left.setEnabled(false);
+		right.setEnabled(false);
+
+		up.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				moveBildUp();
+			}
+		});
+
+		down.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				moveBildDown();
+			}
+		});
+
+		left.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				moveBildLeft();
+			}
+		});
+
+		right.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				moveBildRight();
+			}
+		});
 
 		bhs.addChangeListener(new ChangeListener() {
 
@@ -357,6 +457,24 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 			}
 		});
 
+		bwlr2hs.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				remove();
+				generateButterfly();
+			}
+		});
+
+		bwlr2vs.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				remove();
+				generateButterfly();
+			}
+		});
+
 		bwbhs.addChangeListener(new ChangeListener() {
 
 			@Override
@@ -374,6 +492,49 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 				generateButterfly();
 			}
 		});
+
+		bwb2hs.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				remove();
+				generateButterfly();
+			}
+		});
+
+		bwb2vs.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				remove();
+				generateButterfly();
+			}
+		});
+
+		bwtphs.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				remove();
+				generateButterfly();
+			}
+		});
+
+		bwtpvs.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				remove();
+				generateButterfly();
+			}
+		});
+
+		bild.setBorder(bildBorder);
+		bild.setSize(100, 300);
+		bild.add(up);
+		bild.add(down);
+		bild.add(left);
+		bild.add(right);
 
 		size.setBorder(sizeBorder);
 		size.setSize(100, 300);
@@ -413,11 +574,34 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		size.add(bwlrhs);
 		size.add(bwlrv);
 		size.add(bwlrvs);
+		size.add(bwlr2h);
+		size.add(bwlr2hs);
+		size.add(bwlr2v);
+		size.add(bwlr2vs);
 		size.add(bwbh);
 		size.add(bwbhs);
 		size.add(bwbv);
 		size.add(bwbvs);
+		size.add(bwb2h);
+		size.add(bwb2hs);
+		size.add(bwb2v);
+		size.add(bwb2vs);
+		size.add(bwtph);
+		size.add(bwtphs);
+		size.add(bwtpv);
+		size.add(bwtpvs);
 		add(size);
+		add(bild);
+
+		JButton bild = new JButton("Bild hochladen");
+		bild.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				removeBild();
+				loadBild();
+			}
+
+		});
+		add(bild);
 
 		JButton generate = new JButton("Generate");
 		generate.addActionListener(new ActionListener() {
@@ -477,12 +661,21 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		double bwlrh = (double) bwlrhs.getValue() / 100;
 		double bwlrv = (double) bwlrvs.getValue() / 100;
 
+		double bwlr2h = (double) bwlr2hs.getValue() / 100;
+		double bwlr2v = (double) bwlr2vs.getValue() / 100;
+
 		double bwbh = (double) bwbhs.getValue() / 100;
 		double bwbv = (double) bwbvs.getValue() / 100;
 
+		double bwb2h = (double) bwb2hs.getValue() / 100;
+		double bwb2v = (double) bwb2vs.getValue() / 100;
+
+		double bwtph = (double) bwtphs.getValue() / 100;
+		double bwtpv = (double) bwtpvs.getValue() / 100;
+
 		butterfly = null;
 		butterfly = new Butterfly(bh, bl, wingProzent, wmb, twh, twl, bwh, bwl, twth, twtv, twlrh, twlrv, twtph, twtpv,
-				twbh, twbv, bwlrh, bwlrv, bwbh, bwbv);
+				twbh, twbv, bwlrh, bwlrv, bwbh, bwbv, bwtph, bwtpv, bwb2h, bwb2v, bwlr2h, bwlr2v);
 
 		CgNode father = new CgNode(null, "butterfly");
 
@@ -559,6 +752,117 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		i = 1;
 
 		getRootNode().addChild(father);
+
+	}
+
+	public void removeBild() {
+
+		up.setEnabled(false);
+		down.setEnabled(false);
+		left.setEnabled(false);
+		right.setEnabled(false);
+
+		int children = getRootNode().getNumChildren();
+		for (int i = 0; i < children; i++) {
+			CgNode temp = getRootNode().getChildNode(i);
+			if (temp.getName().equals("bild")) {
+				getRootNode().getChildNode(i).deleteNode();
+				break;
+			}
+		}
+	}
+
+	public void moveBildUp() {
+
+		triangleMesh.getVertex(0).getPosition().set(1, triangleMesh.getVertex(0).getPosition().get(1) + 0.05);
+
+		triangleMesh.getVertex(1).getPosition().set(1, triangleMesh.getVertex(1).getPosition().get(1) + 0.05);
+
+		triangleMesh.getVertex(2).getPosition().set(1, triangleMesh.getVertex(2).getPosition().get(1) + 0.05);
+
+		triangleMesh.getVertex(3).getPosition().set(1, triangleMesh.getVertex(3).getPosition().get(1) + 0.05);
+
+		triangleMesh.updateRenderStructures();
+	}
+
+	public void moveBildDown() {
+
+		triangleMesh.getVertex(0).getPosition().set(1, triangleMesh.getVertex(0).getPosition().get(1) - 0.05);
+
+		triangleMesh.getVertex(1).getPosition().set(1, triangleMesh.getVertex(1).getPosition().get(1) - 0.05);
+
+		triangleMesh.getVertex(2).getPosition().set(1, triangleMesh.getVertex(2).getPosition().get(1) - 0.05);
+
+		triangleMesh.getVertex(3).getPosition().set(1, triangleMesh.getVertex(3).getPosition().get(1) - 0.05);
+
+		triangleMesh.updateRenderStructures();
+	}
+
+	public void moveBildLeft() {
+
+		triangleMesh.getVertex(0).getPosition().set(0, triangleMesh.getVertex(0).getPosition().get(0) - 0.05);
+
+		triangleMesh.getVertex(1).getPosition().set(0, triangleMesh.getVertex(1).getPosition().get(0) - 0.05);
+
+		triangleMesh.getVertex(2).getPosition().set(0, triangleMesh.getVertex(2).getPosition().get(0) - 0.05);
+
+		triangleMesh.getVertex(3).getPosition().set(0, triangleMesh.getVertex(3).getPosition().get(0) - 0.05);
+
+		triangleMesh.updateRenderStructures();
+	}
+
+	public void moveBildRight() {
+
+		triangleMesh.getVertex(0).getPosition().set(0, triangleMesh.getVertex(0).getPosition().get(0) + 0.05);
+
+		triangleMesh.getVertex(1).getPosition().set(0, triangleMesh.getVertex(1).getPosition().get(0) + 0.05);
+
+		triangleMesh.getVertex(2).getPosition().set(0, triangleMesh.getVertex(2).getPosition().get(0) + 0.05);
+
+		triangleMesh.getVertex(3).getPosition().set(0, triangleMesh.getVertex(3).getPosition().get(0) + 0.05);
+
+		triangleMesh.updateRenderStructures();
+	}
+
+	public void loadBild() {
+
+		int a = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-3, -0.4, -0.1)));
+		int b = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(3, -0.4, -0.1)));
+		int c = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-3, 2.6, -0.1)));
+		int d = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(3, 2.6, -0.1)));
+
+		int ta = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 0, -1));
+		int tb = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 0, -1));
+		int tc = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 1, -1));
+		int td = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 1, -1));
+
+		triangleMesh.addTriangle(new Triangle(a, b, c, ta, tb, tc));
+		triangleMesh.addTriangle(new Triangle(b, c, d, tb, tc, td));
+
+		triangleMesh.computeTriangleNormals();
+		triangleMesh.computeVertexNormals();
+
+		triangleMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+
+		final JFileChooser fc = new JFileChooser(
+				"C:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\");
+		fc.showOpenDialog(this);
+		File chosenBild = fc.getSelectedFile();
+
+		String path = chosenBild.getPath();
+
+		ResourceManager.getTextureManagerInstance().getResource("BUTTER_BILD").setTextureFilename(path);
+		System.out.println(path);
+
+		triangleMesh.getMaterial().setTextureId("BUTTER_BILD");
+
+		CgNode bild = new CgNode(triangleMesh, "bild");
+		getRootNode().addChild(bild);
+
+		up.setEnabled(true);
+		down.setEnabled(true);
+		left.setEnabled(true);
+		right.setEnabled(true);
 
 	}
 
