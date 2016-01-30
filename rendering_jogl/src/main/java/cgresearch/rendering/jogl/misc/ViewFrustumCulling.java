@@ -308,11 +308,8 @@ public class ViewFrustumCulling {
         cornerPoints[i].set(Z, tmp * -1);
 
       }
-      // cornerPoints[nbr] = cornerPoints[nbr].multiply(-1.0);
-      // cornerPoints[nbl] = cornerPoints[nbl].multiply(-1.0);
-      // cornerPoints[ntr] = cornerPoints[ntr].multiply(-1.0);
-      // cornerPoints[ntl] = cornerPoints[ntl].multiply(-1.0);
     }
+    /*Debugging
     System.out.println("farBottomRight = " + cornerPoints[fbr]);
     System.out.println("farBottomLeft = " + cornerPoints[fbl]);
     System.out.println("farTopRight = " + cornerPoints[ftr]);
@@ -321,6 +318,7 @@ public class ViewFrustumCulling {
     System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
     System.out.println("nearTopRight = " + cornerPoints[ntr]);
     System.out.println("nearTopleft = " + cornerPoints[ntl]);
+    */
 
     // Berechne Ebene
     // nah
@@ -572,43 +570,10 @@ public class ViewFrustumCulling {
   public ArrayList<OctreeNode<Integer>> checkOctree(OctreeNode<Integer> octreeNode,
       ArrayList<OctreeNode<Integer>> toDraw, CgNode node) {
     node.setVisible(false);
-    // if(checked.contains(octreeNode)){
-    // return null;
-    // }
-    // else{
-    // checked.add(octreeNode);
-    // }
-    // diese Abfrage ist nun uberflussig, da octreeNode aufgrund der vorherigen
-    // Abfrage auf
-    // Intersections mit der sceneBoundingBox das Frustum sowieso schneidet und
-    // nicht mehr
-    // komplett au�erhalb liegen kan
-    //
-    // if (isObjectInFrustum(octreeNode) == 1) {
-    // return null;
-    // }
     if (isObjectInFrustum(octreeNode) == 0) {
-      // komplett drinnen, also hole die leafNodes, weitere Ueberpruefung auf
-      // Intersection ueberflussig
-      // traversalOctreeNode(octreeNode, toDraw, node);
       node.setVisible(true);
       return null;
     }
-    // if (isObjectInFrustum(octreeNode) == 2) {
-    // needToExtract = true;
-    //
-    // if(octreeNode.getNumberOfChildren() > 0){
-    // // geschnitten und noch Kindknoten, also ueberpruefe diese
-    // for (int i = 0; i < octreeNode.getNumberOfChildren(); i++) {
-    // checkOctree(octreeNode.getChild(i), toDraw, node);
-    // }
-    // }
-    // if (octreeNode.getNumberOfChildren() == 0) {
-    // // geschnitten und keine Kinder, also fuege diesen Knoten hinzu
-    // toDraw.add(octreeNode);// (octree_node, to_draw);
-    //// node.setVisible(true);
-    // }
-    // }
     if (isObjectInFrustum(octreeNode) == 2) {
       node.setVisible(false);
       toDraw = traversalOctreeNodeIntersected(octreeNode, toDraw);
@@ -745,6 +710,122 @@ public class ViewFrustumCulling {
    * triangle meshes.
    */
   public void computeVisibleScenePart(CgRootNode rootNode) {
-    // TODO
+      ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
+      ArrayList<CgNode> objects = new ArrayList<CgNode>();
+
+      // berechne View Frustum und zeichne Ebenen
+      ITriangleMesh frustum = getFrustumMesh(this.getCorners());
+      frustum.getMaterial().setTransparency(objectsTransparency);
+      
+      rootNode.addChild(new CgNode(frustum, "frustum")); //TODO hier Frustum sichtbar machen
+
+      // hole leafNodes
+      objects = traversalOctreeNode(rootNode, objects);
+
+      // erzeuge Octrees fuer jedes Mesh
+      ArrayList<OctreeNode<Integer>> octrees = new ArrayList<OctreeNode<Integer>>();
+      for (int i = 0; i < objects.size(); i++) {
+        ITriangleMesh mesh = (ITriangleMesh) objects.get(i).getContent();
+        TriangleMeshTools.cleanup(mesh);
+        octrees.add(createMeshOctree((TriangleMesh) objects.get(i).getContent()));
+      }
+      
+      if (objects.size() > 0) {
+        OctreeNode<Integer> octreeScene = createSceneOctree(objects);
+
+        extractNodesOfFrustum(this, octreeScene, visibleNodes);
+
+        // alles zuerst invisible setzen
+        for (int i = 0; i < objects.size(); i++) {
+          objects.get(i).setVisible(false); // TODO hier muss eigentlich false
+                                            // stehen, true nur fuer Debugging
+        }
+        // fuege sichtbare Elemente der Szene hinzu
+        for (int j = 0; j < objects.size(); j++) {
+          for (int k = 0; k < visibleNodes.size(); k++) {
+            addVisibleElementsToScene(rootNode, this, octrees.get(j), objects.get(j), visibleNodes.get(k));
+          }
+        }
+      }
   }
+  
+  /**
+   * wird aufgerufen, wenn ein OctreeNode komplett innerhalb des Frustums liegt,
+   * um an seine Leafnodes zu kommen
+   * 
+   * @param node
+   *          der OctreeNode, der komplett im Frustum liegt
+   * @param objects
+   *          ArrayList, der die leafnodes hinzugefuegt werden
+   * @return
+   */
+  public ArrayList<CgNode> traversalOctreeNode(CgNode node, ArrayList<CgNode> objects) {
+    if (node.getNumChildren() > 0) {
+      for (int i = 0; i < node.getNumChildren(); i++) {
+        traversalOctreeNode(node.getChildNode(i), objects);
+      }
+    } else {
+      if (node.getContent() != null
+          && (node.getContent().getClass() == TriangleMesh.class || node.getContent().getClass() == PointCloud.class)) {
+        node.getContent().getMaterial().setTransparency(objectsTransparency);
+        objects.add(node);
+      }
+    }
+    return objects;
+  }
+  
+  /**
+   * erzeugt einen Octree fuer ein TriangleMesh
+   */
+  public OctreeNode<Integer> createMeshOctree(ITriangleMesh mesh) {
+    OctreeFactoryStrategyTriangleMesh octreeFactoryStrategyMesh = new OctreeFactoryStrategyTriangleMesh(mesh);
+    OctreeFactory<Integer> octreeFactoryMesh = new OctreeFactory<Integer>(octreeFactoryStrategyMesh);
+    OctreeNode<Integer> octreeMeshRoot = octreeFactoryMesh.create(7, 20);
+    return octreeMeshRoot;
+  }
+  
+  /**
+   * erzeugt einen Octree fuer die Szene
+   */
+  public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
+    OctreeFactoryStrategyScene octreeFactoryStrategyScene = new OctreeFactoryStrategyScene(objects);
+    OctreeFactory<Integer> octreeFactoryScene = new OctreeFactory<Integer>(octreeFactoryStrategyScene);
+    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 10);
+    return octreeSceneRoot;
+  }
+  
+  /**
+   * fuegt einer Liste die LeafNodes des SceneOctrees hinzu, die im Frustum
+   * liegen oder es schneiden
+   * 
+   * @param vfc
+   *          ViewFrustumCulling, fuer welches der SzeneOctree getestet wird
+   * @param node
+   *          SceneOctree
+   * @param nodesInFrustum
+   *          Liste, der die sichtbaren Nodes hinzugefuegt werden
+   */
+  public void extractNodesOfFrustum(ViewFrustumCulling vfc, OctreeNode<Integer> node,
+      ArrayList<OctreeNode<Integer>> nodesInFrustum) {
+    if (node.getNumberOfChildren() > 0) {
+      for (int i = 0; i < node.getNumberOfChildren(); i++) {
+        extractNodesOfFrustum(vfc, node.getChild(i), nodesInFrustum);
+      }
+    } else {
+      if (vfc.isObjectInFrustum(node) == 0 || vfc.isObjectInFrustum(node) == 2) {
+        nodesInFrustum.add(node);
+      }
+    }
+  }
+  
+  public void addVisibleElementsToScene(CgNode rootNode,ViewFrustumCulling vfc, OctreeNode<Integer> tree, CgNode node,
+          OctreeNode<Integer> scene) {
+        ICgNodeContent partlyVisible = vfc.extractNodeContent(tree, node, scene);
+        // System.out.println("8");
+        if (vfc.isObjectInFrustum(node.getContent()) == 2) {
+          CgNode newNode = new CgNode(partlyVisible, "partyVisible_object");
+          rootNode.addChild(newNode);
+        }
+        partlyVisible = null;
+      }
 }
