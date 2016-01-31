@@ -55,6 +55,8 @@ public class ButModel {
 			BezierCurve ltl = new BezierCurve(2);
 			BezierCurve ltt = new BezierCurve(2);
 
+			System.out.println(points.size());
+
 			if (points.size() == butVektor) {
 				btl.setControlPoint(0, points.get(0));
 				btl.setControlPoint(1, points.get(1));
@@ -115,6 +117,7 @@ public class ButModel {
 				ltt.setControlPoint(0, points.get(42));
 				ltt.setControlPoint(1, points.get(44));
 				ltt.setControlPoint(2, points.get(0));
+
 			} else {
 				btl.setControlPoint(0, points.get(0));
 				btl.setControlPoint(1, points.get(1));
