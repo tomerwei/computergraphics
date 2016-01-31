@@ -557,7 +557,7 @@ public class GeneratorGUI2DNew extends IApplicationControllerGui implements Acti
 	}
 
 	public void applyPCA() {
-		analyzer.applyPCA(data18);
+//		analyzer.applyPCA(data18);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

@@ -1258,7 +1258,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void applyPCA() {
-		analyzer.applyPCA(data18);
+//		analyzer.applyPCA(data18);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
