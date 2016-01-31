@@ -60,16 +60,16 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 	JSlider bls = new JSlider(JSlider.HORIZONTAL, 0, 50, 29);
 
 	JLabel twh = new JLabel("Top wings Hoehe");
-	JSlider twhs = new JSlider(JSlider.HORIZONTAL, 10, 150, 150);
+	JSlider twhs = new JSlider(JSlider.HORIZONTAL, 10, 300, 150);
 
 	JLabel twl = new JLabel("Top wings Laenge");
-	JSlider twls = new JSlider(JSlider.HORIZONTAL, 10, 150, 150);
+	JSlider twls = new JSlider(JSlider.HORIZONTAL, 10, 300, 150);
 
 	JLabel bwh = new JLabel("Bottom wings Hoehe");
-	JSlider bwhs = new JSlider(JSlider.HORIZONTAL, 10, 150, 93);
+	JSlider bwhs = new JSlider(JSlider.HORIZONTAL, 10, 300, 93);
 
 	JLabel bwl = new JLabel("Bottom wings Laenge");
-	JSlider bwls = new JSlider(JSlider.HORIZONTAL, 10, 150, 67);
+	JSlider bwls = new JSlider(JSlider.HORIZONTAL, 10, 300, 67);
 
 	JLabel wmb = new JLabel("Wings Mitte Breite");
 	JSlider wmbs = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
@@ -680,8 +680,8 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 	public void generateFromData() {
 
-		int autozahl = 3;
-		Car car = new Car(this.data32.getX().get(autozahl), this.data32.getY().get(autozahl),
+		int autozahl = 0;
+		ButModel car = new ButModel(this.data32.getX().get(autozahl), this.data32.getY().get(autozahl),
 				this.data32.getZ().get(autozahl));
 
 		// EigenAuto
@@ -801,7 +801,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 			az.set(i, 0);
 		}
 
-		Car carnew = new Car(ax, ay, az);
+		ButModel carnew = new ButModel(ax, ay, az);
 
 		CgNode father = new CgNode(null, "butterfly1");
 
