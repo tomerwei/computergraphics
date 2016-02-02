@@ -40,6 +40,10 @@ public class Subdivision3D {
 
     // Map edge -> triangles
     Map<Integer, List<Integer>> edge2Triangles = createEdgeTrianglesMapping(edges);
+    if (edge2Triangles == null) {
+      Logger.getInstance().error("[Subdivide] Failed to do subdivision step.");
+      return;
+    }
 
     // Create vector of new positions
     List<IVector3> newPositions = computeUpdatedVertexPositions(edges, vertex2edgesMapping, edge2Triangles);
@@ -134,18 +138,26 @@ public class Subdivision3D {
       int oldNumberOfVertices, Map<Integer, List<Integer>> edge2Triangles) {
 
     for (int edgeIndex = 0; edgeIndex < edges.size(); edgeIndex++) {
-      Edge edge = edges.get(edgeIndex);
-      IVector3 a = mesh.getVertex(edge.getV0()).getPosition();
-      IVector3 b = mesh.getVertex(edge.getV1()).getPosition();
-      ITriangle t0 = mesh.getTriangle(edge2Triangles.get(edgeIndex).get(0));
-      ITriangle t1 = mesh.getTriangle(edge2Triangles.get(edgeIndex).get(1));
-      IVector3 c = mesh.getVertex(t0.getOther(edge.getV0(), edge.getV1())).getPosition();
-      IVector3 d = mesh.getVertex(t1.getOther(edge.getV0(), edge.getV1())).getPosition();
-      IVector3 newPosition =
-          (a.multiply(3.0 / 8.0)).add(b.multiply(3.0 / 8.0)).add(c.multiply(1.0 / 8.0)).add(d.multiply(1.0 / 8.0));
-
-      int vertexIndex = oldNumberOfVertices + edgeIndex;
-      newPositions.get(vertexIndex).copy(newPosition);
+      if (edges.get(edgeIndex).isBoundary()) {
+        // TODO: Compute boundary new position
+        Edge edge = edges.get(edgeIndex);
+        int vertexIndex = oldNumberOfVertices + edgeIndex;
+        IVector3 a = mesh.getVertex(edge.getV0()).getPosition();
+        IVector3 b = mesh.getVertex(edge.getV1()).getPosition();
+        newPositions.get(vertexIndex).copy((a.add(b)).multiply(0.5));
+      } else if (edge2Triangles.get(edgeIndex).size() == 2) {
+        Edge edge = edges.get(edgeIndex);
+        IVector3 a = mesh.getVertex(edge.getV0()).getPosition();
+        IVector3 b = mesh.getVertex(edge.getV1()).getPosition();
+        ITriangle t0 = mesh.getTriangle(edge2Triangles.get(edgeIndex).get(0));
+        ITriangle t1 = mesh.getTriangle(edge2Triangles.get(edgeIndex).get(1));
+        IVector3 c = mesh.getVertex(t0.getOther(edge.getV0(), edge.getV1())).getPosition();
+        IVector3 d = mesh.getVertex(t1.getOther(edge.getV0(), edge.getV1())).getPosition();
+        IVector3 newPosition =
+            (a.multiply(3.0 / 8.0)).add(b.multiply(3.0 / 8.0)).add(c.multiply(1.0 / 8.0)).add(d.multiply(1.0 / 8.0));
+        int vertexIndex = oldNumberOfVertices + edgeIndex;
+        newPositions.get(vertexIndex).copy(newPosition);
+      }
     }
   }
 
@@ -156,12 +168,37 @@ public class Subdivision3D {
       List<IVector3> newPositions, int oldNumberOfVertices) {
     for (int vertexIndex = 0; vertexIndex < oldNumberOfVertices; vertexIndex++) {
       List<Edge> vertexEdges = vertex2edgesMapping.get(vertexIndex);
-      double beta = (vertexEdges.size() > 3) ? 3.0 / (8.0 * vertexEdges.size()) : 3.0 / 16.0;
-      IVector3 newPosition = mesh.getVertex(vertexIndex).getPosition().multiply(1 - vertexEdges.size() * beta);
-      for (int nIndex = 0; nIndex < vertexEdges.size(); nIndex++) {
-        newPosition.addSelf(mesh.getVertex(vertexEdges.get(nIndex).getOther(vertexIndex)).getPosition().multiply(beta));
+      boolean isBoundary = false;
+      for (Edge edge : vertexEdges) {
+        if (edge.isBoundary()) {
+          isBoundary = true;
+        }
       }
-      newPositions.get(vertexIndex).copy(newPosition);
+      if (isBoundary) {
+        // Boundary: neighbor vertices along boundary edges: 1/8, self: 3/4
+        IVector3 newPosition = mesh.getVertex(vertexIndex).getPosition().multiply(3.0 / 4.0);
+        int numberOfNeighbors = 0;
+        for (int nIndex = 0; nIndex < vertexEdges.size(); nIndex++) {
+          Edge edge = vertexEdges.get(nIndex);
+          if (edge.isBoundary()) {
+            int neighborVertexIndex = edge.getOther(vertexIndex);
+            newPosition.addSelf(mesh.getVertex(neighborVertexIndex).getPosition().multiply(1.0 / 8.0));
+            numberOfNeighbors++;
+          }
+        }
+        if (numberOfNeighbors != 2) {
+          throw new IllegalArgumentException("Counld not find boundary neighbor vertices.");
+        }
+        newPositions.get(vertexIndex).copy(newPosition);
+      } else {
+        double beta = (vertexEdges.size() > 3) ? 3.0 / (8.0 * vertexEdges.size()) : 3.0 / 16.0;
+        IVector3 newPosition = mesh.getVertex(vertexIndex).getPosition().multiply(1 - vertexEdges.size() * beta);
+        for (int nIndex = 0; nIndex < vertexEdges.size(); nIndex++) {
+          newPosition
+              .addSelf(mesh.getVertex(vertexEdges.get(nIndex).getOther(vertexIndex)).getPosition().multiply(beta));
+        }
+        newPositions.get(vertexIndex).copy(newPosition);
+      }
     }
   }
 
@@ -203,6 +240,16 @@ public class Subdivision3D {
       }
     }
     Logger.getInstance().debug("[Subdivision] Created triangle -> edges mapping.");
+
+    for (int edgeIndex = 0; edgeIndex < edges.size(); edgeIndex++) {
+      List<Integer> triangles = edge2Triangles.get(edgeIndex);
+      if (triangles.size() == 1) {
+        edges.get(edgeIndex).setIsBoundary(true);
+      } else {
+        edges.get(edgeIndex).setIsBoundary(false);
+      }
+    }
+
     return edge2Triangles;
   }
 

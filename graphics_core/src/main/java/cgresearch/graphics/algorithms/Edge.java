@@ -2,8 +2,20 @@ package cgresearch.graphics.algorithms;
 
 public class Edge {
 
+  /**
+   * Start vertex index (smaller value).
+   */
   private final int v0;
+
+  /**
+   * End vertex index (larger value).
+   */
   private final int v1;
+  
+  /**
+   * This flag indicates that the edge is a boundary edge.
+   */
+  private Boolean isBoundary = null;
 
   public Edge(int v0, int v1) {
     this.v0 = Math.min(v0, v1);
@@ -57,5 +69,16 @@ public class Edge {
   @Override
   public String toString() {
     return v0 + " <-> " + v1;
+  }
+
+  public void setIsBoundary(boolean value) {
+    isBoundary = value;
+  }
+
+  public boolean isBoundary() {
+    if (isBoundary == null) {
+      throw new IllegalArgumentException("isBoundary not initialized yet!");
+    }
+    return isBoundary;
   }
 }
