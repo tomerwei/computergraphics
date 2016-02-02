@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <groundplan name="4H-HORA Projext1">
+ <groundplan name="distanzVerteilungTest1">
 	<config>
 		<wall_top_height>
 			120.0
@@ -17,10 +17,10 @@
 			0.006
 		</groundplan_scaling_scalar>
 		<angle_tolerance>
-			1.0
+			0.05
 		</angle_tolerance>
 		<distance_interval>
-			0.5
+			5.0
 		</distance_interval>
 	</config>
 	<layer name="Ebene_1" type="WALL">

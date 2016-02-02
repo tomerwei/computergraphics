@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <groundplan name="TestRaum">
+ <groundplan name="distanzVerteilungTest2">
 	<config>
 		<wall_top_height>
-			160
+			120.0
 		</wall_top_height>
 		<window_bottom_height>
-			70
+			20.0
 		</window_bottom_height>
 		<window_top_height>
-			130
+			90.0
 		</window_top_height>
 		<door_top_height>
-			140
+			105.0
 		</door_top_height>
 		<groundplan_scaling_scalar>
-			0.01
+			0.006
 		</groundplan_scaling_scalar>
 		<angle_tolerance>
-			0.0001
+			0.05
 		</angle_tolerance>
 		<distance_interval>
-			1.25
+			5.0
 		</distance_interval>
 	</config>
-	<layer name="WALLS" type="WALL">
-	
-	</layer>
-	<layer name="WINDOWS" type="WINDOW">
-	
-	</layer>
-	<layer name="DOORS" type="DOOR">
+	<layer name="Ebene_1" type="WALL">
 	
 	</layer>
 </groundplan>	
 	
 	
+	
+	<!--
+	<wall id="">
+		<surface id=""/>
+		<surface id=""/>
+	</wall>
+	-->
+		
