@@ -4,6 +4,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -16,6 +21,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import cgresearch.core.math.IVector;
+import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
@@ -32,9 +40,15 @@ import cgresearch.ui.IApplicationControllerGui;
 
 public class GeneratorGUIBut extends IApplicationControllerGui implements ActionListener {
 
+	private final int butVektor = 32;
+	private final int skalar = 10;
+
 	private static final long serialVersionUID = 1L;
 
 	ITriangleMesh triangleMesh = new TriangleMesh();
+	Analyzer analyzer = new Analyzer();
+	ButData data = new ButData();
+	ButData32 data32 = new ButData32();
 
 	JPanel size = new JPanel(new GridLayout(0, 1));
 	TitledBorder sizeBorder = BorderFactory.createTitledBorder("Butterfly");
@@ -46,16 +60,16 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 	JSlider bls = new JSlider(JSlider.HORIZONTAL, 0, 50, 29);
 
 	JLabel twh = new JLabel("Top wings Hoehe");
-	JSlider twhs = new JSlider(JSlider.HORIZONTAL, 10, 150, 150);
+	JSlider twhs = new JSlider(JSlider.HORIZONTAL, 10, 300, 150);
 
 	JLabel twl = new JLabel("Top wings Laenge");
-	JSlider twls = new JSlider(JSlider.HORIZONTAL, 10, 150, 150);
+	JSlider twls = new JSlider(JSlider.HORIZONTAL, 10, 300, 150);
 
 	JLabel bwh = new JLabel("Bottom wings Hoehe");
-	JSlider bwhs = new JSlider(JSlider.HORIZONTAL, 10, 150, 93);
+	JSlider bwhs = new JSlider(JSlider.HORIZONTAL, 10, 300, 93);
 
 	JLabel bwl = new JLabel("Bottom wings Laenge");
-	JSlider bwls = new JSlider(JSlider.HORIZONTAL, 10, 150, 67);
+	JSlider bwls = new JSlider(JSlider.HORIZONTAL, 10, 300, 67);
 
 	JLabel wmb = new JLabel("Wings Mitte Breite");
 	JSlider wmbs = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
@@ -64,58 +78,58 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 	JSlider wms = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
 
 	JLabel twth = new JLabel("Top Wing Top Horizontal");
-	JSlider twths = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twths = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel twtv = new JLabel("Top Wing Top Vertical");
-	JSlider twtvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twtvs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel twlrh = new JLabel("Top Wing Left/Right Horizontal");
-	JSlider twlrhs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twlrhs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel twlrv = new JLabel("Top Wing Left/Right Vertical");
-	JSlider twlrvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twlrvs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel twtph = new JLabel("Top Wing Treffpunkt Horizontal");
-	JSlider twtphs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twtphs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel twtpv = new JLabel("Top Wing Treffpunkt Vertical");
-	JSlider twtpvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twtpvs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel twbh = new JLabel("Top Wing Bottom Horizontal");
-	JSlider twbhs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twbhs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel twbv = new JLabel("Top Wing Bottom Vertical");
-	JSlider twbvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider twbvs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwlrh = new JLabel("Bottom Wing Left/Right Horizontal");
-	JSlider bwlrhs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwlrhs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwlrv = new JLabel("Bottom Wing Left/Right Vertical");
-	JSlider bwlrvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwlrvs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwlr2h = new JLabel("Bottom Wing Left/Right 2 Horizontal");
-	JSlider bwlr2hs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwlr2hs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwlr2v = new JLabel("Bottom Wing Left/Right 2 Vertical");
-	JSlider bwlr2vs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwlr2vs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwbh = new JLabel("Bottom Wing Bottom Horizontal");
-	JSlider bwbhs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwbhs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwbv = new JLabel("Bottom Wing Bottom Vertical");
-	JSlider bwbvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwbvs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwb2h = new JLabel("Bottom Wing Bottom 2 Horizontal");
-	JSlider bwb2hs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwb2hs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwb2v = new JLabel("Bottom Wing Bottom 2 Vertical");
-	JSlider bwb2vs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwb2vs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwtph = new JLabel("Bottom Wing Treffpunkt Horizontal");
-	JSlider bwtphs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwtphs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JLabel bwtpv = new JLabel("Bottom Wing Treffpunkt Vertical");
-	JSlider bwtpvs = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+	JSlider bwtpvs = new JSlider(JSlider.HORIZONTAL, -150, 150, 0);
 
 	JPanel bild = new JPanel(new GridLayout(0, 1));
 	TitledBorder bildBorder = BorderFactory.createTitledBorder("Bild Bewegen");
@@ -124,6 +138,8 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 	JButton down = new JButton("Down");
 	JButton left = new JButton("Left");
 	JButton right = new JButton("Right");
+	JButton save = new JButton("Speichern");
+	JButton fromData = new JButton("Generate form Data");
 
 	Butterfly butterfly;
 
@@ -613,6 +629,207 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		});
 		add(generate);
 
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				saveButterfly();
+			}
+
+		});
+		save.setEnabled(false);
+		add(save);
+
+		JButton serialize = new JButton("Serialisieren");
+		serialize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				serialize();
+			}
+
+		});
+		add(serialize);
+
+		JButton deserialize = new JButton("Deserialisieren");
+		deserialize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				deserialize();
+			}
+
+		});
+		add(deserialize);
+
+		fromData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				remove();
+				generateFromData();
+			}
+
+		});
+		fromData.setEnabled(false);
+		add(fromData);
+
+		JButton applyPCA = new JButton("PCA verwenden");
+		applyPCA.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				applyPCA();
+			}
+
+		});
+		add(applyPCA);
+
+	}
+
+	public void generateFromData() {
+
+		int autozahl = 0;
+		ButModel car = new ButModel(this.data.getX().get(autozahl), this.data.getY().get(autozahl),
+				this.data.getZ().get(autozahl));
+
+		// // EigenAuto
+		//
+		// // Reduziert
+		//
+		// IVector x = new Vector(skalar);
+		// IVector y = new Vector(skalar);
+		//
+		// // Nicht reduziert
+		//
+		// // IVector x = new Vector(carVektor);
+		// // IVector y = new Vector(carVektor);
+		//
+		// IVector xc = new Vector(butVektor);
+		// IVector yc = new Vector(butVektor);
+		//
+		// for (int i = 0; i < butVektor; i++) {
+		// xc.set(i, car.getX().get(i) -
+		// analyzer.getPcaX().getCentroid().get(i));
+		// yc.set(i, car.getY().get(i) -
+		// analyzer.getPcaY().getCentroid().get(i));
+		// }
+		//
+		// for (int i = 0; i < skalar; i++) {
+		//
+		// double xx = 0;
+		// double yy = 0;
+		//
+		// for (int j = 0; j < butVektor; j++) {
+		// xx += analyzer.getBtx().get(j).get(i) * xc.get(j);
+		// yy += analyzer.getBty().get(j).get(i) * yc.get(j);
+		// }
+		//
+		// x.set(i, xx);
+		// y.set(i, yy);
+		//
+		// System.out.println("Alpha x " + i + ": " + x.get(i));
+		// }
+		//
+		// System.out.println();
+		//
+		// // Nicht reduziert
+		//
+		// // for (int i = skalar; i < carVektor; i++) {
+		// // x.set(i, 0);
+		// // y.set(i, 0);
+		// // }
+		//
+		// // Eigen Auto new
+		//
+		// IVector xn = new Vector(butVektor);
+		// IVector yn = new Vector(butVektor);
+		//
+		// for (int i = 0; i < butVektor; i++) {
+		// double xx = 0;
+		// double yy = 0;
+		//
+		// for (int j = 0; j < skalar; j++) {
+		//
+		// xx += analyzer.getEigenX().get(butVektor - 1 - j).get(i) * x.get(j);
+		// yy += analyzer.getEigenY().get(butVektor - 1 - j).get(i) * y.get(j);
+		// }
+		//
+		// xn.set(i, xx);
+		// yn.set(i, yy);
+		// }
+		//
+		// // New Auto
+		//
+		// IVector ax = new Vector(butVektor);
+		// IVector ay = new Vector(butVektor);
+		// IVector az = new Vector(butVektor);
+		//
+		// for (int i = 0; i < butVektor; i++) {
+		// double xx = 0;
+		// double yy = 0;
+		//
+		// // Nicht reduziert
+		//
+		// // for (int j = 0; j < carVektor; j++) {
+		//
+		// // Reduziert
+		//
+		// for (int j = 0; j < skalar; j++) {
+		//
+		// // New Auto
+		//
+		// // xx += analyzer.getBx().get(j).get(i) * xn.get(j);
+		// // yy += analyzer.getBy().get(j).get(i) * yn.get(j);
+		//
+		// // Dasselbe Auto
+		//
+		// xx += analyzer.getBx().get(j).get(i) * x.get(j);
+		// yy += analyzer.getBy().get(j).get(i) * y.get(j);
+		//
+		// if (i == 0) {
+		// // System.out.println("Alpha x " + j + ": " + x.get(j));
+		// System.out.println("Alpha y " + j + ": " + y.get(j));
+		// }
+		// }
+		//
+		// ax.set(i, xx);
+		// ay.set(i, yy);
+		// }
+		//
+		// for (int i = 0; i < butVektor; i++) {
+		// double xi = 0;
+		// double yi = 0;
+		//
+		// xi = ax.get(i) + analyzer.getPcaX().getCentroid().get(i);
+		// yi = ay.get(i) + analyzer.getPcaY().getCentroid().get(i);
+		//
+		// ax.set(i, xi);
+		// ay.set(i, yi);
+		// }
+		//
+		// for (int i = 0; i < butVektor; i++) {
+		// az.set(i, 0);
+		// }
+		//
+		// ButModel carnew = new ButModel(ax, ay, az);
+
+		CgNode father = new CgNode(null, "butterfly1");
+
+		int i = 1;
+		for (BezierCurve c : car.getCurves()) {
+			CgNode node = new CgNode(c, "BezierCurve " + i);
+			father.addChild(node);
+			i++;
+		}
+
+		getRootNode().addChild(father);
+
+		// CgNode father2 = new CgNode(null, "butterfly2");
+		//
+		// int i2 = 1;
+		// for (BezierCurve c : carnew.getCurves()) {
+		// CgNode node = new CgNode(c, "BezierCurve2 " + i2);
+		//
+		// father2.addChild(node);
+		// i2++;
+		// }
+		//
+		// getRootNode().addChild(father2);
+
+		fromData.setEnabled(false);
+
 	}
 
 	public void remove() {
@@ -753,6 +970,8 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 		getRootNode().addChild(father);
 
+		save.setEnabled(true);
+
 	}
 
 	public void removeBild() {
@@ -863,6 +1082,223 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		down.setEnabled(true);
 		left.setEnabled(true);
 		right.setEnabled(true);
+
+	}
+
+	public void saveButterfly() {
+		ButModel bm = new ButModel();
+
+		bm.getCurves().add(this.butterfly.getBody().getTopLeft());
+		bm.getCurves().add(this.butterfly.getBody().getTopRight());
+		bm.getCurves().add(this.butterfly.getRightTopWing().getTop());
+		bm.getCurves().add(this.butterfly.getRightTopWing().getRight());
+		bm.getCurves().add(this.butterfly.getRightTopWing().getBottom());
+		bm.getCurves().add(this.butterfly.getRightBottomWing().getRight());
+		bm.getCurves().add(this.butterfly.getRightBottomWing().getBottom());
+		bm.getCurves().add(this.butterfly.getBody().getBottomRight());
+		bm.getCurves().add(this.butterfly.getBody().getBottomLeft());
+		bm.getCurves().add(this.butterfly.getLeftBottomWing().getBottom());
+		bm.getCurves().add(this.butterfly.getLeftBottomWing().getLeft());
+		bm.getCurves().add(this.butterfly.getLeftTopWing().getBottom());
+		bm.getCurves().add(this.butterfly.getLeftTopWing().getLeft());
+		bm.getCurves().add(this.butterfly.getLeftTopWing().getTop());
+
+		bm.fillPoints();
+		for (IVector3 v : bm.getPoints()) {
+			System.out.println(v.get(0) + " / " + v.get(1) + " / " + v.get(2));
+		}
+		bm.fillArrays();
+
+		System.out.println(bm.getX().getDimension());
+		System.out.println(bm.getY().getDimension());
+		System.out.println(bm.getZ().getDimension());
+
+		for (int i = 0; i < bm.getX().getDimension(); i++) {
+			System.out.println("x = " + bm.getX().get(i));
+		}
+
+		for (int i = 0; i < bm.getY().getDimension(); i++) {
+			System.out.println("y = " + bm.getY().get(i));
+		}
+
+		for (int i = 0; i < bm.getZ().getDimension(); i++) {
+			System.out.println("z = " + bm.getZ().get(i));
+		}
+
+		this.data.getX().add(bm.getX());
+		this.data.getY().add(bm.getY());
+		this.data.getZ().add(bm.getZ());
+
+		System.out.println("Data " + this.data.getX().get(0).get(0));
+		System.out.println("Data " + this.data.getY().get(0).get(0));
+		System.out.println("Data " + this.data.getZ().get(0).get(0));
+
+		save.setEnabled(false);
+	}
+
+	public void applyPCA() {
+		analyzer.applyPCA(data32);
+	}
+
+	public void serialize() {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(
+					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(this.data);
+			out.close();
+			fileOut.close();
+
+		} catch (IOException e) {
+		}
+	}
+
+	public void deserialize() {
+		ButData d = null;
+		try {
+			FileInputStream fileIn = new FileInputStream(
+					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			d = (ButData) in.readObject();
+			in.close();
+			fileIn.close();
+		} catch (IOException i) {
+			i.printStackTrace();
+		} catch (ClassNotFoundException c) {
+			System.out.println("Analyzer class not found");
+			c.printStackTrace();
+		}
+		this.data = null;
+		this.data = d;
+		// System.out.println(this.data.getX().get(0).get(0) + "/" +
+		// this.data.getY().get(0).get(0) + "/"
+		// + this.data.getZ().get(0).get(0));
+		// System.out.println("Size " + this.data.getX().size());
+		// System.out.println("Size " + this.data.getY().size());
+		// System.out.println("Size " + this.data.getZ().size());
+
+		IVector newX = new Vector(butVektor);
+		IVector newY = new Vector(butVektor);
+		IVector newZ = new Vector(butVektor);
+
+		for (IVector iv : data.getX()) {
+			newX = null;
+			newX = new Vector(butVektor);
+			newX.set(0, iv.get(0));
+			newX.set(1, iv.get(1));
+			newX.set(2, iv.get(2));
+			newX.set(3, iv.get(4));
+			newX.set(4, iv.get(5));
+			newX.set(5, iv.get(7));
+			newX.set(6, iv.get(8));
+			newX.set(7, iv.get(10));
+			newX.set(8, iv.get(11));
+			newX.set(9, iv.get(13));
+			newX.set(10, iv.get(14));
+			newX.set(11, iv.get(16));
+			newX.set(12, iv.get(17));
+			newX.set(13, iv.get(18));
+			newX.set(14, iv.get(20));
+			newX.set(15, iv.get(21));
+			newX.set(16, iv.get(22));
+			newX.set(17, iv.get(24));
+			newX.set(18, iv.get(25));
+			newX.set(19, iv.get(27));
+			newX.set(20, iv.get(28));
+			newX.set(21, iv.get(30));
+			newX.set(22, iv.get(31));
+			newX.set(23, iv.get(32));
+			newX.set(24, iv.get(34));
+			newX.set(25, iv.get(35));
+			newX.set(26, iv.get(36));
+			newX.set(27, iv.get(38));
+			newX.set(28, iv.get(39));
+			newX.set(29, iv.get(41));
+			newX.set(30, iv.get(42));
+			newX.set(31, iv.get(44));
+
+			data32.getX().add(newX);
+		}
+
+		for (IVector iv : data.getY()) {
+			newY = null;
+			newY = new Vector(butVektor);
+			newY.set(0, iv.get(0));
+			newY.set(1, iv.get(1));
+			newY.set(2, iv.get(2));
+			newY.set(3, iv.get(4));
+			newY.set(4, iv.get(5));
+			newY.set(5, iv.get(7));
+			newY.set(6, iv.get(8));
+			newY.set(7, iv.get(10));
+			newY.set(8, iv.get(11));
+			newY.set(9, iv.get(13));
+			newY.set(10, iv.get(14));
+			newY.set(11, iv.get(16));
+			newY.set(12, iv.get(17));
+			newY.set(13, iv.get(18));
+			newY.set(14, iv.get(20));
+			newY.set(15, iv.get(21));
+			newY.set(16, iv.get(22));
+			newY.set(17, iv.get(24));
+			newY.set(18, iv.get(25));
+			newY.set(19, iv.get(27));
+			newY.set(20, iv.get(28));
+			newY.set(21, iv.get(30));
+			newY.set(22, iv.get(31));
+			newY.set(23, iv.get(32));
+			newY.set(24, iv.get(34));
+			newY.set(25, iv.get(35));
+			newY.set(26, iv.get(36));
+			newY.set(27, iv.get(38));
+			newY.set(28, iv.get(39));
+			newY.set(29, iv.get(41));
+			newY.set(30, iv.get(42));
+			newY.set(31, iv.get(44));
+
+			data32.getY().add(newY);
+		}
+
+		for (IVector iv : data.getZ()) {
+			newZ = null;
+			newZ = new Vector(butVektor);
+			newZ.set(0, iv.get(0));
+			newZ.set(1, iv.get(1));
+			newZ.set(2, iv.get(2));
+			newZ.set(3, iv.get(4));
+			newZ.set(4, iv.get(5));
+			newZ.set(5, iv.get(7));
+			newZ.set(6, iv.get(8));
+			newZ.set(7, iv.get(10));
+			newZ.set(8, iv.get(11));
+			newZ.set(9, iv.get(13));
+			newZ.set(10, iv.get(14));
+			newZ.set(11, iv.get(16));
+			newZ.set(12, iv.get(17));
+			newZ.set(13, iv.get(18));
+			newZ.set(14, iv.get(20));
+			newZ.set(15, iv.get(21));
+			newZ.set(16, iv.get(22));
+			newZ.set(17, iv.get(24));
+			newZ.set(18, iv.get(25));
+			newZ.set(19, iv.get(27));
+			newZ.set(20, iv.get(28));
+			newZ.set(21, iv.get(30));
+			newZ.set(22, iv.get(31));
+			newZ.set(23, iv.get(32));
+			newZ.set(24, iv.get(34));
+			newZ.set(25, iv.get(35));
+			newZ.set(26, iv.get(36));
+			newZ.set(27, iv.get(38));
+			newZ.set(28, iv.get(39));
+			newZ.set(29, iv.get(41));
+			newZ.set(30, iv.get(42));
+			newZ.set(31, iv.get(44));
+
+			data32.getZ().add(newZ);
+		}
+
+		fromData.setEnabled(true);
 
 	}
 

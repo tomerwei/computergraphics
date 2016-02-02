@@ -168,13 +168,13 @@ public class RightBottomWing {
 	public void setRight(double bwlrh, double bwlrv, double bwtph, double bwtpv, double bwlr2h, double bwlr2v) {
 		BezierCurve curve = new BezierCurve(3);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(D.get(0) + bwtph, D.get(1) + bwtpv, 0));
+		curve.setControlPoint(3, VectorMatrixFactory.newIVector3(D.get(0) + bwtph, D.get(1) + bwtpv, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(D.get(0) + bwlr2h, D.get(1) + offset + bwlr2v, 0));
+		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(D.get(0) + bwlr2h, D.get(1) + offset + bwlr2v, 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(D.get(0) + bwlrh, D.get(1) + hoehe / 2 + bwlrv, 0));
+		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(D.get(0) + bwlrh, D.get(1) + hoehe / 2 + bwlrv, 0));
 
-		curve.setControlPoint(3, VectorMatrixFactory.newIVector3(C.get(0), C.get(1), 0));
+		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(C.get(0), C.get(1), 0));
 
 		this.right = curve;
 	}
@@ -190,13 +190,13 @@ public class RightBottomWing {
 
 		BezierCurve curve = new BezierCurve(3);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(B.get(0), B.get(1) - breite, 0));
+		curve.setControlPoint(3, VectorMatrixFactory.newIVector3(B.get(0), B.get(1) - breite, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(A.get(0) + bwbh, A.get(1) + bwbv, 0));
+		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(A.get(0) + bwbh, A.get(1) + bwbv, 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(D.get(0) + offset + bwb2h, D.get(1) + bwb2v, 0));
+		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(D.get(0) + offset + bwb2h, D.get(1) + bwb2v, 0));
 
-		curve.setControlPoint(3, VectorMatrixFactory.newIVector3(D.get(0) + bwtph, D.get(1) + bwtpv, 0));
+		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(D.get(0) + bwtph, D.get(1) + bwtpv, 0));
 
 		this.bottom = curve;
 	}
