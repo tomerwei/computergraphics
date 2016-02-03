@@ -38,7 +38,7 @@ public class FrustumTestFrame extends CgApplication {
   public FrustumTestFrame() {
 
     getCgRootNode().setUseBlending(true);
-    getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum
+    //getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum
                                                     // Culling einschalten
 
     ITriangleMesh cow = loadMesh("meshes/cow.obj");
