@@ -93,7 +93,7 @@ public class JoglShader {
 
     String errorMsg = getCompileErrorMessage(id, gl);
     if (errorMsg != null) {
-      Logger.getInstance().error("Link error " + ": \n" + errorMsg);
+      Logger.getInstance().error("Compile error " + ": \n" + errorMsg);
     }
 
     if (id < 0) {

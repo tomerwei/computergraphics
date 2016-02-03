@@ -58,4 +58,9 @@ public interface ITriangle {
    */
   public int getOther(int a, int b);
 
+  /**
+   * Return true if the triangle is incident to the specified vertex index.
+   */
+  public boolean contains(int vertexIndex);
+
 }
