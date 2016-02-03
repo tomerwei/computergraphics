@@ -45,9 +45,9 @@ public class ObjTriangleMesh extends CgApplication {
   public ObjTriangleMesh() {
     // 3D Object
     // loadFenja();
-    // loadLotrCubeWithTextureAtlas();
+    loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    loadPlaneWithBunny();
+    // loadPlaneWithBunny();
     // loadMedivalHouse();
     // loadHulk();
     // loadNofretete();
@@ -204,7 +204,7 @@ public class ObjTriangleMesh extends CgApplication {
       // new CgTexture("textures/lego.png"));
       // mesh.getMaterial().setTextureId(texId);
       mesh.fitToUnitBox();
-      mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+      mesh.getMaterial().setShaderId(Material.SHADER_COLOR);
       mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR2));
       NodeMerger.merge(mesh, 1e-5);
       mesh.computeTriangleNormals();

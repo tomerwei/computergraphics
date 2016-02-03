@@ -169,11 +169,11 @@ public class LeftTopWing {
 
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(D.get(0), D.get(1) + breite, 0));
+		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(D.get(0), D.get(1) + breite, 0));
 
 		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(C.get(0) - twth, C.get(1) + twtv, 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(B.get(0), B.get(1), 0));
+		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(B.get(0), B.get(1), 0));
 
 		this.top = curve;
 	}
@@ -185,11 +185,11 @@ public class LeftTopWing {
 	public void setLeft(double twlrh, double twlrv, double twtph, double twtpv) {
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(B.get(0), B.get(1), 0));
+		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(B.get(0), B.get(1), 0));
 
 		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(B.get(0) - twlrh, B.get(1) - hoehe / 4 + twlrv, 0));
 
-		curve.setControlPoint(2,
+		curve.setControlPoint(0,
 				VectorMatrixFactory.newIVector3(A.get(0) + laenge / 4 - twtph, A.get(1) + hoehe / 2 + twtpv, 0));
 
 		this.left = curve;
@@ -202,12 +202,12 @@ public class LeftTopWing {
 	public void setBottom(IVector3 tp, double twtph, double twtpv, double twbh, double twbv) {
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0,
+		curve.setControlPoint(2,
 				VectorMatrixFactory.newIVector3(A.get(0) + laenge / 4 - twtph, A.get(1) + hoehe / 2 + twtpv, 0));
 
 		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(A.get(0) - twbh, A.get(1) + hoehe / 4 + twbv, 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newIVector3(tp.get(0), tp.get(1), 0));
+		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(tp.get(0), tp.get(1), 0));
 
 		this.bottom = curve;
 	}

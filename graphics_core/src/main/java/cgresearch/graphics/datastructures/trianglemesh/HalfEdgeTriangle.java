@@ -108,4 +108,9 @@ public class HalfEdgeTriangle implements ITriangle {
   public int getOther(int a, int b) {
     throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
   }
+
+  @Override
+  public boolean contains(int vertexIndex) {
+    throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
+  }
 }

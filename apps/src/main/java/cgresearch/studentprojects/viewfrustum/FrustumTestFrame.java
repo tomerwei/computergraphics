@@ -36,37 +36,33 @@ public class FrustumTestFrame extends CgApplication {
   public static final double objectsTransparency = 0.5;
 
   public FrustumTestFrame() {
-      
+
     getCgRootNode().setUseBlending(true);
-//    getCgRootNode().setUseViewFrustumCulling(true); //TODO HIER View Frustum Culling einschalten
-      
+    getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum
+                                                    // Culling einschalten
+
     ITriangleMesh cow = loadMesh("meshes/cow.obj");
     ITriangleMesh bunny = loadMesh("meshes/bunny.obj");
     ITriangleMesh fenja = loadMesh("meshes/fenja02.obj");
     ITriangleMesh fenjaDown = loadMesh("meshes/fenja02.obj");
     ITriangleMesh fenjaUp = loadMesh("meshes/fenja02.obj");
     ITriangleMesh pumpkin = loadMesh("meshes/pumpkin.obj");
-    
+
     // ############### Transformationen ###############
-    TriangleMeshTransformation.translate(cow,
-            VectorMatrixFactory.newIVector3(1.0, 0.0, -9.0));
-    TriangleMeshTransformation.translate(bunny,
-            VectorMatrixFactory.newIVector3(0.0, 1.15, -9.0));
+    TriangleMeshTransformation.translate(cow, VectorMatrixFactory.newIVector3(1.0, 0.0, -9.0));
+    TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newIVector3(0.0, 1.15, -9.0));
     TriangleMeshTransformation.scale(bunny, 3.0);
     TriangleMeshTransformation.scale(fenja, 0.1);
-    TriangleMeshTransformation.translate(fenja,
-            VectorMatrixFactory.newIVector3(0.5, -1.0, -8.0));
+    TriangleMeshTransformation.translate(fenja, VectorMatrixFactory.newIVector3(0.5, -1.0, -8.0));
     TriangleMeshTransformation.scale(fenjaDown, 0.1);
-    TriangleMeshTransformation.translate(fenjaDown,
-            VectorMatrixFactory.newIVector3(2.0, -8.0, -8.0));
+    TriangleMeshTransformation.translate(fenjaDown, VectorMatrixFactory.newIVector3(2.0, -8.0, -8.0));
     TriangleMeshTransformation.scale(fenjaUp, 0.1);
-    TriangleMeshTransformation.translate(fenjaUp,
-            VectorMatrixFactory.newIVector3(-1.0, 2.0, -0.5));
+    TriangleMeshTransformation.translate(fenjaUp, VectorMatrixFactory.newIVector3(-1.0, 2.0, -0.5));
     TriangleMeshTransformation.scale(pumpkin, 0.02);
-    TriangleMeshTransformation.translate(pumpkin,
-            VectorMatrixFactory.newIVector3(0.0, -2.0, -20.5));
- // ############### Transformationen ###############
-      
+    TriangleMeshTransformation.translate(pumpkin, VectorMatrixFactory.newIVector3(0.0, 0.0, -20.5));
+    // ############### Transformationen ###############
+
+    getCgRootNode().setUseBlending(true);
     getCgRootNode().addChild(new CgNode(cow, "cow"));
     getCgRootNode().addChild(new CgNode(bunny, "bunny"));
     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
@@ -75,11 +71,10 @@ public class FrustumTestFrame extends CgApplication {
     getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
   }
 
-
   /**
    * erzeugt einen Octree fuer eine PointCloud
    */
-  public OctreeNode<Integer> createPointCloudOctree(IPointCloud pCloud) { //TODO
+  public OctreeNode<Integer> createPointCloudOctree(IPointCloud pCloud) { // TODO
     OctreeFactoryStrategyPointCloud octreeFactoryStrategyPCloud = new OctreeFactoryStrategyPointCloud(pCloud);
     OctreeFactory<Integer> octreeFactoryPointCloud = new OctreeFactory<Integer>(octreeFactoryStrategyPCloud);
     OctreeNode<Integer> octreePointCloudRoot = octreeFactoryPointCloud.create(7, 20);
@@ -93,7 +88,7 @@ public class FrustumTestFrame extends CgApplication {
     IPointCloud pointCloud = PointCloudFactory.createDummyPointCloud();
     return pointCloud;
   }
-  
+
   /**
    * erzeugt ein TriangleMesh aus der angegebenen Datei
    */
@@ -120,6 +115,5 @@ public class FrustumTestFrame extends CgApplication {
       appLauncher.create(app);
       appLauncher.setRenderSystem(RenderSystem.JOGL);
       appLauncher.setUiSystem(UI.JOGL_SWING);
-      
   }
 }
