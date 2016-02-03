@@ -33,6 +33,7 @@ import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
+import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
@@ -558,6 +559,10 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		size.add(bhs);
 		size.add(bl);
 		size.add(bls);
+		size.add(wmb);
+		size.add(wmbs);
+		size.add(wm);
+		size.add(wms);
 		size.add(twh);
 		size.add(twhs);
 		size.add(twl);
@@ -566,10 +571,6 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		size.add(bwhs);
 		size.add(bwl);
 		size.add(bwls);
-		size.add(wmb);
-		size.add(wmbs);
-		size.add(wm);
-		size.add(wms);
 		size.add(twth);
 		size.add(twths);
 		size.add(twtv);
@@ -680,7 +681,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 	public void generateFromData() {
 
-		int autozahl = 0;
+		int autozahl = 9;
 		ButModel car = new ButModel(this.data.getX().get(autozahl), this.data.getY().get(autozahl),
 				this.data.getZ().get(autozahl));
 
@@ -981,6 +982,8 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		left.setEnabled(false);
 		right.setEnabled(false);
 
+		triangleMesh = new TriangleMesh();
+
 		int children = getRootNode().getNumChildren();
 		for (int i = 0; i < children; i++) {
 			CgNode temp = getRootNode().getChildNode(i);
@@ -1062,6 +1065,9 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		triangleMesh.computeVertexNormals();
 
 		triangleMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+		triangleMesh.getMaterial().setRenderMode(Normals.PER_FACET);
+		triangleMesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(1, 1, 1));
+		triangleMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(1, 1, 1));
 
 		final JFileChooser fc = new JFileChooser(
 				"C:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\");
