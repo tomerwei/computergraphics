@@ -64,10 +64,9 @@ public class FrustumTestFrame extends CgApplication {
             VectorMatrixFactory.newIVector3(-1.0, 2.0, -0.5));
     TriangleMeshTransformation.scale(pumpkin, 0.02);
     TriangleMeshTransformation.translate(pumpkin,
-            VectorMatrixFactory.newIVector3(0.0, 0.0, -20.5));
+            VectorMatrixFactory.newIVector3(0.0, -2.0, -20.5));
  // ############### Transformationen ###############
       
-    getCgRootNode().setUseBlending(true);
     getCgRootNode().addChild(new CgNode(cow, "cow"));
     getCgRootNode().addChild(new CgNode(bunny, "bunny"));
     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
@@ -113,11 +112,11 @@ public class FrustumTestFrame extends CgApplication {
   
   public static void main(String[] args){
       ResourcesLocator.getInstance().parseIniFile("resources.ini");
+      
       CgApplication app =  new FrustumTestFrame();
       ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), -8.0, -2.0); //TODO fuer den Live-Modus diese
       vfc.computeVisibleScenePart(app.getCgRootNode());                                  //TODO  und diese Zeile auskommentieren
       JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-
       appLauncher.create(app);
       appLauncher.setRenderSystem(RenderSystem.JOGL);
       appLauncher.setUiSystem(UI.JOGL_SWING);
