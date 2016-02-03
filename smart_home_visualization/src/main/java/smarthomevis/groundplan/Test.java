@@ -8,35 +8,29 @@ import cgresearch.AppLauncher.UI;
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
+import cgresearch.graphics.scenegraph.CgNode;
 import smarthomevis.groundplan.config.Converter;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPConfigXMLReader;
 import smarthomevis.groundplan.config.GPDataType;
 
-public class Test extends CgApplication
+public class Test
 {
-	private void runAnalyzer()
+	private void testRender(GroundPlan app)
 	{
-	// runPlan("4H-HORA Projekt1");
-	// runPlan("TestRaum");
-	// runPlan("Grundriss_Haus_02");
-	// runPlan("distanzVerteilungTest1");
-	runPlan("distanzVerteilungTest2");
+	app.renderAndDisplayPlan("4H-HORA Projekt1");
+	// app.renderAndDisplayPlan("TestRaum");
+	// app.renderAndDisplayPlan("Grundriss_Haus_02");
 	
 	}
 	
-	private void runPlan(String planName)
+	private void runAnalyzer(GroundPlan app)
 	{
-	GPConfigXMLReader reader = new GPConfigXMLReader();
-	GPConfig config = reader.readConfig("dxf/" + planName + ".xml");
-	System.out.println(config.toString());
-	
-	Converter converter = new Converter();
-	GPDataType renderData = converter.importData("dxf/" + planName + ".dxf",
-		config);
-		
-	renderData.setGPConfig(config);
-	new GPAnalyzer().calculateDistancesInPlan(renderData);
+	// app.analyzePlan("4H-HORA Projekt1");
+	app.analyzePlan("TestRaum");
+	// app.analyzePlan("Grundriss_Haus_02");
+	// app.analyzePlan("distanzVerteilungTest1");
+	// app.analyzePlan("distanzVerteilungTest2");
 	}
 	
 	private void runTest()
@@ -109,6 +103,13 @@ public class Test extends CgApplication
 		valueA + " / " + intervalA + " = " + resultA + "; remainder: " + restA);
 	}
 	
+	private void analyzeAndRender(GroundPlan app)
+	{
+	app.analyzeAndRenderPlan("4H-HORA Projekt1");
+	// app.analyzeAndRenderPlan("TestRaum");
+	// app.analyzeAndRenderPlan("Grundriss_Haus_02");
+	}
+	
 	/*
 	 *
 	 * ==============================================================
@@ -123,15 +124,16 @@ public class Test extends CgApplication
 	{
 	ResourcesLocator.getInstance().parseIniFile("resources.ini");
 	JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-	CgApplication app = new Test();
+	GroundPlan app = new GroundPlan();
 	appLauncher.create(app);
 	appLauncher.setRenderSystem(RenderSystem.JOGL);
 	appLauncher.setUiSystem(UI.JOGL_SWING);
 	
 	Test test = new Test();
-	
-	test.runAnalyzer();
 	// test.runTest();
+	// test.runAnalyzer(app);
+	// test.testRender(app);
+	test.analyzeAndRender(app);
 	}
 	
 }

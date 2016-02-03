@@ -1,96 +1,65 @@
 package smarthomevis.groundplan;
 
-import cgresearch.AppLauncher.RenderSystem;
-import cgresearch.AppLauncher.UI;
-import cgresearch.JoglAppLauncher;
-import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
+import cgresearch.graphics.scenegraph.CgNode;
 import smarthomevis.groundplan.config.Converter;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPConfigXMLReader;
 import smarthomevis.groundplan.config.GPDataType;
 
-public class GroundPlan extends CgApplication
+public class GroundPlan extends CgApplication implements IGroundPlan
 {
-
-	private void run()
+	public GPDataType analyzePlan(String planName)
 	{
-		// LightSource light = new LightSource(LightSource.Type.DIRECTIONAL);
-		// light.setColor(new Vector3(1.0, 1.0 , -1.0));
-		// light.setPosition(new Vector3(15.0, 15.0 , 5.0));
-		// getCgRootNode().addLight(light);
-		renderTestRaum();
-		// renderProjektHORA();
-		// renderHaus02();
+	GPConfigXMLReader reader = new GPConfigXMLReader();
+	GPConfig config = reader.readConfig("dxf/" + planName + ".xml");
+	System.out.println(config.toString());
+	
+	Converter converter = new Converter();
+	GPDataType renderData = converter.importData("dxf/" + planName + ".dxf",
+		config);
+		
+	renderData.setGPConfig(config);
+	new GPAnalyzer().calculateDistancesInPlan(renderData);
+	return renderData;
 	}
-
-	private void renderTestRaum()
+	
+	@Override
+	public CgNode convertDXFPlanToCgNode(String gpName)
 	{
-		GPConfigXMLReader reader = new GPConfigXMLReader();
-		GPConfig config = reader.readConfig("dxf/TestRaum.xml");
-		System.out.println(config.toString());
-
-		Converter converter = new Converter();
-		GPDataType renderData = converter.importData("dxf/TestRaum.dxf", config);
-		System.out.println(renderData.toString());
-
-		renderData.setGPConfig(config);
-
-		GPRenderer renderer = new GPRenderer(renderData);
-		// getCgRootNode().addChild(renderer.render2DViewFromGPDataType());
-		// getCgRootNode().addChild(renderer.render3DGridViewFromGPDataType());
-		getCgRootNode().addChild(renderer.render3DMeshViewFromGPDataType());
+	GPConfigXMLReader reader = new GPConfigXMLReader();
+	GPConfig config = reader.readConfig("dxf/" + gpName + ".xml");
+	
+	Converter converter = new Converter();
+	GPDataType renderData = converter.importData("dxf/" + gpName + ".dxf",
+		config);
+		
+	renderData.setGPConfig(config);
+	
+	return construct3DMeshFromData(renderData);
 	}
-
-	private void renderProjektHORA()
+	
+	public CgNode construct3DMeshFromData(GPDataType data)
 	{
-		GPConfigXMLReader reader = new GPConfigXMLReader();
-		GPConfig config = reader.readConfig("dxf/4H-HORA Projekt1.xml");
-		System.out.println(config.toString());
-
-		Converter converter = new Converter();
-		GPDataType renderData = converter.importData("dxf/4H-HORA Projekt1.dxf", config);
-
-		renderData.setGPConfig(config);
-
-		GPRenderer renderer = new GPRenderer(renderData);
-		// getCgRootNode().addChild(renderer.render2DViewFromGPDataType());
-		// getCgRootNode().addChild(renderer.render3DGridViewFromGPDataType());
-		getCgRootNode().addChild(renderer.render3DMeshViewFromGPDataType());
+	GPRenderer renderer = new GPRenderer(data);
+	
+	return renderer.render3DMeshViewFromGPDataType();
 	}
-
-	private void renderHaus02()
+	
+	public void renderAndDisplayPlan(String planName)
 	{
-		GPConfigXMLReader reader = new GPConfigXMLReader();
-		GPConfig config = reader.readConfig("dxf/Grundriss_Haus_02.xml");
-		System.out.println(config.toString());
-
-		Converter converter = new Converter();
-		GPDataType renderData = converter.importData("dxf/Grundriss_Haus_02.dxf", config);
-
-		renderData.setGPConfig(config);
-
-		GPRenderer renderer = new GPRenderer(renderData);
-		// getCgRootNode().addChild(renderer.render2DViewFromGPDataType());
-		// getCgRootNode().addChild(renderer.render3DGridViewFromGPDataType());
-		getCgRootNode().addChild(renderer.render3DMeshViewFromGPDataType());
+	getCgRootNode().addChild(convertDXFPlanToCgNode(planName));
 	}
-
+	
+	public void analyzeAndRenderPlan(String planName)
+	{
+	GPDataType data = analyzePlan(planName);
+	CgNode node = construct3DMeshFromData(data);
+	getCgRootNode().addChild(node);
+	}
+	
 	public GroundPlan()
 	{
-
+	
 	}
-
-	public static void main(String[] args)
-	{
-		ResourcesLocator.getInstance().parseIniFile("resources.ini");
-		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-		GroundPlan plan = new GroundPlan();
-		appLauncher.create(plan);
-		appLauncher.setRenderSystem(RenderSystem.JOGL);
-		appLauncher.setUiSystem(UI.JOGL_SWING);
-
-		plan.run();
-	}
-
 }

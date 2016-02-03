@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.print.attribute.standard.PDLOverrideSupported;
-
 import java.util.Set;
 
 import cgresearch.core.math.IVector3;
@@ -19,6 +16,13 @@ import smarthomevis.groundplan.config.GPLine;
 
 public class GPAnalyzer
 {
+	public GPDataType analyzeAndProcessData(GPDataType data)
+	{
+		calculateDistancesInPlan(data);
+		
+		return data;
+	}
+	
 	public void calculateDistancesInPlan(GPDataType type)
 	{
 	Map<String, List<GPLine>> layerMap = type.getLayers();
