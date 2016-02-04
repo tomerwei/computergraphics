@@ -18,9 +18,12 @@ public class GPAnalyzer
 {
 	public GPDataType analyzeAndProcessData(GPDataType data)
 	{
-		calculateDistancesInPlan(data);
-		
-		return data;
+	
+	calculateDistancesInPlan(data);
+	// ergaenzende Linien zum Abschluss von Wandsegmenten sollten hier in den
+	// GPDataType eingefuegt werden
+	
+	return data;
 	}
 	
 	public void calculateDistancesInPlan(GPDataType type)
