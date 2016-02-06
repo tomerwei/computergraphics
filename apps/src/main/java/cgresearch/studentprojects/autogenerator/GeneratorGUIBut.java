@@ -681,130 +681,134 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 	public void generateFromData() {
 
-		int autozahl = 9;
-		ButModel car = new ButModel(this.data.getX().get(autozahl), this.data.getY().get(autozahl),
-				this.data.getZ().get(autozahl));
+		int autozahl = 5;
+		ButModel car = new ButModel(this.data32.getX().get(autozahl), this.data32.getY().get(autozahl),
+				this.data32.getZ().get(autozahl));
 
-		// // EigenAuto
-		//
-		// // Reduziert
-		//
-		// IVector x = new Vector(skalar);
-		// IVector y = new Vector(skalar);
-		//
-		// // Nicht reduziert
-		//
-		// // IVector x = new Vector(carVektor);
-		// // IVector y = new Vector(carVektor);
-		//
-		// IVector xc = new Vector(butVektor);
-		// IVector yc = new Vector(butVektor);
-		//
-		// for (int i = 0; i < butVektor; i++) {
-		// xc.set(i, car.getX().get(i) -
-		// analyzer.getPcaX().getCentroid().get(i));
-		// yc.set(i, car.getY().get(i) -
-		// analyzer.getPcaY().getCentroid().get(i));
+		// EigenAuto
+
+		// Reduziert
+
+		IVector x = new Vector(skalar);
+		IVector y = new Vector(skalar);
+
+		// Nicht reduziert
+
+		// IVector x = new Vector(butVektor);
+		// IVector y = new Vector(butVektor);
+
+		IVector xc = new Vector(butVektor);
+		IVector yc = new Vector(butVektor);
+
+		for (int i = 0; i < butVektor; i++) {
+			xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
+			yc.set(i, car.getY().get(i) - analyzer.getPcaY().getCentroid().get(i));
+		}
+
+		
+		System.out.println("Apha X");
+		for (int i = 0; i < skalar; i++) {
+
+			double xx = 0;
+			double yy = 0;
+
+			for (int j = 0; j < butVektor; j++) {
+				xx += analyzer.getBtx().get(j).get(i) * xc.get(j);
+				yy += analyzer.getBty().get(j).get(i) * yc.get(j);
+			}
+
+			x.set(i, xx);
+			y.set(i, yy);
+
+			System.out.println(x.get(i));
+		}
+
+		System.out.println();
+
+		// Nicht reduziert
+
+		// for (int i = skalar; i < butVektor; i++) {
+		// x.set(i, 0);
+		// y.set(i, 0);
 		// }
-		//
-		// for (int i = 0; i < skalar; i++) {
-		//
-		// double xx = 0;
-		// double yy = 0;
-		//
-		// for (int j = 0; j < butVektor; j++) {
-		// xx += analyzer.getBtx().get(j).get(i) * xc.get(j);
-		// yy += analyzer.getBty().get(j).get(i) * yc.get(j);
-		// }
-		//
-		// x.set(i, xx);
-		// y.set(i, yy);
-		//
-		// System.out.println("Alpha x " + i + ": " + x.get(i));
-		// }
-		//
-		// System.out.println();
-		//
-		// // Nicht reduziert
-		//
-		// // for (int i = skalar; i < carVektor; i++) {
-		// // x.set(i, 0);
-		// // y.set(i, 0);
-		// // }
-		//
-		// // Eigen Auto new
-		//
-		// IVector xn = new Vector(butVektor);
-		// IVector yn = new Vector(butVektor);
-		//
-		// for (int i = 0; i < butVektor; i++) {
-		// double xx = 0;
-		// double yy = 0;
-		//
-		// for (int j = 0; j < skalar; j++) {
-		//
-		// xx += analyzer.getEigenX().get(butVektor - 1 - j).get(i) * x.get(j);
-		// yy += analyzer.getEigenY().get(butVektor - 1 - j).get(i) * y.get(j);
-		// }
-		//
-		// xn.set(i, xx);
-		// yn.set(i, yy);
-		// }
-		//
-		// // New Auto
-		//
-		// IVector ax = new Vector(butVektor);
-		// IVector ay = new Vector(butVektor);
-		// IVector az = new Vector(butVektor);
-		//
-		// for (int i = 0; i < butVektor; i++) {
-		// double xx = 0;
-		// double yy = 0;
-		//
-		// // Nicht reduziert
-		//
-		// // for (int j = 0; j < carVektor; j++) {
-		//
-		// // Reduziert
-		//
-		// for (int j = 0; j < skalar; j++) {
-		//
-		// // New Auto
-		//
-		// // xx += analyzer.getBx().get(j).get(i) * xn.get(j);
-		// // yy += analyzer.getBy().get(j).get(i) * yn.get(j);
-		//
-		// // Dasselbe Auto
-		//
-		// xx += analyzer.getBx().get(j).get(i) * x.get(j);
-		// yy += analyzer.getBy().get(j).get(i) * y.get(j);
-		//
-		// if (i == 0) {
-		// // System.out.println("Alpha x " + j + ": " + x.get(j));
-		// System.out.println("Alpha y " + j + ": " + y.get(j));
-		// }
-		// }
-		//
-		// ax.set(i, xx);
-		// ay.set(i, yy);
-		// }
-		//
-		// for (int i = 0; i < butVektor; i++) {
-		// double xi = 0;
-		// double yi = 0;
-		//
-		// xi = ax.get(i) + analyzer.getPcaX().getCentroid().get(i);
-		// yi = ay.get(i) + analyzer.getPcaY().getCentroid().get(i);
-		//
-		// ax.set(i, xi);
-		// ay.set(i, yi);
-		// }
-		//
-		// for (int i = 0; i < butVektor; i++) {
-		// az.set(i, 0);
-		// }
-		//
-		// ButModel carnew = new ButModel(ax, ay, az);
+
+		// Eigen Auto new
+
+		IVector xn = new Vector(butVektor);
+		IVector yn = new Vector(butVektor);
+
+		for (int i = 0; i < butVektor; i++) {
+			double xx = 0;
+			double yy = 0;
+
+			for (int j = 0; j < skalar; j++) {
+
+				xx += analyzer.getEigenX().get(butVektor - 1 - j).get(i) * x.get(j);
+				yy += analyzer.getEigenY().get(butVektor - 1 - j).get(i) * y.get(j);
+			}
+
+			xn.set(i, xx);
+			yn.set(i, yy);
+		}
+
+		// New Auto
+
+		IVector ax = new Vector(butVektor);
+		IVector ay = new Vector(butVektor);
+		IVector az = new Vector(butVektor);
+
+		System.out.println("Alpha Y");
+		
+		for (int i = 0; i < butVektor; i++) {
+			double xx = 0;
+			double yy = 0;
+
+			// Nicht reduziert
+
+			// for (int j = 0; j < butVektor; j++) {
+
+			// Reduziert
+
+			
+			
+			for (int j = 0; j < skalar; j++) {
+
+				// New Auto
+
+				// xx += analyzer.getBx().get(j).get(i) * xn.get(j);
+				// yy += analyzer.getBy().get(j).get(i) * yn.get(j);
+
+				// Dasselbe Auto
+
+				xx += analyzer.getBx().get(j).get(i) * x.get(j);
+				yy += analyzer.getBy().get(j).get(i) * y.get(j);
+
+				if (i == 0) {
+					// System.out.println("Alpha x " + j + ": " + x.get(j));
+					System.out.println(y.get(j));
+				}
+			}
+
+			ax.set(i, xx);
+			ay.set(i, yy);
+		}
+
+		for (int i = 0; i < butVektor; i++) {
+			double xi = 0;
+			double yi = 0;
+
+			xi = ax.get(i) + analyzer.getPcaX().getCentroid().get(i);
+			yi = ay.get(i) + analyzer.getPcaY().getCentroid().get(i);
+
+			ax.set(i, xi);
+			ay.set(i, yi);
+		}
+
+		for (int i = 0; i < butVektor; i++) {
+			az.set(i, 0);
+		}
+
+		ButModel carnew = new ButModel(ax, ay, az);
 
 		CgNode father = new CgNode(null, "butterfly1");
 
@@ -817,17 +821,17 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 		getRootNode().addChild(father);
 
-		// CgNode father2 = new CgNode(null, "butterfly2");
-		//
-		// int i2 = 1;
-		// for (BezierCurve c : carnew.getCurves()) {
-		// CgNode node = new CgNode(c, "BezierCurve2 " + i2);
-		//
-		// father2.addChild(node);
-		// i2++;
-		// }
-		//
-		// getRootNode().addChild(father2);
+		CgNode father2 = new CgNode(null, "butterfly2");
+
+		int i2 = 1;
+		for (BezierCurve c : carnew.getCurves()) {
+			CgNode node = new CgNode(c, "BezierCurve2 " + i2);
+
+			father2.addChild(node);
+			i2++;
+		}
+
+		getRootNode().addChild(father2);
 
 		fromData.setEnabled(false);
 
