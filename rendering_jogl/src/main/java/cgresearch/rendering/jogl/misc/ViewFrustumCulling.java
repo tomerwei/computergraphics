@@ -290,22 +290,6 @@ public class ViewFrustumCulling implements Observer {
     nearTopleft =
         nearCenter.subtract(this.up.multiply(nearHeight * 0.5).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[ntl] = nearTopleft;
-
-    if ((nearDistance > 0 && farDistance < 0) || (nearDistance < 0 && farDistance > 0)) {
-      // bei negativem Vorzeichen werden top/bottom und links rechts vertauscht,
-      // rueckgaengig
-      cornerPoints[fbr] = cornerPoints[fbr].multiply(-1.0);
-      cornerPoints[fbl] = cornerPoints[fbl].multiply(-1.0);
-      cornerPoints[ftr] = cornerPoints[ftr].multiply(-1.0);
-      cornerPoints[ftl] = cornerPoints[ftl].multiply(-1.0);
-
-      // near- und farDistance muessen aber bleiben
-      for (int i = 0; i < 4; i++) {
-        double tmp = cornerPoints[i].get(Z);
-        cornerPoints[i].set(Z, tmp * -1);
-
-      }
-    }
     
     //Debugging
 //    System.out.println("farBottomRight = " + cornerPoints[fbr]);
@@ -321,7 +305,7 @@ public class ViewFrustumCulling implements Observer {
     // Berechne Ebene
     // nah
     nearPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ntl]);
-    nearPlane.setNormal(nearPlane.getNormal().multiply(-1.0)); // die Normalen zeigen nach außen, also muessen teilweise umgedreht werden
+    nearPlane.setNormal(nearPlane.getNormal().multiply(-1.0)); // die Normalen zeigen nach auï¿½en, also muessen teilweise umgedreht werden
     this.frustum[near] = nearPlane;
 //     System.out.println("near_plane normal = "+ nearPlane.getNormal() );
 
@@ -333,26 +317,26 @@ public class ViewFrustumCulling implements Observer {
 //     System.out.println("far_plane normal = "+ farPlane.getNormal() );
 
     // links
-    leftPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ftr]);
-    // leftPlane.setNormal(leftPlane.getNormal().multiply(-1.0));
+    leftPlane = calcPlane(cornerPoints[ntl], cornerPoints[nbl], cornerPoints[ftl]);
+     leftPlane.setNormal(leftPlane.getNormal().multiply(-1.0));
     this.frustum[left] = leftPlane;
 //     System.out.println("left_plane normal = "+ leftPlane.getNormal() );
 
     // rechts
-    rightPlane = calcPlane(cornerPoints[ntl], cornerPoints[nbl], cornerPoints[ftl]);
-    rightPlane.setNormal(rightPlane.getNormal().multiply(-1.0));
+    rightPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ftr]);
+//    rightPlane.setNormal(rightPlane.getNormal().multiply(-1.0));
     this.frustum[right] = rightPlane;
 //     System.out.println("right_plane normal = "+ rightPlane.getNormal() );
 
     // oben
-    topPlane = calcPlane(cornerPoints[nbr], cornerPoints[fbr], cornerPoints[nbl]);
-    topPlane.setNormal(topPlane.getNormal().multiply(-1.0));
+    topPlane = calcPlane(cornerPoints[ntr], cornerPoints[ftr], cornerPoints[ntl]);
+//    topPlane.setNormal(topPlane.getNormal().multiply(-1.0));
     this.frustum[top] = topPlane;
 //     System.out.println("top_plane normal = "+ topPlane.getNormal() );
 
     // unten
-    bottomPlane = calcPlane(cornerPoints[ntr], cornerPoints[ftr], cornerPoints[ntl]);
-    // bottomPlane.setNormal(bottomPlane.getNormal().multiply(-1.0));
+    bottomPlane = calcPlane(cornerPoints[nbr], cornerPoints[fbr], cornerPoints[nbl]);
+     bottomPlane.setNormal(bottomPlane.getNormal().multiply(-1.0));
     this.frustum[bottom] = bottomPlane;
 //     System.out.println("bottom_plane normal = "+ bottomPlane.getNormal() );
 
@@ -800,7 +784,7 @@ public class ViewFrustumCulling implements Observer {
   public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
     OctreeFactoryStrategyScene octreeFactoryStrategyScene = new OctreeFactoryStrategyScene(objects);
     OctreeFactory<Integer> octreeFactoryScene = new OctreeFactory<Integer>(octreeFactoryStrategyScene);
-    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 5);
+    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 10);
     return octreeSceneRoot;
   }
   
