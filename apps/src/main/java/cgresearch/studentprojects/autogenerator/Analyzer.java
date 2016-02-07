@@ -8,10 +8,13 @@ import cgresearch.core.math.Vector;
 
 public class Analyzer {
 
-	private final int carVektor = 18;
-	private final int skalar = 7;
+	// private final int carVektor = 18;
+	// private final int skalar = 7;
 	private final int butVektor = 32;
 	private final int butSkalar = 10;
+
+	// private final int butVektor = 18;
+	// private final int butSkalar = 7;
 
 	private PCA pcaX = new PCA();
 	private PCA pcaY = new PCA();

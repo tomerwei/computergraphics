@@ -28,9 +28,10 @@ public class Generator extends CgApplication {
 		appLauncher.setRenderSystem(RenderSystem.JOGL);
 		appLauncher.setUiSystem(UI.JOGL_SWING);
 		// GeneratorGUI gui = new GeneratorGUI(frame.getCgRootNode());
-//		 GeneratorGUI2D gui = new GeneratorGUI2D(frame.getCgRootNode());
+		// GeneratorGUI2D gui = new GeneratorGUI2D(frame.getCgRootNode());
 		// GeneratorGUI2DNew gui = new GeneratorGUI2DNew(frame.getCgRootNode());
-		GeneratorGUIBut gui = new GeneratorGUIBut(frame.getCgRootNode());
+		// GeneratorGUIBut gui = new GeneratorGUIBut(frame.getCgRootNode());
+		GeneratorGUIButNew gui = new GeneratorGUIButNew(frame.getCgRootNode());
 		appLauncher.addCustomUi(gui);
 
 	}

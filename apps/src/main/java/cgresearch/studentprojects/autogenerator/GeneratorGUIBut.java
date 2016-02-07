@@ -681,7 +681,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 	public void generateFromData() {
 
-		int autozahl = 5;
+		int autozahl = 29;
 		ButModel car = new ButModel(this.data32.getX().get(autozahl), this.data32.getY().get(autozahl),
 				this.data32.getZ().get(autozahl));
 
@@ -721,6 +721,12 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 			y.set(i, yy);
 
 			System.out.println(x.get(i));
+		}
+		
+		System.out.println("Apha Y");
+		for (int i = 0; i < skalar; i++) {
+
+			System.out.println(y.get(i));
 		}
 
 		System.out.println();
