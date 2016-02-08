@@ -49,8 +49,7 @@ public class GPConfigXMLReader
 				this.config.addLayer(layerName, defineLineTypeFromString(lineTypeString));
 			}
 			// Handelt es sich um eine config- statt um eine LayerNode, diese
-			// Auslesen und dem
-			// GPDataType uebergeben
+			// Auslesen und dem GPDataType uebergeben
 			else if (node.getNodeName().equals("config") && node.getNodeType() == Node.ELEMENT_NODE)
 			{
 				extractConfig(node);

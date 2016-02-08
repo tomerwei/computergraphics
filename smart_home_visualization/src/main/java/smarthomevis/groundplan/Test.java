@@ -18,8 +18,9 @@ public class Test
 {
 	private void testRender(GroundPlan app)
 	{
-	app.renderAndDisplayPlan("4H-HORA Projekt1");
-	// app.renderAndDisplayPlan("TestRaum");
+	// app.renderAndDisplayPlan("4H-HORA Projekt1");
+	// app.renderAndDisplayPlan("4H-HORA MessTest");
+	app.renderAndDisplayPlan("TestRaum");
 	// app.renderAndDisplayPlan("Grundriss_Haus_02");
 	
 	}
@@ -131,9 +132,9 @@ public class Test
 	
 	Test test = new Test();
 	// test.runTest();
-	// test.runAnalyzer(app);
+	test.runAnalyzer(app);
 	// test.testRender(app);
-	test.analyzeAndRender(app);
+	// test.analyzeAndRender(app);
 	}
 	
 }

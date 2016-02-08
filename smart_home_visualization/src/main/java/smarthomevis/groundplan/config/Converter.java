@@ -96,7 +96,8 @@ public class Converter
 					.println("DXFEntityMap has size " + entityList.size());
 				// die DXFLines entsprechend dem Typ rendern
 				if (entityList.size() > 0)
-					handleLinesOfLayer(layerName, entityList, lineType);
+					handleLinesOfLayer(layerName, entityList, lineType,
+						config.getValue(GPConfig.GROUNDPLAN_SCALING_FACTOR));
 				else
 					System.out
 						.println("Could not Load DXFEntities: List is empty");
@@ -144,9 +145,11 @@ public class Converter
 	 *          die Liste der DXFLines, die umgewandelt werden sollen
 	 * @param lineType
 	 *          enthaelt den Typ der Linie (z.B. Wall, Window oder Door)
+	 * @param scale
+	 *          der Skalierungsfaktor zur Umrechnung der Koordinaten
 	 */
 	private void handleLinesOfLayer(String layerName,
-		List<DXFEntity> dxfLineList, LineType lineType)
+		List<DXFEntity> dxfLineList, LineType lineType, double scale)
 	{
 	List<String> surfaceList = new ArrayList<>();
 	
@@ -160,10 +163,10 @@ public class Converter
 			Point endPoint = l.getEndPoint();
 			
 			GPLine surface = new GPLine(currentLineId,
-				VectorMatrixFactory.newIVector3(startPoint.getX(),
-					startPoint.getY(), startPoint.getZ()),
-				VectorMatrixFactory.newIVector3(endPoint.getX(),
-					endPoint.getY(), endPoint.getZ()));
+				VectorMatrixFactory.newIVector3(startPoint.getX() * scale,
+					startPoint.getY() * scale, startPoint.getZ() * scale),
+				VectorMatrixFactory.newIVector3(endPoint.getX() * scale,
+					endPoint.getY() * scale, endPoint.getZ() * scale));
 					
 			surface.setLineType(lineType);
 			

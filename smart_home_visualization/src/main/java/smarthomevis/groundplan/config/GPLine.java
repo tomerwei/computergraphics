@@ -50,24 +50,14 @@ public class GPLine implements Serializable
 	
 	public IVector3 getStart()
 	{
-	return start;
+	return new Vector3(start.get(0), start.get(1),
+		start.get(2));
 	}
 	
 	public IVector3 getEnd()
 	{
-	return end;
-	}
-	
-	public IVector3 getScaledStart(double scale)
-	{
-	return new Vector3(start.get(0) * scale, start.get(1) * scale,
-		start.get(2) * scale);
-	}
-	
-	public IVector3 getScaledEnd(double scale)
-	{
-	return new Vector3(end.get(0) * scale, end.get(1) * scale,
-		end.get(2) * scale);
+	return new Vector3(end.get(0), end.get(1),
+		end.get(2));
 	}
 	
 	public String toString()

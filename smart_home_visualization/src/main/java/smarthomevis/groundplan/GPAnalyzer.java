@@ -198,8 +198,9 @@ public class GPAnalyzer
 		
 	for (int i = 1; i <= numberOfSteps; i++)
 		{
-		double additionalInterval = highestCurrentKey + (i * distanceInterval);
-		distanceMap.put(additionalInterval, 0);
+		BigDecimal iTimesIntervall = interval.multiply(BigDecimal.valueOf(i));
+		BigDecimal additionalInterval = current.add(iTimesIntervall);
+		distanceMap.put(additionalInterval.doubleValue(), 0);
 		System.out.println(
 			"## added distanceKey " + additionalInterval + " to distanceMap");
 		}

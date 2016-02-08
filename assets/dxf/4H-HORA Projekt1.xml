@@ -2,16 +2,16 @@
  <groundplan name="4H-HORA Projext1">
 	<config>
 		<wall_top_height>
-			120.0
+			2.4
 		</wall_top_height>
 		<window_bottom_height>
-			20.0
+			1.0
 		</window_bottom_height>
 		<window_top_height>
-			90.0
+			2.1
 		</window_top_height>
 		<door_top_height>
-			105.0
+			2.0
 		</door_top_height>
 		<groundplan_scaling_scalar>
 			0.006

@@ -65,16 +65,6 @@ public class GPConfig implements Serializable
 		return this.configValues.get(key);
 	}
 
-	public synchronized Double getScaledValue(String key)
-	{
-		return this.configValues.get(key) * this.configValues.get(GROUNDPLAN_SCALING_FACTOR);
-	}
-
-	public synchronized Double getScaledValue(String key, double scale)
-	{
-		return this.configValues.get(key) * scale;
-	}
-
 	public Map<String, Double> getConfigMap()
 	{
 		return this.configValues;
