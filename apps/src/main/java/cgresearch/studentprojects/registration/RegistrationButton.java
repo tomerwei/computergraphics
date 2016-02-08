@@ -128,7 +128,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 			
 			int iteration = Integer.parseInt(iterationSteps.getText());
 			
-			startRegistration(RegistrationFrame.basePointCloud,  RegistrationFrame.registerPointCloud, iteration);
+			startRegistration(RegistrationFrame.basePointCloud,  RegistrationFrame.Register, iteration);
 			
 		}
 
@@ -159,6 +159,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 //			}
 			
 			Register.updateRenderStructures();
+			
 		
 		}
 	}

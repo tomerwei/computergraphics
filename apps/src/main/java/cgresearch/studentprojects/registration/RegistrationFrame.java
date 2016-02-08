@@ -17,6 +17,7 @@ import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.points.PointCloud;
 import cgresearch.graphics.datastructures.points.PointCloudFactory;
+import cgresearch.graphics.datastructures.points.PointNeighborsQuery;
 import cgresearch.graphics.datastructures.points.TriangleMeshSampler;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -57,8 +58,33 @@ public class RegistrationFrame extends CgApplication {
     // New version: Cubes (JNK)
     loadTestData();
   }
+  
+	public int[] nearestPoints(IPointCloud Base){
+		
+		int[] nearestPoints = new int[Base.getNumberOfPoints()];
+		PointNeighborsQuery nearest = new PointNeighborsQuery(Base);
+		
+		for(int k = 0; k < Base.getNumberOfPoints(); k++){
+			
+			nearest.queryKnn(Base.getPoint(k).getPosition(), 1);
+				
+			
+			nearestPoints[k] = nearest.getNeigbor(0);
+			System.out.println("Platz in der RegisterCloud:" + nearestPoints[k] );
+			
+			System.out.println("Punkt: " + Base.getPoint(nearestPoints[k]).getPosition());
+			
+		}
+		return nearestPoints;
+	}
+	
 
   private void loadTestData() {
+	  int x =0, y =1, z=2;
+	  
+	 
+	  IVector3 translation = VectorMatrixFactory.newIVector3(1, 1, 1);
+
     // Load cube from file
     ObjFileReader reader = new ObjFileReader();
     ITriangleMesh cubeMesh = reader.readFile("meshes/cube.obj").get(0);
@@ -70,78 +96,76 @@ public class RegistrationFrame extends CgApplication {
       basePointCloud.getPoint(i).getColor().copy(Material.PALETTE2_COLOR0);
     }
 
+    double maxY = 0;
+    double maxYOld = 0;
+    double minY = 0;
+    double minYOld=0;
+    for(int k = 0; k < basePointCloud.getNumberOfPoints()-1; k++){
+    	minY = basePointCloud.getPoint(k).getPosition().get(y);
+    	maxY = basePointCloud.getPoint(k).getPosition().get(y);
+    	if(maxY > maxYOld)
+    		maxYOld = basePointCloud.getPoint(k).getPosition().get(y);
+    	if(minY < minYOld)
+    		minYOld = basePointCloud.getPoint(k).getPosition().get(y);
+    	
+    	
+    	}
+    
+    double middleBase = ((maxYOld - minYOld)/2) + minYOld;
+    
+    for(int i = 0; i < basePointCloud.getNumberOfPoints(); i++){
+    	if(middleBase < basePointCloud.getPoint(i).getPosition().get(y))
+    		Base.addPoint(basePointCloud.getPoint(i));
+    }
+    
+    System.out.println("maxY: "+maxYOld+" minY: \n"+minYOld);
+        
+ 
     // Transform mesh for second cube
     // Rotation of the second point cloud: 10 degrees in degrees - transformed
     // to radiens. Rotation axis: (1,1,1)
     double rotationAngle = 10 * Math.PI / 180;
-    TriangleMeshTransformation.transform(cubeMesh,
-        VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(1, 1, 1), rotationAngle));
+    TriangleMeshTransformation.transform(cubeMesh, VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(1, 1, 1), rotationAngle));
     // Optional: translation
-    TriangleMeshTransformation.translate(cubeMesh, VectorMatrixFactory.newIVector3(2, 2, 2));
+    TriangleMeshTransformation.translate(cubeMesh, translation);
     registerPointCloud = TriangleMeshSampler.sample(cubeMesh, 1000);
     registerPointCloud.getMaterial().setShaderId(Material.SHADER_COLOR);
     // Set point color
     for (int i = 0; i < registerPointCloud.getNumberOfPoints(); i++) {
       registerPointCloud.getPoint(i).getColor().copy(Material.PALETTE1_COLOR3);
     }
-
-    CgNode basePointCloudNode = new CgNode(basePointCloud, "pointCloud");
+    double registermaxY = 0;
+    double registermaxYOld = 0;
+    double registerminY;
+    double registerminYOld = registerPointCloud.getPoint(0).getPosition().get(y);;
+    
+    for(int k = 0; k < registerPointCloud.getNumberOfPoints(); k++){
+    	registerminY = registerPointCloud.getPoint(k).getPosition().get(y);
+    	registermaxY = registerPointCloud.getPoint(k).getPosition().get(y);
+    	if(registermaxY > registermaxYOld)
+    		registermaxYOld = registerPointCloud.getPoint(k).getPosition().get(y);
+    	if(registerminY < registerminYOld)
+    		registerminYOld = registerPointCloud.getPoint(k).getPosition().get(y);
+    	
+    	
+    	}
+    System.out.println("maxY: "+registermaxYOld+" minY: \n"+registerminYOld);
+    double middleRegister = ((registermaxYOld - registerminYOld)/2) + registerminYOld;
+    
+    for(int i = 0; i < registerPointCloud.getNumberOfPoints(); i++){
+    	if(middleRegister > registerPointCloud.getPoint(i).getPosition().get(y))
+    		Register.addPoint(registerPointCloud.getPoint(i));
+    }
+    
+    System.out.println("middle: "+middleRegister);
+    
+    CgNode basePointCloudNode = new CgNode(Base, "pointCloud");
     getCgRootNode().addChild(basePointCloudNode);
-    CgNode registerPointCloudNode = new CgNode(registerPointCloud, "pointCloud2");
+    CgNode registerPointCloudNode = new CgNode(Register, "pointCloud2");
     getCgRootNode().addChild(registerPointCloudNode);
 
   }
 
-  public void loadIPointCloud() {
-    IVector3 position1 = VectorMatrixFactory.newIVector3(0, 0, 0);
-    IVector3 position2 = VectorMatrixFactory.newIVector3(0, 0, 2);
-    IVector3 position3 = VectorMatrixFactory.newIVector3(2, 0, 2);
-    IVector3 position4 = VectorMatrixFactory.newIVector3(2, 0, 0);
-
-    IVector3 position5 = VectorMatrixFactory.newIVector3(0, 0, 2);
-    IVector3 position6 = VectorMatrixFactory.newIVector3(0, 2, 0);
-    IVector3 position7 = VectorMatrixFactory.newIVector3(0, 2, 2);
-    IVector3 position8 = VectorMatrixFactory.newIVector3(0, 0, 0);
-
-    IVector3 color = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random());
-    IVector3 normal = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random());
-
-    // IPointCloud pointCloud = new PointCloud();
-    Base.addPoint(new Point(position1, color, normal));
-    Base.addPoint(new Point(position2, color, normal));
-    Base.addPoint(new Point(position3, color, normal));
-    Base.addPoint(new Point(position4, color, normal));
-
-    // IPointCloud pointCloud2 = new PointCloud();
-    Register.addPoint(new Point(position5, color, normal));
-    Register.addPoint(new Point(position6, color, normal));
-    Register.addPoint(new Point(position7, color, normal));
-    Register.addPoint(new Point(position8, color, normal));
-
-    // ObjFileReader reader = new ObjFileReader();
-    // List<ITriangleMesh> meshes = reader.readFile("meshes/cube.obj");
-    // IPointCloud pointCloud3 = PointCloudFactory.createDummyPointCloud();
-    // ITriangleMesh mesh = meshes.get(0);
-    // pointCloud3 = TriangleMeshSampler.sample(mesh, 5000);
-    //
-    // //verschobener W�rfel...leider noch nicht verschoben.
-    // ObjFileReader reader1 = new ObjFileReader();
-    // List<ITriangleMesh> meshes1 = reader.readFile("meshes/cube.obj");
-    // IPointCloud pointCloud4 = PointCloudFactory.createDummyPointCloud();
-    // ITriangleMesh mesh1 = meshes.get(0);
-    // pointCloud4 = TriangleMeshSampler.sample(mesh, 5000);
-
-    //
-    CgNode pointCloudNode = new CgNode(Base, "pointCloud");
-    getCgRootNode().addChild(pointCloudNode);
-
-    CgNode pointCloudNode2 = new CgNode(Register, "pointCloud2");
-    getCgRootNode().addChild(pointCloudNode2);
-
-    // CgNode pointCloudNode3 = new CgNode(pointCloud3, "pointCloud3");
-    // getCgRootNode().addChild(pointCloudNode3);
-
-  }
 
   public static void main(String[] args) {
     // ResourcesLocator.getInstance().parseIniFile("resources.ini");

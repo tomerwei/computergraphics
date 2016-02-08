@@ -57,7 +57,7 @@ public class IcpDistanceFunction  {
 		for(int k = 0; k < Base.getNumberOfPoints(); k++){
 			
 			nearest.queryKnn(Base.getPoint(k).getPosition(), 1);
-			
+		
 			
 			nearestPoints[k] = nearest.getNeigbor(0);
 			System.out.println("Platz in der RegisterCloud:" + nearestPoints[k] );
