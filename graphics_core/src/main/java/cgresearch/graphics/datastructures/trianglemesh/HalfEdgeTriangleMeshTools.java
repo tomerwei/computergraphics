@@ -22,6 +22,19 @@ public class HalfEdgeTriangleMeshTools {
    */
   public static HalfEdgeTriangleMesh fromMesh(ITriangleMesh mesh) {
     HalfEdgeTriangleMesh heMesh = new HalfEdgeTriangleMesh();
+    fromMesh(heMesh, mesh);
+    return heMesh;
+  }
+
+  /**
+   * Create a Half edge triangle mesh from a regular mesh.
+   * 
+   * @param mesh
+   *          Mesh to be converted from.
+   * @return Half edge triangle mesh representation.
+   */
+  public static void fromMesh(HalfEdgeTriangleMesh heMesh, ITriangleMesh mesh) {
+    heMesh.clear();
     for (int i = 0; i < mesh.getNumberOfVertices(); i++) {
       heMesh.addVertex(new HalfEdgeVertex(mesh.getVertex(i).getPosition()));
     }
@@ -32,7 +45,6 @@ public class HalfEdgeTriangleMeshTools {
     heMesh.connectHalfEdges();
     heMesh.computeTriangleNormals();
     heMesh.computeVertexNormals();
-    return heMesh;
   }
 
   public static List<HalfEdgeVertex> getAdjacentVertices(HalfEdgeVertex vertex) {

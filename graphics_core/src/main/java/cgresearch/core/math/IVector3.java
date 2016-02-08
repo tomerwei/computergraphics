@@ -125,4 +125,9 @@ public interface IVector3 extends Serializable {
    * Set all three coordinates.
    */
   void set(double x, double y, double z);
+
+  /**
+   * Inner product of two vertices.
+   */
+  IMatrix3 innerProduct(IVector3 nMinus);
 }

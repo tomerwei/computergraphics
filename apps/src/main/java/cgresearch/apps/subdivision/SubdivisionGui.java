@@ -14,11 +14,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.algorithms.Subdivision2D;
 import cgresearch.graphics.algorithms.Subdivision3D;
 import cgresearch.graphics.datastructures.Polygon;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.NodeMerger;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;

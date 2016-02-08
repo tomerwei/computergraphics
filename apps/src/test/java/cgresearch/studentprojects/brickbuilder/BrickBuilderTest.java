@@ -3,9 +3,9 @@ package cgresearch.studentprojects.brickbuilder;
 import javax.imageio.spi.IIORegistry;
 
 import cgresearch.core.assets.ResourcesLocator;
+import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.scenegraph.CgNode;
 

@@ -1,4 +1,4 @@
-package cgresearch.graphics.datastructures.trianglemesh;
+package cgresearch.graphics.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import cgresearch.core.math.IMatrix;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
 /**
  * Implements Laplacian smoothing by solving the linear system corresponding to

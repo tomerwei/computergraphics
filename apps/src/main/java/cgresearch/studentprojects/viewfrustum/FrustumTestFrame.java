@@ -12,6 +12,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.datastructures.points.IPointCloud;
@@ -20,7 +21,6 @@ import cgresearch.graphics.datastructures.tree.OctreeFactory;
 import cgresearch.graphics.datastructures.tree.OctreeFactoryStrategyPointCloud;
 import cgresearch.graphics.datastructures.tree.OctreeNode;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
@@ -37,7 +37,7 @@ public class FrustumTestFrame extends CgApplication {
   public FrustumTestFrame() {
 
     getCgRootNode().setUseBlending(true);
-    getCgRootNode().setUseViewFrustumCulling(false); // TODO HIER View Frustum
+    getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum
                                                     // Culling einschalten
 
     ITriangleMesh cow = loadMesh("meshes/cow.obj");
@@ -102,16 +102,21 @@ public class FrustumTestFrame extends CgApplication {
     meshes.get(0).getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     return meshes.get(0);
   }
-  
-  public static void main(String[] args){
-      ResourcesLocator.getInstance().parseIniFile("resources.ini");
-      
-      CgApplication app =  new FrustumTestFrame();
-      ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), 0.1, 10.0); //TODO fuer den Live-Modus diese
-      vfc.computeVisibleScenePart(app.getCgRootNode());                                  //TODO  und diese Zeile auskommentieren
-      JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-      appLauncher.create(app);
-      appLauncher.setRenderSystem(RenderSystem.JOGL);
-      appLauncher.setUiSystem(UI.JOGL_SWING);
+
+  public static void main(String[] args) {
+    ResourcesLocator.getInstance().parseIniFile("resources.ini");
+
+    CgApplication app = new FrustumTestFrame();
+    //ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), 0.1, 10.0); // TODO
+                                                                                      // fuer
+                                                                                      // den
+                                                                                      // Live-Modus
+                                                                                      // diese
+    //vfc.computeVisibleScenePart(app.getCgRootNode()); // TODO und diese Zeile
+                                                      // auskommentieren
+    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(app);
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
   }
 }

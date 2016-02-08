@@ -3,10 +3,15 @@
  * Hochschule für Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.graphics.datastructures.trianglemesh;
+package cgresearch.graphics.algorithms;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.IVector3;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.Triangle;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 
 /**
  * Merge the nodes (vertices) of a triange mesh withing a given distance.

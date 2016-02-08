@@ -5,9 +5,9 @@ import java.util.List;
 
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;

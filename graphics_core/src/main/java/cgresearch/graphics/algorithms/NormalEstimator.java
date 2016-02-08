@@ -1,8 +1,10 @@
-package cgresearch.graphics.datastructures.points;
+package cgresearch.graphics.algorithms;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.PrincipalComponentAnalysis;
+import cgresearch.graphics.datastructures.points.IPointCloud;
+import cgresearch.graphics.datastructures.points.PointNeighborsQuery;
 
 /**
  * Estimate the normals for a point cloud.

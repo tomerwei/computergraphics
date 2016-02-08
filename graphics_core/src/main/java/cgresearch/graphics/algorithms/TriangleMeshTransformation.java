@@ -3,11 +3,12 @@
  * Hochschule für Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.graphics.datastructures.trianglemesh;
+package cgresearch.graphics.algorithms;
 
 import cgresearch.core.math.IMatrix3;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
 /**
  * Apply an affine transformation on a triangle mesh (more precisely its

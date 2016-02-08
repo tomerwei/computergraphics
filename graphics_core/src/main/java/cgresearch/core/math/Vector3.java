@@ -246,4 +246,15 @@ public class Vector3 implements IVector3 {
     set(1, y);
     set(2, z);
   }
+
+  @Override
+  public IMatrix3 innerProduct(IVector3 vector) {
+    IMatrix3 matrix = VectorMatrixFactory.newIMatrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    for (int row = 0; row < 3; row++) {
+      for (int column = 0; column < 3; column++) {
+        matrix.set(row, column, vector.get(row) * vector.get(column));
+      }
+    }
+    return matrix;
+  }
 }

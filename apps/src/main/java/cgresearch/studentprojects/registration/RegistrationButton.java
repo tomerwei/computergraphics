@@ -37,7 +37,6 @@ import javax.swing.DefaultListModel;
 import cgresearch.graphics.datastructures.points.PointNeighborsQuery;
 import cgresearch.graphics.datastructures.points.TriangleMeshSampler;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -155,7 +154,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 			
 			Register = icp.startAlgorithm(Base, Register, i);
 //			for(int k = 0 ;k < Register.getNumberOfPoints(); k++ ){
-//				System.out.println(" veränderte Register: "+ Register.getPoint(k).getPosition());
+//				System.out.println(" verï¿½nderte Register: "+ Register.getPoint(k).getPosition());
 //			}
 			
 			Register.updateRenderStructures();

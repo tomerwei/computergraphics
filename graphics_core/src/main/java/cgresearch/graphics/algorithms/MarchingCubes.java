@@ -3,7 +3,7 @@
  * Hochschule für Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.graphics.datastructures.implicitfunction;
+package cgresearch.graphics.algorithms;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.IVector3;

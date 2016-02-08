@@ -7,10 +7,10 @@ import java.util.Observer;
 
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.picking.Picking;
 import cgresearch.graphics.picking.PickingItem;

@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.Vector3;
+import cgresearch.graphics.algorithms.TriangleMeshTools;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.datastructures.points.PointCloud;
 import cgresearch.graphics.datastructures.primitives.Plane;
@@ -21,7 +23,6 @@ import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTools;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
@@ -31,8 +32,8 @@ import cgresearch.graphics.scenegraph.ICgNodeContent;
 import cgresearch.core.math.VectorMatrixFactory;
 
 public class ViewFrustumCulling implements Observer {
-    
-  public static final boolean liveModus = false;
+
+  public static final boolean liveModus = true;
 
   public static final double frustumTransparency = 0.5;
   public static final double objectsTransparency = 0.5;
@@ -90,8 +91,8 @@ public class ViewFrustumCulling implements Observer {
     cornerPoints = new Vector3[8];
 
     // dritter Parameter beeinflusst die Breite des Frustums
-    if(liveModus){
-        Camera.getInstance().addObserver(this);  //TODO
+    if (liveModus) {
+      Camera.getInstance().addObserver(this); // TODO
     }
     calcPlanesOfFrustum(nearDistance, farDistance, 1.0); //
 
@@ -122,8 +123,8 @@ public class ViewFrustumCulling implements Observer {
     cornerPoints = new Vector3[8];
 
     // dritter Parameter beeinflusst die Breite des Frustums
-    if(liveModus){
-        Camera.getInstance().addObserver(this); //TODO
+    if (liveModus) {
+      Camera.getInstance().addObserver(this); // TODO
     }
     calcPlanesOfFrustum(cam.getNearClippingPlane(), cam.getFarClippingPlane(), 1.0); //
 
@@ -296,55 +297,60 @@ public class ViewFrustumCulling implements Observer {
     nearTopleft =
         nearCenter.subtract(this.up.multiply(nearHeight * 0.5).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[ntl] = nearTopleft;
-    
-    //Debugging
-//    System.out.println("farBottomRight = " + cornerPoints[fbr]);
-//    System.out.println("farBottomLeft = " + cornerPoints[fbl]);
-//    System.out.println("farTopRight = " + cornerPoints[ftr]);
-//    System.out.println("farTopLeft = " + cornerPoints[ftl]);
-//    System.out.println("nearBottomRight = " + cornerPoints[nbr]);
-//    System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
-//    System.out.println("nearTopRight = " + cornerPoints[ntr]);
-//    System.out.println("nearTopleft = " + cornerPoints[ntl]);
-    
+
+    // Debugging
+    // System.out.println("farBottomRight = " + cornerPoints[fbr]);
+    // System.out.println("farBottomLeft = " + cornerPoints[fbl]);
+    // System.out.println("farTopRight = " + cornerPoints[ftr]);
+    // System.out.println("farTopLeft = " + cornerPoints[ftl]);
+    // System.out.println("nearBottomRight = " + cornerPoints[nbr]);
+    // System.out.println("nearBottomLeft = " + cornerPoints[nbl]);
+    // System.out.println("nearTopRight = " + cornerPoints[ntr]);
+    // System.out.println("nearTopleft = " + cornerPoints[ntl]);
 
     // Berechne Ebene
     // nah
     nearPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ntl]);
-    nearPlane.setNormal(nearPlane.getNormal().multiply(-1.0)); // die Normalen zeigen nach au�en, also muessen teilweise umgedreht werden
+    nearPlane.setNormal(nearPlane.getNormal().multiply(-1.0)); // die Normalen
+                                                               // zeigen nach
+                                                               // au�en, also
+                                                               // muessen
+                                                               // teilweise
+                                                               // umgedreht
+                                                               // werden
     this.frustum[near] = nearPlane;
-//     System.out.println("near_plane normal = "+ nearPlane.getNormal() );
+    // System.out.println("near_plane normal = "+ nearPlane.getNormal() );
 
     // fern
     farPlane = calcPlane(cornerPoints[ftr], cornerPoints[fbr], cornerPoints[ftl]);
     // farPlane.setNormal(farPlane.getNormal().multiply(-1.0)); // the normals
     // must point inwards the frustum, so they have to be inverted
     this.frustum[far] = farPlane;
-//     System.out.println("far_plane normal = "+ farPlane.getNormal() );
+    // System.out.println("far_plane normal = "+ farPlane.getNormal() );
 
     // links
     leftPlane = calcPlane(cornerPoints[ntl], cornerPoints[nbl], cornerPoints[ftl]);
-     leftPlane.setNormal(leftPlane.getNormal().multiply(-1.0));
+    leftPlane.setNormal(leftPlane.getNormal().multiply(-1.0));
     this.frustum[left] = leftPlane;
-//     System.out.println("left_plane normal = "+ leftPlane.getNormal() );
+    // System.out.println("left_plane normal = "+ leftPlane.getNormal() );
 
     // rechts
     rightPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ftr]);
-//    rightPlane.setNormal(rightPlane.getNormal().multiply(-1.0));
+    // rightPlane.setNormal(rightPlane.getNormal().multiply(-1.0));
     this.frustum[right] = rightPlane;
-//     System.out.println("right_plane normal = "+ rightPlane.getNormal() );
+    // System.out.println("right_plane normal = "+ rightPlane.getNormal() );
 
     // oben
     topPlane = calcPlane(cornerPoints[ntr], cornerPoints[ftr], cornerPoints[ntl]);
-//    topPlane.setNormal(topPlane.getNormal().multiply(-1.0));
+    // topPlane.setNormal(topPlane.getNormal().multiply(-1.0));
     this.frustum[top] = topPlane;
-//     System.out.println("top_plane normal = "+ topPlane.getNormal() );
+    // System.out.println("top_plane normal = "+ topPlane.getNormal() );
 
     // unten
     bottomPlane = calcPlane(cornerPoints[nbr], cornerPoints[fbr], cornerPoints[nbl]);
-     bottomPlane.setNormal(bottomPlane.getNormal().multiply(-1.0));
+    bottomPlane.setNormal(bottomPlane.getNormal().multiply(-1.0));
     this.frustum[bottom] = bottomPlane;
-//     System.out.println("bottom_plane normal = "+ bottomPlane.getNormal() );
+    // System.out.println("bottom_plane normal = "+ bottomPlane.getNormal() );
 
   }
 
@@ -417,14 +423,21 @@ public class ViewFrustumCulling implements Observer {
       for (int j = 0; j < corner_points.length && (in == 0 || out == 0); j++) {
         // fuer jede Ecke der Bounding Box
         // pruefe, ob sie innerhalb oder ausserhalb liegt
-        if (frustum[i].computeSignedDistance(corner_points[j])< 0) { // hier ist vertauschte Logik aufgrund von computeSignedDistance !!!
+        if (frustum[i].computeSignedDistance(corner_points[j]) < 0) { // hier
+                                                                      // ist
+                                                                      // vertauschte
+                                                                      // Logik
+                                                                      // aufgrund
+                                                                      // von
+                                                                      // computeSignedDistance
+                                                                      // !!!
           in++;
         } else {
           out++;
         }
       }
 
-      if( in == 0) {
+      if (in == 0) {
         return OUTSIDE;
       } else if (out > 0) { // in > 0 && out > 0 -> intersect
         result = INTERSECT;
@@ -693,63 +706,72 @@ public class ViewFrustumCulling implements Observer {
    * triangle meshes.
    */
   public void computeVisibleScenePart(CgRootNode rootNode) {
-      System.out.println("computeVisibleScenePart");
-      
-      ViewFrustumCulling vfc;
-      if(Camera.getInstance().hasChanged()){
-          vfc = new ViewFrustumCulling(Camera.getInstance());
-      }else{
-          vfc = this;
-      }
-      ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
-      ArrayList<CgNode> objects = new ArrayList<CgNode>();
 
-      // berechne View Frustum und zeichne Ebenen
-      ITriangleMesh frustum = getFrustumMesh(vfc.getCorners());
-      frustum.getMaterial().setTransparency(objectsTransparency);
-      
-//      rootNode.addChild(new CgNode(frustum, "frustum")); //TODO hier Frustum sichtbar machen
+    if (true) {
+      return;
+    }
 
-      // hole leafNodes
-      objects = traversalOctreeNode(rootNode, objects);
+    Logger.getInstance().message("computeVisibleScenePart");
 
-      // erzeuge Octrees fuer jedes Mesh
-      ArrayList<OctreeNode<Integer>> octrees = new ArrayList<OctreeNode<Integer>>();
+    ViewFrustumCulling vfc;
+    if (Camera.getInstance().hasChanged()) {
+      vfc = new ViewFrustumCulling(Camera.getInstance());
+    } else {
+      vfc = this;
+    }
+    ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
+    ArrayList<CgNode> objects = new ArrayList<CgNode>();
+
+    // berechne View Frustum und zeichne Ebenen
+    ITriangleMesh frustum = getFrustumMesh(vfc.getCorners());
+    frustum.getMaterial().setTransparency(objectsTransparency);
+
+    // rootNode.addChild(new CgNode(frustum, "frustum")); //TODO hier Frustum
+    // sichtbar machen
+
+    // hole leafNodes
+    objects = traversalOctreeNode(rootNode, objects);
+
+    // erzeuge Octrees fuer jedes Mesh
+    ArrayList<OctreeNode<Integer>> octrees = new ArrayList<OctreeNode<Integer>>();
+    for (int i = 0; i < objects.size(); i++) {
+      ITriangleMesh mesh = (ITriangleMesh) objects.get(i).getContent();
+      TriangleMeshTools.cleanup(mesh);
+      octrees.add(createMeshOctree((TriangleMesh) objects.get(i).getContent()));
+    }
+    // System.out.println("1");
+
+    if (objects.size() > 0) {
+
       for (int i = 0; i < objects.size(); i++) {
-        ITriangleMesh mesh = (ITriangleMesh) objects.get(i).getContent();
-        TriangleMeshTools.cleanup(mesh);
-        octrees.add(createMeshOctree((TriangleMesh) objects.get(i).getContent()));
+        objects.get(i).setVisible(true); // TODO wenn im Live-Modus hier false
+                                         // steht, wird der
+                                         // Octree fuer die Szene beim zweiten
+                                         // Durchlauf nicht korrekt gebildet,
+                                         // da dann alle Objekte auf false sind
+                                         // und diese nicht erkannt werden
       }
-//      System.out.println("1");
-      
-      if (objects.size() > 0) {
 
+      OctreeNode<Integer> octreeScene = createSceneOctree(objects);
+      extractNodesOfFrustum(vfc, octreeScene, visibleNodes);
+
+      // alles zuerst invisible setzen
+      if (!init) {
+        this.root = rootNode;
+        init = true;
         for (int i = 0; i < objects.size(); i++) {
-            objects.get(i).setVisible(true); // TODO wenn im Live-Modus hier false steht, wird der
-                                             // Octree fuer die Szene beim zweiten Durchlauf nicht korrekt gebildet,
-                                             //  da dann alle Objekte auf false sind und diese nicht erkannt werden
-        }
-          
-        OctreeNode<Integer> octreeScene = createSceneOctree(objects);
-        extractNodesOfFrustum(vfc, octreeScene, visibleNodes);
-
-        // alles zuerst invisible setzen
-        if(!init){
-            this.root = rootNode;
-            init = true;
-            for (int i = 0; i < objects.size(); i++) {
-                objects.get(i).setVisible(false);
-            }
-        }
-        // fuege sichtbare Elemente der Szene hinzu
-        for (int j = 0; j < objects.size(); j++) {
-          for (int k = 0; k < visibleNodes.size(); k++) {
-            addVisibleElementsToScene(rootNode,vfc , octrees.get(j), objects.get(j), visibleNodes.get(k));
-          }
+          objects.get(i).setVisible(false);
         }
       }
+      // fuege sichtbare Elemente der Szene hinzu
+      for (int j = 0; j < objects.size(); j++) {
+        for (int k = 0; k < visibleNodes.size(); k++) {
+          addVisibleElementsToScene(rootNode, vfc, octrees.get(j), objects.get(j), visibleNodes.get(k));
+        }
+      }
+    }
   }
-  
+
   /**
    * wird aufgerufen, wenn ein OctreeNode komplett innerhalb des Frustums liegt,
    * um an seine Leafnodes zu kommen
@@ -774,7 +796,7 @@ public class ViewFrustumCulling implements Observer {
     }
     return objects;
   }
-  
+
   /**
    * erzeugt einen Octree fuer ein TriangleMesh
    */
@@ -784,7 +806,7 @@ public class ViewFrustumCulling implements Observer {
     OctreeNode<Integer> octreeMeshRoot = octreeFactoryMesh.create(7, 20);
     return octreeMeshRoot;
   }
-  
+
   /**
    * erzeugt einen Octree fuer die Szene
    */
@@ -794,7 +816,7 @@ public class ViewFrustumCulling implements Observer {
     OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 10);
     return octreeSceneRoot;
   }
-  
+
   /**
    * fuegt einer Liste die LeafNodes des SceneOctrees hinzu, die im Frustum
    * liegen oder es schneiden
@@ -818,21 +840,27 @@ public class ViewFrustumCulling implements Observer {
       }
     }
   }
-  
-  public void addVisibleElementsToScene(CgNode rootNode,ViewFrustumCulling vfc, OctreeNode<Integer> tree, CgNode node,
-          OctreeNode<Integer> scene) {
-        ICgNodeContent partlyVisible = vfc.extractNodeContent(tree, node, scene);
-        // System.out.println("8");
-        if (vfc.isObjectInFrustum(node.getContent()) == 2) {
-          CgNode newNode = new CgNode(partlyVisible, "partyVisible_object");
-          rootNode.addChild(newNode);
-        }
-        partlyVisible = null;
-      }
 
-@Override
-public void update(Observable arg0, Object arg1) {
+  public void addVisibleElementsToScene(CgNode rootNode, ViewFrustumCulling vfc, OctreeNode<Integer> tree, CgNode node,
+      OctreeNode<Integer> scene) {
+    ICgNodeContent partlyVisible = vfc.extractNodeContent(tree, node, scene);
+    // System.out.println("8");
+    if (vfc.isObjectInFrustum(node.getContent()) == 2) {
+      CgNode newNode = new CgNode(partlyVisible, "partyVisible_object");
+      rootNode.addChild(newNode);
+    }
+    partlyVisible = null;
+  }
+
+  @Override
+  public void update(Observable arg0, Object arg1) {
+    Logger.getInstance().message("Update aufgerufen");
     computeVisibleScenePart(root);
-    
-}
+  }
+  
+  public void rebuildOctree(){
+    // TODO
+  }
+  
+  
 }
