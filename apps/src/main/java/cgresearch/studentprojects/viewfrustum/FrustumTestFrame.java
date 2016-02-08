@@ -31,14 +31,13 @@ import cgresearch.rendering.jogl.misc.ViewFrustumCulling;
 public class FrustumTestFrame extends CgApplication {
 
   public static OctreeFactoryStrategyScene scene;
-  private ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
 
   public static final double objectsTransparency = 0.5;
 
   public FrustumTestFrame() {
 
     getCgRootNode().setUseBlending(true);
-    //getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum
+    getCgRootNode().setUseViewFrustumCulling(false); // TODO HIER View Frustum
                                                     // Culling einschalten
 
     ITriangleMesh cow = loadMesh("meshes/cow.obj");

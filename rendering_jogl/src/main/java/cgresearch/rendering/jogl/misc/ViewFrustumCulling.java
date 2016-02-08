@@ -31,6 +31,8 @@ import cgresearch.graphics.scenegraph.ICgNodeContent;
 import cgresearch.core.math.VectorMatrixFactory;
 
 public class ViewFrustumCulling implements Observer {
+    
+  public static final boolean liveModus = false;
 
   public static final double frustumTransparency = 0.5;
   public static final double objectsTransparency = 0.5;
@@ -88,7 +90,9 @@ public class ViewFrustumCulling implements Observer {
     cornerPoints = new Vector3[8];
 
     // dritter Parameter beeinflusst die Breite des Frustums
-//    Camera.getInstance().addObserver(this);  //TODO
+    if(liveModus){
+        Camera.getInstance().addObserver(this);  //TODO
+    }
     calcPlanesOfFrustum(nearDistance, farDistance, 1.0); //
 
   }
@@ -118,7 +122,9 @@ public class ViewFrustumCulling implements Observer {
     cornerPoints = new Vector3[8];
 
     // dritter Parameter beeinflusst die Breite des Frustums
-//    Camera.getInstance().addObserver(this); //TODO
+    if(liveModus){
+        Camera.getInstance().addObserver(this); //TODO
+    }
     calcPlanesOfFrustum(cam.getNearClippingPlane(), cam.getFarClippingPlane(), 1.0); //
 
   }
@@ -411,14 +417,14 @@ public class ViewFrustumCulling implements Observer {
       for (int j = 0; j < corner_points.length && (in == 0 || out == 0); j++) {
         // fuer jede Ecke der Bounding Box
         // pruefe, ob sie innerhalb oder ausserhalb liegt
-        if (frustum[i].computeSignedDistance(corner_points[j]) > 0) {
-          out++;
-        } else {
+        if (frustum[i].computeSignedDistance(corner_points[j])< 0) { // hier ist vertauschte Logik aufgrund von computeSignedDistance !!!
           in++;
+        } else {
+          out++;
         }
       }
 
-      if (in == 0) {
+      if( in == 0) {
         return OUTSIDE;
       } else if (out > 0) { // in > 0 && out > 0 -> intersect
         result = INTERSECT;
@@ -687,6 +693,7 @@ public class ViewFrustumCulling implements Observer {
    * triangle meshes.
    */
   public void computeVisibleScenePart(CgRootNode rootNode) {
+      System.out.println("computeVisibleScenePart");
       
       ViewFrustumCulling vfc;
       if(Camera.getInstance().hasChanged()){
@@ -701,7 +708,7 @@ public class ViewFrustumCulling implements Observer {
       ITriangleMesh frustum = getFrustumMesh(vfc.getCorners());
       frustum.getMaterial().setTransparency(objectsTransparency);
       
-      rootNode.addChild(new CgNode(frustum, "frustum")); //TODO hier Frustum sichtbar machen
+//      rootNode.addChild(new CgNode(frustum, "frustum")); //TODO hier Frustum sichtbar machen
 
       // hole leafNodes
       objects = traversalOctreeNode(rootNode, objects);
