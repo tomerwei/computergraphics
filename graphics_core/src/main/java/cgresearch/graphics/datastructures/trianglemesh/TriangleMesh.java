@@ -13,6 +13,7 @@ import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.material.Material;
 
 /**

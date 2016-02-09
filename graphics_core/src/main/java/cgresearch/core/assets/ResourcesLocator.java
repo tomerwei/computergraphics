@@ -77,10 +77,12 @@ public class ResourcesLocator {
 	 */
 	public String getPathToResource(String resourcePath) {
 		for (String path : paths) {
-			if (new File(path + resourcePath).exists()) {
+		  String path1 = path + resourcePath;
+		  String path2 = path + File.separator + resourcePath;
+			if (new File(path1).exists()) {
 				return path + resourcePath;
-			} else if (new File(path + File.separator + resourcePath).exists()) {
-				return path + File.separator + resourcePath;
+			} else if (new File(path2).exists()) {
+				return path2;
 			}
 		}
 		return null;

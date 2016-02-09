@@ -47,4 +47,25 @@ public class Polygon extends ICgNodeContent {
   public void clear() {
     points.clear();
   }
+
+  /**
+   * Collases the edge index between the points index and index+1
+   */
+  public void collapse(int index, IVector3 newPosition) {
+    points.remove(index);
+    points.get(index % points.size()).copy(newPosition);
+  }
+
+  /**
+   * Scale polygon to [-1,1]^2 und center at origin
+   */
+  public void fitToUnitBox() {
+    BoundingBox bbox = new BoundingBox();
+    for (IVector3 p : points) {
+      bbox.add(p);
+    }
+    for (int i = 0; i < points.size(); i++) {
+      points.set(i, (points.get(i).subtract(bbox.getCenter())).multiply(2.0 / bbox.getMaxExtend()));
+    }
+  }
 }

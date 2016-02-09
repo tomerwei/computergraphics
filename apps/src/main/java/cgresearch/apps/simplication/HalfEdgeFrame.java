@@ -3,7 +3,7 @@
  * Hochschule für Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.apps.halfedge;
+package cgresearch.apps.simplication;
 
 import java.util.List;
 

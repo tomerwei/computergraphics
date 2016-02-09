@@ -11,6 +11,7 @@ import java.util.List;
 import cgresearch.core.math.IMatrix3;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.datastructures.primitives.Cylinder;
 import cgresearch.graphics.datastructures.primitives.Line3D;

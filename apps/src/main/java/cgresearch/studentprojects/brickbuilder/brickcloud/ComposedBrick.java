@@ -11,10 +11,10 @@ import java.util.List;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.NodeMerger;
+import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.NodeMerger;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 

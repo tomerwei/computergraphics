@@ -1,8 +1,10 @@
-package cgresearch.graphics.datastructures.trianglemesh;
+package cgresearch.graphics.algorithms;
 
 import cgresearch.core.math.IMatrix;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.Matrix;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
 /**
  * A collection of mesh tools.

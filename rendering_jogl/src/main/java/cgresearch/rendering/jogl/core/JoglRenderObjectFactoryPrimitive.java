@@ -7,6 +7,7 @@ package cgresearch.rendering.jogl.core;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.datastructures.primitives.Cuboid;
 import cgresearch.graphics.datastructures.primitives.Cylinder;
@@ -17,7 +18,6 @@ import cgresearch.graphics.datastructures.primitives.Sphere;
 import cgresearch.graphics.datastructures.primitives.Tetrahedron;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshTransformation;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.rendering.core.IRenderObjectsFactory;

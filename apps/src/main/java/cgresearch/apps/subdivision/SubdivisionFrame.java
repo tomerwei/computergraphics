@@ -37,7 +37,7 @@ public class SubdivisionFrame extends CgApplication {
   public SubdivisionFrame() {
     getCgRootNode().addChild(new CgNode(polygon, "Polygon"));
     getCgRootNode().addChild(new CgNode(mesh, "Mesh"));
-    getCgRootNode().addChild(new CoordinateSystem());
+    getCgRootNode().addChild(new CoordinateSystem(0.01));
 
     LightSource light = new LightSource(Type.POINT);
     light.setPosition(VectorMatrixFactory.newIVector3(-5, -5, -5));

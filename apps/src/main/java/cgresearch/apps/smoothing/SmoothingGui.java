@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import cgresearch.graphics.algorithms.LaplaceSmoothing;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.LaplaceSmoothing;
 import cgresearch.ui.IApplicationControllerGui;
 
 public class SmoothingGui extends IApplicationControllerGui implements ActionListener {
