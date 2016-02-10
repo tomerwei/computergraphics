@@ -25,6 +25,7 @@ import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.graphics.scenegraph.CgRootNode;
 import cgresearch.rendering.jogl.misc.OctreeFactoryStrategyScene;
 import cgresearch.rendering.jogl.misc.ViewFrustumCulling;
 
@@ -33,6 +34,7 @@ public class FrustumTestFrame extends CgApplication {
   public static OctreeFactoryStrategyScene scene;
 
   public static final double objectsTransparency = 0.5;
+  public static CgRootNode rootNode;
 
   public FrustumTestFrame() {
 
@@ -52,13 +54,13 @@ public class FrustumTestFrame extends CgApplication {
     TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newIVector3(0.0, 1.15, 9.0));
     TriangleMeshTransformation.scale(bunny, 3.0);
     TriangleMeshTransformation.scale(fenja, 0.1);
-    TriangleMeshTransformation.translate(fenja, VectorMatrixFactory.newIVector3(0.5, -3.0, 18.0));
+    TriangleMeshTransformation.translate(fenja, VectorMatrixFactory.newIVector3(0.5, 0.0, 25.0));
     TriangleMeshTransformation.scale(fenjaDown, 0.1);
     TriangleMeshTransformation.translate(fenjaDown, VectorMatrixFactory.newIVector3(2.0, -8.0, 8.0));
     TriangleMeshTransformation.scale(fenjaUp, 0.1);
     TriangleMeshTransformation.translate(fenjaUp, VectorMatrixFactory.newIVector3(-1.0, 2.0, 0.5));
     TriangleMeshTransformation.scale(pumpkin, 0.02);
-    TriangleMeshTransformation.translate(pumpkin, VectorMatrixFactory.newIVector3(0.0, 2.0, 20.5));
+    TriangleMeshTransformation.translate(pumpkin, VectorMatrixFactory.newIVector3(0.0, 0.0, 20.5));
     // ############### Transformationen ###############
 
     getCgRootNode().addChild(new CgNode(cow, "cow"));
@@ -67,6 +69,7 @@ public class FrustumTestFrame extends CgApplication {
     getCgRootNode().addChild(new CgNode(fenjaDown, "fenjaDown"));
     getCgRootNode().addChild(new CgNode(fenjaUp, "fenjaUp"));
     getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
+    rootNode = getCgRootNode();
   }
 
   /**
@@ -107,13 +110,10 @@ public class FrustumTestFrame extends CgApplication {
     ResourcesLocator.getInstance().parseIniFile("resources.ini");
 
     CgApplication app = new FrustumTestFrame();
-    //ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), 0.1, 10.0); // TODO
-                                                                                      // fuer
-                                                                                      // den
-                                                                                      // Live-Modus
-                                                                                      // diese
-    //vfc.computeVisibleScenePart(app.getCgRootNode()); // TODO und diese Zeile
-                                                      // auskommentieren
+    if(!rootNode.useViewFrustumCulling()){
+        ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), 0.1, 10.0, rootNode);
+    vfc.computeVisibleScenePart(app.getCgRootNode()); 
+    }
     JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
     appLauncher.create(app);
     appLauncher.setRenderSystem(RenderSystem.JOGL);
