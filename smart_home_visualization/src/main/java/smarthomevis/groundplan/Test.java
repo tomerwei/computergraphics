@@ -18,9 +18,9 @@ public class Test
 {
 	private void testRender(GroundPlan app)
 	{
-	// app.renderAndDisplayPlan("4H-HORA Projekt1");
+	app.renderAndDisplayPlan("4H-HORA Projekt1");
 	// app.renderAndDisplayPlan("4H-HORA MessTest");
-	app.renderAndDisplayPlan("TestRaum");
+	// app.renderAndDisplayPlan("TestRaum");
 	// app.renderAndDisplayPlan("Grundriss_Haus_02");
 	
 	}

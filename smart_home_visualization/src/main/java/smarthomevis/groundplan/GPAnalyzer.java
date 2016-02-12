@@ -16,17 +16,52 @@ import smarthomevis.groundplan.config.GPLine;
 
 public class GPAnalyzer
 {
+	
+	private Map<Double, Integer> distanceMap = new HashMap<>();
+	
 	public GPDataType analyzeAndProcessData(GPDataType data)
 	{
 	
-	calculateDistancesInPlan(data);
+	Map<Double, List<String[]>> pairsToDistanceMap = calculateDistancesInPlan(
+		data);
 	// ergaenzende Linien zum Abschluss von Wandsegmenten sollten hier in den
 	// GPDataType eingefuegt werden
 	
+	Map<Double, List<String[]>> relevantPairsMap = chooseCorrectDistances(
+		pairsToDistanceMap, data.getGPConfig());
+		
 	return data;
 	}
 	
-	public void calculateDistancesInPlan(GPDataType type)
+	// FIXME evt reicht die rueckgabe der relevanten distanzen?
+	private Map<Double, List<String[]>> chooseCorrectDistances(
+		Map<Double, List<String[]>> pairsToDistanceMap, GPConfig config)
+	{
+	Map<Double, List<String[]>> relevantDistances = new HashMap<>();
+	for (Entry<Double, List<String[]>> e : pairsToDistanceMap.entrySet())
+		{
+		Double distance = e.getKey();
+		if (distance >= config.getValue(GPConfig.LOWER_WALLTHICKNESS_LIMIT)
+			&& distance <= config.getValue(GPConfig.UPPER_WALLTHICKNESS_LIMIT))
+			{
+			System.out.println("Distance " + distance + " is in range");
+			int count = distanceMap.get(distance);
+			Double threshold = config.getValue(GPConfig.WALL_COUNT_THRESHOLD);
+			if (count >= threshold)
+				{
+				// TODO Liste mit paaren in neue Liste kopieren und diese
+				// zurueckgeben
+				System.out.println("number of pairs (" + count
+					+ ") is over threshold (" + threshold + ")");
+				}
+				
+			}
+		}
+		
+	return null;
+	}
+	
+	public Map<Double, List<String[]>> calculateDistancesInPlan(GPDataType type)
 	{
 	Map<String, List<GPLine>> layerMap = type.getLayers();
 	
@@ -64,11 +99,7 @@ public class GPAnalyzer
 		System.out.println("\nMap of " + e.getKey().toString(5) + " contains "
 			+ e.getValue().size() + " lines");
 			
-	Map<Double, Integer> distanceMap = countAllDistances(type, directionMap);
-	
-	// GPUtility.printDistanceMap(distanceMap);
-	GPUtility.saveDistanceMapToCSVFile(distanceMap);
-	
+	return countAllDistances(type, directionMap);
 	}
 	
 	public IVector3 testVectorFitsAngleOfDirVector(IVector3 normDirVector,
@@ -94,11 +125,14 @@ public class GPAnalyzer
 	return null;
 	}
 	
-	private Map<Double, Integer> countAllDistances(GPDataType type,
+	private Map<Double, List<String[]>> countAllDistances(GPDataType type,
 		Map<IVector3, List<GPLine>> directionMap)
 	{
-	Map<Double, Integer> distanceMap = new HashMap<>();
 	distanceMap.put(0.0, 0);
+	
+	// Map fuer die Speicherung der Linienpaare unter der Referenz des
+	// jeweiligen Abstands
+	Map<Double, List<String[]>> distanceAndLinesReferenceMap = new HashMap<>();
 	
 	double distanceInterval = type.getGPConfig()
 		.getValue(GPConfig.DISTANCE_INTERVAL);
@@ -127,12 +161,14 @@ public class GPAnalyzer
 				if (dist > 0.0)
 					{
 					// den passenden Intervallwert fuer die aktuelle Distanz
-					// ermitteln
+					// ermitteln, um diesen zu zaehlen
 					double distanceKey = calculateDistanceKey(dist,
 						distanceInterval);
+					// ist die Distanz ausserhalb des bisherigen Maximums, Map
+					// erweitern
 					if (!distanceMap.containsKey(distanceKey))
 						{
-						expandDistanceMapToDistanceKey(distanceMap, distanceKey,
+						expandDistanceMapToDistanceKey(distanceKey,
 							distanceInterval);
 						// System.out.println("# new amount of distances is " +
 						// distanceMap.size());
@@ -140,10 +176,12 @@ public class GPAnalyzer
 						
 					System.out.println("++ increasing count of key "
 						+ distanceKey + " for line distance " + dist);
-					increaseDistanceCounter(distanceMap, distanceKey);
+					increaseDistanceCounter(distanceKey);
 					
-					// TODO speichern der gefundenen zueinander gehoerenden
-					// Liniengruppen
+					// die Namensreferenz des gefundenen Linienpaares unter der
+					// Distanzreferenz ablegen
+					saveLinePairWithDistance(distanceAndLinesReferenceMap,
+						line.getName(), other.getName(), distanceKey);
 					}
 				}
 				
@@ -151,7 +189,25 @@ public class GPAnalyzer
 			
 		}
 		
-	return distanceMap;
+	// GPUtility.printDistanceMap(distanceMap);
+	GPUtility.saveDistanceMapToCSVFile(distanceMap);
+	
+	return distanceAndLinesReferenceMap;
+	}
+	
+	private void saveLinePairWithDistance(
+		Map<Double, List<String[]>> distanceAndLinesReferenceMap,
+		String lineName, String otherName, double distanceKey)
+	{
+	// Key ggf. vorinitialisieren
+	if (!distanceAndLinesReferenceMap.containsKey(distanceKey))
+		{
+		distanceAndLinesReferenceMap.put(distanceKey, new ArrayList<>());
+		}
+		
+	String[] pair =
+		{ lineName, otherName };
+	distanceAndLinesReferenceMap.get(distanceKey).add(pair);
 	}
 	
 	private double calculateDistanceKey(double dist, double distanceInterval)
@@ -177,12 +233,11 @@ public class GPAnalyzer
 	return distanceKey.doubleValue();
 	}
 	
-	private void expandDistanceMapToDistanceKey(
-		Map<Double, Integer> distanceMap, double distanceKey,
+	private void expandDistanceMapToDistanceKey(double distanceKey,
 		double distanceInterval)
 	{
 	// zunaechst den bisher hoechsten Key ermitteln
-	double highestCurrentKey = findHighestCurrentDistanceKey(distanceMap);
+	double highestCurrentKey = findHighestCurrentDistanceKey();
 	
 	BigDecimal current = BigDecimal.valueOf(highestCurrentKey);
 	BigDecimal target = BigDecimal.valueOf(distanceKey);
@@ -207,8 +262,7 @@ public class GPAnalyzer
 		
 	}
 	
-	private double findHighestCurrentDistanceKey(
-		Map<Double, Integer> distanceMap)
+	private double findHighestCurrentDistanceKey()
 	{
 	// geht alle Keys durch und findet den hoechsten
 	double currentHighest = 0.0;
@@ -235,8 +289,7 @@ public class GPAnalyzer
 	return temp / temp2;
 	}
 	
-	private void increaseDistanceCounter(Map<Double, Integer> distanceMap,
-		double distance)
+	private void increaseDistanceCounter(double distance)
 	{
 	int currentCount = distanceMap.get(distance);
 	distanceMap.put(distance, currentCount + 1);

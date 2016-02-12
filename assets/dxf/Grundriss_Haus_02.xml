@@ -22,6 +22,15 @@
 		<distance_interval>
 			0.5
 		</distance_interval>
+		<lower_wallthickness_limit>
+			0.1
+		</lower_wallthickness_limit>
+		<upper_wallthickness_limit>
+			0.5
+		</upper_wallthickness_limit>
+		<wall_count_threshold>
+			4
+		</wall_count_threshold>
 	</config>
 	<layer name="Schnittkanten" type="WALL">
 	
