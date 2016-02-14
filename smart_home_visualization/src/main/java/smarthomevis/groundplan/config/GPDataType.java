@@ -22,6 +22,8 @@ public class GPDataType implements Serializable
 	private Map<String, GPLine> lines = null;
 	// Ordnet die GPLine-Objekte anhand ihres eindeutigen Namens einem Layer zu
 	private Map<String, List<String>> layers = null;
+	// Ordnet die gefundenen Linienpaaren wieder den entsprechenden Layers zu
+	private Map<String, List<String[]>> linePairsPerLayer = null;
 
 	/**
 	 * 
@@ -32,6 +34,7 @@ public class GPDataType implements Serializable
 	{
 		this.lines = new HashMap<>();
 		this.layers = new HashMap<>();
+		this.linePairsPerLayer = new HashMap<>();
 	}
 
 	public GPDataType(GPConfig config)
@@ -39,6 +42,7 @@ public class GPDataType implements Serializable
 		this.config = config;
 		this.lines = new HashMap<>();
 		this.layers = new HashMap<>();
+		this.linePairsPerLayer = new HashMap<>();
 	}
 
 	/*
@@ -57,6 +61,17 @@ public class GPDataType implements Serializable
 	public List<String> getLayer(String id)
 	{
 		return this.layers.get(id);
+	}
+
+	public String getLayerOfLine(String lineName)
+	{
+		for (String layerName : layers.keySet())
+		{
+			if (layers.get(layerName).contains(lineName))
+			return layerName;
+		}
+
+		return "none";
 	}
 
 	public Map<String, List<GPLine>> getLayers()
@@ -90,6 +105,33 @@ public class GPDataType implements Serializable
 		return result;
 	}
 
+	public Map<String, List<GPLine[]>> getGPLinePairsPerLayerMap()
+	{
+		Map<String, List<GPLine[]>> gplinePairsPerLayer = new HashMap<>();
+
+		for (Entry<String, List<String[]>> e : linePairsPerLayer.entrySet())
+		{
+			String key = e.getKey();
+
+			gplinePairsPerLayer.put(key, getGPLinePairsOfLayer(key));
+		}
+
+		return gplinePairsPerLayer;
+	}
+
+	public List<GPLine[]> getGPLinePairsOfLayer(String layerName)
+	{
+		List<GPLine[]> pairList = new ArrayList<>();
+		for (String[] sArray : this.linePairsPerLayer.get(layerName))
+		{
+			GPLine[] lineArray =
+			{ this.getLine(sArray[0]), this.getLine(sArray[1]) };
+			pairList.add(lineArray);
+		}
+
+		return pairList;
+	}
+
 	/*
 	 * Setters
 	 */
@@ -106,6 +148,14 @@ public class GPDataType implements Serializable
 	public void addWall(String id, List<String> lineList)
 	{
 		this.layers.put(id, lineList);
+	}
+
+	public void addPairToLayer(String layerName, String[] linePair)
+	{
+		if (!this.linePairsPerLayer.containsKey(layerName))
+		this.linePairsPerLayer.put(layerName, new ArrayList<String[]>());
+
+		this.linePairsPerLayer.get(layerName).add(linePair);
 	}
 
 	/*
