@@ -10,7 +10,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.graphics.datastructures.Polygon;
+import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMesh;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
@@ -36,6 +36,7 @@ public class SimplifcationFrame extends CgApplication {
   public SimplifcationFrame() {
     heMesh = new HalfEdgeTriangleMesh();
     CgNode meshNode = new CgNode(heMesh, "Mesh");
+    meshNode.setVisible(false);
     getCgRootNode().addChild(meshNode);
 
     polygon = new Polygon();

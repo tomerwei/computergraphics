@@ -5,7 +5,7 @@
  */
 package cgresearch.rendering.jogl.core;
 
-import cgresearch.graphics.datastructures.Polygon;
+import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.rendering.core.IRenderObjectsFactory;
 

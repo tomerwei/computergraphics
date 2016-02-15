@@ -41,19 +41,19 @@ public abstract class CgApplication implements Observer {
   private void addLight() {
     // Light source 1
     LightSource light1 =
-        new LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(10, 10, 10))
+        new LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(5, 5, 5))
             // .setColor(VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
             .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
     rootNode.addLight(light1);
-    // // Light source 2
-    // LightSource light2 = new LightSource(LightSource.Type.POINT)
-    // .setPosition(VectorMatrixFactory.newIVector3(0, 2, 0))
-    // // .setColor(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
-    // .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
-    // rootNode.addLight(light2);
-    // // Light source 3
-    // LightSource light3 = new LightSource(LightSource.Type.POINT)
-    // .setPosition(VectorMatrixFactory.newIVector3(0, 0, 2))
+    // Light source 2
+    LightSource light2 = new LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(-5, -5, -5))
+        // .setColor(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
+        .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    rootNode.addLight(light2);
+    // Light source 3
+    // LightSource light3 = new
+    // LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(0,
+    // 0, 2))
     // // .setColor(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.75));
     // .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
     // rootNode.addLight(light3);

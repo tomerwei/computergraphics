@@ -166,6 +166,9 @@ public class Vector3 implements IVector3 {
    */
   @Override
   public void copy(IVector3 other) {
+    if (other == null) {
+      throw new IllegalArgumentException("Invalid copy vector.");
+    }
     values[MathHelpers.INDEX_0] = other.get(MathHelpers.INDEX_0);
     values[MathHelpers.INDEX_1] = other.get(MathHelpers.INDEX_1);
     values[MathHelpers.INDEX_2] = other.get(MathHelpers.INDEX_2);

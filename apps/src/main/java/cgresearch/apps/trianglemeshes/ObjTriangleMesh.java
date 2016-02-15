@@ -45,9 +45,9 @@ public class ObjTriangleMesh extends CgApplication {
   public ObjTriangleMesh() {
     // 3D Object
     // loadFenja();
-    loadLotrCubeWithTextureAtlas();
+    // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    // loadPlaneWithBunny();
+    loadPlaneWithBunny();
     // loadMedivalHouse();
     // loadHulk();
     // loadNofretete();
@@ -109,15 +109,15 @@ public class ObjTriangleMesh extends CgApplication {
       mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(1, 1, 1));
       mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(1, 1, 1));
       mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0.05, 0.05, 0.05));
-      mesh.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
-      CgNode bunnyNode = new CgNode(mesh, "medival house");
-      getCgRootNode().addChild(bunnyNode);
+      // mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+      CgNode houseNode = new CgNode(mesh, "medival house");
+      getCgRootNode().addChild(houseNode);
     }
-    getCgRootNode().addChild(new CoordinateSystem());
+    // getCgRootNode().addChild(new CoordinateSystem());
   }
 
   public void loadPlaneWithBunny() {
-    getCgRootNode().setUseBlending(true);
+    //getCgRootNode().setUseBlending(true);
     Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
     plane.getMaterial().setReflectionAmbient(Material.PALETTE2_COLOR1);
     // plane.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR1);
@@ -126,11 +126,11 @@ public class ObjTriangleMesh extends CgApplication {
     plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     plane.getMaterial().setSpecularShininess(100);
     plane.getMaterial().setTransparency(1);
-    getCgRootNode().addChild(new CgNode(plane, "plane"));
+    // getCgRootNode().addChild(new CgNode(plane, "plane"));
     // plane.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 
     ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile("meshes/bunny.obj");
+    List<ITriangleMesh> meshes = reader.readFile("meshes/cow.obj");
     if (meshes.size() == 1) {
       ITriangleMesh bunny = meshes.get(0);
       bunny.fitToUnitBox();
@@ -143,8 +143,8 @@ public class ObjTriangleMesh extends CgApplication {
       // bunny.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0,
       // 0, 0));
       bunny.getMaterial().setReflectionDiffuse(Material.PALETTE1_COLOR2);
-      bunny.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0.2, 0.2, 0.2));
-      bunny.getMaterial().setTransparency(0.5);
+      bunny.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(1, 1, 1));
+      //bunny.getMaterial().setTransparency(0.5);
       CgNode bunnyNode = new CgNode(bunny, "bunny");
       getCgRootNode().addChild(bunnyNode);
     }

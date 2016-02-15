@@ -60,7 +60,7 @@ public class OctreeTest extends CgApplication {
 
     // Read mesh
     ObjFileReader reader = new ObjFileReader();
-    List<ITriangleMesh> meshes = reader.readFile("meshes/fenja02.obj");
+    List<ITriangleMesh> meshes = reader.readFile("meshes/bunny.obj");
     mesh = null;
     if (meshes.size() == 0) {
       return;
@@ -71,7 +71,7 @@ public class OctreeTest extends CgApplication {
     // TriangleMeshTransformation.scale(mesh, 2);
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     CgNode meshNode = new CgNode(mesh, "mesh");
-    meshNode.setVisible(false);
+    meshNode.setVisible(true);
     getCgRootNode().addChild(meshNode);
 
     // Create octree
@@ -96,12 +96,12 @@ public class OctreeTest extends CgApplication {
     visibleElementsMesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR0);
     computeVisibleElements();
     CgNode visibleElementsNode = new CgNode(visibleElementsMesh, "visible elements");
-    visibleElementsNode.setVisible(true);
+    visibleElementsNode.setVisible(false);
     getCgRootNode().addChild(visibleElementsNode);
 
     // Coordinate system
-    CgNode coordinateSystem = new CoordinateSystem();
-    coordinateSystem.setVisible(false);
+    CgNode coordinateSystem = new CoordinateSystem(0.1);
+    coordinateSystem.setVisible(true);
     getCgRootNode().addChild(coordinateSystem);
   }
 

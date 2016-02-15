@@ -17,10 +17,11 @@ import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.algorithms.Subdivision2D;
 import cgresearch.graphics.algorithms.Subdivision3D;
-import cgresearch.graphics.datastructures.Polygon;
+import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.fileio.ObjFileReader;
+import cgresearch.graphics.fileio.PolygonIO;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.ui.IApplicationControllerGui;
@@ -119,15 +120,23 @@ public class SubdivisionGui extends IApplicationControllerGui implements ActionL
   }
 
   private void reset() {
-    // Init polygon
+    // 2D
+    PolygonIO polygonIO = new PolygonIO();
     polygon.clear();
     polygon.addPoint(VectorMatrixFactory.newIVector3(-2, 0, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(0, 2, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(2, 0, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(0, -2, 0));
+//    polygonIO.writePolygon(polygon, "/Users/abo781/abo781/code/computergraphics/assets/polygons/square.polygon");
+
+    polygon.copy(polygonIO.readPolygon("polygons/bird.polygon"));
     polygon.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     polygon.getMaterial().setReflectionDiffuse(Material.PALETTE1_COLOR4);
+    polygon.getMaterial().setPointSphereSize(0.05);
+    polygon.getMaterial().setShowPointSpheres(true);
     polygon.updateRenderStructures();
+
+    // 3D
     reset3D(Mesh.valueOf((String) comboSelect3Ddataset.getSelectedItem()));
   }
 

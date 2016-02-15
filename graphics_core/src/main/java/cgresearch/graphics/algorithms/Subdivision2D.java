@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.IVector3;
-import cgresearch.graphics.datastructures.Polygon;
+import cgresearch.graphics.datastructures.polygon.Polygon;
+import cgresearch.graphics.datastructures.polygon.PolygonVertex;
 
 /**
  * Compute subdivision on a 2D polygon.
@@ -29,13 +30,14 @@ public class Subdivision2D {
       return;
     }
     List<IVector3> newPositions = new ArrayList<IVector3>();
-    for (int i = 0; i < polygon.getNumPoints(); i++) {
-      IVector3 newPosition =
-          computeNewPosition(polygon.getPoint(i), polygon.getPoint((i + 1) % polygon.getNumPoints()));
+    for (int pointIndex = 0; pointIndex < polygon.getNumPoints(); pointIndex++) {
+      PolygonVertex p = polygon.getPoint(pointIndex);
+      PolygonVertex q = p.getOutgoingEdge().getEndVertex();
+      IVector3 newPosition = computeNewPosition(p.getPosition(), q.getPosition());
       newPositions.add(newPosition);
     }
     for (int i = 0; i < polygon.getNumPoints(); i++) {
-      polygon.getPoint(i).copy(newPositions.get(i));
+      polygon.getPoint(i).getPosition().copy(newPositions.get(i));
     }
   }
 
@@ -55,11 +57,9 @@ public class Subdivision2D {
     if (polygon == null) {
       return;
     }
-    int numberOfPoints = polygon.getNumPoints();
-    for (int i = 0; i < numberOfPoints; i++) {
-      IVector3 newPoint = polygon.getPoint(i * 2).add(polygon.getPoint((i * 2 + 1) % polygon.getNumPoints()));
-      newPoint.multiplySelf(0.5);
-      polygon.insertPointAt(2 * i + 1, newPoint);
+    int numberOfEgdes = polygon.getNumEdges();
+    for (int edgeIndex = 0; edgeIndex < numberOfEgdes; edgeIndex++) {
+      polygon.splitEdge(polygon.getEdge(edgeIndex));
     }
   }
 
