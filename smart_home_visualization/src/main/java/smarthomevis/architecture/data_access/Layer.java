@@ -1,8 +1,7 @@
-package smarthomevis.architecture.entities;
+package smarthomevis.architecture.data_access;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
-import smarthomevis.architecture.persistence.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,13 @@ public class Layer extends BaseEntity {
 
     public Layer() {
         devices = new ArrayList<>();
+    }
+
+    public CgNodeLayer toCgNodeLayer() {
+        CgNodeLayer cgNodeLayer = new CgNodeLayer();
+        cgNodeLayer.setDevices(this.devices);
+        cgNodeLayer.setName(this.name);
+        return cgNodeLayer;
     }
 
     public void addDevice(ObjectId objectId) {
@@ -40,12 +46,4 @@ public class Layer extends BaseEntity {
     public void setDevices(List<ObjectId> device) {
         this.devices = device;
     }
-
-    public CgNodeLayer toCgNodeLayer() {
-        CgNodeLayer cgNodeLayer = new CgNodeLayer();
-        cgNodeLayer.setDevices(this.devices);
-        cgNodeLayer.setName(this.name);
-        return cgNodeLayer;
-    }
-
 }

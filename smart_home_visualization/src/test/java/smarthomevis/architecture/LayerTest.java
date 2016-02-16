@@ -7,10 +7,10 @@ import org.bson.types.ObjectId;
 import org.junit.*;
 import org.mongodb.morphia.Datastore;
 import org.restlet.resource.ClientResource;
-import smarthomevis.architecture.entities.Layer;
-import smarthomevis.architecture.logic.Connector;
-import smarthomevis.architecture.logic.LayerController;
-import smarthomevis.architecture.persistence.Repository;
+import smarthomevis.architecture.data_access.Layer;
+import smarthomevis.architecture.core.LayerController;
+import smarthomevis.architecture.data_access.Repository;
+import smarthomevis.architecture.core.SmartHome;
 
 import java.io.IOException;
 
@@ -27,13 +27,13 @@ public class LayerTest {
 
     @BeforeClass
     public static void initialize() throws Exception {
-        datastore = Connector.getInstance().connectToMongoDB(NAME_FOR_TEST_DB);
+        datastore = new SmartHome().getDatastore();
     }
 
     @Before
     public void setUp() {
         node = new CgNode(new Cylinder(new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0), 1.0), "cylinder");
-        layerController = new LayerController();
+        layerController = new LayerController(datastore, new SmartHome().getCgRootNode());
     }
 
     @AfterClass

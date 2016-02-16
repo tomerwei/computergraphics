@@ -1,4 +1,4 @@
-package smarthomevis.architecture.persistence;
+package smarthomevis.architecture.data_access;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;

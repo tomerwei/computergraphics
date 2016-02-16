@@ -3,31 +3,29 @@ package smarthomevis.architecture;
 import org.bson.types.ObjectId;
 import org.junit.*;
 import org.mongodb.morphia.Datastore;
-import smarthomevis.architecture.entities.Device;
-import smarthomevis.architecture.logic.Connector;
-import smarthomevis.architecture.logic.DeviceController;
-import smarthomevis.architecture.persistence.Repository;
+import smarthomevis.architecture.data_access.Device;
+import smarthomevis.architecture.data_access.Repository;
+import smarthomevis.architecture.core.SmartHome;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 // This test needs MongoDB running on localhost:27017 to pass
 @Ignore
-public class RepositoryTest {
+public class DeviceRepositoryTest {
 
-    private static final String NAME_FOR_TEST_DB = "smarthome";
-
-    private static DeviceController controller;
     private static Datastore datastore;
-
     private static Repository<Device> deviceRepository;
+
     private Device device;
 
     @BeforeClass
     public static void initialize() {
-        controller = new DeviceController();
-        deviceRepository = controller.getRepository();
-        datastore = Connector.getInstance().connectToMongoDB(NAME_FOR_TEST_DB);
+        SmartHome smartHome = new SmartHome();
+        datastore = smartHome.initializeForTesting();
+        deviceRepository = new Repository<>(datastore, Device.class);
     }
 
     @Before
@@ -48,7 +46,7 @@ public class RepositoryTest {
         ObjectId id = deviceRepository.save(device);
         Device device2 = deviceRepository.get(id);
         String after = device2.getName();
-        Assert.assertEquals(before, after);
+        assertEquals(before, after);
     }
 
     @Test
@@ -70,17 +68,17 @@ public class RepositoryTest {
         deviceRepository.save(device3);
         list.add(device3);
 
-        Assert.assertEquals(3, deviceRepository.getAll().size());
-        Assert.assertEquals("Source2", deviceRepository.get(id).getName());
+        assertEquals(3, deviceRepository.getAll().size());
+        assertEquals("Source2", deviceRepository.get(id).getName());
         list.forEach(Device::getName);
     }
 
     @Test
     public void testDeleteWithHas() {
         ObjectId id = deviceRepository.save(device);
-        Assert.assertTrue(deviceRepository.has(id));
+        assertTrue(deviceRepository.has(id));
         deviceRepository.delete(id);
-        Assert.assertFalse(deviceRepository.has(id));
+        assertFalse(deviceRepository.has(id));
     }
 
     @Test
@@ -88,7 +86,7 @@ public class RepositoryTest {
         for (int i = 0; i < 5; i++) {
             deviceRepository.save(device);
         }
-        Assert.assertEquals(1, deviceRepository.count());
+        assertEquals(1, deviceRepository.count());
     }
 
     @Test
@@ -105,7 +103,7 @@ public class RepositoryTest {
         device3.setName("Source3");
         deviceRepository.save(device3);
 
-        Assert.assertEquals(3, deviceRepository.count());
+        assertEquals(3, deviceRepository.count());
     }
 
     private static void deleteDevices() {

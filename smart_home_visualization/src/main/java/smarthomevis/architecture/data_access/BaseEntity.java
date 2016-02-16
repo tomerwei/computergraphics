@@ -1,4 +1,4 @@
-package smarthomevis.architecture.persistence;
+package smarthomevis.architecture.data_access;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
@@ -12,11 +12,11 @@ public abstract class BaseEntity {
     @Id
     protected ObjectId id;
 
-    protected Date creationDate;
-    protected Date lastChanged;
+    transient protected Date creationDate;
+    transient protected Date lastChanged;
 
     @Version
-    private long version;
+    transient private long version;
 
     public BaseEntity() {
         super();
@@ -26,12 +26,8 @@ public abstract class BaseEntity {
         return id;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public Date getLastChanged() {
-        return lastChanged;
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     @PrePersist

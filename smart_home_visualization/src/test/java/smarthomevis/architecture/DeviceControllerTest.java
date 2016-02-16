@@ -1,38 +1,33 @@
 package smarthomevis.architecture;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bson.types.ObjectId;
 import org.junit.*;
 import org.mongodb.morphia.Datastore;
-import org.restlet.data.MediaType;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
+import smarthomevis.architecture.core.DeviceController;
+import smarthomevis.architecture.core.SmartHome;
 import smarthomevis.architecture.data_access.Device;
 import smarthomevis.architecture.data_access.ObjectIdDeserializer;
 import smarthomevis.architecture.data_access.ObjectIdSerializer;
 import smarthomevis.architecture.data_access.Repository;
-import smarthomevis.architecture.core.SmartHome;
 
-import java.io.IOException;
+import static org.junit.Assert.*;
 
-// This test needs MongoDB running on localhost:27017 to pass
 @Ignore
-public class DeviceResourceTest {
+public class DeviceControllerTest {
 
     private static Datastore datastore;
-    private static Repository<Device> deviceRepository;
+    private static DeviceController controller;
+    private static Repository<Device> repository;
     private static GsonBuilder gson;
 
     private Device device;
 
-    private static ClientResource client;
-    private static String testUrl = "http://localhost:8183/smarthome/devices/";
-
     @BeforeClass
     public static void initialize() throws Exception {
         datastore = new SmartHome().initializeForTesting();
-        deviceRepository = new Repository<>(datastore, Device.class);
+        controller = new DeviceController(datastore);
+        repository = new Repository<>(datastore, Device.class);
         initializeGson();
     }
 
@@ -49,21 +44,31 @@ public class DeviceResourceTest {
     }
 
     @Test
-    public void testGetIsSuccessful() {
+    public void testCreateDeviceIsSuccessful() {
+        String id = controller.createDevice(gson.create().toJson(device));
+        Device createdDeviceId = repository.get(new ObjectId(id));
+
+        assertEquals(device.getName(), createdDeviceId.getName());
+        assertEquals(device.getDatedMeasurements(), createdDeviceId.getDatedMeasurements());
     }
 
     @Test
-    public void testPutIsSuccesful() {
+    public void testGetDeviceIsSuccessful() {
+        String id = repository.save(device).toString();
+        String createdDeviceId = controller.getDeviceAsJson(id);
+
+        assertTrue(createdDeviceId.contains("Thermometer_1"));
     }
 
     @Test
-    public void testPostIsSuccesful() {
+    public void updateDeviceIsSuccessful() {
+        String id = controller.createDevice(gson.create().toJson(device));
+        device.setName("Pyrometer_1");
+        device.setId(new ObjectId(id));
+        controller.updateDevice(gson.create().toJson(device));
 
-    }
-
-    @Test
-    public void testDeleteIsSuccesful() {
-
+        Device updatedDevice = repository.get(new ObjectId(id));
+        assertEquals(updatedDevice.getName(), "Pyrometer_1");
     }
 
     private static void initializeGson() {

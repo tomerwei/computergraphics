@@ -1,14 +1,23 @@
 package smarthomevis.architecture.rest;
 
+import cgresearch.graphics.scenegraph.CgNode;
+import org.mongodb.morphia.Datastore;
 import org.restlet.resource.Get;
 import org.restlet.resource.Put;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-import smarthomevis.architecture.entities.Layer;
-import smarthomevis.architecture.logic.LayerController;
+import smarthomevis.architecture.data_access.Layer;
+import smarthomevis.architecture.core.LayerController;
 
 public class LayerResource extends ServerResource {
 
-    LayerController controller = new LayerController();
+    private LayerController controller;
+    private Datastore datastore;
+    private CgNode rootNode;
+
+    public LayerResource() {
+        controller = new LayerController(datastore, rootNode);
+    }
 
     @Get
     public String getLayer() {
@@ -20,5 +29,10 @@ public class LayerResource extends ServerResource {
     @Put
     public String createLayer(String name) {
         return controller.save(name);
+    }
+
+    protected void doInit() throws ResourceException {
+        this.datastore = (Datastore) getContext().getAttributes().get("datastore");
+        this.rootNode = (CgNode) getContext().getAttributes().get("rootCgNode");
     }
 }

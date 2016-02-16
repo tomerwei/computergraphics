@@ -1,8 +1,8 @@
-package smarthomevis.architecture.entities;
+package smarthomevis.architecture.data_access;
 
 import cgresearch.graphics.scenegraph.CgNode;
 import org.mongodb.morphia.annotations.Transient;
-import smarthomevis.architecture.logic.Connector;
+import smarthomevis.architecture.data_access.Layer;
 
 public class CgNodeLayer extends Layer {
 
@@ -19,6 +19,7 @@ public class CgNodeLayer extends Layer {
 
     public void setNode(CgNode node) {
         this.node = node;
-        Connector.getInstance().getCgRootNode().addChild(node);
+        // TODO add Node to RootNode
+        //Connector.getInstance().getCgRootNode().addChild(node);
     }
 }

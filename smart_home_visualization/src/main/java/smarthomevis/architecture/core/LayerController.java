@@ -1,32 +1,30 @@
-package smarthomevis.architecture.logic;
+package smarthomevis.architecture.core;
 
 import cgresearch.graphics.scenegraph.CgNode;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
-import smarthomevis.architecture.entities.Layer;
-import smarthomevis.architecture.persistence.Repository;
+import smarthomevis.architecture.data_access.Layer;
+import smarthomevis.architecture.data_access.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LayerController implements Controller {
+public class LayerController {
 
     private List<Layer> layers;
     private Repository<Layer> layerRepository;
+    private CgNode rootNode;
 
-    public LayerController() {
+    public LayerController(Datastore datastore, CgNode rootNode) {
         layers = new ArrayList<>();
-        Connector connector = new Connector();
-        Datastore datastore = connector.connectToMongoDB("smarthome");
         layerRepository = new Repository<>(datastore, Layer.class);
+        this.rootNode = rootNode;
     }
 
-    @Override
     public Layer get(String id) {
         return layerRepository.get(new ObjectId(id));
     }
 
-    @Override
     public String save(String name) {
         Layer layer = new Layer();
         layer.setName(name);
@@ -34,7 +32,6 @@ public class LayerController implements Controller {
         return layerRepository.save(layer).toString();
     }
 
-    @Override
     public void delete(String id) {
         layerRepository.delete(new ObjectId(id));
     }
@@ -50,7 +47,6 @@ public class LayerController implements Controller {
         layerRepository.delete(new ObjectId(layerId));
     }
 
-    @Override
     public Repository<Layer> getRepository() {
         return layerRepository;
     }
