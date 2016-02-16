@@ -10,7 +10,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.graphics.datastructures.Polygon;
+import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.fileio.PolygonIO;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -30,19 +30,28 @@ public class PolygonFrame extends CgApplication {
   public PolygonFrame() {
 
     PolygonIO reader = new PolygonIO();
-    String inFilename = "polygons/textballoon.polygon";
-    String outFilename = "/Users/abo781/abo781/code/computergraphics/assets/polygons/textballoon.out.polygon";
-    // Polygon polygon = reader.readPolygon(inFilename);
-    String svgFilename = "polygons/krake.svg";
-    Polygon polygon = reader.importFromSvgPath(svgFilename);
+    String inFilename = "polygons/krake.polygon";
+    Polygon polygon = reader.readPolygon(inFilename);
+
+    // Export
+    // String outFilename =
+    // "/Users/abo781/abo781/code/computergraphics/assets/polygons/music.polygon";
+
+    // SVG import
+    // String svgFilename = "polygons/music.svg";
+    // Polygon polygon = reader.importFromSvgPath(svgFilename);
+
     if (polygon != null) {
+      // SVG Import
       // polygon.fitToUnitBox();
+
       CgNode node = new CgNode(polygon, "polygon");
       polygon.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       polygon.getMaterial().setReflectionDiffuse(Material.PALETTE0_COLOR2);
+      polygon.getMaterial().setPointSphereSize(0.02);
       getCgRootNode().addChild(node);
 
-      // Only use for conversion
+      // Export
       // reader.writePolygon(polygon, outFilename);
     }
     getCgRootNode().addChild(new CoordinateSystem());

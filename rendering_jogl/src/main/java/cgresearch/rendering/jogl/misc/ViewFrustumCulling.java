@@ -102,7 +102,6 @@ public class ViewFrustumCulling implements Observer {
     rebuildOctree();
     extractNodesOfFrustum(this, octreeScene,
             visibleNodes);
-//    computeVisibleScenePart(rootNode);
   }
 
   /**
@@ -125,6 +124,7 @@ public class ViewFrustumCulling implements Observer {
     this.refPoint = cam.getRef();
     this.up = cam.getUp();
     this.cameraRight = VectorMatrixFactory.newIVector3(1.0, 0.0, 0.0);
+    System.out.println("CAMERA RIGHT =" + cameraRight);
     this.cameraRight.normalize();
     frustum = new Plane[6];
     cornerPoints = new Vector3[8];
@@ -138,8 +138,6 @@ public class ViewFrustumCulling implements Observer {
     rebuildOctree();
     extractNodesOfFrustum(this, octreeScene,
             visibleNodes);
-//    computeVisibleScenePart(rootNode);
-
   }
 
   /**
@@ -281,33 +279,28 @@ public class ViewFrustumCulling implements Observer {
 
     // Berechne Eckpunkte der Ebenen
 
-    farBottomRight =
-        farCenter.add(this.up.multiply(farHeight * 0.5).subtract(this.cameraRight.multiply(farWidth * 0.5)));
+    farBottomRight = (farCenter.subtract(this.up.multiply(farHeight * 0.5)).add(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[fbr] = farBottomRight;
 
-    farBottomLeft = farCenter.add(this.up.multiply(farHeight * 0.5).add(this.cameraRight.multiply(farWidth * 0.5)));
+    farBottomLeft = (farCenter.subtract(this.up.multiply(farHeight * 0.5)).subtract(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[fbl] = farBottomLeft;
 
-    farTopRight = farCenter.subtract(this.up.multiply(farHeight * 0.5).add(this.cameraRight.multiply(farWidth * 0.5)));
+    farTopRight = (farCenter.add(this.up.multiply(farHeight * 0.5)).add(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[ftr] = farTopRight;
 
-    farTopLeft =
-        farCenter.subtract(this.up.multiply(farHeight * 0.5).subtract(this.cameraRight.multiply(farWidth * 0.5)));
+    farTopLeft = (farCenter.add(this.up.multiply(farHeight * 0.5)).subtract(this.cameraRight.multiply(farWidth * 0.5)));
     cornerPoints[ftl] = farTopLeft;
 
-    nearBottomRight =
-        nearCenter.add(this.up.multiply(nearHeight * 0.5).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
+    nearBottomRight = (nearCenter.subtract(this.up.multiply(nearHeight * 0.5)).add(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[nbr] = nearBottomRight;
 
-    nearBottomLeft = nearCenter.add(this.up.multiply(nearHeight * 0.5).add(this.cameraRight.multiply(nearWidth * 0.5)));
+    nearBottomLeft = (nearCenter.subtract(this.up.multiply(nearHeight * 0.5)).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[nbl] = nearBottomLeft;
 
-    nearTopRight =
-        nearCenter.subtract(this.up.multiply(nearHeight * 0.5).add(this.cameraRight.multiply(nearWidth * 0.5)));
+    nearTopRight = (nearCenter.add(this.up.multiply(nearHeight * 0.5)).add(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[ntr] = nearTopRight;
 
-    nearTopleft =
-        nearCenter.subtract(this.up.multiply(nearHeight * 0.5).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
+    nearTopleft = nearCenter.add(this.up.multiply(nearHeight * 0.5).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[ntl] = nearTopleft;
 
     // Debugging
@@ -321,48 +314,78 @@ public class ViewFrustumCulling implements Observer {
 //     System.out.println("nearTopleft = " + cornerPoints[ntl]);
 
     // Berechne Ebene
+    System.out.println("Ebenen berechnen");
     // nah
     nearPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ntl]);
-    nearPlane.setNormal(nearPlane.getNormal().multiply(-1.0)); // die Normalen
-                                                               // zeigen nach
+    if(nearPlane.getNormal().get(Z) < 0){
+        nearPlane.setNormal(nearPlane.getNormal().multiply(-1.0)); // die Normalen
+    }                                                           // zeigen nach
                                                                // au�en, also
                                                                // muessen
                                                                // teilweise
                                                                // umgedreht
                                                                // werden
     this.frustum[near] = nearPlane;
-    // System.out.println("near_plane normal = "+ nearPlane.getNormal() );
+     System.out.println("near_plane normal = "+ nearPlane.getNormal() );
 
     // fern
     farPlane = calcPlane(cornerPoints[ftr], cornerPoints[fbr], cornerPoints[ftl]);
-    // farPlane.setNormal(farPlane.getNormal().multiply(-1.0)); // the normals
+    if(farPlane.getNormal().get(Z) > 0){
+        farPlane.setNormal(farPlane.getNormal().multiply(-1.0)); // the normals
+    }
     // must point inwards the frustum, so they have to be inverted
     this.frustum[far] = farPlane;
-    // System.out.println("far_plane normal = "+ farPlane.getNormal() );
+     System.out.println("far_plane normal = "+ farPlane.getNormal() );
 
     // links
     leftPlane = calcPlane(cornerPoints[ntl], cornerPoints[nbl], cornerPoints[ftl]);
-    leftPlane.setNormal(leftPlane.getNormal().multiply(-1.0));
+    if(leftPlane.getNormal().get(X) < 0){
+        leftPlane.getNormal().set(X, leftPlane.getNormal().get(X) * -1);
+    }
+    if(leftPlane.getNormal().get(Y) < 0){
+        leftPlane.getNormal().set(Y, leftPlane.getNormal().get(Y) * -1);
+    }
     this.frustum[left] = leftPlane;
-    // System.out.println("left_plane normal = "+ leftPlane.getNormal() );
+     System.out.println("left_plane normal = "+ leftPlane.getNormal() );
 
     // rechts
     rightPlane = calcPlane(cornerPoints[ntr], cornerPoints[nbr], cornerPoints[ftr]);
-    // rightPlane.setNormal(rightPlane.getNormal().multiply(-1.0));
+    if(rightPlane.getNormal().get(X) > 0){
+        rightPlane.getNormal().set(X, rightPlane.getNormal().get(X) * -1);
+    }
+    if(rightPlane.getNormal().get(Y) < 0 || rightPlane.getNormal().get(Y) == -0) {
+        rightPlane.getNormal().set(Y, rightPlane.getNormal().get(Y) * -1);
+    }
+    if(rightPlane.getNormal().get(Z) < 0){
+        rightPlane.getNormal().set(Z, rightPlane.getNormal().get(Z) * -1);
+    }
     this.frustum[right] = rightPlane;
-    // System.out.println("right_plane normal = "+ rightPlane.getNormal() );
+     System.out.println("right_plane normal = "+ rightPlane.getNormal() );
 
     // oben
     topPlane = calcPlane(cornerPoints[ntr], cornerPoints[ftr], cornerPoints[ntl]);
-    // topPlane.setNormal(topPlane.getNormal().multiply(-1.0));
+    if(topPlane.getNormal().get(Y) > 0){
+        topPlane.getNormal().set(Y, topPlane.getNormal().get(Y) * -1);
+    }
+    if(topPlane.getNormal().get(X) < 0 || topPlane.getNormal().get(X) == -0 ){
+        topPlane.getNormal().set(X, topPlane.getNormal().get(X) * -1);
+    }
+    if(topPlane.getNormal().get(Z) < 0){
+        topPlane.getNormal().set(Z, topPlane.getNormal().get(Z) * -1);
+    }
     this.frustum[top] = topPlane;
-    // System.out.println("top_plane normal = "+ topPlane.getNormal() );
+     System.out.println("top_plane normal = "+ topPlane.getNormal() );
 
     // unten
     bottomPlane = calcPlane(cornerPoints[nbr], cornerPoints[fbr], cornerPoints[nbl]);
-    bottomPlane.setNormal(bottomPlane.getNormal().multiply(-1.0));
+    if(bottomPlane.getNormal().get(Y) < 0){
+        bottomPlane.getNormal().set(Y, bottomPlane.getNormal().get(Y) * -1);
+    }
+    if(bottomPlane.getNormal().get(X) < 0){
+      bottomPlane.getNormal().set(X, bottomPlane.getNormal().get(X) * -1);
+  }
     this.frustum[bottom] = bottomPlane;
-    // System.out.println("bottom_plane normal = "+ bottomPlane.getNormal() );
+     System.out.println("bottom_plane normal = "+ bottomPlane.getNormal() );
 
   }
 
@@ -435,14 +458,7 @@ public class ViewFrustumCulling implements Observer {
       for (int j = 0; j < corner_points.length && (in == 0 || out == 0); j++) {
         // fuer jede Ecke der Bounding Box
         // pruefe, ob sie innerhalb oder ausserhalb liegt
-        if (frustum[i].computeSignedDistance(corner_points[j]) < 0) { // hier
-                                                                      // ist
-                                                                      // vertauschte
-                                                                      // Logik
-                                                                      // aufgrund
-                                                                      // von
-                                                                      // computeSignedDistance
-                                                                      // !!!
+        if (frustum[i].computeSignedDistance(corner_points[j]) > 0) { 
           in++;
         } else {
           out++;
@@ -450,11 +466,14 @@ public class ViewFrustumCulling implements Observer {
       }
 
       if (in == 0) {
+//          System.out.println("RETURN OUTSIDE");
         return OUTSIDE;
       } else if (out > 0) { // in > 0 && out > 0 -> intersect
+//          System.out.println("RETURN INTERSECT");
         result = INTERSECT;
       }
     }
+//    System.out.println("RETURN INSIDE");
     return result;
 
   }
@@ -583,9 +602,9 @@ public class ViewFrustumCulling implements Observer {
       return null;
     }
     if (isObjectInFrustum(octreeNode) == 2) {
-      node.setVisible(false);
-      toDraw = traversalOctreeNodeIntersected(octreeNode, toDraw);
-      return toDraw;
+      node.setVisible(false); //TODO
+//      toDraw = traversalOctreeNodeIntersected(octreeNode, toDraw);
+//      return toDraw;
     }
     return null;
   }
@@ -660,7 +679,9 @@ public class ViewFrustumCulling implements Observer {
         return contentToDraw;
       }
     }
-
+    else{
+        node.setVisible(false);
+    }
     return null;
   }
 
@@ -743,6 +764,7 @@ public class ViewFrustumCulling implements Observer {
       if (node.getContent() != null
           && (node.getContent().getClass() == TriangleMesh.class || node.getContent().getClass() == PointCloud.class)) {
         node.getContent().getMaterial().setTransparency(objectsTransparency);
+        node.setVisible(true);
         objects.add(node);
       }
     }
@@ -765,7 +787,7 @@ public class ViewFrustumCulling implements Observer {
   public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
     OctreeFactoryStrategyScene octreeFactoryStrategyScene = new OctreeFactoryStrategyScene(objects);
     OctreeFactory<Integer> octreeFactoryScene = new OctreeFactory<Integer>(octreeFactoryStrategyScene);
-    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 10);
+    OctreeNode<Integer> octreeSceneRoot = octreeFactoryScene.create(7, 5);
     return octreeSceneRoot;
   }
 
@@ -809,17 +831,35 @@ public class ViewFrustumCulling implements Observer {
   public void update(Observable arg0, Object arg1) {
       Logger.getInstance().message("Update");
       visibleNodes.clear();
+      // Sichtbarkeit resetten
+      for(int i = 0; i < objects.size(); i++){
+          objects.get(i).setVisible(true);
+      }
+      System.out.println("Angle = " + Camera.getInstance().getOpeningAngle() + ", Far = " + Camera.getInstance().getFarClippingPlane() + ", Near = " + Camera.getInstance().getNearClippingPlane() + 
+              ", Eye =" + Camera.getInstance().getEye()+ ", Ref =" + Camera.getInstance().getRef()+", Up ="+ Camera.getInstance().getUp());
+      this.eye = Camera.getInstance().getEye();
+      this.up = Camera.getInstance().getUp();
+      calcPlanesOfFrustum(Camera.getInstance().getNearClippingPlane(), Camera.getInstance().getFarClippingPlane(), 1.0);
       extractNodesOfFrustum(this, octreeScene, visibleNodes);
       if(visibleNodes.size()>0){
           computeVisibleScenePart(rootNode);
       }
+//      else{
+//          for(int i = 0; i < objects.size(); i++){
+//              objects.get(i).setVisible(false);
+//          }
+//      }
   }
   
   public void rebuildOctree(){
     // TODO
       
-      objects = traversalOctreeNode(rootNode, objects);      
+      objects = traversalOctreeNode(rootNode, objects); 
+//      for(int i = 0; i < objects.size(); i++){
+//          objects.get(i).setVisible(true);
+//      }
       this.octreeScene = createSceneOctree(objects);
+
       
       // Zeichne Ebenen
 //      ITriangleMesh frustum = getFrustumMesh(vfc.getCorners());
@@ -831,11 +871,10 @@ public class ViewFrustumCulling implements Observer {
         ITriangleMesh mesh = (ITriangleMesh) objects.get(i).getContent();
         TriangleMeshTools.cleanup(mesh);
         octrees.add(createMeshOctree((TriangleMesh) objects.get(i).getContent()));
-        objects.get(i).setVisible(false);
+//        objects.get(i).setVisible(false);
       }
       computeVisibleScenePart(rootNode);
       
-//      rootNode.addChild(new CgNode(this.getFrustumMesh(this.getCorners()), "frustum")); //TODO frustum sichtbar machen
   }
 
   

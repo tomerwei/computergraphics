@@ -20,7 +20,7 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 		config);
 		
 	renderData.setGPConfig(config);
-	new GPAnalyzer().calculateDistancesInPlan(renderData);
+	new GPAnalyzer().analyzeAndProcessData(renderData);
 	return renderData;
 	}
 	

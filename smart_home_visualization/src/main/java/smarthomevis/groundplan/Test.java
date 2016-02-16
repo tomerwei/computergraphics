@@ -7,18 +7,13 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.graphics.scenegraph.CgNode;
-import smarthomevis.groundplan.config.Converter;
-import smarthomevis.groundplan.config.GPConfig;
-import smarthomevis.groundplan.config.GPConfigXMLReader;
-import smarthomevis.groundplan.config.GPDataType;
 
 public class Test
 {
 	private void testRender(GroundPlan app)
 	{
 	app.renderAndDisplayPlan("4H-HORA Projekt1");
+	// app.renderAndDisplayPlan("4H-HORA MessTest");
 	// app.renderAndDisplayPlan("TestRaum");
 	// app.renderAndDisplayPlan("Grundriss_Haus_02");
 	
@@ -125,15 +120,15 @@ public class Test
 	ResourcesLocator.getInstance().parseIniFile("resources.ini");
 	JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
 	GroundPlan app = new GroundPlan();
-	appLauncher.create(app);
-	appLauncher.setRenderSystem(RenderSystem.JOGL);
-	appLauncher.setUiSystem(UI.JOGL_SWING);
+//	appLauncher.create(app);
+//	appLauncher.setRenderSystem(RenderSystem.JOGL);
+//	appLauncher.setUiSystem(UI.JOGL_SWING);
 	
 	Test test = new Test();
 	// test.runTest();
-	// test.runAnalyzer(app);
+	test.runAnalyzer(app);
 	// test.testRender(app);
-	test.analyzeAndRender(app);
+	// test.analyzeAndRender(app);
 	}
 	
 }

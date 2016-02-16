@@ -23,6 +23,9 @@ public class GPConfig implements Serializable
 	public static final String GROUNDPLAN_SCALING_FACTOR = "groundplan_scaling_scalar";
 	public static final String ANGLE_TOLERANCE = "angle_tolerance";
 	public static final String DISTANCE_INTERVAL = "distance_interval";
+	public static final String LOWER_WALLTHICKNESS_LIMIT = "lower_wallthickness_limit";
+	public static final String UPPER_WALLTHICKNESS_LIMIT = "upper_wallthickness_limit";
+	public static final String WALL_COUNT_THRESHOLD = "wall_count_threshold";
 
 	private Map<String, LineType> layers = null;
 
@@ -63,16 +66,6 @@ public class GPConfig implements Serializable
 	public synchronized Double getValue(String key)
 	{
 		return this.configValues.get(key);
-	}
-
-	public synchronized Double getScaledValue(String key)
-	{
-		return this.configValues.get(key) * this.configValues.get(GROUNDPLAN_SCALING_FACTOR);
-	}
-
-	public synchronized Double getScaledValue(String key, double scale)
-	{
-		return this.configValues.get(key) * scale;
 	}
 
 	public Map<String, Double> getConfigMap()

@@ -5,6 +5,7 @@
  */
 package cgresearch.apps.simplication;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -12,15 +13,18 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
+import cgresearch.core.logging.Logger;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.QuadricErrorMetricsSimplification2D;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
-import cgresearch.graphics.datastructures.Polygon;
+import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMeshTools;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
+import cgresearch.graphics.fileio.PolygonIO;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.ui.IApplicationControllerGui;
@@ -50,6 +54,8 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
   public static final String ACTION_COMMMAND_SIMPLIFY_3D = "ACTION_COMMMAND_SIMPLIFY_3D";
   public static final String ACTION_COMMMAND_RESET_3D = "ACTION_COMMMAND_RESET_3D";
 
+  private JTextField textNumberOfSteps;
+
   /**
    * Constructor
    */
@@ -67,6 +73,10 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     buttonReset2D.setActionCommand(ACTION_COMMMAND_RESET_2D);
     buttonReset2D.addActionListener(this);
     add(buttonReset2D);
+
+    textNumberOfSteps = new JTextField("1");
+    textNumberOfSteps.setMaximumSize(new Dimension(200, 30));
+    add(textNumberOfSteps);
 
     JButton buttonSimplify2D = new JButton("Simplify");
     buttonSimplify2D.setActionCommand(ACTION_COMMMAND_SIMPLIFY_2D);
@@ -110,17 +120,27 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
 
   private void reset2D() {
     polygon.clear();
+
+    // Square
     polygon.addPoint(VectorMatrixFactory.newIVector3(-1, -1, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(-1, -0.5, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(-1, 0.5, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(-1, 1, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(1, 1, 0));
     polygon.addPoint(VectorMatrixFactory.newIVector3(1, -1, 0));
+
+    PolygonIO reader = new PolygonIO();
+    polygon.copy(reader.readPolygon("polygons/hamburg.polygon"));
+
     polygon.getMaterial().setRenderMode(Normals.PER_VERTEX);
     polygon.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR2);
+    polygon.getMaterial().setShaderId(Material.SHADER_COLOR);
     polygon.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    polygon.getMaterial().setPointSphereSize(0.01);
+    polygon.getMaterial().setShowPointSpheres(true);
     polygon.updateRenderStructures();
     simplification2D.reset();
+    simplification2D.computeEdgeErrorColor();
   }
 
   @Override
@@ -151,8 +171,23 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
    * Apply one simplification step in 2D.
    */
   private void simplify2D() {
-    simplification2D.simplify();
+
+//    long start = System.currentTimeMillis();
+//    while (polygon.getNumPoints() > 3) {
+//      simplification2D.simplify();
+//    }
+//    double timeRequired = (System.currentTimeMillis() - start) / 1000.0;
+//    Logger.getInstance().message("Time required: " + timeRequired + " s.");
+//    polygon.updateRenderStructures();
+
+    int numberOfSteps = Integer.parseInt(textNumberOfSteps.getText());
+    for (int i = 0; i < numberOfSteps; i++) {
+      simplification2D.simplify();
+    }
+    simplification2D.computeEdgeErrorColor();
     polygon.updateRenderStructures();
+    Logger.getInstance()
+        .message(polygon.getNumPoints() + " points and " + polygon.getNumEdges() + " edges left after simplifiction.");
   }
 
   /**
