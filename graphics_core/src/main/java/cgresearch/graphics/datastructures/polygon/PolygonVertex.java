@@ -1,6 +1,7 @@
 package cgresearch.graphics.datastructures.polygon;
 
 import cgresearch.core.math.IVector3;
+import cgresearch.graphics.datastructures.GenericVertex;
 
 /**
  * A polygon vertex can have up to two edges (incoming, outgoing).
@@ -8,7 +9,7 @@ import cgresearch.core.math.IVector3;
  * @author Philipp Jenke
  *
  */
-public class PolygonVertex {
+public class PolygonVertex implements GenericVertex {
 
   /**
    * Point position.

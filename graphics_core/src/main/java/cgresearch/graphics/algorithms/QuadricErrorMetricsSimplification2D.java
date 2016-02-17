@@ -1,32 +1,31 @@
 package cgresearch.graphics.algorithms;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.PriorityQueue;
 
 import cgresearch.core.logging.Logger;
+import cgresearch.core.math.IMatrix;
 import cgresearch.core.math.IMatrix3;
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.polygon.PolygonEdge;
 import cgresearch.graphics.datastructures.polygon.PolygonVertex;
 
-public class QuadricErrorMetricsSimplification2D {
+public class QuadricErrorMetricsSimplification2D extends QuadrikErrorMetricsSimplification {
 
   /**
    * Processed polygon.
    */
   private Polygon polygon;
 
-  /**
-   * List of QEMs for the points.
-   */
-  private Map<PolygonVertex, IMatrix3> pointQems = new HashMap<PolygonVertex, IMatrix3>();
-
   public QuadricErrorMetricsSimplification2D(Polygon polygon) {
     this.polygon = polygon;
+    this.queue =
+        new PriorityQueue<GenericEdge>((e1, e2) -> (edgesQems.get(e1).error < edgesQems.get(e2).error) ? -1 : 1);
+    reset();
   }
 
   /**
@@ -34,10 +33,17 @@ public class QuadricErrorMetricsSimplification2D {
    */
   public void reset() {
     pointQems.clear();
+    edgesQems.clear();
+    queue.clear();
     // Compute QEM for each vertex.
     for (int i = 0; i < polygon.getNumPoints(); i++) {
       PolygonVertex vertex = polygon.getPoint(i);
       pointQems.put(vertex, computePointQem(vertex));
+    }
+    for (int edgeIndex = 0; edgeIndex < polygon.getNumEdges(); edgeIndex++) {
+      PolygonEdge edge = polygon.getEdge(edgeIndex);
+      edgesQems.put(edge, computeEdgeCollapse(edge));
+      queue.add(edge);
     }
   }
 
@@ -63,7 +69,7 @@ public class QuadricErrorMetricsSimplification2D {
    * Compute QEM for the edge from p to q.
    */
   public IMatrix3 computeEdgeQem(IVector3 p, IVector3 q) {
-    IVector3 normal = findPerpendicular2D(p.subtract(q));
+    IVector3 normal = getNormal(p.subtract(q));
     normal.normalize();
     double distance = normal.multiply(p);
     IVector3 v = VectorMatrixFactory.newIVector3(normal);
@@ -75,7 +81,7 @@ public class QuadricErrorMetricsSimplification2D {
   /**
    * Return a perpendicular vector.
    */
-  private IVector3 findPerpendicular2D(IVector3 v) {
+  private IVector3 getNormal(IVector3 v) {
     return VectorMatrixFactory.newIVector3(v.get(1), -v.get(0), 0);
   }
 
@@ -87,69 +93,56 @@ public class QuadricErrorMetricsSimplification2D {
       Logger.getInstance().error("Cannot collapse polygon with less than 2 points.");
       return;
     }
-    double errorMin = Double.POSITIVE_INFINITY;
-    int optimalEdgeIndex = -1;
-    IVector3 optimalPos = VectorMatrixFactory.newIVector3();
-    IMatrix3 optimalQ = VectorMatrixFactory.newIMatrix3();
-    for (int pointIndex = 0; pointIndex < polygon.getNumPoints(); pointIndex++) {
-      ErrorComputationResult result = computeError(pointIndex);
-      if (result.error < errorMin) {
-        errorMin = result.error;
-        optimalEdgeIndex = pointIndex;
-        optimalPos.copy(result.newPos);
-        optimalQ.copy(result.Q);
-      }
-    }
 
-    if (optimalEdgeIndex >= 0) {
-      optimalPos.set(2, 0);
-      PolygonVertex p = polygon.collapse(optimalEdgeIndex, optimalPos);
-      pointQems.put(p, optimalQ);
-    } else {
-      Logger.getInstance().error("Invalid edge index - should not happen.");
-    }
-  }
+    PolygonEdge queueEdge = (PolygonEdge) queue.poll();
+    PolygonVertex p = polygon.collapse(queueEdge, edgesQems.get(queueEdge).newPos);
+    pointQems.put(p, edgesQems.get(queueEdge).Q);
+    // Update edge QEMs
+    edgesQems.put(p.getIncomingEdge(), computeEdgeCollapse(p.getIncomingEdge()));
+    edgesQems.put(p.getOutgoingEdge(), computeEdgeCollapse(p.getOutgoingEdge()));
 
-  class ErrorComputationResult {
-    public ErrorComputationResult(double error, IMatrix3 Q, int edgeIndex, IVector3 newPos) {
-      this.error = error;
-      this.Q = Q;
-      this.edgeIndex = edgeIndex;
-      this.newPos = newPos;
-    }
-
-    public double error;
-    public IMatrix3 Q;
-    public int edgeIndex;
-    public IVector3 newPos;
+    // Old version without queue
+    // double errorMin = Double.POSITIVE_INFINITY;
+    // int optimalEdgeIndex = -1;
+    // IVector3 optimalPos = VectorMatrixFactory.newIVector3();
+    // IMatrix3 optimalQ = VectorMatrixFactory.newIMatrix3();
+    // for (int edgeIndex = 0; edgeIndex < polygon.getNumEdges(); edgeIndex++) {
+    // ErrorComputationResult result = computeError(polygon.getEdge(edgeIndex));
+    // if (result.error < errorMin) {
+    // errorMin = result.error;
+    // optimalEdgeIndex = edgeIndex;
+    // optimalPos.copy(result.newPos);
+    // optimalQ.copy(result.Q);
+    // }
+    // }
+    // if (optimalEdgeIndex >= 0) {
+    // optimalPos.set(2, 0);
+    // PolygonVertex p = polygon.collapse(optimalEdgeIndex, optimalPos);
+    // pointQems.put(p, optimalQ);
+    // } else {
+    // Logger.getInstance().error("Invalid edge index - should not happen.");
+    // }
   }
 
   /**
-   * Computes the error by collapsing the edge with the given index
-   * 
-   * @param pointIndex
-   * @return
+   * Computes the error by collapsing the edge with the given index.
    */
-  private ErrorComputationResult computeError(int edgeIndex) {
-
-    PolygonEdge edge = polygon.getEdge(edgeIndex);
+  private EdgeCollapse computeEdgeCollapse(PolygonEdge edge) {
     PolygonVertex p0 = edge.getStartVertex();
     PolygonVertex p1 = edge.getEndVertex();
-
-    IMatrix3 qem = pointQems.get(p0).add(pointQems.get(p1));
-
-    IMatrix3 derivQem = VectorMatrixFactory.newIMatrix3(qem);
+    IMatrix qem = pointQems.get(p0).add(pointQems.get(p1));
+    IMatrix derivQem = VectorMatrixFactory.newIMatrix3(qem);
     derivQem.set(2, 0, 0);
     derivQem.set(2, 1, 0);
     derivQem.set(2, 2, 1);
-    double det = Math.abs(derivQem.getDeteterminant());
+    double det = Math.abs(derivQem.getDeterminant());
     if (det > 1e-5) {
       // Matrix is invertible
       IMatrix3 invQ = derivQem.getInverse();
       IVector3 pos = invQ.multiply(VectorMatrixFactory.newIVector3(0, 0, 1));
       pos.set(2, 0);
       double error = pos.multiply(qem.multiply(pos));
-      return new ErrorComputationResult(error, qem, edgeIndex, pos);
+      return new EdgeCollapse(error, qem, pos);
     } else {
       // Matrix cannot be inverted, use corner points or midpoint
       List<IVector3> candidates = new ArrayList<IVector3>();
@@ -167,7 +160,7 @@ public class QuadricErrorMetricsSimplification2D {
           minPos = pos;
         }
       }
-      return new ErrorComputationResult(minError, qem, edgeIndex, minPos);
+      return new EdgeCollapse(minError, qem, minPos);
     }
   }
 
@@ -178,7 +171,7 @@ public class QuadricErrorMetricsSimplification2D {
     double errorMin = Double.POSITIVE_INFINITY;
     double errorMax = Double.NEGATIVE_INFINITY;
     for (int edgeIndex = 0; edgeIndex < polygon.getNumEdges(); edgeIndex++) {
-      ErrorComputationResult result = computeError(edgeIndex);
+      EdgeCollapse result = computeEdgeCollapse(polygon.getEdge(edgeIndex));
       if (result.error < errorMin) {
         errorMin = result.error;
       }
@@ -187,7 +180,7 @@ public class QuadricErrorMetricsSimplification2D {
       }
     }
     for (int edgeIndex = 0; edgeIndex < polygon.getNumEdges(); edgeIndex++) {
-      ErrorComputationResult result = computeError(edgeIndex);
+      EdgeCollapse result = computeEdgeCollapse(polygon.getEdge(edgeIndex));
       IVector3 color =
           VectorMatrixFactory.newIVector3(transferFunction((result.error - errorMin) / (errorMax - errorMin)), 0, 0);
       polygon.setEdgeColor(edgeIndex, color);

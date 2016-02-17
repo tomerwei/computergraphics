@@ -2,13 +2,14 @@ package cgresearch.graphics.datastructures.polygon;
 
 import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.graphics.datastructures.GenericEdge;
 
 /**
  * An edge connects two points in a polygon.
  * 
  * @author Philipp Jenke
  */
-public class PolygonEdge {
+public class PolygonEdge implements GenericEdge {
 
   /**
    * Start vertex of the edge.

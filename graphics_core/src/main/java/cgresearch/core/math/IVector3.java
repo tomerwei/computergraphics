@@ -5,8 +5,6 @@
  */
 package cgresearch.core.math;
 
-import java.io.Serializable;
-
 /**
  * 
  * Generic interface for a vector of a given type in 3D.
@@ -14,7 +12,7 @@ import java.io.Serializable;
  * @author Philipp Jenke
  * 
  */
-public interface IVector3 extends Serializable {
+public interface IVector3 extends IVector {
 
   /**
    * Copy all values.
@@ -37,7 +35,7 @@ public interface IVector3 extends Serializable {
   /**
    * Scalar product
    */
-  public double multiply(final IVector3 other);
+  public double multiply(final IVector other);
 
   /**
    * Return the squared norm of the vector
@@ -63,22 +61,22 @@ public interface IVector3 extends Serializable {
    * Compute the cross product of two vectors. Only works for 3-dimensional
    * vectors.
    */
-  public IVector3 cross(final IVector3 other);
+  public IVector3 cross(final IVector other);
 
   /**
    * Subtract vector from this vector, return result.
    */
-  public IVector3 subtract(IVector3 other);
+  public IVector3 subtract(IVector other);
 
   /**
    * Add this vector other to this vector, result result
    */
-  public IVector3 add(IVector3 other);
+  public IVector3 add(IVector other);
 
   /**
    * Add this vector other to this vector, the result overrides self
    */
-  public void addSelf(IVector3 other);
+  public void addSelf(IVector other);
 
   /**
    * Normalize the vector (vector length = 1)
@@ -104,12 +102,12 @@ public interface IVector3 extends Serializable {
   /**
    * Create a homogenious 4-vector from a 3-vector.
    */
-  IVector4 makeHomogenious();
+  public IVector4 makeHomogenious();
 
   /**
    * Compute the vector product of the two vectors
    */
-  IMatrix3 vectorProduct(IVector3 d);
+  public IMatrix3 innerProduct(IVector d);
 
   /**
    * Additional toString method with a given precision.
@@ -124,10 +122,5 @@ public interface IVector3 extends Serializable {
   /**
    * Set all three coordinates.
    */
-  void set(double x, double y, double z);
-
-  /**
-   * Inner product of two vertices.
-   */
-  IMatrix3 innerProduct(IVector3 nMinus);
+  public void set(double x, double y, double z);
 }

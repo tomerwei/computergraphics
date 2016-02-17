@@ -11,7 +11,7 @@ package cgresearch.core.math;
  * @author Philipp Jenke
  * 
  */
-public interface IMatrix3 {
+public interface IMatrix3 extends IMatrix {
   /**
    * Set the row 'index'. Attentions: sets the reference, no copy!
    */
@@ -20,7 +20,7 @@ public interface IMatrix3 {
   /**
    * Compute the product of this matrix and a vector.
    */
-  public IVector3 multiply(final IVector3 other);
+  public IVector3 multiply(final IVector other);
 
   /**
    * Getter.
@@ -75,7 +75,7 @@ public interface IMatrix3 {
   /**
    * Add another matrix, return the result.
    */
-  public IMatrix3 add(IMatrix3 vectorProduct);
+  public IMatrix3 add(IMatrix vectorProduct);
 
   /**
    * Getter for an individual values.
@@ -93,12 +93,12 @@ public interface IMatrix3 {
    * 
    * @param rotation
    */
-  public void copy(IMatrix3 rotation);
+  public void copy(IMatrix other);
 
   /**
    * Matrix multiplication.
    */
-  public IMatrix3 multiply(IMatrix3 other);
+  public IMatrix3 multiply(IMatrix other);
 
   /**
    * Return the inverse of the matrix, return null if not invertible.
@@ -108,7 +108,7 @@ public interface IMatrix3 {
   /**
    * Return the determinant of the matrix.
    */
-  double getDeteterminant();
+  public double getDeterminant();
 
   /**
    * Multiply with scalar.

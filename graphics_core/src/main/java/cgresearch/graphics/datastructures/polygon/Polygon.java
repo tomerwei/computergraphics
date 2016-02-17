@@ -55,18 +55,10 @@ public class Polygon extends ICgNodeContent {
   }
 
   /**
-   * Collapses the edge index between the points index and index+1. Returns the
-   * remaining point.
-   */
-  public PolygonVertex collapse(int edgeIndex, IVector3 newPosition) {
-    return collapse(edges.get(edgeIndex), newPosition);
-  }
-
-  /**
    * Collapse edge, remove edge from list, remove edge-end from list. Returns
    * the remaining point.
    */
-  private PolygonVertex collapse(PolygonEdge polygonEdge, IVector3 newPosition) {
+  public PolygonVertex collapse(PolygonEdge polygonEdge, IVector3 newPosition) {
     PolygonVertex start = polygonEdge.getStartVertex();
     PolygonVertex end = polygonEdge.getEndVertex();
     edges.remove(polygonEdge);

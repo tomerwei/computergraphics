@@ -273,7 +273,7 @@ public class VectorMatrixFactory {
 	 * @param other
 	 * @return
 	 */
-	public static IMatrix3 newIMatrix3(IMatrix3 other) {
+	public static IMatrix3 newIMatrix3(IMatrix other) {
 		IMatrix3 matrix = VectorMatrixFactory.newIMatrix3();
 		matrix.copy(other);
 		return matrix;

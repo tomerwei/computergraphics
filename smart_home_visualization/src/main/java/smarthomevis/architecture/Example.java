@@ -17,11 +17,11 @@ public class Example {
 
         SmartHome smartHome = new SmartHome();
         IGroundPlan gp = new GroundPlan();
-        CgNode plan = gp.convertDXFPlanToCgNode("4H-HORA Projekt1");
-        smartHome.getCgRootNode().addChild(plan);
+        //CgNode plan = gp.convertDXFPlanToCgNode("4H-HORA Projekt1");
+        //smartHome.getCgRootNode().addChild(plan);
 
         appLauncher.create(smartHome);
-        //appLauncher.setRenderSystem(RenderSystem.JOGL);
+        appLauncher.setRenderSystem(RenderSystem.JOGL);
         appLauncher.setUiSystem(UI.JOGL_SWING);
     }
 }

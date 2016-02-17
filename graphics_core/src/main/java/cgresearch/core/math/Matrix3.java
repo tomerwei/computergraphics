@@ -50,7 +50,7 @@ public class Matrix3 implements IMatrix3 {
   }
 
   @Override
-  public IVector3 multiply(final IVector3 other) {
+  public IVector3 multiply(final IVector other) {
     IVector3 result = VectorMatrixFactory.newIVector3();
     for (int i = 0; i < MathHelpers.DIMENSION_3; i++) {
       result.set(i, getRow(i).multiply(other));
@@ -144,9 +144,17 @@ public class Matrix3 implements IMatrix3 {
    * @see edu.haw.cg.math.IMatrix3#add(edu.haw.cg.math.IMatrix3)
    */
   @Override
-  public IMatrix3 add(IMatrix3 other) {
-    return VectorMatrixFactory.newIMatrix3(rows[0].add(other.getRow(0)), rows[1].add(other.getRow(1)),
-        rows[2].add(other.getRow(2)));
+  public IMatrix3 add(IMatrix other) {
+    if (other.getNumberOfColumns() != 3 || other.getNumberOfColumns() != 3) {
+      throw new IllegalArgumentException();
+    }
+    IMatrix3 m = VectorMatrixFactory.newIMatrix3();
+    for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+      for (int columnIndex = 0; columnIndex < 3; columnIndex++) {
+        m.set(rowIndex, columnIndex, get(rowIndex, columnIndex) + other.get(rowIndex, columnIndex));
+      }
+    }
+    return m;
   }
 
   @Override
@@ -165,10 +173,15 @@ public class Matrix3 implements IMatrix3 {
   }
 
   @Override
-  public void copy(IMatrix3 other) {
-    rows[0].copy(other.getRow(0));
-    rows[1].copy(other.getRow(1));
-    rows[2].copy(other.getRow(2));
+  public void copy(IMatrix other) {
+    if (other.getNumberOfColumns() != 3 || other.getNumberOfRows() != 3) {
+      throw new IllegalArgumentException();
+    }
+    for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+      for (int columnIndex = 0; columnIndex < 3; columnIndex++) {
+        set(rowIndex, columnIndex, other.get(rowIndex, columnIndex));
+      }
+    }
   }
 
   @Override
@@ -179,13 +192,18 @@ public class Matrix3 implements IMatrix3 {
   }
 
   @Override
-  public IMatrix3 multiply(IMatrix3 other) {
-    IVector3[] a = new IVector3[] { getRow(0), getRow(1), getRow(2) };
-    IVector3[] b = new IVector3[] { other.getColumn(0), other.getColumn(1), other.getColumn(2) };
+  public IMatrix3 multiply(IMatrix other) {
+    if (other.getNumberOfRows() != 3 || other.getNumberOfColumns() != 3) {
+      throw new IllegalArgumentException();
+    }
     IMatrix3 result = new Matrix3();
     for (int row = 0; row < 3; row++) {
       for (int column = 0; column < 3; column++) {
-        result.set(row, column, a[row].multiply(b[column]));
+        double d = 0;
+        for (int i = 0; i < 3; i++) {
+          d += get(row, i) * other.get(i, column);
+        }
+        result.set(row, column, d);
       }
     }
     return result;
@@ -198,7 +216,7 @@ public class Matrix3 implements IMatrix3 {
 
   @Override
   public IMatrix3 getInverse() {
-    double det = getDeteterminant();
+    double det = getDeterminant();
     double a = get(0, 0);
     double b = get(0, 1);
     double c = get(0, 2);
@@ -214,7 +232,7 @@ public class Matrix3 implements IMatrix3 {
   }
 
   @Override
-  public double getDeteterminant() {
+  public double getDeterminant() {
     return get(0, 0) * get(1, 1) * get(2, 2) + get(0, 1) * get(1, 2) * get(2, 0) + get(0, 2) * get(1, 0) * get(2, 1)
         - get(0, 2) * get(1, 1) * get(2, 0) - get(0, 1) * get(1, 0) * get(2, 2) - get(0, 0) * get(1, 2) * get(2, 1);
   }
@@ -228,5 +246,15 @@ public class Matrix3 implements IMatrix3 {
       }
     }
     return result;
+  }
+
+  @Override
+  public int getNumberOfRows() {
+    return 3;
+  }
+
+  @Override
+  public int getNumberOfColumns() {
+    return 3;
   }
 }

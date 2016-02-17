@@ -172,18 +172,21 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
    */
   private void simplify2D() {
 
-//    long start = System.currentTimeMillis();
-//    while (polygon.getNumPoints() > 3) {
-//      simplification2D.simplify();
-//    }
-//    double timeRequired = (System.currentTimeMillis() - start) / 1000.0;
-//    Logger.getInstance().message("Time required: " + timeRequired + " s.");
-//    polygon.updateRenderStructures();
+    // Full collapse (timing measurement)
+    // long start = System.currentTimeMillis();
+    // while (polygon.getNumPoints() > 3) {
+    // simplification2D.simplify();
+    // }
+    // double timeRequired = (System.currentTimeMillis() - start) / 1000.0;
+    // Logger.getInstance().message("Time required: " + timeRequired + " s.");
 
+    // Selected number of collapsed
     int numberOfSteps = Integer.parseInt(textNumberOfSteps.getText());
     for (int i = 0; i < numberOfSteps; i++) {
       simplification2D.simplify();
     }
+
+    // Update rendering
     simplification2D.computeEdgeErrorColor();
     polygon.updateRenderStructures();
     Logger.getInstance()

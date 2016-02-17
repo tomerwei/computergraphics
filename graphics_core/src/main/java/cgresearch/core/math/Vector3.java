@@ -100,7 +100,10 @@ public class Vector3 implements IVector3 {
   }
 
   @Override
-  public IVector3 cross(final IVector3 other) {
+  public IVector3 cross(final IVector other) {
+    if (other.getDimension() != 3) {
+      throw new IllegalArgumentException();
+    }
     IVector3 result = new Vector3();
     result.set(MathHelpers.INDEX_0, get(MathHelpers.INDEX_1) * other.get(MathHelpers.INDEX_2)
         - get(MathHelpers.INDEX_2) * other.get(MathHelpers.INDEX_1));
@@ -112,7 +115,7 @@ public class Vector3 implements IVector3 {
   }
 
   @Override
-  public IVector3 subtract(IVector3 other) {
+  public IVector3 subtract(IVector other) {
     IVector3 result = new Vector3();
     for (int i = 0; i < MathHelpers.DIMENSION_3; i++) {
       result.set(i, get(i) - other.get(i));
@@ -121,7 +124,7 @@ public class Vector3 implements IVector3 {
   }
 
   @Override
-  public IVector3 add(IVector3 other) {
+  public IVector3 add(IVector other) {
     IVector3 result = new Vector3();
     for (int i = 0; i < MathHelpers.DIMENSION_3; i++) {
       result.set(i, get(i) + other.get(i));
@@ -154,7 +157,7 @@ public class Vector3 implements IVector3 {
   }
 
   @Override
-  public double multiply(IVector3 other) {
+  public double multiply(IVector other) {
     double result = get(0) * other.get(0) + get(1) * other.get(1) + get(2) * other.get(2);
     return result;
   }
@@ -202,15 +205,32 @@ public class Vector3 implements IVector3 {
    * 
    * @see edu.haw.cg.math.IVector3#vectorProduct(edu.haw.cg.math.IVector3)
    */
+  // @Override
+  // public IMatrix3 vectorProduct(IVector other) {
+  // if (other.getDimension() != 3) {
+  // throw new IllegalArgumentException();
+  // }
+  // IMatrix3 M = VectorMatrixFactory.newIMatrix3();
+  // for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+  // for (int columnIndex = 0; columnIndex < 3; columnIndex++) {
+  // M.set(columnIndex, rowIndex, get(rowIndex) * other.get(columnIndex));
+  // }
+  // }
+  // return M;
+  // }
+
   @Override
-  public IMatrix3 vectorProduct(IVector3 d) {
-    IMatrix3 M = VectorMatrixFactory.newIMatrix3();
-    for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-      for (int columnIndex = 0; columnIndex < 3; columnIndex++) {
-        M.set(columnIndex, rowIndex, get(rowIndex) * d.get(columnIndex));
+  public IMatrix3 innerProduct(IVector other) {
+    if (other.getDimension() != 3) {
+      throw new IllegalArgumentException();
+    }
+    IMatrix3 matrix = VectorMatrixFactory.newIMatrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    for (int row = 0; row < 3; row++) {
+      for (int column = 0; column < 3; column++) {
+        matrix.set(row, column, get(row) * other.get(column));
       }
     }
-    return M;
+    return matrix;
   }
 
   @Override
@@ -232,7 +252,10 @@ public class Vector3 implements IVector3 {
   }
 
   @Override
-  public void addSelf(IVector3 other) {
+  public void addSelf(IVector other) {
+    if (other.getDimension() != 3) {
+      throw new IllegalArgumentException();
+    }
     for (int i = 0; i < MathHelpers.DIMENSION_3; i++) {
       set(i, get(i) + other.get(i));
     }
@@ -251,13 +274,7 @@ public class Vector3 implements IVector3 {
   }
 
   @Override
-  public IMatrix3 innerProduct(IVector3 vector) {
-    IMatrix3 matrix = VectorMatrixFactory.newIMatrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
-    for (int row = 0; row < 3; row++) {
-      for (int column = 0; column < 3; column++) {
-        matrix.set(row, column, vector.get(row) * vector.get(column));
-      }
-    }
-    return matrix;
+  public int getDimension() {
+    return 3;
   }
 }
