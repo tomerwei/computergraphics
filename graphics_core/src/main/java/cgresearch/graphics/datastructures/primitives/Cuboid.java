@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -20,12 +20,12 @@ public class Cuboid extends IPrimitive {
     /**
      * Center of the cuboid.
      */
-    private IVector3 center = VectorMatrixFactory.newIVector3();
+    private Vector center = VectorMatrixFactory.newVector(3);
 
     /**
      * Dimension of the cuboid in x, y and z-direction.
      */
-    private IVector3 dimensions = VectorMatrixFactory.newIVector3(1, 1, 1);
+    private Vector dimensions = VectorMatrixFactory.newVector(1, 1, 1);
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ public class Cuboid extends IPrimitive {
     /**
      * Constructor
      */
-    public Cuboid(IVector3 center, double x, double y, double z) {
+    public Cuboid(Vector center, double x, double y, double z) {
         this.center.copy(center);
         dimensions.set(0, x);
         dimensions.set(1, y);
@@ -46,7 +46,7 @@ public class Cuboid extends IPrimitive {
     /**
      * Constructor
      */
-    public Cuboid(IVector3 center, IVector3 dimensions) {
+    public Cuboid(Vector center, Vector dimensions) {
         this.center.copy(center);
         this.dimensions = dimensions;
     }
@@ -54,14 +54,14 @@ public class Cuboid extends IPrimitive {
     /**
      * Getter.
      */
-    public IVector3 getCenter() {
+    public Vector getCenter() {
         return center;
     }
 
     /**
      * Getter.
      */
-    public IVector3 getDimensions() {
+    public Vector getDimensions() {
         return dimensions;
     }
 
@@ -102,8 +102,8 @@ public class Cuboid extends IPrimitive {
     /**
      * @return
      */
-    private IVector3 getUpperRight() {
-        return center.add(VectorMatrixFactory.newIVector3(
+    private Vector getUpperRight() {
+        return center.add(VectorMatrixFactory.newVector(
                 dimensions.get(0) / 2.0, dimensions.get(1) / 2.0,
                 dimensions.get(2) / 2.0));
     }
@@ -111,8 +111,8 @@ public class Cuboid extends IPrimitive {
     /**
      * @return
      */
-    private IVector3 getLowerLeft() {
-        return center.subtract(VectorMatrixFactory.newIVector3(
+    private Vector getLowerLeft() {
+        return center.subtract(VectorMatrixFactory.newVector(
                 dimensions.get(0) / 2.0, dimensions.get(1) / 2.0,
                 dimensions.get(2) / 2.0));
     }

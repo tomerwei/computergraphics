@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Observable;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -46,17 +46,17 @@ public class Camera extends Observable {
   /**
    * Position of the eye.
    */
-  private IVector3 eye;
+  private Vector eye;
 
   /**
    * Reference point of the camera (look at)
    */
-  private IVector3 ref;
+  private Vector ref;
 
   /**
    * Up-vector of the camera.
    */
-  private IVector3 up;
+  private Vector up;
 
   /**
    * Near clipping plane.
@@ -110,9 +110,9 @@ public class Camera extends Observable {
    * Constructor.
    */
   private Camera() {
-    eye = VectorMatrixFactory.newIVector3(0, 0, 5);
-    ref = VectorMatrixFactory.newIVector3(0, 0, 0);
-    up = VectorMatrixFactory.newIVector3(0, 1, 0);
+    eye = VectorMatrixFactory.newVector(0, 0, 5);
+    ref = VectorMatrixFactory.newVector(0, 0, 0);
+    up = VectorMatrixFactory.newVector(0, 1, 0);
 
     setChanged();
     notifyObservers();
@@ -149,29 +149,29 @@ public class Camera extends Observable {
   /**
    * Getter.
    */
-  public IVector3 getEye() {
+  public Vector getEye() {
     return eye;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getRef() {
+  public Vector getRef() {
     return ref;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getUp() {
+  public Vector getUp() {
     return up;
   }
 
   /**
    * Setter.
    */
-  public void setEye(IVector3 e) {
-    eye = VectorMatrixFactory.newIVector3(e);
+  public void setEye(Vector e) {
+    eye = VectorMatrixFactory.newVector(e);
 
     setChanged();
     notifyObservers();
@@ -180,8 +180,8 @@ public class Camera extends Observable {
   /**
    * Setter.
    */
-  public void setRef(IVector3 e) {
-    ref = VectorMatrixFactory.newIVector3(e);
+  public void setRef(Vector e) {
+    ref = VectorMatrixFactory.newVector(e);
 
     setChanged();
     notifyObservers();
@@ -190,8 +190,8 @@ public class Camera extends Observable {
   /**
    * Setter.
    */
-  public void setUp(IVector3 e) {
-    up = VectorMatrixFactory.newIVector3(e);
+  public void setUp(Vector e) {
+    up = VectorMatrixFactory.newVector(e);
 
     setChanged();
     notifyObservers();
@@ -202,7 +202,7 @@ public class Camera extends Observable {
    */
   public void translateVertically(double distance) {
     // up/down
-    IVector3 movement = up.getNormalized().multiply(distance);
+    Vector movement = up.getNormalized().multiply(distance);
 
     // apply translation
     setRef(ref.add(movement));
@@ -216,8 +216,8 @@ public class Camera extends Observable {
    */
   public void translateHorizontally(double distance) {
     // left/right
-    IVector3 direction = eye.subtract(ref);
-    IVector3 movement = direction.cross(up).getNormalized().multiply(distance);
+    Vector direction = eye.subtract(ref);
+    Vector movement = direction.cross(up).getNormalized().multiply(distance);
 
     // apply translation
     setRef(ref.add(movement));
@@ -229,14 +229,14 @@ public class Camera extends Observable {
    */
   public void rotateEyeVertically(final double angle) {
     // Normalize direction
-    IVector3 oldDirection = eye.subtract(ref);
+    Vector oldDirection = eye.subtract(ref);
     double length = oldDirection.getNorm();
     oldDirection = oldDirection.multiply(1.0 / length);
 
     // Apply rotation
-    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
-    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
-    IVector3 newEye = ref.add(newDirection.multiply(length));
+    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
+    Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    Vector newEye = ref.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setEye(newEye);
@@ -247,21 +247,21 @@ public class Camera extends Observable {
    */
   public void rotateEyeHorizontally(final double angle) {
     // Normalize direction
-    IVector3 oldDirection = eye.subtract(ref);
+    Vector oldDirection = eye.subtract(ref);
     double length = oldDirection.getNorm();
     oldDirection = oldDirection.getNormalized();
 
     // Compute rotation axis
-    IVector3 axis = oldDirection.cross(up).getNormalized();
+    Vector axis = oldDirection.cross(up).getNormalized();
 
     // Apply rotation
-    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
-    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
-    IVector3 newEye = ref.add(newDirection.multiply(length));
+    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
+    Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    Vector newEye = ref.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setEye(newEye);
-    setUp(VectorMatrixFactory.newIVector3(axis.cross(newDirection)).getNormalized());
+    setUp(VectorMatrixFactory.newVector(axis.cross(newDirection)).getNormalized());
   }
 
   /**
@@ -269,14 +269,14 @@ public class Camera extends Observable {
    */
   public void rotateRefVertically(double angle) {
     // Normalize direction
-    IVector3 oldDirection = ref.subtract(eye);
+    Vector oldDirection = ref.subtract(eye);
     double length = oldDirection.getNorm();
     oldDirection = oldDirection.multiply(1.0 / length);
 
     // Apply rotation
-    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
-    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
-    IVector3 newRef = eye.add(newDirection.multiply(length));
+    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
+    Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    Vector newRef = eye.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setRef(newRef);
@@ -287,21 +287,21 @@ public class Camera extends Observable {
    */
   public void rotateRefHorizontally(double angle) {
     // Normalize direction
-    IVector3 oldDirection = ref.subtract(eye);
+    Vector oldDirection = ref.subtract(eye);
     double length = oldDirection.getNorm();
     oldDirection = oldDirection.getNormalized();
 
     // Compute rotation axis
-    IVector3 axis = oldDirection.cross(up).getNormalized();
+    Vector axis = oldDirection.cross(up).getNormalized();
 
     // Apply rotation
-    IMatrix3 rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
-    IVector3 newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
-    IVector3 newRef = eye.add(newDirection.multiply(length));
+    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
+    Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
+    Vector newRef = eye.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setRef(newRef);
-    setUp(VectorMatrixFactory.newIVector3(axis.cross(newDirection)).getNormalized());
+    setUp(VectorMatrixFactory.newVector(axis.cross(newDirection)).getNormalized());
   }
 
   /**
@@ -334,14 +334,14 @@ public class Camera extends Observable {
   /**
    * Append a new key point at the end of the key points list.
    */
-  public void appendKeyPoint(IVector3 pos, IVector3 up, IVector3 ref) {
+  public void appendKeyPoint(Vector pos, Vector up, Vector ref) {
     cameraPath.addKeyPoint(pos, up, ref);
   }
 
   /**
    * Get the interpolated path position.
    */
-  public IVector3 getCameraPathInterpolation(float t) {
+  public Vector getCameraPathInterpolation(float t) {
     return cameraPath.getInterpolatedPos(t);
   }
 
@@ -364,9 +364,9 @@ public class Camera extends Observable {
    * Move forward.
    */
   public void moveForwards(double length) {
-    IVector3 eye = getEye();
-    IVector3 ref = getRef();
-    IVector3 moveDirection = ref.subtract(eye);
+    Vector eye = getEye();
+    Vector ref = getRef();
+    Vector moveDirection = ref.subtract(eye);
     moveDirection.normalize();
     moveDirection = moveDirection.multiply(length);
     setEye(eye.add(moveDirection));

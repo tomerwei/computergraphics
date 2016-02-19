@@ -3,7 +3,7 @@ package cgresearch.studentprojects.autogenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
@@ -12,12 +12,12 @@ public class Gast2D {
 	
 	private final int carVektor = 28;
 
-	private IVector3 center;
+	private Vector center;
 
-	private IVector3 A;
-	private IVector3 B;
-	private IVector3 C;
-	private IVector3 D;
+	private Vector A;
+	private Vector B;
+	private Vector C;
+	private Vector D;
 
 	private Line3D AB;
 	private Line3D BC;
@@ -34,14 +34,14 @@ public class Gast2D {
 
 	private int degree;
 
-	private IVector3 frontPunkt;
-	private IVector3 heckPunkt;
+	private Vector frontPunkt;
+	private Vector heckPunkt;
 
 	private Line3D[] lines = new Line3D[4];
 	private List<BezierCurve> curves = new ArrayList<BezierCurve>();
 
-	public Gast2D(IVector3 center, double hoehe, double laenge, int degree,
-			IVector3 frontPunkt, IVector3 heckPunkt, int gastv, int gasth,
+	public Gast2D(Vector center, double hoehe, double laenge, int degree,
+			Vector frontPunkt, Vector heckPunkt, int gastv, int gasth,
 			int gastFrontHor, int gastFrontVer, int gastHeckHor, int gastHeckVer) {
 		setCenter(center);
 		setA(center, hoehe, laenge);
@@ -65,52 +65,52 @@ public class Gast2D {
 		setCurves(left, top, right);
 	}
 
-	public IVector3 getCenter() {
+	public Vector getCenter() {
 		return center;
 	}
 
-	public void setCenter(IVector3 center) {
+	public void setCenter(Vector center) {
 		this.center = center;
 	}
 
-	public IVector3 getA() {
+	public Vector getA() {
 		return A;
 	}
 
-	public void setA(IVector3 center, double hoehe, double laenge) {
+	public void setA(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		A = VectorMatrixFactory.newIVector3(x, y, 0);
+		A = VectorMatrixFactory.newVector(x, y, 0);
 	}
 
-	public IVector3 getB() {
+	public Vector getB() {
 		return B;
 	}
 
-	public void setB(IVector3 center, double hoehe, double laenge) {
+	public void setB(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		B = VectorMatrixFactory.newIVector3(x, y, 0);
+		B = VectorMatrixFactory.newVector(x, y, 0);
 	}
 
-	public IVector3 getC() {
+	public Vector getC() {
 		return C;
 	}
 
-	public void setC(IVector3 center, double hoehe, double laenge) {
+	public void setC(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		C = VectorMatrixFactory.newIVector3(x, y, 0);
+		C = VectorMatrixFactory.newVector(x, y, 0);
 	}
 
-	public IVector3 getD() {
+	public Vector getD() {
 		return D;
 	}
 
-	public void setD(IVector3 center, double hoehe, double laenge) {
+	public void setD(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		D = VectorMatrixFactory.newIVector3(x, y, 0);
+		D = VectorMatrixFactory.newVector(x, y, 0);
 	}
 
 	public Line3D getAB() {
@@ -152,7 +152,7 @@ public class Gast2D {
 	}
 
 	public void setLeft(int gastv, int gastFrontHor, int gastFrontVer,
-			IVector3... points) {
+			Vector... points) {
 
 		double x = this.laenge * gastv / 100;
 		double xx = this.laenge * gastFrontHor / 100;
@@ -162,28 +162,28 @@ public class Gast2D {
 
 		curve.setControlPoint(
 				0,
-				VectorMatrixFactory.newIVector3(points[0].get(0),
+				VectorMatrixFactory.newVector(points[0].get(0),
 						points[0].get(1), 0));
 
 		// for (int i = 1; i < degree; i++) {
-		// curve.setControlPoint(i, VectorMatrixFactory.newIVector3(x + i * xx,
+		// curve.setControlPoint(i, VectorMatrixFactory.newVector(x + i * xx,
 		// y + i*yy, 0));
 		// }
 
-		// curve.setControlPoint(1, VectorMatrixFactory.newIVector3(
+		// curve.setControlPoint(1, VectorMatrixFactory.newVector(
 		// points[1].get(0) - 0.2, points[1].get(1) - 0.4, 0));
 		//
 		// curve.setControlPoint(
 		// 2,
-		// VectorMatrixFactory.newIVector3(points[1].get(0),
+		// VectorMatrixFactory.newVector(points[1].get(0),
 		// points[1].get(1) - 0.2, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(
+		curve.setControlPoint(1, VectorMatrixFactory.newVector(
 				points[1].get(0) + xx, points[1].get(1) + yy, 0));
 
 		curve.setControlPoint(
 				2,
-				VectorMatrixFactory.newIVector3(points[1].get(0) + x,
+				VectorMatrixFactory.newVector(points[1].get(0) + x,
 						points[1].get(1), 0));
 
 		this.left = curve;
@@ -193,30 +193,30 @@ public class Gast2D {
 		return top;
 	}
 
-	public void setTop(int gastv, int gasth, IVector3... points) {
+	public void setTop(int gastv, int gasth, Vector... points) {
 
 		double x1 = this.laenge * gastv / 100;
 		double x2 = this.laenge * gasth / 100;
 
 		BezierCurve curve = new BezierCurve(1);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newIVector3(
+		curve.setControlPoint(0, VectorMatrixFactory.newVector(
 				points[0].get(0) + x1, points[0].get(1), 0));
 
 		// for (int i = 1; i < degree; i++) {
-		// curve.setControlPoint(i, VectorMatrixFactory.newIVector3(x + i * xx,
+		// curve.setControlPoint(i, VectorMatrixFactory.newVector(x + i * xx,
 		// y + i*yy, 0));
 		// }
 
-		// curve.setControlPoint(1, VectorMatrixFactory.newIVector3(
+		// curve.setControlPoint(1, VectorMatrixFactory.newVector(
 		// points[1].get(0) - 0.2, points[1].get(1) - 0.4, 0));
 		//
 		// curve.setControlPoint(
 		// 2,
-		// VectorMatrixFactory.newIVector3(points[1].get(0),
+		// VectorMatrixFactory.newVector(points[1].get(0),
 		// points[1].get(1) - 0.2, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(
+		curve.setControlPoint(1, VectorMatrixFactory.newVector(
 				points[1].get(0) - x2, points[1].get(1), 0));
 
 		this.top = curve;
@@ -227,7 +227,7 @@ public class Gast2D {
 	}
 
 	public void setRight(int gasth, int gastHeckHor, int gastHeckVer,
-			IVector3... points) {
+			Vector... points) {
 
 		double x = this.laenge * gasth / 100;
 		double xx = this.laenge * gastHeckHor / 100;
@@ -237,28 +237,28 @@ public class Gast2D {
 
 		curve.setControlPoint(
 				0,
-				VectorMatrixFactory.newIVector3(points[0].get(0) - x,
+				VectorMatrixFactory.newVector(points[0].get(0) - x,
 						points[0].get(1), 0));
 
 		// for (int i = 1; i < degree; i++) {
-		// curve.setControlPoint(i, VectorMatrixFactory.newIVector3(x + i * xx,
+		// curve.setControlPoint(i, VectorMatrixFactory.newVector(x + i * xx,
 		// y + i*yy, 0));
 		// }
 
-		// curve.setControlPoint(1, VectorMatrixFactory.newIVector3(
+		// curve.setControlPoint(1, VectorMatrixFactory.newVector(
 		// points[1].get(0) - 0.2, points[1].get(1) - 0.4, 0));
 		//
 		// curve.setControlPoint(
 		// 2,
-		// VectorMatrixFactory.newIVector3(points[1].get(0),
+		// VectorMatrixFactory.newVector(points[1].get(0),
 		// points[1].get(1) - 0.2, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newIVector3(
+		curve.setControlPoint(1, VectorMatrixFactory.newVector(
 				points[0].get(0) + xx, points[0].get(1) + yy, 0));
 
 		curve.setControlPoint(
 				2,
-				VectorMatrixFactory.newIVector3(points[1].get(0),
+				VectorMatrixFactory.newVector(points[1].get(0),
 						points[1].get(1), 0));
 
 		this.right = curve;
@@ -268,14 +268,14 @@ public class Gast2D {
 		return bottom;
 	}
 
-	public void setBottom(IVector3... points) {
+	public void setBottom(Vector... points) {
 		int degree = points.length - 1;
 		int i = 0;
 		BezierCurve curve = new BezierCurve(degree);
-		for (IVector3 p : points) {
+		for (Vector p : points) {
 			curve.setControlPoint(
 					i,
-					VectorMatrixFactory.newIVector3(p.get(0), p.get(1),
+					VectorMatrixFactory.newVector(p.get(0), p.get(1),
 							p.get(2)));
 			i++;
 		}
@@ -306,19 +306,19 @@ public class Gast2D {
 		this.degree = degree;
 	}
 
-	public IVector3 getFrontPunkt() {
+	public Vector getFrontPunkt() {
 		return frontPunkt;
 	}
 
-	public void setFrontPunkt(IVector3 frontPunkt) {
+	public void setFrontPunkt(Vector frontPunkt) {
 		this.frontPunkt = frontPunkt;
 	}
 
-	public IVector3 getHeckPunkt() {
+	public Vector getHeckPunkt() {
 		return heckPunkt;
 	}
 
-	public void setHeckPunkt(IVector3 heckPunkt) {
+	public void setHeckPunkt(Vector heckPunkt) {
 		this.heckPunkt = heckPunkt;
 	}
 

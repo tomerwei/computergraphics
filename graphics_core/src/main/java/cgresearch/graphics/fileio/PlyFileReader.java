@@ -13,7 +13,7 @@ import java.util.List;
 
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -341,7 +341,7 @@ public class PlyFileReader {
 					}
 				}
 			}
-			Vertex vertex = new Vertex(VectorMatrixFactory.newIVector3(x, y, z));
+			Vertex vertex = new Vertex(VectorMatrixFactory.newVector(x, y, z));
 			mesh.addVertex(vertex);
 		}
 	}
@@ -360,7 +360,7 @@ public class PlyFileReader {
 
 			// Read normal
 			if (header.hasVertexNormal()) {
-				IVector3 normal = readNormal(tokens);
+				Vector normal = readNormal(tokens);
 				if (normal != null) {
 					vertex.setNormal(normal);
 				}
@@ -372,7 +372,7 @@ public class PlyFileReader {
 	/**
 	 * Read a normal from a vertex line. Return null on error.
 	 */
-	private IVector3 readNormal(String[] tokens) {
+	private Vector readNormal(String[] tokens) {
 		int xIndex = header
 				.getVertexPropertyPosition(PlyProperty.ProperyName.NX);
 		int yIndex = header
@@ -381,7 +381,7 @@ public class PlyFileReader {
 				.getVertexPropertyPosition(PlyProperty.ProperyName.NZ);
 		if (xIndex >= 0 && yIndex >= 0 && zIndex >= 0 && xIndex < tokens.length
 				&& yIndex < tokens.length && zIndex < tokens.length) {
-			IVector3 normal = VectorMatrixFactory.newIVector3(
+			Vector normal = VectorMatrixFactory.newVector(
 					Double.parseDouble(tokens[xIndex]),
 					Double.parseDouble(tokens[yIndex]),
 					Double.parseDouble(tokens[zIndex]));
@@ -405,7 +405,7 @@ public class PlyFileReader {
 		// Read position
 		if (xIndex >= 0 && yIndex >= 0 && zIndex >= 0 && xIndex < tokens.length
 				&& yIndex < tokens.length && zIndex < tokens.length) {
-			IVector3 position = VectorMatrixFactory.newIVector3(
+			Vector position = VectorMatrixFactory.newVector(
 					Double.parseDouble(tokens[xIndex]),
 					Double.parseDouble(tokens[yIndex]),
 					Double.parseDouble(tokens[zIndex]));

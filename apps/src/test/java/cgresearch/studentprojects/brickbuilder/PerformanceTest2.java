@@ -52,7 +52,7 @@ public class PerformanceTest2 {
 				long[] trans = new long[runsPerModelPerRes];
 				long sumTrans = 0;
 				
-				RootBrick root = new RootBrick(VectorMatrixFactory.newIVector3(0.08, 0.096, 0.08), null);		
+				RootBrick root = new RootBrick(VectorMatrixFactory.newVector(0.08, 0.096, 0.08), null);		
 				ComposedBrick brick2x1 = new ComposedBrick(root, new VectorInt3(2, 1, 1));
 				ComposedBrick brick2x2 = new ComposedBrick(root, new VectorInt3(2, 1, 2));		
 				ComposedBrick brick3x1 = new ComposedBrick(root, new VectorInt3(3, 1, 1));

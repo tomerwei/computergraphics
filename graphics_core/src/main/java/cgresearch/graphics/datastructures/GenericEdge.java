@@ -1,6 +1,6 @@
 package cgresearch.graphics.datastructures;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Generic parent interface for edges, used to put name in shared container.
@@ -12,7 +12,7 @@ public interface GenericEdge {
   /**
    * Sets the color of the edge (used for debugging).
    */
-  public void setColor(IVector3 color);
+  public void setColor(Vector color);
 
   /**
    * Returns the first vertex of the edge.

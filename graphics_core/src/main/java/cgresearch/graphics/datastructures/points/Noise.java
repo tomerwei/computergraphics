@@ -7,7 +7,7 @@ package cgresearch.graphics.datastructures.points;
 
 import java.util.Random;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Add noise to a point cloid
@@ -23,7 +23,7 @@ public class Noise {
     public static void addNoise(IPointCloud pointCloud, double standardDeviation) {
 
         for (int pointIndex = 0; pointIndex < pointCloud.getNumberOfPoints(); pointIndex++) {
-            IVector3 oldPosition = pointCloud.getPoint(pointIndex)
+            Vector oldPosition = pointCloud.getPoint(pointIndex)
                     .getPosition();
             pointCloud
                     .getPoint(pointIndex)

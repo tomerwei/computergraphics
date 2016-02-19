@@ -52,7 +52,7 @@ public class BrickBuilderTest extends CgApplication {
   // // i + 1);
   // // mesh3.getMaterial().setLighting(false);
   // // TriangleMeshTransformation.translate(mesh3,
-  // // VectorMatrixFactory.newIVector3(1.0 + (1.0 * i), 0, 0));
+  // // VectorMatrixFactory.newVector(1.0 + (1.0 * i), 0, 0));
   // // rootNode.addChild(new CgNode(mesh3, "bunny 03"));
   // // }
   // }
@@ -62,7 +62,7 @@ public class BrickBuilderTest extends CgApplication {
   // voxelclouds/legoMan
   // // ITriangleMesh rootMesh = TriangleMeshFactory.createCube();
   //
-  // RootBrick root = new RootBrick(VectorMatrixFactory.newIVector3(0.08,
+  // RootBrick root = new RootBrick(VectorMatrixFactory.newVector(0.08,
   // 0.096, 0.08), null);
   // ComposedBrick brick2x1 = new ComposedBrick(root,
   // new VectorInt3(2, 1, 1));
@@ -153,14 +153,14 @@ public class BrickBuilderTest extends CgApplication {
   // ITriangleMesh mesh1 = VoxelCloudMesher.transformCloud2Mesh(cloud, true);
   // // TriangleMeshTransformation.scale(mesh1, 1.3);
   // // TriangleMeshTransformation.translate(mesh1,
-  // // VectorMatrixFactory.newIVector3(5, 0.1, 0));
+  // // VectorMatrixFactory.newVector(5, 0.1, 0));
   // rootNode.addChild(new CgNode(mesh1, "bunny 01"));
   //
   // // ITriangleMesh mesh2 = BrickCloudMesher.transformCloud2Mesh(cloud2);
   // // mesh2.getMaterial().setLighting(false);
   // // // TriangleMeshTransformation.scale(mesh2, 0.3);
   // // // TriangleMeshTransformation.translate(mesh2,
-  // // VectorMatrixFactory.newIVector3(-2.2, -0.35, -0.42));
+  // // VectorMatrixFactory.newVector(-2.2, -0.35, -0.42));
   // // rootNode.addChild(new CgNode(mesh2, "bunny 02"));
   // //
   // // for (int i = 10; i < 13; i++) {
@@ -168,7 +168,7 @@ public class BrickBuilderTest extends CgApplication {
   // // i + 1);
   // // mesh3.getMaterial().setLighting(false);
   // // TriangleMeshTransformation.translate(mesh3,
-  // // VectorMatrixFactory.newIVector3(0, 0, (1.5 * (i - 9))));
+  // // VectorMatrixFactory.newVector(0, 0, (1.5 * (i - 9))));
   // // rootNode.addChild(new CgNode(mesh3, "bunny 03"));
   // // }
   //
@@ -176,7 +176,7 @@ public class BrickBuilderTest extends CgApplication {
   // // BrickCloudMesher.transformCloud2MeshDebug(cloud2);
   // // mesh4.getMaterial().setLighting(false);
   // // TriangleMeshTransformation.translate(mesh4,
-  // // VectorMatrixFactory.newIVector3(0, 0, -1.5));
+  // // VectorMatrixFactory.newVector(0, 0, -1.5));
   // // rootNode.addChild(new CgNode(mesh4, "bunny 03"));
   //
   // // System.out.println("write");

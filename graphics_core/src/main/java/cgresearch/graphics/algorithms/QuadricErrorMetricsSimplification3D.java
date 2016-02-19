@@ -2,8 +2,8 @@ package cgresearch.graphics.algorithms;
 
 import java.util.List;
 
-import cgresearch.core.math.IMatrix;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.GenericVertex;
 import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMesh;
@@ -23,7 +23,7 @@ public class QuadricErrorMetricsSimplification3D extends QuadrikErrorMetricsSimp
   }
 
   @Override
-  protected IMatrix computePointQem(GenericVertex vertex) {
+  protected Matrix computePointQem(GenericVertex vertex) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -57,7 +57,7 @@ public class QuadricErrorMetricsSimplification3D extends QuadrikErrorMetricsSimp
   }
 
   @Override
-  protected GenericVertex collapse(GenericEdge edge, IVector3 newPos) {
+  protected GenericVertex collapse(GenericEdge edge, Vector newPos) {
     // TODO
     return null;
   }

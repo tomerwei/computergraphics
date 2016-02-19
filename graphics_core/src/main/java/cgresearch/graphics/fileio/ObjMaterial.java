@@ -6,12 +6,12 @@
 
 package cgresearch.graphics.fileio;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 public class ObjMaterial {
 	private String name = "";
 	private String textureFilename = "";
-	private IVector3 diffuseColor = null;
+	private Vector diffuseColor = null;
 
 	public ObjMaterial(final String name, final String textureFilename) {
 		this.name = name;
@@ -37,11 +37,11 @@ public class ObjMaterial {
 		return textureFilename;
 	}
 
-	public void setDiffuseColor(IVector3 color) {
+	public void setDiffuseColor(Vector color) {
 		this.diffuseColor = color;
 	}
 
-	public IVector3 getDiffuseColor() {
+	public Vector getDiffuseColor() {
 		return diffuseColor;
 	}
 }

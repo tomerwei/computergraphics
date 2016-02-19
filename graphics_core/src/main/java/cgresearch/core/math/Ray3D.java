@@ -11,17 +11,17 @@ public class Ray3D {
   /**
    * Starting point.
    */
-  private IVector3 p = VectorMatrixFactory.newIVector3();
+  private Vector p = VectorMatrixFactory.newVector(3);
 
   /**
    * Direction
    */
-  private IVector3 r = VectorMatrixFactory.newIVector3();
+  private Vector r = VectorMatrixFactory.newVector(3);
 
   /**
    * Constructor.
    */
-  public Ray3D(IVector3 p, IVector3 r) {
+  public Ray3D(Vector p, Vector r) {
     this.p.copy(p);
     this.r.copy(r);
   }
@@ -34,14 +34,14 @@ public class Ray3D {
   /**
    * Getter.
    */
-  public IVector3 getDirection() {
+  public Vector getDirection() {
     return r;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getPoint() {
+  public Vector getPoint() {
     return p;
   }
 

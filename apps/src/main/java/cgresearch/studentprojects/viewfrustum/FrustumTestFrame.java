@@ -50,17 +50,17 @@ public class FrustumTestFrame extends CgApplication {
     ITriangleMesh pumpkin = loadMesh("meshes/pumpkin.obj");
 
     // ############### Transformationen ###############
-    TriangleMeshTransformation.translate(cow, VectorMatrixFactory.newIVector3(1.0, 0.0, 9.0));
-    TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newIVector3(0.0, 0.0 /*1.15*/, 9.0));
+    TriangleMeshTransformation.translate(cow, VectorMatrixFactory.newVector(1.0, 0.0, 9.0));
+    TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newVector(0.0, 0.0 /*1.15*/, 9.0));
     TriangleMeshTransformation.scale(bunny, 3.0);
     TriangleMeshTransformation.scale(fenja, 0.1);
-    TriangleMeshTransformation.translate(fenja, VectorMatrixFactory.newIVector3(0.5, 0.0, 25.0));
+    TriangleMeshTransformation.translate(fenja, VectorMatrixFactory.newVector(0.5, 0.0, 25.0));
     TriangleMeshTransformation.scale(fenjaDown, 0.1);
-    TriangleMeshTransformation.translate(fenjaDown, VectorMatrixFactory.newIVector3(2.0, -8.0, 8.0));
+    TriangleMeshTransformation.translate(fenjaDown, VectorMatrixFactory.newVector(2.0, -8.0, 8.0));
     TriangleMeshTransformation.scale(fenjaUp, 0.1);
-    TriangleMeshTransformation.translate(fenjaUp, VectorMatrixFactory.newIVector3(-1.0, 2.0, 0.5));
+    TriangleMeshTransformation.translate(fenjaUp, VectorMatrixFactory.newVector(-1.0, 2.0, 0.5));
     TriangleMeshTransformation.scale(pumpkin, 0.02);
-    TriangleMeshTransformation.translate(pumpkin, VectorMatrixFactory.newIVector3(0.0, 0.0, 20.5));
+    TriangleMeshTransformation.translate(pumpkin, VectorMatrixFactory.newVector(0.0, 0.0, 20.5));
     // ############### Transformationen ###############
 
     getCgRootNode().addChild(new CgNode(cow, "cow"));

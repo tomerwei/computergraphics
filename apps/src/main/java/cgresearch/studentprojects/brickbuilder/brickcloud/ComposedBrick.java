@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 
@@ -32,7 +32,7 @@ public class ComposedBrick implements IChildBrick {
 	/**
 	 * Resolution of the root brick.
 	 */
-	private IVectorInt3 resolution;
+	private VectorInt3 resolution;
 	/**
 	 * Brick model.
 	 */
@@ -40,14 +40,14 @@ public class ComposedBrick implements IChildBrick {
 	/**
 	 * Unit positions.
 	 */
-	private List<IVectorInt3> unitPos;
+	private List<VectorInt3> unitPos;
 	
 	/**
 	 * Constructor - generating model out of root brick.
 	 * @param rootBrick
 	 * @param resolution
 	 */
-	public ComposedBrick(IBrick rootBrick, IVectorInt3 resolution) {
+	public ComposedBrick(IBrick rootBrick, VectorInt3 resolution) {
 		this(rootBrick, resolution, null);
 	}
 
@@ -57,10 +57,10 @@ public class ComposedBrick implements IChildBrick {
 	 * @param resolution
 	 * @param model
 	 */
-	public ComposedBrick(IBrick rootBrick, IVectorInt3 resolution, ITriangleMesh model) {
+	public ComposedBrick(IBrick rootBrick, VectorInt3 resolution, ITriangleMesh model) {
 		this.rootBrick = rootBrick;
 		this.resolution = resolution;
-		this.unitPos = new ArrayList<IVectorInt3>();
+		this.unitPos = new ArrayList<VectorInt3>();
 		for (int z = 0; z < resolution.getZ(); z++) {
 			for (int y = 0; y < resolution.getY(); y++) {
 				for (int x = 0; x < resolution.getX(); x++) {
@@ -73,9 +73,9 @@ public class ComposedBrick implements IChildBrick {
 	}
 	
 	@Override
-	public IVector3 getDimensions() {
-		IVector3 dim = rootBrick.getDimensions();
-		return VectorMatrixFactory.newIVector3(dim.get(0) * resolution.getX(),
+	public Vector getDimensions() {
+		Vector dim = rootBrick.getDimensions();
+		return VectorMatrixFactory.newVector(dim.get(0) * resolution.getX(),
 				dim.get(1) * resolution.getY(),
 				dim.get(2) * resolution.getZ());
 	}
@@ -96,7 +96,7 @@ public class ComposedBrick implements IChildBrick {
 	}
 	
 	@Override
-	public IVectorInt3 getResolution() {
+	public VectorInt3 getResolution() {
 		return resolution;
 	}
 
@@ -106,14 +106,14 @@ public class ComposedBrick implements IChildBrick {
 	private void createModel() {
 		ITriangleMesh model = new TriangleMesh();
 		BoundingBox box = model.getBoundingBox();
-		IVector3 diagonal = box.getUpperRight().subtract(box.getLowerLeft());
+		Vector diagonal = box.getUpperRight().subtract(box.getLowerLeft());
 		
 		for (int z = 0; z < resolution.getZ(); z++) {
 			for (int y = 0; y < resolution.getY(); y++) {
 				for (int x = 0; x < resolution.getX(); x++) {
 					ITriangleMesh add = new TriangleMesh(rootBrick.getModel());
 					TriangleMeshTransformation.translate(add,
-							VectorMatrixFactory.newIVector3(
+							VectorMatrixFactory.newVector(
 									x * diagonal.get(0),
 									y * diagonal.get(1),
 									z * diagonal.get(2)));
@@ -126,7 +126,7 @@ public class ComposedBrick implements IChildBrick {
 	}
 
 	@Override
-	public List<IVectorInt3> getUnitPositions() {
+	public List<VectorInt3> getUnitPositions() {
 		return unitPos;
 	}
 }

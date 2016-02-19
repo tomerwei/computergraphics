@@ -2,8 +2,8 @@ package smarthomevis.groundplan.config;
 
 import java.io.Serializable;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.Vector3;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 
 /**
  * Zweidimensionale Definition einer Wand. Eine interne Representation der
@@ -21,11 +21,11 @@ public class GPLine implements Serializable
 	private static final long serialVersionUID = 1039885046114959309L;
 	
 	private String name = null;
-	private IVector3 start = null;
-	private IVector3 end = null;
+	private Vector start = null;
+	private Vector end = null;
 	private LineType lineType = null;
 	
-	public GPLine(String name, IVector3 startPoint, IVector3 endPoint)
+	public GPLine(String name, Vector startPoint, Vector endPoint)
 	{
 		this.name = name;
 		this.start = startPoint;
@@ -48,15 +48,15 @@ public class GPLine implements Serializable
 	this.lineType = type;
 	}
 	
-	public IVector3 getStart()
+	public Vector getStart()
 	{
-	return new Vector3(start.get(0), start.get(1),
+	return new Vector(start.get(0), start.get(1),
 		start.get(2));
 	}
 	
-	public IVector3 getEnd()
+	public Vector getEnd()
 	{
-	return new Vector3(end.get(0), end.get(1),
+	return new Vector(end.get(0), end.get(1),
 		end.get(2));
 	}
 	
@@ -74,9 +74,9 @@ public class GPLine implements Serializable
 	public GPLine clone()
 	{
 	GPLine gpLine = new GPLine(new String(name),
-		new Vector3(new Double(start.get(0)), new Double(start.get(1)),
+		new Vector(new Double(start.get(0)), new Double(start.get(1)),
 			new Double(start.get(2))),
-		new Vector3(new Double(end.get(0)), new Double(end.get(1)),
+		new Vector(new Double(end.get(0)), new Double(end.get(1)),
 			new Double(end.get(2))));
 	gpLine.setLineType(lineType);
 	return gpLine;

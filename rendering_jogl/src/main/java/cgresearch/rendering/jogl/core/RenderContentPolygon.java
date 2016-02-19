@@ -5,7 +5,7 @@
  */
 package cgresearch.rendering.jogl.core;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.Transformation;
@@ -57,7 +57,7 @@ public class RenderContentPolygon implements IRenderContent {
     }
 
     for (int i = 0; i < polygon.getNumPoints(); i++) {
-      IVector3 p = polygon.getPoint(i).getPosition();
+      Vector p = polygon.getPoint(i).getPosition();
       spheresMesh.unite(TriangleMeshFactory.createSphere(p, polygon.getMaterial().getPointSphereSize(), 20));
     }
     spheresMesh.updateRenderStructures();
@@ -88,7 +88,7 @@ public class RenderContentPolygon implements IRenderContent {
   }
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners,
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners,
       boolean cameraPositionChanged) {
 
   }

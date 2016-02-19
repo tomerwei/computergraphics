@@ -1,6 +1,6 @@
 package cgresearch.graphics.datastructures.polygon;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.GenericVertex;
 
 /**
@@ -14,7 +14,7 @@ public class PolygonVertex implements GenericVertex {
   /**
    * Point position.
    */
-  private final IVector3 position;
+  private final Vector position;
 
   /**
    * Incoming edge.
@@ -26,7 +26,7 @@ public class PolygonVertex implements GenericVertex {
    */
   private PolygonEdge outgoingEdge = null;
 
-  public PolygonVertex(IVector3 position) {
+  public PolygonVertex(Vector position) {
     this.position = position;
 
   }
@@ -47,7 +47,7 @@ public class PolygonVertex implements GenericVertex {
     this.outgoingEdge = outgoingEdge;
   }
 
-  public IVector3 getPosition() {
+  public Vector getPosition() {
     return position;
   }
 

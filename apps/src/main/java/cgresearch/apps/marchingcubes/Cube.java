@@ -2,7 +2,7 @@ package cgresearch.apps.marchingcubes;
 
 import java.util.Observable;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 public class Cube extends Observable {
@@ -10,12 +10,12 @@ public class Cube extends Observable {
   /**
    * Lower left corner point.
    */
-  private IVector3 lowerLeft = VectorMatrixFactory.newIVector3(-1, -1, -1);
+  private Vector lowerLeft = VectorMatrixFactory.newVector(-1, -1, -1);
 
   /**
    * Upper right corner point.
    */
-  private IVector3 upperRight = VectorMatrixFactory.newIVector3(1, 1, 1);
+  private Vector upperRight = VectorMatrixFactory.newVector(1, 1, 1);
 
   /**
    * Corner point function values.
@@ -34,27 +34,27 @@ public class Cube extends Observable {
    *          Valid indices are 0...7
    * @return
    */
-  public IVector3 getCornerPoint(int index) {
+  public Vector getCornerPoint(int index) {
     double dx = upperRight.get(0) - lowerLeft.get(0);
     double dy = upperRight.get(1) - lowerLeft.get(1);
     double dz = upperRight.get(2) - lowerLeft.get(2);
     switch (index) {
       case 0:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(0, 0, 0));
+        return lowerLeft.add(VectorMatrixFactory.newVector(0, 0, 0));
       case 1:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(dx, 0, 0));
+        return lowerLeft.add(VectorMatrixFactory.newVector(dx, 0, 0));
       case 2:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(dx, dy, 0));
+        return lowerLeft.add(VectorMatrixFactory.newVector(dx, dy, 0));
       case 3:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(0, dy, 0));
+        return lowerLeft.add(VectorMatrixFactory.newVector(0, dy, 0));
       case 4:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(0, 0, dz));
+        return lowerLeft.add(VectorMatrixFactory.newVector(0, 0, dz));
       case 5:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(dx, 0, dz));
+        return lowerLeft.add(VectorMatrixFactory.newVector(dx, 0, dz));
       case 6:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(dx, dy, dz));
+        return lowerLeft.add(VectorMatrixFactory.newVector(dx, dy, dz));
       case 7:
-        return lowerLeft.add(VectorMatrixFactory.newIVector3(0, dy, dz));
+        return lowerLeft.add(VectorMatrixFactory.newVector(0, dy, dz));
       default:
         return null;
     }

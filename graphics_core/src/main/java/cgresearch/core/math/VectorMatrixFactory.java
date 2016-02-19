@@ -13,13 +13,8 @@ package cgresearch.core.math;
  */
 public class VectorMatrixFactory {
 
-  /**
-   * Create a new instance for a 3-vector.
-   * 
-   * @return new instance.
-   */
-  public static IVector3 newIVector3() {
-    return new Vector3();
+  public static Vector newVector(int dimension) {
+    return new Vector(dimension);
   }
 
   /**
@@ -29,8 +24,8 @@ public class VectorMatrixFactory {
    *          Vector to be copied from.
    * @return new instance.
    */
-  public static IVector3 newIVector3(IVector3 other) {
-    return new Vector3(other);
+  public static Vector newVector(Vector other) {
+    return new Vector(other);
   }
 
   /**
@@ -45,17 +40,8 @@ public class VectorMatrixFactory {
    *          Initial value for z-coordinate.
    * @return new instance.
    */
-  public static IVector3 newIVector3(double x, double y, double z) {
-    return new Vector3(x, y, z);
-  }
-
-  /**
-   * Create a new instance for a 4-vector.
-   * 
-   * @return new instance.
-   */
-  public static IVector4 newIVector4() {
-    return new Vector4();
+  public static Vector newVector(double x, double y, double z) {
+    return new Vector(x, y, z);
   }
 
   /**
@@ -71,17 +57,8 @@ public class VectorMatrixFactory {
    *          Initial value for w-coordinate.
    * @return new instance.
    */
-  public static IVector4 newIVector4(double x, double y, double z, double w) {
-    return new Vector4(x, y, z, w);
-  }
-
-  /**
-   * Create a new instance for a 3x3-matrix.
-   * 
-   * @return new instance.
-   */
-  public static IMatrix3 newIMatrix3() {
-    return new Matrix3();
+  public static Vector newVector(double x, double y, double z, double w) {
+    return new Vector(x, y, z, w);
   }
 
   /**
@@ -95,25 +72,35 @@ public class VectorMatrixFactory {
    *          Initial value for the third row.
    * @return new instance.
    */
-  public static IMatrix3 newIMatrix3(IVector3 row0, IVector3 row1, IVector3 row2) {
-    return new Matrix3(row0, row1, row2);
+  public static Matrix newMatrix(Vector row0, Vector row1, Vector row2) {
+    return new Matrix(row0.get(0), row0.get(1), row0.get(2), row1.get(0), row1.get(1), row1.get(2), row2.get(0),
+        row2.get(1), row2.get(2));
   }
 
   /**
    * Create a new instance of a 3x3-matrix.
    */
-  public static IMatrix3 newIMatrix3(double v00, double v01, double v02, double v10, double v11, double v12, double v20,
+  public static Matrix newMatrix(double v00, double v01, double v02, double v10, double v11, double v12, double v20,
       double v21, double v22) {
-    return new Matrix3(v00, v01, v02, v10, v11, v12, v20, v21, v22);
+    return new Matrix(v00, v01, v02, v10, v11, v12, v20, v21, v22);
   }
 
   /**
-   * Create a new instance for a 4x4-matrix.
+   * Create a new instance for a matrix.
    * 
    * @return new instance.
    */
-  public static IMatrix4 newIMatrix4() {
-    return new Matrix4();
+  public static Matrix newMatrix(Matrix other) {
+    return new Matrix(other);
+  }
+
+  /**
+   * Create a new instance for a matrix.
+   * 
+   * @return new instance.
+   */
+  public static Matrix newMatrix(int numberOfRows, int numberOfColumns) {
+    return new Matrix(numberOfRows, numberOfColumns);
   }
 
   /**
@@ -129,24 +116,25 @@ public class VectorMatrixFactory {
    *          Initial value for the forth row.
    * @return new instance.
    */
-  public static IMatrix4 newIMatrix4(IVector4 row0, IVector4 row1, IVector4 row2, IVector4 row3) {
-    return new Matrix4(row0, row1, row2, row3);
-  }
+  // public static Matrix newMatrix(Vector row0, Vector row1, Vector
+  // row2, Vector row3) {
+  // return new Matrix(row0, row1, row2, row3);
+  // }
 
   /**
    * Create a rotation matrix around an axis with a given angle.
    */
-  public static IMatrix3 getRotationMatrix(IVector3 axis, double angle) {
+  public static Matrix getRotationMatrix(Vector axis, double angle) {
     double s = Math.sin(angle);
     double c = Math.cos(angle);
     double t = 1.0 - c;
 
-    return new Matrix3(
-        VectorMatrixFactory.newIVector3(t * axis.get(0) * axis.get(0) + c,
+    return VectorMatrixFactory.newMatrix(
+        VectorMatrixFactory.newVector(t * axis.get(0) * axis.get(0) + c,
             t * axis.get(0) * axis.get(1) + s * axis.get(2), t * axis.get(0) * axis.get(2) - s * axis.get(1)),
-        VectorMatrixFactory.newIVector3(t * axis.get(0) * axis.get(1) - s * axis.get(2),
+        VectorMatrixFactory.newVector(t * axis.get(0) * axis.get(1) - s * axis.get(2),
             t * axis.get(1) * axis.get(1) + c, t * axis.get(1) * axis.get(2) + s * axis.get(0)),
-        VectorMatrixFactory.newIVector3(t * axis.get(0) * axis.get(2) + s * axis.get(1),
+        VectorMatrixFactory.newVector(t * axis.get(0) * axis.get(2) + s * axis.get(1),
             t * axis.get(2) * axis.get(2) - s * axis.get(0), t * axis.get(2) * axis.get(2) + c));
   }
 
@@ -158,22 +146,22 @@ public class VectorMatrixFactory {
    *          New direction for the second base vector.
    * @return Coordinate system in matrix representation.
    */
-  public static IMatrix3 createCoordinateFrameY(IVector3 newY) {
+  public static Matrix createCoordinateFrameY(Vector newY) {
     newY.normalize();
-    if (Math.abs(newY.multiply(newIVector3(1, 0, 0))) < 0.95) {
-      IVector3 newX = newIVector3(1, 0, 0);
-      IVector3 newZ = newX.cross(newY);
+    if (Math.abs(newY.multiply(newVector(1, 0, 0))) < 0.95) {
+      Vector newX = newVector(1, 0, 0);
+      Vector newZ = newX.cross(newY);
       newX = newY.cross(newZ);
       newX.normalize();
       newZ.normalize();
-      return newIMatrix3(newX, newY, newZ).getTransposed();
+      return newMatrix(newX, newY, newZ).getTransposed();
     } else {
-      IVector3 newZ = newIVector3(0, 0, 1);
-      IVector3 newX = newY.cross(newZ);
+      Vector newZ = newVector(0, 0, 1);
+      Vector newX = newY.cross(newZ);
       newZ = newX.cross(newY);
       newX.normalize();
       newZ.normalize();
-      return newIMatrix3(newX, newY, newZ).getTransposed();
+      return newMatrix(newX, newY, newZ).getTransposed();
     }
   }
 
@@ -185,23 +173,23 @@ public class VectorMatrixFactory {
    *          New direction for the second base vector.
    * @return Coordinate system in matrix representation.
    */
-  public static IMatrix3 createCoordinateFrameX(IVector3 oldX) {
-    IVector3 newX = VectorMatrixFactory.newIVector3(oldX);
+  public static Matrix createCoordinateFrameX(Vector oldX) {
+    Vector newX = VectorMatrixFactory.newVector(oldX);
     newX.normalize();
-    if (Math.abs(newX.multiply(newIVector3(0, 1, 0))) < 0.95) {
-      IVector3 newY = newIVector3(0, 1, 0);
-      IVector3 newZ = newX.cross(newY);
+    if (Math.abs(newX.multiply(newVector(0, 1, 0))) < 0.95) {
+      Vector newY = newVector(0, 1, 0);
+      Vector newZ = newX.cross(newY);
       newY = newZ.cross(newX);
       newY.normalize();
       newZ.normalize();
-      return newIMatrix3(newX, newY, newZ).getTransposed();
+      return newMatrix(newX, newY, newZ).getTransposed();
     } else {
-      IVector3 newZ = newIVector3(0, 0, 1);
-      IVector3 newY = newZ.cross(newX);
+      Vector newZ = newVector(0, 0, 1);
+      Vector newY = newZ.cross(newX);
       newZ = newX.cross(newY);
       newY.normalize();
       newZ.normalize();
-      return newIMatrix3(newX, newY, newZ).getTransposed();
+      return newMatrix(newX, newY, newZ).getTransposed();
     }
   }
 
@@ -213,96 +201,46 @@ public class VectorMatrixFactory {
    *          New direction for the second base vector.
    * @return Coordinate system in matrix representation.
    */
-  public static IMatrix3 createCoordinateFrameZ(IVector3 oldZ) {
-    IVector3 newZ = VectorMatrixFactory.newIVector3(oldZ);
+  public static Matrix createCoordinateFrameZ(Vector oldZ) {
+    Vector newZ = VectorMatrixFactory.newVector(oldZ);
     newZ.normalize();
-    if (Math.abs(newZ.multiply(newIVector3(0, 1, 0))) < 0.95) {
-      IVector3 newY = newIVector3(0, 1, 0);
-      IVector3 newX = newY.cross(newZ);
+    if (Math.abs(newZ.multiply(newVector(0, 1, 0))) < 0.95) {
+      Vector newY = newVector(0, 1, 0);
+      Vector newX = newY.cross(newZ);
       newY = newZ.cross(newX);
       newX.normalize();
       newY.normalize();
-      return newIMatrix3(newX, newY, newZ).getTransposed();
+      return newMatrix(newX, newY, newZ).getTransposed();
     } else {
-      IVector3 newX = newIVector3(0, 0, 1);
-      IVector3 newY = newZ.cross(newX);
+      Vector newX = newVector(0, 0, 1);
+      Vector newY = newZ.cross(newX);
       newX = newY.cross(newZ);
       newX.normalize();
       newY.normalize();
-      return newIMatrix3(newX, newY, newZ).getTransposed();
+      return newMatrix(newX, newY, newZ).getTransposed();
     }
   }
 
   /**
    * Create a 4x4 matrix by providing all coordinates.
    */
-  public static IMatrix4 newIMatrix4(double i, double j, double k, double l, double m, double n, double o, double p,
+  public static Matrix newMatrix(double i, double j, double k, double l, double m, double n, double o, double p,
       double q, double r, double s, double t, double u, double v, double w, double x) {
-    return newIMatrix4(VectorMatrixFactory.newIVector4(i, j, k, l), VectorMatrixFactory.newIVector4(m, n, o, p),
-        VectorMatrixFactory.newIVector4(q, r, s, t), VectorMatrixFactory.newIVector4(u, v, w, x));
+    return new Matrix(i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x);
   }
 
   /**
    * Create a 4x identity matrix.
    */
-  public static IMatrix4 newIMatrix4Identity() {
-    return newIMatrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-  }
-
-  /**
-   * Create a 4x4-matrix from a 3x3 matrix.
-   */
-  public static IMatrix4 newIMatrix4(IMatrix3 mat3) {
-    return newIMatrix4(mat3.get(0, 0), mat3.get(0, 1), mat3.get(0, 2), 0, mat3.get(1, 0), mat3.get(1, 1),
-        mat3.get(1, 2), 0, mat3.get(2, 0), mat3.get(2, 1), mat3.get(2, 2), 0, 0, 0, 0, 1);
-  }
-
-  /**
-   * Create a 4x4-matrix from a 3x3 matrix.
-   */
-  public static IMatrix4 newIMatrix4(IMatrix4 other) {
-    IMatrix4 result = newIMatrix4();
-    for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
-      for (int columnIndex = 0; columnIndex < 4; columnIndex++) {
-        result.set(rowIndex, columnIndex, other.get(rowIndex, columnIndex));
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Create a 4x4-matrix from a 3x3 matrix.
-   */
-  public static IMatrix4 newIMatrix4(IMatrix other) {
-    if (other.getNumberOfRows() != 4 || other.getNumberOfColumns() != 4) {
-      throw new IllegalArgumentException();
-    }
-    IMatrix4 result = newIMatrix4();
-    for (int rowIndex = 0; rowIndex < 4; rowIndex++) {
-      for (int columnIndex = 0; columnIndex < 4; columnIndex++) {
-        result.set(rowIndex, columnIndex, other.get(rowIndex, columnIndex));
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Copy-constructor.
-   * 
-   * @param other
-   * @return
-   */
-  public static IMatrix3 newIMatrix3(IMatrix other) {
-    IMatrix3 matrix = VectorMatrixFactory.newIMatrix3();
-    matrix.copy(other);
-    return matrix;
+  public static Matrix newMatrixIdentity() {
+    return newMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
   }
 
   /**
    * Make a homogenious translation matrix.
    */
-  public static IMatrix4 makeTranslationMatrix(IVector3 translation) {
-    IMatrix4 M = VectorMatrixFactory.newIMatrix4Identity();
+  public static Matrix makeTranslationMatrix(Vector translation) {
+    Matrix M = VectorMatrixFactory.newMatrixIdentity();
     M.set(0, 3, translation.get(0));
     M.set(1, 3, translation.get(1));
     M.set(2, 3, translation.get(2));
@@ -312,11 +250,39 @@ public class VectorMatrixFactory {
   /**
    * Make a homogenious scale matrix.
    */
-  public static IMatrix4 makeHomogeniousScaleMatrix(double scale) {
-    IMatrix4 M = VectorMatrixFactory.newIMatrix4Identity();
+  public static Matrix makeHomogeniousScaleMatrix(double scale) {
+    Matrix M = VectorMatrixFactory.newMatrixIdentity();
     M.set(0, 0, scale);
     M.set(1, 1, scale);
     M.set(2, 2, scale);
     return M;
+  }
+
+  public static Matrix dim3toDim4(Matrix other) {
+    if (other.getNumberOfRows() != 3 || other.getNumberOfColumns() != 3) {
+      throw new IllegalArgumentException();
+    }
+    Matrix result = new Matrix(4, 4);
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        result.set(row, col, other.get(row, col));
+      }
+    }
+    result.set(3, 3, 1);
+    return result;
+  }
+
+  public static Vector dim4toDim3(Vector v) {
+    if (v.getDimension() != 4) {
+      throw new IllegalArgumentException();
+    }
+    return VectorMatrixFactory.newVector(v.get(0), v.get(1), v.get(2));
+  }
+
+  public static Vector dim3toDim4(Vector v) {
+    if (v.getDimension() != 3) {
+      throw new IllegalArgumentException();
+    }
+    return VectorMatrixFactory.newVector(v.get(0), v.get(1), v.get(2), 1);
   }
 }

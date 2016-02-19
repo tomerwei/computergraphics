@@ -1,6 +1,6 @@
 package cgresearch.graphics.datastructures.implicitfunction;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 public class ImplicitFunctionGourSat implements IImplicitFunction3D {
 
@@ -19,7 +19,7 @@ public class ImplicitFunctionGourSat implements IImplicitFunction3D {
   }
 
   @Override
-  public double f(IVector3 p) {
+  public double f(Vector p) {
     double x = p.get(0);
     double y = p.get(1);
     double z = p.get(2);

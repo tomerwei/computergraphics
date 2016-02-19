@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.fileio.AsciiPointFormat;
@@ -328,7 +328,7 @@ public class Scanner {
 
 		//Scanning the real point
 		Point point;
-		IVector3 pointVector = scannerRegistrationInformation.convert2WorldCoordinates(new ScannerMeasurement(currentDistance, currentRotation, RESOLUTION*vertical));
+		Vector pointVector = scannerRegistrationInformation.convert2WorldCoordinates(new ScannerMeasurement(currentDistance, currentRotation, RESOLUTION*vertical));
 		point = new Point(pointVector);
 		cloud.addPoint(point);
 		cloud.updateRenderStructures();

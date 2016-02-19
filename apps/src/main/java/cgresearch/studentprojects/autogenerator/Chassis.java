@@ -1,18 +1,18 @@
 package cgresearch.studentprojects.autogenerator;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.primitives.Cuboid;
 
 public class Chassis extends Cuboid {
 	
 	private final int carVektor = 28;
 
-	private IVector3 center;
+	private Vector center;
 	private double breite;
 	private double hoehe;
 	private double laenge;
 
-	public Chassis(IVector3 center, double breite, double hoehe, double laenge) {
+	public Chassis(Vector center, double breite, double hoehe, double laenge) {
 		super(center, breite, hoehe, laenge);
 		this.breite = breite;
 		this.hoehe = hoehe;
@@ -44,11 +44,11 @@ public class Chassis extends Cuboid {
 		this.laenge = laenge;
 	}
 
-	public IVector3 getCenter() {
+	public Vector getCenter() {
 		return center;
 	}
 
-	public void setCenter(IVector3 center) {
+	public void setCenter(Vector center) {
 		this.center = center;
 	}
 

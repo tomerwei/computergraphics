@@ -6,7 +6,7 @@
 package cgresearch.graphics.algorithms;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.implicitfunction.IImplicitFunction3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -27,7 +27,7 @@ public class MarchingCubes {
   /**
    * Origin of the triangulated space (lower-left corner).
    */
-  private IVector3 origin = VectorMatrixFactory.newIVector3(-2, -2, -2);
+  private Vector origin = VectorMatrixFactory.newVector(-2, -2, -2);
 
   /**
    * Length (in all spatial directions) of the triangulated space
@@ -50,7 +50,7 @@ public class MarchingCubes {
    * @param resolution
    *          Inital value for the resolution.
    */
-  public MarchingCubes(int resolution, IVector3 lowerLeft, double width) {
+  public MarchingCubes(int resolution, Vector lowerLeft, double width) {
     this.resolution = resolution;
     this.length = width;
     this.origin.copy(lowerLeft);
@@ -70,21 +70,21 @@ public class MarchingCubes {
     for (int i = 0; i < resolution; i++) {
       for (int j = 0; j < resolution; j++) {
         for (int k = 0; k < resolution; k++) {
-          IVector3 p1 = origin.add(VectorMatrixFactory.newIVector3(i * delta, j * delta, k * delta));
+          Vector p1 = origin.add(VectorMatrixFactory.newVector(i * delta, j * delta, k * delta));
 
-          IVector3 p2 = origin.add(VectorMatrixFactory.newIVector3((i + 1) * delta, j * delta, k * delta));
+          Vector p2 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, j * delta, k * delta));
 
-          IVector3 p3 = origin.add(VectorMatrixFactory.newIVector3((i + 1) * delta, (j + 1) * delta, k * delta));
+          Vector p3 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, (j + 1) * delta, k * delta));
 
-          IVector3 p4 = origin.add(VectorMatrixFactory.newIVector3(i * delta, (j + 1) * delta, k * delta));
+          Vector p4 = origin.add(VectorMatrixFactory.newVector(i * delta, (j + 1) * delta, k * delta));
 
-          IVector3 p5 = origin.add(VectorMatrixFactory.newIVector3(i * delta, j * delta, (k + 1) * delta));
+          Vector p5 = origin.add(VectorMatrixFactory.newVector(i * delta, j * delta, (k + 1) * delta));
 
-          IVector3 p6 = origin.add(VectorMatrixFactory.newIVector3((i + 1) * delta, j * delta, (k + 1) * delta));
+          Vector p6 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, j * delta, (k + 1) * delta));
 
-          IVector3 p7 = origin.add(VectorMatrixFactory.newIVector3((i + 1) * delta, (j + 1) * delta, (k + 1) * delta));
+          Vector p7 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, (j + 1) * delta, (k + 1) * delta));
 
-          IVector3 p8 = origin.add(VectorMatrixFactory.newIVector3(i * delta, (j + 1) * delta, (k + 1) * delta));
+          Vector p8 = origin.add(VectorMatrixFactory.newVector(i * delta, (j + 1) * delta, (k + 1) * delta));
 
           createTriangulation(p1, p2, p3, p4, p5, p6, p7, p8);
         }
@@ -111,8 +111,8 @@ public class MarchingCubes {
    * @param p7
    * @param p8
    */
-  private void createTriangulation(IVector3 p1, IVector3 p2, IVector3 p3, IVector3 p4, IVector3 p5, IVector3 p6,
-      IVector3 p7, IVector3 p8) {
+  private void createTriangulation(Vector p1, Vector p2, Vector p3, Vector p4, Vector p5, Vector p6,
+      Vector p7, Vector p8) {
     double v1 = implicitFunction.f(p1);
     double v2 = implicitFunction.f(p2);
     double v3 = implicitFunction.f(p3);
@@ -132,8 +132,8 @@ public class MarchingCubes {
    * @param v1
    *          ... v8: Function values at the corner points.
    */
-  public static ITriangleMesh createTriangles(IVector3 p1, IVector3 p2, IVector3 p3, IVector3 p4, IVector3 p5,
-      IVector3 p6, IVector3 p7, IVector3 p8, double v1, double v2, double v3, double v4, double v5, double v6,
+  public static ITriangleMesh createTriangles(Vector p1, Vector p2, Vector p3, Vector p4, Vector p5,
+      Vector p6, Vector p7, Vector p8, double v1, double v2, double v3, double v4, double v5, double v6,
       double v7, double v8) {
 
     ITriangleMesh mesh = new TriangleMesh();
@@ -156,12 +156,12 @@ public class MarchingCubes {
         int edgeIndex0 = faces[faceIndex + i * 3];
         int edgeIndex1 = faces[faceIndex + i * 3 + 1];
         int edgeIndex2 = faces[faceIndex + i * 3 + 2];
-        IVector3 pA = getEdgePoint(edgeIndex0, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
-        IVector3 pB = getEdgePoint(edgeIndex1, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
-        IVector3 pC = getEdgePoint(edgeIndex2, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
-        int a = mesh.addVertex(new Vertex(pA, VectorMatrixFactory.newIVector3(1, 0, 0)));
-        int b = mesh.addVertex(new Vertex(pB, VectorMatrixFactory.newIVector3(1, 0, 0)));
-        int c = mesh.addVertex(new Vertex(pC, VectorMatrixFactory.newIVector3(1, 0, 0)));
+        Vector pA = getEdgePoint(edgeIndex0, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
+        Vector pB = getEdgePoint(edgeIndex1, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
+        Vector pC = getEdgePoint(edgeIndex2, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
+        int a = mesh.addVertex(new Vertex(pA, VectorMatrixFactory.newVector(1, 0, 0)));
+        int b = mesh.addVertex(new Vertex(pB, VectorMatrixFactory.newVector(1, 0, 0)));
+        int c = mesh.addVertex(new Vertex(pC, VectorMatrixFactory.newVector(1, 0, 0)));
         Triangle t = new Triangle(a, b, c);
         mesh.addTriangle(t);
       }
@@ -192,8 +192,8 @@ public class MarchingCubes {
    * @param v8
    * @return
    */
-  private static IVector3 getEdgePoint(int edgeIndex, IVector3 p1, IVector3 p2, IVector3 p3, IVector3 p4, IVector3 p5,
-      IVector3 p6, IVector3 p7, IVector3 p8, double v1, double v2, double v3, double v4, double v5, double v6,
+  private static Vector getEdgePoint(int edgeIndex, Vector p1, Vector p2, Vector p3, Vector p4, Vector p5,
+      Vector p6, Vector p7, Vector p8, double v1, double v2, double v3, double v4, double v5, double v6,
       double v7, double v8) {
     if (edgeIndex == 0) {
       return interpolate(p1, p2, v1, v2);
@@ -231,10 +231,10 @@ public class MarchingCubes {
    * @param valueQ
    * @return
    */
-  private static IVector3 interpolate(IVector3 p, IVector3 q, double valueP, double valueQ) {
+  private static Vector interpolate(Vector p, Vector q, double valueP, double valueQ) {
     float lambda = (float) (Math.abs(valueP / (valueQ - valueP)));
-    IVector3 xP = p.multiply(1.0f - lambda);
-    IVector3 xQ = q.multiply(lambda);
+    Vector xP = p.multiply(1.0f - lambda);
+    Vector xQ = q.multiply(lambda);
     return xP.add(xQ);
   }
 

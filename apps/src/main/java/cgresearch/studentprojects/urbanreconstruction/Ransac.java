@@ -3,8 +3,7 @@ package cgresearch.studentprojects.urbanreconstruction;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.Vector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
@@ -47,14 +46,14 @@ public class Ransac {
 	}
 
 	public void runRansac(List<Point> points) {
-		IVector3 norm_s = new Vector3();
+		Vector norm_s = new Vector(3);
 
 		int numberOfPoints = points.size();
 		// System.out.println("Number of points: " + numberOfPoints);
 
 		int bestSupport = 0;
-		Plane bestPlane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0),
-				VectorMatrixFactory.newIVector3(0, 0, 0));
+		Plane bestPlane = new Plane(VectorMatrixFactory.newVector(0, 0, 0),
+				VectorMatrixFactory.newVector(0, 0, 0));
 		int i = 0;
 		double e = 1 - (double) forseeable_support / (double) numberOfPoints;
 		// System.out.println("e: " + e);
@@ -172,11 +171,11 @@ public class Ransac {
 		// Plane:
 		// Ax + By + Cz + D = 0;
 
-		IVector3 norm = new Vector3(A, B, C);
+		Vector norm = new Vector(A, B, C);
 		// System.out.println("A = " + A);
 		// System.out.println("B = " + B);
 		// System.out.println("C = " + C);
-		IVector3 point = new Vector3(x1, x2, x3);
+		Vector point = new Vector(x1, x2, x3);
 		// System.out.println("x1 = " + x1);
 		// System.out.println("x2 = " + x2);
 		// System.out.println("x3 = " + x3);
@@ -212,14 +211,14 @@ public class Ransac {
 		ny = y / l;
 		nz = z / l;
 
-		IVector3 norm = VectorMatrixFactory.newIVector3(nx, ny, nz);
+		Vector norm = VectorMatrixFactory.newVector(nx, ny, nz);
 		this.plane.setNormal(norm);
 
 	}
 
 	public IPointCloud getResult(List<Point> points) {
 		IPointCloud result = new PointCloud();
-		IVector3 norm_s = this.plane.getNormal();
+		Vector norm_s = this.plane.getNormal();
 		normalize();
 
 		for (int i = 0; i < points.size(); i++) {
@@ -244,12 +243,12 @@ public class Ransac {
 
 		// Ransac r = new Ransac(2500, 0.002);
 		//
-		// Point x = new Point(new Vector3(-1, 8, 0), new Vector3(), new
-		// Vector3());
-		// Point z = new Point(new Vector3(2, 4, -3), new Vector3(), new
-		// Vector3());
-		// Point y = new Point(new Vector3(-1, 9, 2), new Vector3(), new
-		// Vector3());
+		// Point x = new Point(new Vector(-1, 8, 0), new Vector(), new
+		// Vector());
+		// Point z = new Point(new Vector(2, 4, -3), new Vector(), new
+		// Vector());
+		// Point y = new Point(new Vector(-1, 9, 2), new Vector(), new
+		// Vector());
 		//
 		// r.findPlane(x, y, z);
 		// r.normalize();

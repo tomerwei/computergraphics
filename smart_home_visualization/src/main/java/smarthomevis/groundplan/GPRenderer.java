@@ -8,8 +8,8 @@ import org.kabeja.dxf.DXFLine;
 import org.kabeja.dxf.helpers.Point;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.Vector3;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.linesegments.LineSegments;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -98,7 +98,7 @@ public class GPRenderer
 	mesh.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	// mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 	mesh.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newIVector3(Material.PALETTE1_COLOR3));
+		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR3));
 	mesh.getMaterial().setRenderMode(Normals.PER_FACET);
 	mesh.computeTriangleNormals();
 	mesh.computeVertexNormals();
@@ -110,15 +110,15 @@ public class GPRenderer
 	{
 	GPConfig gpConfig = this.data.getGPConfig();
 	
-	IVector3 start = l.getStart();
+	Vector start = l.getStart();
 	System.out.println("StartPoint: " + start.toString(3));
-	IVector3 end = l.getEnd();
+	Vector end = l.getEnd();
 	System.out.println("EndPoint: " + end.toString(3));
 	
-	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
+	Vector wallTopStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 		
-	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
+	Vector wallTopEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 		
 	int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
@@ -140,13 +140,13 @@ public class GPRenderer
 	GPConfig gpConfig = this.data.getGPConfig();
 	
 	// Die oberen und unteren Ortsvektoren der Wand erzeugen
-	IVector3 start = l.getStart();
-	IVector3 end = l.getEnd();
+	Vector start = l.getStart();
+	Vector end = l.getEnd();
 	
-	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
+	Vector wallTopStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 		
-	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
+	Vector wallTopEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 		
 	int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
@@ -155,14 +155,14 @@ public class GPRenderer
 	int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
 	
 	// Die oberen und unteren Ortsvektoren des Fensters erzeugen
-	IVector3 bottomWindowStart = new Vector3(start.get(0), start.get(1),
+	Vector bottomWindowStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
-	IVector3 bottomWindowEnd = new Vector3(end.get(0), end.get(1),
+	Vector bottomWindowEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
 		
-	IVector3 topWindowStart = new Vector3(start.get(0), start.get(1),
+	Vector topWindowStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
-	IVector3 topWindowEnd = new Vector3(end.get(0), end.get(1),
+	Vector topWindowEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
 		
 	int windowBottomStartIndex = mesh.addVertex(new Vertex(bottomWindowStart));
@@ -191,19 +191,19 @@ public class GPRenderer
 	{
 	GPConfig gpConfig = this.data.getGPConfig();
 	
-	IVector3 start = l.getStart();
-	IVector3 end = l.getEnd();
+	Vector start = l.getStart();
+	Vector end = l.getEnd();
 	
 	// Die oberen Ortsvektoren der Wand erzeugen
-	IVector3 wallTopStart = new Vector3(start.get(0), start.get(1),
+	Vector wallTopStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-	IVector3 wallTopEnd = new Vector3(end.get(0), end.get(1),
+	Vector wallTopEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 		
 	// Die Ortsvektoren der Tuer erzeugen
-	IVector3 doorStart = new Vector3(start.get(0), start.get(1),
+	Vector doorStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
-	IVector3 doorEnd = new Vector3(end.get(0), end.get(1),
+	Vector doorEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
 		
 	int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
@@ -270,7 +270,7 @@ public class GPRenderer
 		
 	segment.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	segment.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newIVector3(Material.PALETTE1_COLOR0));
+		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR0));
 		
 	return new CgNode(segment, layerName);
 	}
@@ -281,19 +281,19 @@ public class GPRenderer
 	GPConfig gpConfig = this.data.getGPConfig();
 	
 	// zuerst die Bodenlinie erzeugen
-	IVector3 start = line.getStart();
+	Vector start = line.getStart();
 	int a = segment.addPoint(start);
-	IVector3 end = line.getEnd();
+	Vector end = line.getEnd();
 	int b = segment.addPoint(end);
 	
 	segment.addLine(a, b);
 	
 	// die obere Wandlinie erzeugen
 	
-	IVector3 upperStart = new Vector3(start.get(0), start.get(1),
+	Vector upperStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 		
-	IVector3 upperEnd = new Vector3(end.get(0), end.get(1),
+	Vector upperEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 		
 	int c = segment.addPoint(upperStart);
@@ -314,17 +314,17 @@ public class GPRenderer
 	GPConfig gpConfig = this.data.getGPConfig();
 	
 	// zuerst die untere Wandlinie erzeugen
-	IVector3 start = line.getStart();
+	Vector start = line.getStart();
 	int bottomWallStartIndex = segment.addPoint(start);
-	IVector3 end = line.getEnd();
+	Vector end = line.getEnd();
 	int bottomWallEndIndex = segment.addPoint(end);
 	
 	segment.addLine(bottomWallStartIndex, bottomWallEndIndex);
 	
 	// die untere Linie des Fensters erzeugen
-	IVector3 bottomWindowStart = new Vector3(start.get(0), start.get(1),
+	Vector bottomWindowStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
-	IVector3 bottomWindowEnd = new Vector3(end.get(0), end.get(1),
+	Vector bottomWindowEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
 	int bottomWindowStartIndex = segment.addPoint(bottomWindowStart);
 	int bottomWindowEndIndex = segment.addPoint(bottomWindowEnd);
@@ -332,9 +332,9 @@ public class GPRenderer
 	segment.addLine(bottomWindowStartIndex, bottomWindowEndIndex);
 	
 	// die obere Linie des Fensters erzeugen
-	IVector3 topWindowStart = new Vector3(start.get(0), start.get(1),
+	Vector topWindowStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
-	IVector3 topWindowEnd = new Vector3(end.get(0), end.get(1),
+	Vector topWindowEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
 	int topWindowStartIndex = segment.addPoint(topWindowStart);
 	int topWindowEndIndex = segment.addPoint(topWindowEnd);
@@ -342,10 +342,10 @@ public class GPRenderer
 	segment.addLine(topWindowStartIndex, topWindowEndIndex);
 	
 	// die obere Linie der Wand erzeugen
-	IVector3 topWallStart = new Vector3(start.get(0), start.get(1),
+	Vector topWallStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 	int topWallStartIndex = segment.addPoint(topWallStart);
-	IVector3 topWallEnd = new Vector3(end.get(0), end.get(1),
+	Vector topWallEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 	int topWallEndIndex = segment.addPoint(topWallEnd);
 	
@@ -362,15 +362,15 @@ public class GPRenderer
 	{
 	GPConfig gpConfig = this.data.getGPConfig();
 	
-	IVector3 start = line.getStart();
+	Vector start = line.getStart();
 	int startIndex = segment.addPoint(start);
-	IVector3 end = line.getEnd();
+	Vector end = line.getEnd();
 	int endIndex = segment.addPoint(end);
 	
 	// die obere Tuerlinie erzeugen
-	IVector3 topDoorStart = new Vector3(start.get(0), start.get(1),
+	Vector topDoorStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
-	IVector3 topDoorEnd = new Vector3(end.get(0), end.get(1),
+	Vector topDoorEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
 	int topDoorStartIndex = segment.addPoint(topDoorStart);
 	int topDoorEndIndex = segment.addPoint(topDoorEnd);
@@ -378,9 +378,9 @@ public class GPRenderer
 	segment.addLine(topDoorStartIndex, topDoorEndIndex);
 	
 	// die obere Wandlinie erzeugen
-	IVector3 topWallStart = new Vector3(start.get(0), start.get(1),
+	Vector topWallStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-	IVector3 topWallEnd = new Vector3(end.get(0), end.get(1),
+	Vector topWallEnd = new Vector(end.get(0), end.get(1),
 		end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
 	int topWallStartIndex = segment.addPoint(topWallStart);
 	int topWallEndIndex = segment.addPoint(topWallEnd);
@@ -432,7 +432,7 @@ public class GPRenderer
 		
 	wallSegment.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	wallSegment.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newIVector3(Material.PALETTE1_COLOR0));
+		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR0));
 		
 	return wallSegment;
 	}
@@ -482,7 +482,7 @@ public class GPRenderer
 		
 	unit.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	unit.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newIVector3(Material.PALETTE1_COLOR0));
+		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR0));
 	return unit;
 	}
 	
@@ -502,9 +502,9 @@ public class GPRenderer
 	Point startPoint = line.getStartPoint();
 	Point endPoint = line.getEndPoint();
 	
-	segments.addPoint(VectorMatrixFactory.newIVector3(startPoint.getX(),
+	segments.addPoint(VectorMatrixFactory.newVector(startPoint.getX(),
 		startPoint.getY(), startPoint.getZ()));
-	segments.addPoint(VectorMatrixFactory.newIVector3(endPoint.getX(),
+	segments.addPoint(VectorMatrixFactory.newVector(endPoint.getX(),
 		endPoint.getY(), endPoint.getZ()));
 		
 	segments.addLine(index, index + 1);

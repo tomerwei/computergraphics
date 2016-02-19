@@ -2,7 +2,7 @@ package cgresearch.projects.simulation;
 
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -59,7 +59,7 @@ public class ClothSimulation extends Simulation {
 
   private void initSceneClothWind() {
     int clothResolution = 20;
-    Cloth cloth = new Fabric(Fabric.Type.XY, clothResolution, 1.0, VectorMatrixFactory.newIVector3(0, 0, 0), 1);
+    Cloth cloth = new Fabric(Fabric.Type.XY, clothResolution, 1.0, VectorMatrixFactory.newVector(0, 0, 0), 1);
     setCloth(cloth);
     addFixedMassPoint(clothResolution - 1);
     addFixedMassPoint(clothResolution * clothResolution - 1);
@@ -73,12 +73,12 @@ public class ClothSimulation extends Simulation {
     double planeHeight = -0.5;
     int clothResolution = 20;
     Cloth cloth =
-        new Fabric(Fabric.Type.XZ, clothResolution, 1.0, VectorMatrixFactory.newIVector3(0, clothHeight, 0), 1);
+        new Fabric(Fabric.Type.XZ, clothResolution, 1.0, VectorMatrixFactory.newVector(0, clothHeight, 0), 1);
 
     setCloth(cloth);
-    addSceneObject(new CollidableSphere(VectorMatrixFactory.newIVector3(0, sphereHeight, 0), sphereRadius));
-    addSceneObject(new CollidablePlane(VectorMatrixFactory.newIVector3(0, planeHeight, 0),
-        VectorMatrixFactory.newIVector3(0, 1, 0)));
+    addSceneObject(new CollidableSphere(VectorMatrixFactory.newVector(0, sphereHeight, 0), sphereRadius));
+    addSceneObject(new CollidablePlane(VectorMatrixFactory.newVector(0, planeHeight, 0),
+        VectorMatrixFactory.newVector(0, 1, 0)));
   }
 
   public Cloth getCloth() {
@@ -86,13 +86,13 @@ public class ClothSimulation extends Simulation {
   }
 
   @Override
-  protected void preSimulationStep(List<IVector3> x, List<IVector3> v) {
+  protected void preSimulationStep(List<Vector> x, List<Vector> v) {
     // Make sure, the array have the correct size
     while (x.size() < cloth.getNumberOfMassPoints()) {
-      x.add(VectorMatrixFactory.newIVector3());
+      x.add(VectorMatrixFactory.newVector(3));
     }
     while (v.size() < cloth.getNumberOfMassPoints()) {
-      v.add(VectorMatrixFactory.newIVector3());
+      v.add(VectorMatrixFactory.newVector(3));
     }
     for (int massIndex = 0; massIndex < cloth.getNumberOfMassPoints(); massIndex++) {
       MassPoint massPoint = cloth.getMassPoint(massIndex);
@@ -102,7 +102,7 @@ public class ClothSimulation extends Simulation {
   }
 
   @Override
-  protected void postSimulationStep(List<IVector3> x, List<IVector3> v) {
+  protected void postSimulationStep(List<Vector> x, List<Vector> v) {
     // Update position and velocity
     for (int massIndex = 0; massIndex < cloth.getNumberOfMassPoints(); massIndex++) {
       MassPoint massPoint = cloth.getMassPoint(massIndex);
@@ -129,9 +129,9 @@ public class ClothSimulation extends Simulation {
     // Handle output
     ITriangleMesh frameMesh = new TriangleMesh(clothRestMesh);
     frameMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
-    frameMesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(0, 0, 0));
-    frameMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(1, 1, 1));
-    frameMesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+    frameMesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newVector(0, 0, 0));
+    frameMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(1, 1, 1));
+    frameMesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(0, 0, 0));
     CgNode frameNode = new CgNode(frameMesh, "frame" + getCurrentSimulationStep());
     getAnimationNode().addChild(frameNode);
 
@@ -165,7 +165,7 @@ public class ClothSimulation extends Simulation {
         Vertex vertex = new Vertex(getCloth().getMassPoint(index).getX());
         double u = (double) i / (double) (clothResolution - 1);
         double v = (double) j / (double) (clothResolution - 1);
-        clothRestMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(u, v, 0));
+        clothRestMesh.addTextureCoordinate(VectorMatrixFactory.newVector(u, v, 0));
         clothRestMesh.addVertex(vertex);
       }
     }
@@ -181,7 +181,7 @@ public class ClothSimulation extends Simulation {
     }
     clothRestMesh.computeTriangleNormals();
     clothRestMesh.computeVertexNormals();
-    clothRestMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.75));
+    clothRestMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.25, 0.25, 0.75));
     clothRestMesh.getMaterial().setRenderMode(Material.Normals.PER_VERTEX);
     String TEXTURE_CLOTH_ID = "TEXTURE_CLOTH_ID";
     ResourceManager.getTextureManagerInstance().addResource(TEXTURE_CLOTH_ID, new CgTexture("textures/cloth.png"));
@@ -190,7 +190,7 @@ public class ClothSimulation extends Simulation {
   }
 
   @Override
-  public IVector3 getMassPointPosition(int index) {
+  public Vector getMassPointPosition(int index) {
     return cloth.getMassPoint(index).getX();
   }
 }

@@ -40,7 +40,7 @@ public class SubdivisionFrame extends CgApplication {
     getCgRootNode().addChild(new CoordinateSystem(0.01));
 
     LightSource light = new LightSource(Type.POINT);
-    light.setPosition(VectorMatrixFactory.newIVector3(-5, -5, -5));
+    light.setPosition(VectorMatrixFactory.newVector(-5, -5, -5));
     getCgRootNode().addLight(light);
   }
 

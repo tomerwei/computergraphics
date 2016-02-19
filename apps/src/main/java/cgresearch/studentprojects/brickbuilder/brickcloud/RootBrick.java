@@ -8,10 +8,10 @@ package cgresearch.studentprojects.brickbuilder.brickcloud;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
@@ -23,7 +23,7 @@ public class RootBrick implements IBrick {
 	/**
 	 * Dimensions of the brick.
 	 */
-	private IVector3 dimensions;
+	private Vector dimensions;
 	/**
 	 * Model of the brick.
 	 */
@@ -31,18 +31,18 @@ public class RootBrick implements IBrick {
 	/**
 	 * Unit positions.
 	 */
-	private List<IVectorInt3> unitPos;
+	private List<VectorInt3> unitPos;
 	
-	public RootBrick(IVector3 dimensions, ITriangleMesh model) {
-		this.dimensions = VectorMatrixFactory.newIVector3(dimensions);
+	public RootBrick(Vector dimensions, ITriangleMesh model) {
+		this.dimensions = VectorMatrixFactory.newVector(dimensions);
 		this.model = model;
-		this.unitPos = new ArrayList<IVectorInt3>();
+		this.unitPos = new ArrayList<VectorInt3>();
 		this.unitPos.add(new VectorInt3(0, 0, 0));
 	}
 	
 	@Override
-	public IVector3 getDimensions() {
-		return VectorMatrixFactory.newIVector3(dimensions);
+	public Vector getDimensions() {
+		return VectorMatrixFactory.newVector(dimensions);
 	}
 
 	@Override
@@ -56,12 +56,12 @@ public class RootBrick implements IBrick {
 	}
 
 	@Override
-	public IVectorInt3 getResolution() {
+	public VectorInt3 getResolution() {
 		return new VectorInt3(1, 1, 1);
 	}
 
 	@Override
-	public List<IVectorInt3> getUnitPositions() {
+	public List<VectorInt3> getUnitPositions() {
 		return unitPos;
 	}
 }

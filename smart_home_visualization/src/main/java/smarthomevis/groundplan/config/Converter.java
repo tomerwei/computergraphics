@@ -163,9 +163,9 @@ public class Converter
 			Point endPoint = l.getEndPoint();
 			
 			GPLine surface = new GPLine(currentLineId,
-				VectorMatrixFactory.newIVector3(startPoint.getX() * scale,
+				VectorMatrixFactory.newVector(startPoint.getX() * scale,
 					startPoint.getY() * scale, startPoint.getZ() * scale),
-				VectorMatrixFactory.newIVector3(endPoint.getX() * scale,
+				VectorMatrixFactory.newVector(endPoint.getX() * scale,
 					endPoint.getY() * scale, endPoint.getZ() * scale));
 					
 			surface.setLineType(lineType);

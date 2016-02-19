@@ -25,10 +25,10 @@ public class PortalScene2DTest {
 	private PortalScene2D createDummyScene() {
 		PortalScene2D scene = new PortalScene2D();
 		scene.clear();
-		scene.addNode(VectorMatrixFactory.newIVector3(-0.5, 0, -0.5));
-		scene.addNode(VectorMatrixFactory.newIVector3(0.5, 0, -0.5));
-		scene.addNode(VectorMatrixFactory.newIVector3(0.5, 0, 0.5));
-		scene.addNode(VectorMatrixFactory.newIVector3(-0.5, 0, 0.5));
+		scene.addNode(VectorMatrixFactory.newVector(-0.5, 0, -0.5));
+		scene.addNode(VectorMatrixFactory.newVector(0.5, 0, -0.5));
+		scene.addNode(VectorMatrixFactory.newVector(0.5, 0, 0.5));
+		scene.addNode(VectorMatrixFactory.newVector(-0.5, 0, 0.5));
 		PortalEdge e01 = new PortalEdge(PortalEdge.State.WALL, 0, 1);
 		PortalEdge e12 = new PortalEdge(PortalEdge.State.WALL, 1, 2);
 		PortalEdge e23 = new PortalEdge(PortalEdge.State.WALL, 2, 3);
@@ -55,9 +55,9 @@ public class PortalScene2DTest {
 	public void testComputeStartCell() {
 		PortalScene2D scene = createDummyScene();
 		assertEquals(0, scene.getStartCellIndex(VectorMatrixFactory
-				.newIVector3(0, 0, -0.25)));
+				.newVector(0, 0, -0.25)));
 		assertEquals(1, scene.getStartCellIndex(VectorMatrixFactory
-				.newIVector3(0, 0, 0.25)));
+				.newVector(0, 0, 0.25)));
 	}
 
 	@Test
@@ -66,26 +66,26 @@ public class PortalScene2DTest {
 		assertEquals(
 				true,
 				scene.cellContainsPoint(scene.getCell(0),
-						VectorMatrixFactory.newIVector3(0, 0, -0.25)));
+						VectorMatrixFactory.newVector(0, 0, -0.25)));
 		assertEquals(
 				false,
 				scene.cellContainsPoint(scene.getCell(1),
-						VectorMatrixFactory.newIVector3(0, 0, -0.25)));
+						VectorMatrixFactory.newVector(0, 0, -0.25)));
 	}
 
 	@Test
 	public void testIntersectRays() {
-		Ray2D ray1 = new Ray2D(VectorMatrixFactory.newIVector3(1, 0, 1),
-				VectorMatrixFactory.newIVector3(4, 0, 2));
-		Ray2D ray2 = new Ray2D(VectorMatrixFactory.newIVector3(2, 0, 3),
-				VectorMatrixFactory.newIVector3(1, 0, -1));
+		Ray2D ray1 = new Ray2D(VectorMatrixFactory.newVector(1, 0, 1),
+				VectorMatrixFactory.newVector(4, 0, 2));
+		Ray2D ray2 = new Ray2D(VectorMatrixFactory.newVector(2, 0, 3),
+				VectorMatrixFactory.newVector(1, 0, -1));
 		assertEquals(0.5, ray1.intersect(ray2).lambda1, 1e-5);
 		assertEquals(1, ray1.intersect(ray2).lambda2, 1e-5);
 
-		Ray2D ray3 = new Ray2D(VectorMatrixFactory.newIVector3(1, 0, 1),
-				VectorMatrixFactory.newIVector3(1, 0, 1));
-		Ray2D ray4 = new Ray2D(VectorMatrixFactory.newIVector3(2, 0, 3),
-				VectorMatrixFactory.newIVector3(1, 0, 1));
+		Ray2D ray3 = new Ray2D(VectorMatrixFactory.newVector(1, 0, 1),
+				VectorMatrixFactory.newVector(1, 0, 1));
+		Ray2D ray4 = new Ray2D(VectorMatrixFactory.newVector(2, 0, 3),
+				VectorMatrixFactory.newVector(1, 0, 1));
 		assertEquals(null, ray3.intersect(ray4));
 	}
 
@@ -93,9 +93,9 @@ public class PortalScene2DTest {
 	public void testIntersectViewVolumeEdge() {
 		PortalScene2D scene = createDummyScene();
 		ViewVolume2D viewVolume = new ViewVolume2D(
-				VectorMatrixFactory.newIVector3(0, 0, -0.25),
-				VectorMatrixFactory.newIVector3(-1, 0, 1),
-				VectorMatrixFactory.newIVector3(1, 0, 1));
+				VectorMatrixFactory.newVector(0, 0, -0.25),
+				VectorMatrixFactory.newVector(-1, 0, 1),
+				VectorMatrixFactory.newVector(1, 0, 1));
 		scene.intersect(scene.getEdge(4), viewVolume);
 	}
 }

@@ -2,7 +2,7 @@ package cgresearch.rendering.jogl.core;
 
 import com.jogamp.opengl.GL2;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.material.CgGlslShader;
 
 /**
@@ -22,7 +22,7 @@ public class ShaderVariables {
   /**
    * Set the current camera position.
    */
-  public static void setCameraPosition(GL2 gl, CgGlslShader shader, IVector3 pos) {
+  public static void setCameraPosition(GL2 gl, CgGlslShader shader, Vector pos) {
     int location = gl.glGetUniformLocation(shader.getShaderProgram(), CAMERA_POSITION);
     gl.glUniform3f(location, (float) pos.get(0), (float) pos.get(1), (float) pos.get(2));
   }

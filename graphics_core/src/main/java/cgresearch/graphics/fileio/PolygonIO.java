@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.polygon.Polygon;
 
@@ -24,7 +24,7 @@ public class PolygonIO {
   /**
    * Remember the last point for relative coordinates.s
    */
-  private IVector3 lastPoint = VectorMatrixFactory.newIVector3(0, 0, 0);
+  private Vector lastPoint = VectorMatrixFactory.newVector(0, 0, 0);
 
   private Polygon polygon;
 
@@ -50,7 +50,7 @@ public class PolygonIO {
       // Read File Line By Line
       while ((strLine = br.readLine()) != null) {
         // Print the content on the console
-        IVector3 point = parseLine(strLine);
+        Vector point = parseLine(strLine);
         if (point != null) {
           polygon.addPoint(point);
           if (polygon.getNumPoints() > 1) {
@@ -76,7 +76,7 @@ public class PolygonIO {
   /**
    * Read line, convert to (2D) point.
    */
-  private IVector3 parseLine(String line) {
+  private Vector parseLine(String line) {
     String[] tokens = line.trim().split("\\s+");
     if (tokens.length != 3) {
       return null;
@@ -85,7 +85,7 @@ public class PolygonIO {
       double x = Double.valueOf(tokens[0].replace(',', '.'));
       double y = Double.valueOf(tokens[1].replace(',', '.'));
       double z = Double.valueOf(tokens[2].replace(',', '.'));
-      return VectorMatrixFactory.newIVector3(x, y, z);
+      return VectorMatrixFactory.newVector(x, y, z);
     } catch (NumberFormatException e) {
       return null;
     }
@@ -115,7 +115,7 @@ public class PolygonIO {
   /**
    * Create line for point in polygon file.
    */
-  private String toLine(IVector3 point) {
+  private String toLine(Vector point) {
     return String.format("%.5f %.5f %.5f", point.get(0), point.get(1), point.get(2));
   }
 
@@ -227,7 +227,7 @@ public class PolygonIO {
    * parser for next index, compute relative position if required.
    */
   public void addPointToPolygon(State state, String[] tokens, int tokenIndex, boolean relative) {
-    IVector3 point;
+    Vector point;
     point = readPoint(tokens[tokenIndex]);
     if (point != null) {
       if (relative) {
@@ -242,10 +242,10 @@ public class PolygonIO {
   /**
    * Parse point from String.
    */
-  private IVector3 readPoint(String coordinates) {
+  private Vector readPoint(String coordinates) {
     try {
       String[] tokens = coordinates.split("\\s*,\\s*");
-      return VectorMatrixFactory.newIVector3(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]), 0);
+      return VectorMatrixFactory.newVector(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]), 0);
     } catch (Exception e) {
       return null;
     }

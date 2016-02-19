@@ -13,7 +13,7 @@ import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.points.PointCloud;
 import cgresearch.graphics.material.Material;
@@ -171,7 +171,7 @@ public class RenderContentPointCloud extends JoglRenderContent {
   }
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners, boolean cameraPositionChanged) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners, boolean cameraPositionChanged) {
 
   }
 
@@ -180,8 +180,8 @@ public class RenderContentPointCloud extends JoglRenderContent {
     double scale = 0.005;
     gl.glBegin(GL2.GL_LINES);
     for (int pointIndex = 0; pointIndex < pointCloud.getNumberOfPoints(); pointIndex++) {
-      IVector3 pos = pointCloud.getPoint(pointIndex).getPosition();
-      IVector3 end = pos.add(pointCloud.getPoint(pointIndex).getNormal().multiply(scale));
+      Vector pos = pointCloud.getPoint(pointIndex).getPosition();
+      Vector end = pos.add(pointCloud.getPoint(pointIndex).getNormal().multiply(scale));
       gl.glVertex3fv(pos.floatData(), 0);
       gl.glVertex3fv(end.floatData(), 0);
     }

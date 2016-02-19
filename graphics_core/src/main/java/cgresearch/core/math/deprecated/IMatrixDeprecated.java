@@ -3,7 +3,11 @@
  * Hochschule für Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.core.math;
+package cgresearch.core.math.deprecated;
+
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 
 /**
  * Interface class for matrices in 4-space.
@@ -11,16 +15,17 @@ package cgresearch.core.math;
  * @author Philipp Jenke
  * 
  */
-public interface IMatrix4 extends IMatrix {
+public interface IMatrixDeprecated
+{
   /**
    * Set the row 'index'. Attentions: sets the reference, no copy!
    */
-  public void setRow(final int index, IVector4 row);
+  public void setRow(final int index, Vector row);
 
   /**
    * Compute the product of this matrix and a vector.
    */
-  public IVector4 multiply(final IVector other);
+  public Vector multiply(final Vector other);
 
   /**
    * Sets the value at row rowIndex and column columnIndex.
@@ -40,7 +45,7 @@ public interface IMatrix4 extends IMatrix {
   /**
    * Return the transposed of the matrix.
    */
-  public IMatrix4 getTransposed();
+  public Matrix getTransposed();
 
   /**
    * Return an array of row-first values.
@@ -50,15 +55,15 @@ public interface IMatrix4 extends IMatrix {
   /**
    * Multiply matrix with another matrix, return result.
    */
-  public IMatrix4 multiply(IMatrix other);
+  public Matrix multiply(Matrix other);
 
   /**
    * Return the i'th column
    */
-  public IVector4 getColumn(int i);
+  public Vector getColumn(int i);
 
   /**
    * Returns the inverse of the matrix, returns null if the computation failed.
    */
-  public IMatrix4 getInverse();
+  public Matrix getInverse();
 }

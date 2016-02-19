@@ -1,6 +1,6 @@
 package cgresearch.graphics.datastructures;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Superclass required to use containers for different vertex types.
@@ -12,6 +12,6 @@ public interface GenericVertex {
   /**
    * Returns the position of the vertex
    */
-  public IVector3 getPosition();
+  public Vector getPosition();
 
 }

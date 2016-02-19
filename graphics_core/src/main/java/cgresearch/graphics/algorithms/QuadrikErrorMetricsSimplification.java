@@ -7,10 +7,8 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IMatrix;
-import cgresearch.core.math.IVector;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.IVector4;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.GenericVertex;
@@ -29,7 +27,7 @@ public abstract class QuadrikErrorMetricsSimplification {
    * @author Philipp Jenke
    */
   class EdgeCollapse {
-    public EdgeCollapse(double error, IMatrix Q, IVector3 newPos) {
+    public EdgeCollapse(double error, Matrix Q, Vector newPos) {
       this.error = error;
       this.Q = Q;
       this.newPos = newPos;
@@ -43,18 +41,18 @@ public abstract class QuadrikErrorMetricsSimplification {
     /**
      * Quadric error metric
      */
-    public IMatrix Q;
+    public Matrix Q;
 
     /**
      * Optimal position after the collapse
      */
-    public IVector3 newPos;
+    public Vector newPos;
   }
 
   /**
    * List of QEMs for the points.
    */
-  protected Map<GenericVertex, IMatrix> pointQems = new HashMap<GenericVertex, IMatrix>();
+  protected Map<GenericVertex, Matrix> pointQems = new HashMap<GenericVertex, Matrix>();
 
   /**
    * Collapse information for the edge
@@ -92,7 +90,7 @@ public abstract class QuadrikErrorMetricsSimplification {
   /**
    * Compute the QEM for the vertex at the specified index (initialization).
    */
-  protected abstract IMatrix computePointQem(GenericVertex vertex);
+  protected abstract Matrix computePointQem(GenericVertex vertex);
 
   /**
    * Compute the result of a possible edge collapse of the specified edge
@@ -101,8 +99,8 @@ public abstract class QuadrikErrorMetricsSimplification {
   protected EdgeCollapse computeEdgeCollapseResult(GenericEdge edge) {
     GenericVertex p0 = edge.getStartVertex();
     GenericVertex p1 = edge.getEndVertex();
-    IMatrix qem = pointQems.get(p0).add(pointQems.get(p1));
-    IMatrix derivQem = VectorMatrixFactory.newIMatrix4(qem);
+    Matrix qem = pointQems.get(p0).add(pointQems.get(p1));
+    Matrix derivQem = VectorMatrixFactory.newMatrix(qem);
     derivQem.set(3, 0, 0);
     derivQem.set(3, 1, 0);
     derivQem.set(3, 2, 0);
@@ -110,25 +108,25 @@ public abstract class QuadrikErrorMetricsSimplification {
     double det = Math.abs(derivQem.getDeterminant());
     if (det > 1e-5) {
       // Matrix is invertible
-      IMatrix invQ = derivQem.getInverse();
-      IVector pos = invQ.multiply(VectorMatrixFactory.newIVector4(0, 0, 0, 1));
+      Matrix invQ = derivQem.getInverse();
+      Vector pos = invQ.multiply(VectorMatrixFactory.newVector(0, 0, 0, 1));
       double error = pos.multiply(qem.multiply(pos));
-      return new EdgeCollapse(error, qem, VectorMatrixFactory.newIVector3(pos.get(0), pos.get(1), pos.get(2)));
+      return new EdgeCollapse(error, qem, VectorMatrixFactory.newVector(pos.get(0), pos.get(1), pos.get(2)));
     } else {
       // Matrix cannot be inverted, use corner points or midpoint
-      List<IVector3> candidates = new ArrayList<IVector3>();
+      List<Vector> candidates = new ArrayList<Vector>();
       candidates.add(p0.getPosition());
       candidates.add(p1.getPosition());
       candidates.add((p0.getPosition().add(p1.getPosition())).multiply(0.5));
       double minError = Double.POSITIVE_INFINITY;
-      IVector3 minPos = null;
-      for (IVector3 p : candidates) {
-        IVector4 pos = p.makeHomogenious();
+      Vector minPos = null;
+      for (Vector p : candidates) {
+        Vector pos = VectorMatrixFactory.dim3toDim4(p);
         pos.set(3, 1);
         double error = pos.multiply(qem.multiply(pos));
         if (error < minError) {
           minError = error;
-          minPos = VectorMatrixFactory.newIVector3(pos.get(0), pos.get(1), pos.get(2));
+          minPos = VectorMatrixFactory.newVector(pos.get(0), pos.get(1), pos.get(2));
         }
       }
       return new EdgeCollapse(minError, qem, minPos);
@@ -179,8 +177,8 @@ public abstract class QuadrikErrorMetricsSimplification {
     // Old version without queue
     // double errorMin = Double.POSITIVE_INFINITY;
     // int optimalEdgeIndex = -1;
-    // IVector3 optimalPos = VectorMatrixFactory.newIVector3();
-    // IMatrix3 optimalQ = VectorMatrixFactory.newIMatrix3();
+    // Vector optimalPos = VectorMatrixFactory.newVector();
+    // Matrix optimalQ = VectorMatrixFactory.newMatrix();
     // for (int edgeIndex = 0; edgeIndex < polygon.getNumEdges(); edgeIndex++) {
     // ErrorComputationResult result = computeError(polygon.getEdge(edgeIndex));
     // if (result.error < errorMin) {
@@ -204,7 +202,7 @@ public abstract class QuadrikErrorMetricsSimplification {
   /**
    * Collapse the specified edge, provides the new vertex position.
    */
-  protected abstract GenericVertex collapse(GenericEdge edge, IVector3 newPos);
+  protected abstract GenericVertex collapse(GenericEdge edge, Vector newPos);
 
   /**
    * Color-code edge by error.
@@ -223,8 +221,8 @@ public abstract class QuadrikErrorMetricsSimplification {
     }
     for (int edgeIndex = 0; edgeIndex < getNumberOfEdges(); edgeIndex++) {
       EdgeCollapse result = computeEdgeCollapseResult(getEdge(edgeIndex));
-      IVector3 color =
-          VectorMatrixFactory.newIVector3(transferFunction((result.error - errorMin) / (errorMax - errorMin)), 0, 0);
+      Vector color =
+          VectorMatrixFactory.newVector(transferFunction((result.error - errorMin) / (errorMax - errorMin)), 0, 0);
       getEdge(edgeIndex).setColor(color);
     }
   }

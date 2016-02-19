@@ -18,12 +18,12 @@ public class Transformation extends ICgNodeContent {
   /**
    * Representation of the transformation as homogenious 4x4 matrix
    */
-  private IMatrix4 transformation = VectorMatrixFactory.newIMatrix4Identity();
+  private Matrix transformation = VectorMatrixFactory.newMatrixIdentity();
 
   /**
    * Transposed transformation.
    */
-  private IMatrix4 transposedTransformation = VectorMatrixFactory.newIMatrix4Identity();
+  private Matrix transposedTransformation = VectorMatrixFactory.newMatrixIdentity();
 
   /**
    * Constructor
@@ -64,7 +64,7 @@ public class Transformation extends ICgNodeContent {
   /**
    * Include a translation.
    */
-  public void addTranslation(IVector3 translation) {
+  public void addTranslation(Vector translation) {
     transformation = transformation.multiply(VectorMatrixFactory.makeTranslationMatrix(translation));
     updateTransposedTransformation();
   }
@@ -80,13 +80,13 @@ public class Transformation extends ICgNodeContent {
   /**
    * Include a transformation
    */
-  public void addTransformation(IMatrix3 transform) {
-    IMatrix4 homogeniousMatrix = transform.makeHomogenious();
+  public void addTransformation(Matrix transform) {
+    Matrix homogeniousMatrix = VectorMatrixFactory.dim3toDim4(transform);
     transformation = transformation.multiply(homogeniousMatrix);
     updateTransposedTransformation();
   }
 
-  public void multiplyTransformation(IMatrix4 transform) {
+  public void multiplyTransformation(Matrix transform) {
     transformation = transformation.multiply(transform);
     updateTransposedTransformation();
   }
@@ -94,28 +94,21 @@ public class Transformation extends ICgNodeContent {
   /**
    * @return
    */
-  public IMatrix4 getTransformation() {
+  public Matrix getTransformation() {
     return transformation;
   }
 
   /**
    * Return the transposed transformation
    */
-  public IMatrix4 getTransposedTransformation() {
+  public Matrix getTransposedTransformation() {
     return transposedTransformation;
   }
 
   /**
    * Returns the transformed vector as a Vector 4
    */
-  public IVector4 getTransformedVector4(IVector3 vector3) {
-    return transformation.multiply(vector3.getHomogenious());
-  }
-
-  /**
-   * Returns the transformed vector as a Vector 3
-   */
-  public IVector3 getTransformedVector3(IVector3 vector3) {
-    return getTransformedVector4(vector3).toVector3();
+  public Vector getTransformedVector(Vector other) {
+    return transformation.multiply(VectorMatrixFactory.dim3toDim4(other));
   }
 }

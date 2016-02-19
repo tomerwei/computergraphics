@@ -13,8 +13,8 @@ import cgresearch.apps.hlsvis.rabbitmq.RabbitMqCommunication;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
@@ -50,8 +50,8 @@ public class Package extends Movable {
 	/**
 	 * Temp vars to avoid instanciation
 	 */
-	private IVector3 v1 = VectorMatrixFactory.newIVector3(),
-			v2 = VectorMatrixFactory.newIVector3();
+	private Vector v1 = VectorMatrixFactory.newVector(3),
+			v2 = VectorMatrixFactory.newVector(3);
 	private double[] vd = new double[] { 0, 0 };
 
 	private Vehicle vehicle;
@@ -89,9 +89,9 @@ public class Package extends Movable {
 		packageMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 		packageMesh.getMaterial().setRenderMode(Normals.PER_FACET);
 		TriangleMeshTransformation.scale(packageMesh, VectorMatrixFactory
-				.newIVector3(packageSize, packageSize, packageSize));
+				.newVector(packageSize, packageSize, packageSize));
 		TriangleMeshTransformation.translate(packageMesh,
-				VectorMatrixFactory.newIVector3(0, packageSize / 2, 0));
+				VectorMatrixFactory.newVector(0, packageSize / 2, 0));
 		CgNode sphereNode = new CgNode(packageMesh, "mesh");
 		addChild(sphereNode);
 	}
@@ -118,23 +118,23 @@ public class Package extends Movable {
 		// packageMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE_PHONG);
 		// packageMesh.getMaterial().setRenderMode(Normals.PER_FACET);
 		// TriangleMeshTransformation.scale(packageMesh, VectorMatrixFactory
-		// .newIVector3(packageSize, packageSize, packageSize));
+		// .newVector(packageSize, packageSize, packageSize));
 		// TriangleMeshTransformation.translate(packageMesh,
-		// VectorMatrixFactory.newIVector3(0, packageSize / 2, 0));
+		// VectorMatrixFactory.newVector(0, packageSize / 2, 0));
 		// CgNode sphereNode = new CgNode(packageMesh, "mesh");
 
 		BoundingBox bb = node.getBoundingBox();
 		double scale = 1.0 / bb.getMaxExtend();
-		IVector3 translation = bb.getCenter().multiply(-1);
-		IMatrix3 R = VectorMatrixFactory.getRotationMatrix(
-				VectorMatrixFactory.newIVector3(0, 1, 0), -Math.PI / 2.0);
+		Vector translation = bb.getCenter().multiply(-1);
+		Matrix R = VectorMatrixFactory.getRotationMatrix(
+				VectorMatrixFactory.newVector(0, 1, 0), -Math.PI / 2.0);
 		for (int i = 0; i < node.getNumChildren(); i++) {
 			ICgNodeContent content = node.getChildNode(i).getContent();
 			ITriangleMesh packageMesh = (ITriangleMesh) content;
 			TriangleMeshTransformation.translate(packageMesh, translation);
 			TriangleMeshTransformation.scale(
 					packageMesh,
-					VectorMatrixFactory.newIVector3(scale * packageSize, scale
+					VectorMatrixFactory.newVector(scale * packageSize, scale
 							* packageSize, scale * packageSize));
 			TriangleMeshTransformation.multiply(packageMesh, R);
 		}
@@ -157,14 +157,14 @@ public class Package extends Movable {
 		City startCity = TransportNetwork.getCity(order.getStartLocation());
 		City destinationCity = TransportNetwork.getCity(order
 				.getTargetLocation());
-		path.add(VectorMatrixFactory.newIVector3(startCity.getCoords()[0], 0,
+		path.add(VectorMatrixFactory.newVector(startCity.getCoords()[0], 0,
 				startCity.getCoords()[1]));
-		path.add(VectorMatrixFactory.newIVector3(
+		path.add(VectorMatrixFactory.newVector(
 				destinationCity.getCoords()[0], 0,
 				destinationCity.getCoords()[1]));
 
 		// Set the orientation
-		IMatrix3 rotation = getOrientation();
+		Matrix rotation = getOrientation();
 		getTransformation().addTransformation(rotation);
 
 		int dauer = (int) ((order.getDeliveryTime().getTime() - order
@@ -305,13 +305,13 @@ public class Package extends Movable {
 
 				if (vehicle == Vehicle.TRUCK) {
 					transformation
-							.addTranslation(VectorMatrixFactory.newIVector3(
+							.addTranslation(VectorMatrixFactory.newVector(
 									coords[0],
 									heightField.getHeight(coords[0], coords[1]),
 									coords[1]));
 				} else if (vehicle == Vehicle.AIRPLANE) {
 					transformation.addTranslation(VectorMatrixFactory
-							.newIVector3(
+							.newVector(
 									coords[0],
 									computePlaneHeight(
 											getPathFraction(currentTime),

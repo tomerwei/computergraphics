@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -72,7 +72,7 @@ public class ObjFileReader {
   /**
    * List of all texture coordinates read from the OBJ file.
    */
-  private List<IVector3> textureCoordinates = new ArrayList<IVector3>();
+  private List<Vector> textureCoordinates = new ArrayList<Vector>();
 
   /**
    * Remember the directory of the input filename in order to read the material
@@ -209,7 +209,7 @@ public class ObjFileReader {
         }
 
         // Color
-        IVector3 diffuseColor = mat.getDiffuseColor();
+        Vector diffuseColor = mat.getDiffuseColor();
         if (diffuseColor != null) {
           currentMesh.getMaterial().setReflectionDiffuse(diffuseColor);
         }
@@ -262,7 +262,7 @@ public class ObjFileReader {
       v = getFloatValue(allCoords[2]);
     }
 
-    textureCoordinates.add(VectorMatrixFactory.newIVector3(u, v, 0));
+    textureCoordinates.add(VectorMatrixFactory.newVector(u, v, 0));
   }
 
   private float getFloatValue(String string) {
@@ -389,7 +389,7 @@ public class ObjFileReader {
       float x = Float.parseFloat(components[1]);
       float y = Float.parseFloat(components[2]);
       float z = Float.parseFloat(components[3]);
-      vertices.add(new Vertex(VectorMatrixFactory.newIVector3(x, y, z), VectorMatrixFactory.newIVector3(1, 0, 0)));
+      vertices.add(new Vertex(VectorMatrixFactory.newVector(x, y, z), VectorMatrixFactory.newVector(1, 0, 0)));
     }
   }
 

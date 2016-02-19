@@ -3,7 +3,7 @@ package cgresearch.studentprojects.autogenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
 
 public class Analyzer {
@@ -19,18 +19,18 @@ public class Analyzer {
 	private PCA pcaX = new PCA();
 	private PCA pcaY = new PCA();
 	private PCA pcaZ = new PCA();
-	private List<IVector> eigenX = new ArrayList<IVector>();
-	private List<IVector> eigenY = new ArrayList<IVector>();
-	private List<IVector> eigenZ = new ArrayList<IVector>();
-	private IVector valueX = new Vector(butVektor);
-	private IVector valueY = new Vector(butVektor);
-	private IVector valueZ = new Vector(butVektor);
-	private List<IVector> Bx = new ArrayList<IVector>();
-	private List<IVector> By = new ArrayList<IVector>();
-	private List<IVector> Bz = new ArrayList<IVector>();
-	private List<IVector> Btx = new ArrayList<IVector>();
-	private List<IVector> Bty = new ArrayList<IVector>();
-	private List<IVector> Btz = new ArrayList<IVector>();
+	private List<Vector> eigenX = new ArrayList<Vector>();
+	private List<Vector> eigenY = new ArrayList<Vector>();
+	private List<Vector> eigenZ = new ArrayList<Vector>();
+	private Vector valueX = new Vector(butVektor);
+	private Vector valueY = new Vector(butVektor);
+	private Vector valueZ = new Vector(butVektor);
+	private List<Vector> Bx = new ArrayList<Vector>();
+	private List<Vector> By = new ArrayList<Vector>();
+	private List<Vector> Bz = new ArrayList<Vector>();
+	private List<Vector> Btx = new ArrayList<Vector>();
+	private List<Vector> Bty = new ArrayList<Vector>();
+	private List<Vector> Btz = new ArrayList<Vector>();
 	private int dimension;
 
 	// public void applyPCA(Data2D data) {
@@ -45,7 +45,7 @@ public class Analyzer {
 		pcaX.clear();
 		System.out.println("X-Werte:");
 		i = 0;
-		for (IVector v : data.getX()) {
+		for (Vector v : data.getX()) {
 			pcaX.add(v);
 			System.out.println("Vektor " + i + ":");
 			System.out.println(v);
@@ -66,7 +66,7 @@ public class Analyzer {
 
 		Btx.clear();
 		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(butSkalar);
+			Vector v = new Vector(butSkalar);
 			for (int k = 0; k < butSkalar; k++) {
 				v.set(k, Bx.get(k).get(j));
 			}
@@ -75,7 +75,7 @@ public class Analyzer {
 		System.out.println("Btx dimension: " + Btx.size());
 
 		System.out.println("Eigenvektoren X:");
-		for (IVector v : eigenX) {
+		for (Vector v : eigenX) {
 			System.out.println("Eigevektor " + eigenX.indexOf(v) + ":");
 			System.out.println(v);
 		}
@@ -84,7 +84,7 @@ public class Analyzer {
 		pcaY.clear();
 		System.out.println("Y-Werte:");
 		i = 0;
-		for (IVector v : data.getY()) {
+		for (Vector v : data.getY()) {
 			pcaY.add(v);
 			System.out.println("Vektor " + i + ":");
 			System.out.println(v);
@@ -104,7 +104,7 @@ public class Analyzer {
 
 		Bty.clear();
 		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(butSkalar);
+			Vector v = new Vector(butSkalar);
 			for (int k = 0; k < butSkalar; k++) {
 				v.set(k, By.get(k).get(j));
 			}
@@ -113,7 +113,7 @@ public class Analyzer {
 		System.out.println("Bty dimension: " + Bty.size());
 
 		System.out.println("Eigenvektoren Y:");
-		for (IVector v : eigenY) {
+		for (Vector v : eigenY) {
 			System.out.println("Eigevektor " + eigenY.indexOf(v) + ":");
 			System.out.println(v);
 		}
@@ -122,7 +122,7 @@ public class Analyzer {
 		pcaZ.clear();
 		System.out.println("Z-Werte:");
 		i = 0;
-		for (IVector v : data.getZ()) {
+		for (Vector v : data.getZ()) {
 			pcaZ.add(v);
 			System.out.println("Vektor " + i + ":");
 			System.out.println(v);
@@ -142,7 +142,7 @@ public class Analyzer {
 
 		Btz.clear();
 		for (int j = 0; j < dimension; j++) {
-			IVector v = new Vector(butSkalar);
+			Vector v = new Vector(butSkalar);
 			for (int k = 0; k < butSkalar; k++) {
 				v.set(k, Bz.get(k).get(j));
 			}
@@ -151,7 +151,7 @@ public class Analyzer {
 		System.out.println("Btz dimension: " + Btz.size());
 
 		System.out.println("Eigenvektoren Z:");
-		for (IVector v : eigenZ) {
+		for (Vector v : eigenZ) {
 			System.out.println("Eigevektor " + eigenZ.indexOf(v) + ":");
 			System.out.println(v);
 		}
@@ -189,7 +189,7 @@ public class Analyzer {
 
 		// Btx.clear();
 		// for (int j = 0; j < dimension; j++) {
-		// IVector v = new Vector(carVektor);
+		// Vector v = new Vector(carVektor);
 		// for (int k = 0; k < carVektor; k++) {
 		// v.set(k, Bx.get(k).get(j));
 		// }
@@ -197,7 +197,7 @@ public class Analyzer {
 		// }
 		// Bty.clear();
 		// for (int j = 0; j < dimension; j++) {
-		// IVector v = new Vector(carVektor);
+		// Vector v = new Vector(carVektor);
 		// for (int k = 0; k < carVektor; k++) {
 		// v.set(k, By.get(k).get(j));
 		// }
@@ -205,7 +205,7 @@ public class Analyzer {
 		// }
 		// Btz.clear();
 		// for (int j = 0; j < dimension; j++) {
-		// IVector v = new Vector(carVektor);
+		// Vector v = new Vector(carVektor);
 		// for (int k = 0; k < carVektor; k++) {
 		// v.set(k, Bz.get(k).get(j));
 		// }
@@ -222,51 +222,51 @@ public class Analyzer {
 
 	}
 
-	public List<IVector> getEigenX() {
+	public List<Vector> getEigenX() {
 		return eigenX;
 	}
 
-	public void setEigenX(List<IVector> eigenX) {
+	public void setEigenX(List<Vector> eigenX) {
 		this.eigenX = eigenX;
 	}
 
-	public List<IVector> getEigenY() {
+	public List<Vector> getEigenY() {
 		return eigenY;
 	}
 
-	public void setEigenY(List<IVector> eigenY) {
+	public void setEigenY(List<Vector> eigenY) {
 		this.eigenY = eigenY;
 	}
 
-	public List<IVector> getEigenZ() {
+	public List<Vector> getEigenZ() {
 		return eigenZ;
 	}
 
-	public void setEigenZ(List<IVector> eigenZ) {
+	public void setEigenZ(List<Vector> eigenZ) {
 		this.eigenZ = eigenZ;
 	}
 
-	public IVector getValueX() {
+	public Vector getValueX() {
 		return valueX;
 	}
 
-	public void setValueX(IVector valueX) {
+	public void setValueX(Vector valueX) {
 		this.valueX = valueX;
 	}
 
-	public IVector getValueY() {
+	public Vector getValueY() {
 		return valueY;
 	}
 
-	public void setValueY(IVector valueY) {
+	public void setValueY(Vector valueY) {
 		this.valueY = valueY;
 	}
 
-	public IVector getValueZ() {
+	public Vector getValueZ() {
 		return valueZ;
 	}
 
-	public void setValueZ(IVector valueZ) {
+	public void setValueZ(Vector valueZ) {
 		this.valueZ = valueZ;
 	}
 
@@ -294,51 +294,51 @@ public class Analyzer {
 		this.pcaZ = pcaZ;
 	}
 
-	public List<IVector> getBx() {
+	public List<Vector> getBx() {
 		return Bx;
 	}
 
-	public void setBx(List<IVector> bx) {
+	public void setBx(List<Vector> bx) {
 		Bx = bx;
 	}
 
-	public List<IVector> getBy() {
+	public List<Vector> getBy() {
 		return By;
 	}
 
-	public void setBy(List<IVector> by) {
+	public void setBy(List<Vector> by) {
 		By = by;
 	}
 
-	public List<IVector> getBz() {
+	public List<Vector> getBz() {
 		return Bz;
 	}
 
-	public void setBz(List<IVector> bz) {
+	public void setBz(List<Vector> bz) {
 		Bz = bz;
 	}
 
-	public List<IVector> getBtx() {
+	public List<Vector> getBtx() {
 		return Btx;
 	}
 
-	public void setBtx(List<IVector> btx) {
+	public void setBtx(List<Vector> btx) {
 		Btx = btx;
 	}
 
-	public List<IVector> getBty() {
+	public List<Vector> getBty() {
 		return Bty;
 	}
 
-	public void setBty(List<IVector> bty) {
+	public void setBty(List<Vector> bty) {
 		Bty = bty;
 	}
 
-	public List<IVector> getBtz() {
+	public List<Vector> getBtz() {
 		return Btz;
 	}
 
-	public void setBtz(List<IVector> btz) {
+	public void setBtz(List<Vector> btz) {
 		Btz = btz;
 	}
 

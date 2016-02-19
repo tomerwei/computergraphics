@@ -60,16 +60,16 @@ public class ObjTriangleMesh extends CgApplication {
     getCgRootNode().clearLights();
 
     LightSource light = new LightSource(Type.POINT);
-    light.setPosition(VectorMatrixFactory.newIVector3(5, 5, 5));
-    light.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
-    light.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    light.setPosition(VectorMatrixFactory.newVector(5, 5, 5));
+    light.setDirection(VectorMatrixFactory.newVector(-1, -1, -1));
+    light.setColor(VectorMatrixFactory.newVector(1, 1, 1));
     // light.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light);
 
     LightSource light2 = new LightSource(Type.POINT);
-    light2.setPosition(VectorMatrixFactory.newIVector3(5, 5, -5));
-    light2.setDirection(VectorMatrixFactory.newIVector3(-1, -1, -1));
-    light2.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    light2.setPosition(VectorMatrixFactory.newVector(5, 5, -5));
+    light2.setDirection(VectorMatrixFactory.newVector(-1, -1, -1));
+    light2.setColor(VectorMatrixFactory.newVector(1, 1, 1));
     // light2.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light2);
   }
@@ -79,9 +79,9 @@ public class ObjTriangleMesh extends CgApplication {
     ITriangleMesh mesh = reader.read("meshes/nofretete/nofretete.stl");
     if (mesh != null) {
       mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-      mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(Material.PALETTE0_COLOR3));
-      mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE0_COLOR3));
-      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(1, 1, 1));
+      mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newVector(Material.PALETTE0_COLOR3));
+      mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(Material.PALETTE0_COLOR3));
+      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(1, 1, 1));
       getCgRootNode().addChild(new CgNode(mesh, "Nofretete"));
     }
   }
@@ -94,7 +94,7 @@ public class ObjTriangleMesh extends CgApplication {
       mesh.computeTriangleNormals();
       mesh.computeVertexNormals();
       mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
-      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(0, 0, 0));
       mesh.getMaterial().setTransparency(0.9);
       CgNode hulkNode = new CgNode(mesh, "hulk");
       getCgRootNode().addChild(hulkNode);
@@ -106,9 +106,9 @@ public class ObjTriangleMesh extends CgApplication {
     List<ITriangleMesh> meshes = reader.readFile("meshes/medival/cornerhouse/cornerhouse.obj");
     for (ITriangleMesh mesh : meshes) {
       mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
-      mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(1, 1, 1));
-      mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(1, 1, 1));
-      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0.05, 0.05, 0.05));
+      mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newVector(1, 1, 1));
+      mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(1, 1, 1));
+      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(0.05, 0.05, 0.05));
       // mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       CgNode houseNode = new CgNode(mesh, "medival house");
       getCgRootNode().addChild(houseNode);
@@ -118,11 +118,11 @@ public class ObjTriangleMesh extends CgApplication {
 
   public void loadPlaneWithBunny() {
     //getCgRootNode().setUseBlending(true);
-    Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
+    Plane plane = new Plane(VectorMatrixFactory.newVector(0, 0, 0), VectorMatrixFactory.newVector(0, 1, 0));
     plane.getMaterial().setReflectionAmbient(Material.PALETTE2_COLOR1);
     // plane.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR1);
-    plane.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0, 0, 0));
-    plane.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+    plane.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0, 0, 0));
+    plane.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(0, 0, 0));
     plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     plane.getMaterial().setSpecularShininess(100);
     plane.getMaterial().setTransparency(1);
@@ -135,15 +135,15 @@ public class ObjTriangleMesh extends CgApplication {
       ITriangleMesh bunny = meshes.get(0);
       bunny.fitToUnitBox();
       TriangleMeshTransformation.scale(bunny, 0.5);
-      TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newIVector3(-1, 0.26, -1));
+      TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newVector(-1, 0.26, -1));
       bunny.computeTriangleNormals();
       bunny.computeVertexNormals();
       bunny.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       bunny.getMaterial().setReflectionAmbient(Material.PALETTE1_COLOR2);
-      // bunny.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0,
+      // bunny.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0,
       // 0, 0));
       bunny.getMaterial().setReflectionDiffuse(Material.PALETTE1_COLOR2);
-      bunny.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(1, 1, 1));
+      bunny.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(1, 1, 1));
       //bunny.getMaterial().setTransparency(0.5);
       CgNode bunnyNode = new CgNode(bunny, "bunny");
       getCgRootNode().addChild(bunnyNode);
@@ -168,8 +168,8 @@ public class ObjTriangleMesh extends CgApplication {
 
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
-    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.75, 0.75, 0.75));
-    mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.75, 0.75, 0.75));
+    mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(0, 0, 0));
     getCgRootNode().addChild(new CgNode(mesh, "mesh"));
   }
 
@@ -205,7 +205,7 @@ public class ObjTriangleMesh extends CgApplication {
       // mesh.getMaterial().setTextureId(texId);
       mesh.fitToUnitBox();
       mesh.getMaterial().setShaderId(Material.SHADER_COLOR);
-      mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR2));
+      mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(Material.PALETTE2_COLOR2));
       NodeMerger.merge(mesh, 1e-5);
       mesh.computeTriangleNormals();
       mesh.computeVertexNormals();

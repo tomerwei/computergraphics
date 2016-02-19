@@ -1,6 +1,6 @@
 package cgresearch.rendering.jogl.camera;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.camera.CameraController;
@@ -27,8 +27,8 @@ public class CameraPathController extends CameraController {
 		AnimationTimer timer = AnimationTimer.getInstance();
 		float scale = timer.getMaxValue() - timer.getMinValue();
 		float t = (timer.getValue() - timer.getMinValue()) / scale;
-		IVector3 pos = cameraPathInterPolator.getInterpolatedPos(t);
-		IVector3 ref = cameraPathInterPolator.getInterpolatedRef(t);
+		Vector pos = cameraPathInterPolator.getInterpolatedPos(t);
+		Vector ref = cameraPathInterPolator.getInterpolatedRef(t);
 		Camera.getInstance().setEye(pos);
 		Camera.getInstance().setRef(ref);
 	}
@@ -40,24 +40,24 @@ public class CameraPathController extends CameraController {
 	private void createDummyPath() {
 		cameraPathInterPolator.clearKeyPoints();
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newIVector3(-1, 0.5, -1),
-				VectorMatrixFactory.newIVector3(0, 1, 0),
-				VectorMatrixFactory.newIVector3(0, 0, 0));
+				VectorMatrixFactory.newVector(-1, 0.5, -1),
+				VectorMatrixFactory.newVector(0, 1, 0),
+				VectorMatrixFactory.newVector(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newIVector3(-1, 1, 1),
-				VectorMatrixFactory.newIVector3(0, 1, 0),
-				VectorMatrixFactory.newIVector3(0, 0, 0));
+				VectorMatrixFactory.newVector(-1, 1, 1),
+				VectorMatrixFactory.newVector(0, 1, 0),
+				VectorMatrixFactory.newVector(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newIVector3(1, 0.5, 1),
-				VectorMatrixFactory.newIVector3(0, 1, 0),
-				VectorMatrixFactory.newIVector3(0, 0, 0));
+				VectorMatrixFactory.newVector(1, 0.5, 1),
+				VectorMatrixFactory.newVector(0, 1, 0),
+				VectorMatrixFactory.newVector(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newIVector3(1, 1, -1),
-				VectorMatrixFactory.newIVector3(0, 1, 0),
-				VectorMatrixFactory.newIVector3(0, 0, 0));
+				VectorMatrixFactory.newVector(1, 1, -1),
+				VectorMatrixFactory.newVector(0, 1, 0),
+				VectorMatrixFactory.newVector(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newIVector3(-1, 1, -1),
-				VectorMatrixFactory.newIVector3(0, 1, 0),
-				VectorMatrixFactory.newIVector3(0, 0, 0));
+				VectorMatrixFactory.newVector(-1, 1, -1),
+				VectorMatrixFactory.newVector(0, 1, 0),
+				VectorMatrixFactory.newVector(0, 0, 0));
 	}
 }

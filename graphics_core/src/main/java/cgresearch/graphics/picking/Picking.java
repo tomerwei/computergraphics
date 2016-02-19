@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.Ray3D;
 import cgresearch.core.math.VectorMatrixFactory;
@@ -187,9 +187,9 @@ public class Picking extends Observable {
 		PickingItem pickedItem = null;
 		double pickedDistance = -1;
 		for (PickingItem item : pickingItems) {
-			IVector3 u = item.getPosition().subtract(
+			Vector u = item.getPosition().subtract(
 					Camera.getInstance().getEye());
-			IVector3 v = ray.getDirection();
+			Vector v = ray.getDirection();
 			double angleRadiens = Math.acos(u.multiply(v)
 					/ (u.getNorm() * v.getNorm()));
 			double angleDegrees = Math.abs(MathHelpers
@@ -228,14 +228,14 @@ public class Picking extends Observable {
 	 */
 	private Ray3D getRayFromClickCoordinates(int x, int y, int width,
 			int height, double perspectiveAngle) {
-		IVector3 dir = Camera.getInstance().getRef()
+		Vector dir = Camera.getInstance().getRef()
 				.subtract(Camera.getInstance().getEye());
 		dir.normalize();
 		// points 'right'
-		IVector3 dx = dir.cross(Camera.getInstance().getUp());
+		Vector dx = dir.cross(Camera.getInstance().getUp());
 		dx.normalize();
 		// points 'down'
-		IVector3 dy = dir.cross(dx);
+		Vector dy = dir.cross(dx);
 		dy.normalize();
 
 		double ly = Math.tan(perspectiveAngle * Math.PI / (2.0 * 180.0));
@@ -253,7 +253,7 @@ public class Picking extends Observable {
 	public void moveX(float deltaX) {
 		PickingItem selectedItem = Picking.getInstance().getSelectedItem();
 		if (selectedItem != null) {
-			IVector3 dx = VectorMatrixFactory.newIVector3(1, 0, 0);
+			Vector dx = VectorMatrixFactory.newVector(1, 0, 0);
 			selectedItem.setPosition(selectedItem.getPosition().add(
 					dx.multiply(deltaX * scaling * 0.2)));
 
@@ -273,7 +273,7 @@ public class Picking extends Observable {
 	public void moveY(float deltaX) {
 		PickingItem selectedItem = Picking.getInstance().getSelectedItem();
 		if (selectedItem != null) {
-			IVector3 dy = VectorMatrixFactory.newIVector3(0, 1, 0);
+			Vector dy = VectorMatrixFactory.newVector(0, 1, 0);
 			selectedItem.setPosition(selectedItem.getPosition().add(
 					dy.multiply(deltaX * scaling * 0.2)));
 
@@ -288,7 +288,7 @@ public class Picking extends Observable {
 	public void moveZ(float deltaX) {
 		PickingItem selectedItem = Picking.getInstance().getSelectedItem();
 		if (selectedItem != null) {
-			IVector3 dz = VectorMatrixFactory.newIVector3(0, 0, 1);
+			Vector dz = VectorMatrixFactory.newVector(0, 0, 1);
 			selectedItem.setPosition(selectedItem.getPosition().add(
 					dz.multiply(deltaX * scaling * 0.2)));
 

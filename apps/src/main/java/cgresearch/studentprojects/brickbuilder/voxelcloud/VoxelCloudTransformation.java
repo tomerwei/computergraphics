@@ -8,7 +8,7 @@ package cgresearch.studentprojects.brickbuilder.voxelcloud;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 public class VoxelCloudTransformation {
@@ -59,7 +59,7 @@ public class VoxelCloudTransformation {
 				// go through axiz
 				VoxelType last = VoxelType.EXTERIOR;
 				for (pos[axiz] = 0; pos[axiz] < src.getResolutions().get()[axiz]; pos[axiz]++) {
-					IVectorInt3 v = new VectorInt3(pos[0], pos[1], pos[2]);
+					VectorInt3 v = new VectorInt3(pos[0], pos[1], pos[2]);
 					VoxelType t = src.getVoxelAt(v);
 					// if type changed
 					if (last != t) {
@@ -70,7 +70,7 @@ public class VoxelCloudTransformation {
 						}
 						// exterior => last one is surface
 						else if (t == VoxelType.EXTERIOR) {
-							IVectorInt3 vPrev = new VectorInt3(pos[0] - (axiz == 0 ? 1 : 0),
+							VectorInt3 vPrev = new VectorInt3(pos[0] - (axiz == 0 ? 1 : 0),
 									pos[1] - (axiz == 1 ? 1 : 0),
 									pos[2] - (axiz == 2 ? 1 : 0));
 							dest.setVoxelAt(vPrev, VoxelType.SURFACE);
@@ -152,7 +152,7 @@ public class VoxelCloudTransformation {
 		for (int z = 0; z < cloud.getResolutions().getZ(); z++) {
 			for (int y = 0; y < cloud.getResolutions().getY(); y++) {
 				for (int x = 0; x < cloud.getResolutions().getX(); x++) {
-					IVectorInt3 v = new VectorInt3(x, y, z);
+					VectorInt3 v = new VectorInt3(x, y, z);
 					if (cloud.getVoxelAt(v) != VoxelType.SURFACE)
 						cloud.clearVoxelColor(v);
 				}

@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 
@@ -33,8 +33,8 @@ public class BinaryPointsWriter {
 			for (int pointIndex = 0; pointIndex < pointCloud
 					.getNumberOfPoints(); pointIndex++) {
 				Point point = pointCloud.getPoint(pointIndex);
-				IVector3 pos = point.getPosition();
-				IVector3 normal = point.getNormal();
+				Vector pos = point.getPosition();
+				Vector normal = point.getNormal();
 				float value = (float) pos.get(0);
 				os.writeFloat(value);
 				value = (float) pos.get(1);

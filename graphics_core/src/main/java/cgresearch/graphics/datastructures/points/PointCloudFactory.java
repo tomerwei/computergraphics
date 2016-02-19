@@ -5,7 +5,7 @@
  */
 package cgresearch.graphics.datastructures.points;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.material.Material;
 
@@ -24,12 +24,12 @@ public class PointCloudFactory {
 		int NUMBER_OF_POINTS = 5000;
 		IPointCloud pointCloud = new PointCloud();
 		for (int i = 0; i < NUMBER_OF_POINTS; i++) {
-			IVector3 position = VectorMatrixFactory.newIVector3(
+			Vector position = VectorMatrixFactory.newVector(
 					Math.random() - 0.5, Math.random() - 0.5,
 					Math.random() - 0.5);
-			IVector3 color = VectorMatrixFactory.newIVector3(Math.random(),
+			Vector color = VectorMatrixFactory.newVector(Math.random(),
 					Math.random(), Math.random());
-			IVector3 normal = VectorMatrixFactory.newIVector3(Math.random(),
+			Vector normal = VectorMatrixFactory.newVector(Math.random(),
 					Math.random(), Math.random());
 			pointCloud.addPoint(new Point(position, color, normal));
 		}
@@ -39,7 +39,7 @@ public class PointCloudFactory {
 	/**
 	 * Create the triangle mesh for a sphere with given origin an radius.
 	 */
-	public static IPointCloud createSphere(IVector3 center, double radius,
+	public static IPointCloud createSphere(Vector center, double radius,
 			int resolution) {
 		IPointCloud pointCloud = new PointCloud();
 		int resolutionX = resolution;
@@ -51,12 +51,12 @@ public class PointCloudFactory {
 			for (int y = 0; y < resolutionY; y++) {
 				double phi = x * deltaX;
 				double theta = (y + 1) * deltaY;
-				IVector3 normal = VectorMatrixFactory.newIVector3(
+				Vector normal = VectorMatrixFactory.newVector(
 						radius * Math.sin(theta) * Math.cos(phi)
 								+ center.get(0), radius * Math.sin(theta)
 								* Math.sin(phi) + center.get(1),
 						radius * Math.cos(theta) + center.get(2));
-				IVector3 position = normal.multiply(radius).add(center);
+				Vector position = normal.multiply(radius).add(center);
 				Point point = new Point(position, Material.PALETTE2_COLOR2,
 						normal);
 				pointCloud.addPoint(point);

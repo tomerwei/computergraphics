@@ -42,7 +42,7 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.VectorMatrixFactory;
-import cgresearch.core.math.jama.Matrix;
+import Jama.Matrix;
 import cgresearch.graphics.bricks.CgApplication;
 
 
@@ -181,9 +181,9 @@ public class RegistrationButton extends IApplicationControllerGui {
 //	    // to radiens. Rotation axis: (1,1,1)
 //	    double rotationAngle = 10 * Math.PI / 180;
 //	    TriangleMeshTransformation.transform(cubeMeshRegister,
-//	        VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(1, 1, 1), rotationAngle));
+//	        VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newVector(1, 1, 1), rotationAngle));
 //	    // Optional: translation
-//	    TriangleMeshTransformation.translate(cubeMeshRegister, VectorMatrixFactory.newIVector3(0.2, 0.2, 0.2));
+//	    TriangleMeshTransformation.translate(cubeMeshRegister, VectorMatrixFactory.newVector(0.2, 0.2, 0.2));
 //	    registerPointCloud = TriangleMeshSampler.sample(cubeMeshRegister, 500);
 //	    registerPointCloud.getMaterial().setShaderId(Material.SHADER_COLOR);
 //	    // Set point color

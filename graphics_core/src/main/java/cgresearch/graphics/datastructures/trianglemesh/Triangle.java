@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -31,7 +31,7 @@ public class Triangle implements ITriangle {
   /**
    * Normal of the triangle, initialized with a default direction.
    */
-  private IVector3 normal = VectorMatrixFactory.newIVector3(1, 0, 0);
+  private Vector normal = VectorMatrixFactory.newVector(1, 0, 0);
 
   /**
    * Default constructor
@@ -85,7 +85,7 @@ public class Triangle implements ITriangle {
    * @param normal
    *          Initial value.
    */
-  public Triangle(int a, int b, int c, int tA, int tB, int tC, IVector3 normal) {
+  public Triangle(int a, int b, int c, int tA, int tB, int tC, Vector normal) {
     vertexIndices[0] = a;
     vertexIndices[1] = b;
     vertexIndices[2] = c;
@@ -108,7 +108,7 @@ public class Triangle implements ITriangle {
   /**
    * Getter.
    */
-  public IVector3 getNormal() {
+  public Vector getNormal() {
     return normal;
   }
 
@@ -151,7 +151,7 @@ public class Triangle implements ITriangle {
   /**
    * Setter.
    */
-  public void setNormal(IVector3 normal) {
+  public void setNormal(Vector normal) {
     this.normal = normal;
   }
 

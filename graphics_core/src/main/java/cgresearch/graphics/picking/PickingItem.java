@@ -1,6 +1,6 @@
 package cgresearch.graphics.picking;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 public class PickingItem {
@@ -18,12 +18,12 @@ public class PickingItem {
 	/**
 	 * Current position of the item;
 	 */
-	private IVector3 position = VectorMatrixFactory.newIVector3(0, 0, 0);
+	private Vector position = VectorMatrixFactory.newVector(0, 0, 0);
 
 	/**
 	 * Constructor.
 	 */
-	public PickingItem(IVector3 position) {
+	public PickingItem(Vector position) {
 		this.position.copy(position);
 		this.id = "ID" + idCounter;
 		idCounter++;
@@ -39,7 +39,7 @@ public class PickingItem {
 	/**
 	 * Getter.
 	 */
-	public IVector3 getPosition() {
+	public Vector getPosition() {
 		return position;
 	}
 
@@ -48,7 +48,7 @@ public class PickingItem {
 	 * 
 	 * @param position
 	 */
-	public void setPosition(IVector3 position) {
+	public void setPosition(Vector position) {
 		this.position.copy(position);
 	}
 }

@@ -1,6 +1,6 @@
 package cgresearch.graphics.scenegraph;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -22,17 +22,17 @@ public class LightSource {
   /**
    * Position in 3-space.
    */
-  private IVector3 position = VectorMatrixFactory.newIVector3();
+  private Vector position = VectorMatrixFactory.newVector(3);
 
   /**
    * Color of the light source
    */
-  private IVector3 color = VectorMatrixFactory.newIVector3(1, 1, 1);
+  private Vector color = VectorMatrixFactory.newVector(1, 1, 1);
 
   /**
    * Direction of the light (if required)
    */
-  private IVector3 direction = VectorMatrixFactory.newIVector3(0, 0, 0);
+  private Vector direction = VectorMatrixFactory.newVector(0, 0, 0);
 
   /**
    * Type of the light source.
@@ -72,19 +72,19 @@ public class LightSource {
     this.lightStrength = lightStrength;
   }
 
-  public IVector3 getPosition() {
+  public Vector getPosition() {
     return position;
   }
 
-  public IVector3 getDirection() {
+  public Vector getDirection() {
     return direction;
   }
 
-  public IVector3 getDiffuseColor() {
+  public Vector getDiffuseColor() {
     return color;
   }
-  
-  public IVector3 getSpecularColor() {
+
+  public Vector getSpecularColor() {
     return color;
   }
 
@@ -100,17 +100,17 @@ public class LightSource {
     return lightStrength;
   }
 
-  public LightSource setPosition(IVector3 position) {
+  public LightSource setPosition(Vector position) {
     this.position = position;
     return this;
   }
 
-  public LightSource setColor(IVector3 color) {
+  public LightSource setColor(Vector color) {
     this.color = color;
     return this;
   }
 
-  public LightSource setDirection(IVector3 direction) {
+  public LightSource setDirection(Vector direction) {
     this.direction = direction;
     return this;
   }

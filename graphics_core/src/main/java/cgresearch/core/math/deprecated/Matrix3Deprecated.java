@@ -3,7 +3,11 @@
  * Hochschule für Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.core.math;
+package cgresearch.core.math.deprecated;
+
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 
 /**
  * Interface class for matrices in 3-space.
@@ -11,26 +15,26 @@ package cgresearch.core.math;
  * @author Philipp Jenke
  * 
  */
-public interface IMatrix3 extends IMatrix {
+public interface Matrix3Deprecated {
   /**
    * Set the row 'index'. Attentions: sets the reference, no copy!
    */
-  public void setRow(final int rowIndex, IVector3 row);
+  public void setRow(final int rowIndex, Vector row);
 
   /**
    * Compute the product of this matrix and a vector.
    */
-  public IVector3 multiply(final IVector other);
+  public Vector multiply(final Vector other);
 
   /**
    * Getter.
    */
-  public IVector3 getRow(final int rowIndex);
+  public Vector getRow(final int rowIndex);
 
   /**
    * Getter
    */
-  public IVector3 getColumn(int columnIndex);
+  public Vector getColumn(int columnIndex);
 
   /**
    * Return the double array representing the matrix. Use with caution. Use
@@ -49,16 +53,9 @@ public interface IMatrix3 extends IMatrix {
   public double[] data4x4();
 
   /**
-   * Create a 4x4 homogenious matrix from a 3x3 matrix.
-   * 
-   * @return
-   */
-  public IMatrix4 makeHomogenious();
-
-  /**
    * Return the transposed of the matrix.
    */
-  public IMatrix3 getTransposed();
+  public Matrix getTransposed();
 
   /**
    * Set the value at the specified row and column index.
@@ -75,7 +72,7 @@ public interface IMatrix3 extends IMatrix {
   /**
    * Add another matrix, return the result.
    */
-  public IMatrix3 add(IMatrix vectorProduct);
+  public Matrix add(Matrix vectorProduct);
 
   /**
    * Getter for an individual values.
@@ -93,17 +90,17 @@ public interface IMatrix3 extends IMatrix {
    * 
    * @param rotation
    */
-  public void copy(IMatrix other);
+  public void copy(Matrix other);
 
   /**
    * Matrix multiplication.
    */
-  public IMatrix3 multiply(IMatrix other);
+  public Matrix multiply(Matrix other);
 
   /**
    * Return the inverse of the matrix, return null if not invertible.
    */
-  public IMatrix3 getInverse();
+  public Matrix getInverse();
 
   /**
    * Return the determinant of the matrix.
@@ -113,5 +110,5 @@ public interface IMatrix3 extends IMatrix {
   /**
    * Multiply with scalar.
    */
-  public IMatrix3 multiply(double d);
+  public Matrix multiply(double d);
 }

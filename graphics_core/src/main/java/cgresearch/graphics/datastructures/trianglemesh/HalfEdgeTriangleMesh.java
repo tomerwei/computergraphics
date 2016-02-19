@@ -5,7 +5,7 @@ import java.util.List;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
@@ -108,9 +108,9 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
       IVertex v1 = he.getStartVertex();
       IVertex v2 = he.getNext().getStartVertex();
       IVertex v3 = he.getNext().getNext().getStartVertex();
-      IVector3 u = v2.getPosition().subtract(v1.getPosition());
-      IVector3 v = v3.getPosition().subtract(v1.getPosition());
-      IVector3 normal = u.cross(v).getNormalized();
+      Vector u = v2.getPosition().subtract(v1.getPosition());
+      Vector v = v3.getPosition().subtract(v1.getPosition());
+      Vector normal = u.cross(v).getNormalized();
       facet.setNormal(normal);
     }
 
@@ -124,7 +124,7 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
     for (int vertexIndex = 0; vertexIndex < getNumberOfVertices(); vertexIndex++) {
       HalfEdgeVertex vertex = getVertex(vertexIndex);
       HalfEdge startHE = vertex.getHalfEdge();
-      IVector3 normal = startHE.getFacet().getNormal();
+      Vector normal = startHE.getFacet().getNormal();
       HalfEdge currentHE = startHE.getOpposite().getNext();
       // int numberOfAdjacentFacets = 1;
       while (currentHE != startHE) {
@@ -191,12 +191,12 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
   }
 
   @Override
-  public IVector3 getTextureCoordinate(int index) {
-    return VectorMatrixFactory.newIVector3(-1, -1, 0);
+  public Vector getTextureCoordinate(int index) {
+    return VectorMatrixFactory.newVector(-1, -1, 0);
   }
 
   @Override
-  public int addTextureCoordinate(IVector3 texCoord3f) {
+  public int addTextureCoordinate(Vector texCoord3f) {
     throw new UnsupportedOperationException("Method not implemented.", null);
   }
 
@@ -208,8 +208,8 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
   @Override
   public void fitToUnitBox() {
     BoundingBox bb = getBoundingBox();
-    IVector3 center = bb.getCenter();
-    IVector3 diagonal = bb.getUpperRight().subtract(bb.getLowerLeft());
+    Vector center = bb.getCenter();
+    Vector diagonal = bb.getUpperRight().subtract(bb.getLowerLeft());
     double scale = Math.max(Math.max(diagonal.get(MathHelpers.INDEX_0), diagonal.get(MathHelpers.INDEX_1)),
         diagonal.get(MathHelpers.INDEX_2));
     for (int i = 0; i < vertices.size(); i++) {

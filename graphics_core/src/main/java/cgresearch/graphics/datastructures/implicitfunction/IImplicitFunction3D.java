@@ -5,7 +5,7 @@
  */
 package cgresearch.graphics.datastructures.implicitfunction;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Parent interface for implicit functions.
@@ -22,6 +22,6 @@ public interface IImplicitFunction3D {
      *            The function is evaluated at this point.
      * @return Function value.
      */
-    public double f(IVector3 p);
+    public double f(Vector p);
 
 }

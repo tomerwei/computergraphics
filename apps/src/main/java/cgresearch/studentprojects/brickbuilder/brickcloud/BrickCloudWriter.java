@@ -15,7 +15,7 @@ import java.util.List;
 import cgresearch.core.logging.Logger;
 import cgresearch.graphics.fileio.ObjFileWriter;
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
  * Writes a brick cloud (+ brick set) into a file.
@@ -145,7 +145,7 @@ public class BrickCloudWriter {
 		writer.writeByte(BrickType.SPECIAL.ordinal());
 		writer.writeByte(brick.getBrickType().ordinal());
 		writer.writeShort(brick.getUnitPositions().size());
-		for (IVectorInt3 pos : brick.getUnitPositions()) {
+		for (VectorInt3 pos : brick.getUnitPositions()) {
 			writer.writeByte(pos.getX());
 			writer.writeByte(pos.getY());
 			writer.writeByte(pos.getZ());

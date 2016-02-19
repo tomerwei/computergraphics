@@ -125,12 +125,12 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     polygon.clear();
 
     // Square
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, -1, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, -0.5, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, 0.5, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, 1, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(1, 1, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(1, -1, 0));
+    polygon.addPoint(VectorMatrixFactory.newVector(-1, -1, 0));
+    polygon.addPoint(VectorMatrixFactory.newVector(-1, -0.5, 0));
+    polygon.addPoint(VectorMatrixFactory.newVector(-1, 0.5, 0));
+    polygon.addPoint(VectorMatrixFactory.newVector(-1, 1, 0));
+    polygon.addPoint(VectorMatrixFactory.newVector(1, 1, 0));
+    polygon.addPoint(VectorMatrixFactory.newVector(1, -1, 0));
 
     PolygonIO reader = new PolygonIO();
     polygon.copy(reader.readPolygon("polygons/hamburg.polygon"));

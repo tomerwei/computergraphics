@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -20,12 +20,12 @@ public class Arrow extends IPrimitive {
     /**
      * Start point of the arrow.
      */
-    public IVector3 start = VectorMatrixFactory.newIVector3(0, 0, 0);
+    public Vector start = VectorMatrixFactory.newVector(0, 0, 0);
 
     /**
      * End point of the arrow.
      */
-    public IVector3 end = VectorMatrixFactory.newIVector3(1, 0, 0);
+    public Vector end = VectorMatrixFactory.newVector(1, 0, 0);
 
     /**
      * Constructor.
@@ -36,7 +36,7 @@ public class Arrow extends IPrimitive {
     /**
      * Constructor.
      */
-    public Arrow(IVector3 start, IVector3 end) {
+    public Arrow(Vector start, Vector end) {
         this.start.copy(start);
         this.end.copy(end);
     }
@@ -44,14 +44,14 @@ public class Arrow extends IPrimitive {
     /**
      * Getter.
      */
-    public IVector3 getStart() {
+    public Vector getStart() {
         return start;
     }
 
     /**
      * Getter.
      */
-    public IVector3 getEnd() {
+    public Vector getEnd() {
         return end;
     }
 

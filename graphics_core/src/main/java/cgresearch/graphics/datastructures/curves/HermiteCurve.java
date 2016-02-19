@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.curves;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -27,8 +27,8 @@ public class HermiteCurve extends ICurve {
      * @param p1
      *            Interpolation position at 1
      */
-    public HermiteCurve(IVector3 p0, IVector3 m0, IVector3 m1, IVector3 p1) {
-        controlPoints = new IVector3[4];
+    public HermiteCurve(Vector p0, Vector m0, Vector m1, Vector p1) {
+        controlPoints = new Vector[4];
         controlPoints[0] = p0;
         controlPoints[1] = m0;
         controlPoints[2] = m1;
@@ -41,8 +41,8 @@ public class HermiteCurve extends ICurve {
      * @see edu.cg1.exercises.curves.ICurve#eval(double)
      */
     @Override
-    public IVector3 eval(double t) {
-        IVector3 result = VectorMatrixFactory.newIVector3(0, 0, 0);
+    public Vector eval(double t) {
+        Vector result = VectorMatrixFactory.newVector(0, 0, 0);
         for (int i = 0; i < 4; i++) {
             result = result.add(controlPoints[i].multiply(evalBasisFunction(i,
                     t)));
@@ -56,8 +56,8 @@ public class HermiteCurve extends ICurve {
      * @see edu.cg1.exercises.curves.ICurve#derivative(double)
      */
     @Override
-    public IVector3 derivative(double t) {
-        IVector3 result = VectorMatrixFactory.newIVector3(0, 0, 0);
+    public Vector derivative(double t) {
+        Vector result = VectorMatrixFactory.newVector(0, 0, 0);
         for (int i = 0; i < 4; i++) {
             result = result
                     .add(controlPoints[i].multiply(evalDerivative(i, t)));

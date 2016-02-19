@@ -8,7 +8,7 @@ package cgresearch.rendering.jogl.core;
 import java.util.Observable;
 import java.util.Observer;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
@@ -80,7 +80,7 @@ public class JoglRenderNode implements Observer {
   /**
    * Draw the content
    */
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners,
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners,
       boolean cameraPositionChanged) {
     if (cgNode == null || !cgNode.isVisible()) {
       return;

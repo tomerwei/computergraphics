@@ -3,9 +3,8 @@ package cgresearch.graphics.algorithms;
 import java.util.Arrays;
 import java.util.List;
 
-import cgresearch.core.math.IMatrix;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.IVector4;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.GenericVertex;
@@ -46,33 +45,33 @@ public class QuadricErrorMetricsSimplification2D extends QuadrikErrorMetricsSimp
   }
 
   @Override
-  protected IMatrix computePointQem(GenericVertex v) {
+  protected Matrix computePointQem(GenericVertex v) {
     if (!(v instanceof PolygonVertex)) {
       throw new IllegalArgumentException();
     }
     PolygonVertex vertex = (PolygonVertex) v;
-    IMatrix Q = initComputeEdgeQem(vertex.getIncomingEdge()).add(initComputeEdgeQem(vertex.getOutgoingEdge()));
+    Matrix Q = initComputeEdgeQem(vertex.getIncomingEdge()).add(initComputeEdgeQem(vertex.getOutgoingEdge()));
     return Q;
   }
 
   /**
    * Computes the initial QEM for an edge.
    */
-  private IMatrix initComputeEdgeQem(PolygonEdge edge) {
-    IVector3 p = edge.getStartVertex().getPosition();
-    IVector3 q = edge.getEndVertex().getPosition();
-    IVector3 perp = p.subtract(q);
-    IVector3 normal = VectorMatrixFactory.newIVector3(perp.get(1), -perp.get(0), 0);
+  private Matrix initComputeEdgeQem(PolygonEdge edge) {
+    Vector p = edge.getStartVertex().getPosition();
+    Vector q = edge.getEndVertex().getPosition();
+    Vector perp = p.subtract(q);
+    Vector normal = VectorMatrixFactory.newVector(perp.get(1), -perp.get(0), 0);
     normal.normalize();
     double distance = normal.multiply(p);
-    IVector4 v = VectorMatrixFactory.newIVector3(normal).makeHomogenious();
+    Vector v = VectorMatrixFactory.newVector(normal.get(0), normal.get(1), normal.get(2), 1);
     v.set(3, -distance);
-    IMatrix Q = v.innerProduct(v);
+    Matrix Q = v.innerProduct(v);
     return Q;
   }
 
   @Override
-  protected GenericVertex collapse(GenericEdge edge, IVector3 newPos) {
+  protected GenericVertex collapse(GenericEdge edge, Vector newPos) {
     if (!(edge instanceof PolygonEdge)) {
       throw new IllegalArgumentException();
     }

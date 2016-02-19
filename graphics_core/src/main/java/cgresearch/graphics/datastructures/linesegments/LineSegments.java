@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
 /**
@@ -19,7 +19,7 @@ public class LineSegments extends ICgNodeContent {
   /**
    * Container for the points.
    */
-  private List<IVector3> points = new ArrayList<IVector3>();
+  private List<Vector> points = new ArrayList<Vector>();
 
   /**
    * Container for the lines (pairs of indices).
@@ -29,7 +29,7 @@ public class LineSegments extends ICgNodeContent {
   public LineSegments() {
   }
 
-  public int addPoint(IVector3 p) {
+  public int addPoint(Vector p) {
     points.add(p);
     return points.indexOf(p);
   }
@@ -46,7 +46,7 @@ public class LineSegments extends ICgNodeContent {
     return lines.size();
   }
 
-  public IVector3 getPoint(int pointIndex) {
+  public Vector getPoint(int pointIndex) {
     return points.get(pointIndex);
   }
 
@@ -58,18 +58,18 @@ public class LineSegments extends ICgNodeContent {
     return lines.get(lineIndex).endIndex;
   }
 
-  public IVector3 getLineStartPoint(int lineIndex) {
+  public Vector getLineStartPoint(int lineIndex) {
     return points.get(lines.get(lineIndex).startIndex);
   }
 
-  public IVector3 getLineEndPoint(int lineIndex) {
+  public Vector getLineEndPoint(int lineIndex) {
     return points.get(lines.get(lineIndex).endIndex);
   }
 
   @Override
   public BoundingBox getBoundingBox() {
     BoundingBox bbox = new BoundingBox();
-    for (IVector3 p : points) {
+    for (Vector p : points) {
       bbox.add(p);
     }
     return bbox;

@@ -11,8 +11,8 @@ import java.util.Observer;
 import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.curves.ICurve;
@@ -82,7 +82,7 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
   private void updateTransformation() {
     transformation.reset();
     transformation.addTranslation(getCurve().eval(getCurve().getParameter()));
-    IMatrix3 T = VectorMatrixFactory.createCoordinateFrameX(getCurve().derivative(getCurve().getParameter()));
+    Matrix T = VectorMatrixFactory.createCoordinateFrameX(getCurve().derivative(getCurve().getParameter()));
     transformation.addTransformation(T);
 
   }
@@ -105,7 +105,7 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
   private ITriangleMesh createControlPointsMesh() {
     // Control points
     ITriangleMesh mesh = new TriangleMesh();
-    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.6, 0.6, 0.9));
+    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.6, 0.6, 0.9));
     for (int i = 0; i <= getCurve().getDegree(); i++) {
       mesh.unite(TriangleMeshFactory.createSphere(getCurve().getControlPoint(i), 0.03f, 10));
     }
@@ -132,7 +132,7 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
     ITriangleMesh mesh = new TriangleMesh();
 
     // Eval-position
-    mesh.unite(TriangleMeshFactory.createSphere(VectorMatrixFactory.newIVector3(0, 0, 0), 0.1f, 10));
+    mesh.unite(TriangleMeshFactory.createSphere(VectorMatrixFactory.newVector(0, 0, 0), 0.1f, 10));
 
     // Derivative arrow
     ITriangleMesh arrowMesh = TriangleMeshFactory.createArrow();
@@ -160,14 +160,17 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
 
     for (int i = 0; i < resolution; i++) {
       double t = (double) i / (double) (resolution - 1);
-      IVector3 center = getCurve().eval(t);
-      IVector3 tangent = getCurve().derivative(t);
-      IMatrix3 frame = VectorMatrixFactory.createCoordinateFrameX(tangent).getTransposed();
-      IVector3 dx = frame.getRow(1).multiply(radius);
-      IVector3 dy = frame.getRow(2).multiply(radius);
+      Vector center = getCurve().eval(t);
+      Vector tangent = getCurve().derivative(t);
+      Matrix frame = VectorMatrixFactory.createCoordinateFrameX(tangent).getTransposed();
+
+      Vector y = VectorMatrixFactory.newVector(frame.get(1, 0), frame.get(1, 1), frame.get(1, 2));
+      Vector z = VectorMatrixFactory.newVector(frame.get(2, 0), frame.get(2, 1), frame.get(2, 2));
+      Vector dx = y.multiply(radius);
+      Vector dy = z.multiply(radius);
       for (int j = 0; j < circleResolution; j++) {
         double alpha = (double) j * 2.0 * Math.PI / (double) (circleResolution + 1);
-        IVector3 p = center.add(dx.multiply(Math.cos(alpha)).add(dy.multiply(Math.sin(alpha))));
+        Vector p = center.add(dx.multiply(Math.cos(alpha)).add(dy.multiply(Math.sin(alpha))));
         mesh.addVertex(new Vertex(p));
       }
 
@@ -217,7 +220,8 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
   }
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners, boolean cameraPositionChanged) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners,
+      boolean cameraPositionChanged) {
 
   }
 

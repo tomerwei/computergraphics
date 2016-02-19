@@ -28,8 +28,8 @@ public class SimulationFrame extends CgApplication {
     AnimationTimer.getInstance().setMaxValue(500);
 
     LightSource light = new LightSource(Type.POINT);
-    light.setPosition(VectorMatrixFactory.newIVector3(10, 10, 10));
-    light.setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    light.setPosition(VectorMatrixFactory.newVector(10, 10, 10));
+    light.setColor(VectorMatrixFactory.newVector(1, 1, 1));
     //getCgRootNode().clearLights();
     getCgRootNode().addLight(light);
 

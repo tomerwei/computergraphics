@@ -19,17 +19,17 @@ public class Ray2D {
 	/**
 	 * Starting point of the ray.
 	 */
-	private IVector3 p;
+	private Vector p;
 
 	/**
 	 * Direction vector of the ray.
 	 */
-	private IVector3 direction;
+	private Vector direction;
 
 	/**
 	 * Constructor.
 	 */
-	public Ray2D(IVector3 p, IVector3 direction) {
+	public Ray2D(Vector p, Vector direction) {
 		this.p = p;
 		this.direction = direction;
 	}
@@ -37,14 +37,14 @@ public class Ray2D {
 	/**
 	 * Getter.
 	 */
-	public IVector3 getDirection() {
+	public Vector getDirection() {
 		return direction;
 	}
 
 	/**
 	 * Evaluate the ray, compute the position
 	 */
-	public IVector3 eval(double lambda) {
+	public Vector eval(double lambda) {
 		return p.add(direction.multiply(lambda));
 	}
 

@@ -8,7 +8,7 @@ package cgresearch.studentprojects.brickbuilder.math;
 import java.util.Arrays;
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -30,7 +30,7 @@ public class ColorRGB implements IColorRGB {
 		this.color = new int[] {(color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff};
 	}
 	
-	public ColorRGB(IVector3 color) {
+	public ColorRGB(Vector color) {
 		this.color = new int[] {(int) color.get(0) % 256, (int) color.get(1) % 256, 
 				(int) color.get(2) % 256};
 	}
@@ -60,8 +60,8 @@ public class ColorRGB implements IColorRGB {
 	}
 
 	@Override
-	public IVector3 getAsVector() {
-		return VectorMatrixFactory.newIVector3(color[0], color[1], color[2]);
+	public Vector getAsVector() {
+		return VectorMatrixFactory.newVector(color[0], color[1], color[2]);
 	}
 
 	@Override

@@ -24,14 +24,14 @@ public class HalfEdgeTriangleMeshFactory {
     HalfEdgeTriangleMesh ds = new HalfEdgeTriangleMesh();
 
     // Create and insert vertices
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(0, 0, 0)));
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(1, 0, 0)));
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(1, 1, 0)));
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(0, 1, 0)));
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(0, 0, 1)));
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(1, 0, 1)));
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(1, 1, 1)));
-    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newIVector3(0, 1, 1)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(0, 0, 0)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(1, 0, 0)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(1, 1, 0)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(0, 1, 0)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(0, 0, 1)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(1, 0, 1)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(1, 1, 1)));
+    ds.addVertex(new HalfEdgeVertex(VectorMatrixFactory.newVector(0, 1, 1)));
 
     // Create and insert facets
     for (int i = 0; i < 12; i++) {

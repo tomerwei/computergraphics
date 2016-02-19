@@ -72,10 +72,10 @@ public class HeightField {
 				float x = (float) i / (float) resolutionU;
 				float y = (float) j / (float) resolutionV;
 				double height = getHeight(x, y);
-				Vertex vertex = new Vertex(VectorMatrixFactory.newIVector3(
+				Vertex vertex = new Vertex(VectorMatrixFactory.newVector(
 						deltaU * i, height, deltaV * j));
 				mesh.addVertex(vertex);
-				mesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(i
+				mesh.addTextureCoordinate(VectorMatrixFactory.newVector(i
 						* deltaU, 1 - j * deltaV, 0));
 			}
 		}

@@ -43,7 +43,7 @@ public class PlyTriangleMesh extends CgApplication {
 
     mesh.fitToUnitBox();
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR4));
+    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(Material.PALETTE2_COLOR4));
     mesh.computeTriangleNormals();
     mesh.computeVertexNormals();
     mesh.getMaterial().setRenderMode(Normals.PER_VERTEX);

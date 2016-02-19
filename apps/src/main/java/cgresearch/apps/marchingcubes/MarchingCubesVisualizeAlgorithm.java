@@ -16,7 +16,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.MarchingCubes;
 import cgresearch.graphics.bricks.CgApplication;
@@ -38,8 +38,8 @@ import cgresearch.rendering.jogl.core.JoglRenderable;
  */
 public class MarchingCubesVisualizeAlgorithm extends CgApplication implements JoglRenderable {
 
-  private final IVector3 COLOR_INSIDE = VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25);
-  private final IVector3 COLOR_OUTSIDE = VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25);
+  private final Vector COLOR_INSIDE = VectorMatrixFactory.newVector(0.25, 0.75, 0.25);
+  private final Vector COLOR_OUTSIDE = VectorMatrixFactory.newVector(0.75, 0.25, 0.25);
   private final Cube cube;
   private List<Sphere> spheres;
   private ITriangleMesh mesh = new TriangleMesh();;

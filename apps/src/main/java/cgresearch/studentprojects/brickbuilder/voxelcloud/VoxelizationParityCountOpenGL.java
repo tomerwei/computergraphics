@@ -22,7 +22,7 @@ import com.jogamp.opengl.fixedfunc.GLPointerFunc;
 import com.jogamp.opengl.glu.GLU;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
@@ -51,9 +51,9 @@ public class VoxelizationParityCountOpenGL implements
   @Override
   public IVoxelCloud transformMesh2Cloud(
       ITriangleMesh meshOriginal, int resolutionAxisX,
-      IVector3 voxelScale) {
+      Vector voxelScale) {
     BoundingBox box = meshOriginal.getBoundingBox();
-    IVector3 location = box.getLowerLeft();
+    Vector location = box.getLowerLeft();
     double width =
         box.getUpperRight().subtract(box.getLowerLeft())
             .get(MathHelpers.INDEX_0);
@@ -90,13 +90,13 @@ public class VoxelizationParityCountOpenGL implements
     double offsetZ =
         ((resolutionAxisAll * zRes) - depth) * 0.5;
     location =
-        location.subtract(VectorMatrixFactory.newIVector3(
+        location.subtract(VectorMatrixFactory.newVector(
             offsetX, offsetY, offsetZ));
 
     // create voxel cloud
     IVoxelCloud cloud =
         new VoxelCloud(location,
-            VectorMatrixFactory.newIVector3(xRes, yRes,
+            VectorMatrixFactory.newVector(xRes, yRes,
                 zRes), new VectorInt3(resolutionAxisAll,
                 resolutionAxisAll, resolutionAxisAll));
 
@@ -104,9 +104,9 @@ public class VoxelizationParityCountOpenGL implements
     ITriangleMesh mesh = copyMesh(meshOriginal);
     mesh.fitToUnitBox();
     TriangleMeshTransformation.translate(mesh,
-        VectorMatrixFactory.newIVector3(0.5, 0.5, 0.5));
+        VectorMatrixFactory.newVector(0.5, 0.5, 0.5));
     mesh.getMaterial().setReflectionDiffuse(
-        VectorMatrixFactory.newIVector3(1.0, 0, 0));
+        VectorMatrixFactory.newVector(1.0, 0, 0));
 
     // create a rendercontent node to use cg_jogl rendering
     node = new RenderContentTriangleMesh(mesh);

@@ -45,7 +45,7 @@ public class JoglRenderer3D implements Observer {
   private static final int SCREEN_WIDTH = 640;
   private static final int SCREEN_HEIGHT = 480;
   private static final float OPAQUE = 1.0f;
-  private static final IVector3 CLEAR_COLOR = VectorMatrixFactory.newIVector3(1, 1, 1);
+  private static final Vector CLEAR_COLOR = VectorMatrixFactory.newVector(1, 1, 1);
   private static final int JOGL_NUMBER_OF_LIGHTS = 8;
 
   /**
@@ -102,7 +102,7 @@ public class JoglRenderer3D implements Observer {
   /**
    * Corner points of the near clipping plane
    */
-  private IVector3[] nearPlaneCorners = new IVector3[4];
+  private Vector[] nearPlaneCorners = new Vector[4];
 
   /**
    * Render used for FPS display
@@ -396,7 +396,7 @@ public class JoglRenderer3D implements Observer {
     updateExtrinsicCameraParameters(drawable);
 
     // Load projection infinite matrix
-    IMatrix4 pInf = getProjectionInfinity();
+    Matrix pInf = getProjectionInfinity();
     gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
     gl.glLoadMatrixd(pInf.data(), 0);
 
@@ -515,32 +515,32 @@ public class JoglRenderer3D implements Observer {
     float offset = softShadowOffset;
 
     if (coord == 0) {
-      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, 0)));
-      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, 0)));
-      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, offset)));
-      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, -offset)));
-      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, offset)));
-      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, offset)));
-      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, -offset)));
-      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, -offset)));
+      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, offset)));
+      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, -offset)));
+      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, offset)));
+      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, offset)));
+      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, -offset)));
+      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, -offset)));
     } else if (coord == 1) {
-      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, 0)));
-      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, 0)));
-      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, offset)));
-      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, -offset)));
-      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, offset)));
-      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, offset)));
-      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, -offset)));
-      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, -offset)));
+      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, offset)));
+      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, -offset)));
+      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, offset)));
+      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, offset)));
+      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, -offset)));
+      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, -offset)));
     } else {
-      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, 0)));
-      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, 0)));
-      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, 0)));
-      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, 0)));
-      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, offset, 0)));
-      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, offset, 0)));
-      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, -offset, 0)));
-      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, -offset, 0)));
+      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, 0)));
+      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, 0)));
+      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, offset, 0)));
+      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, offset, 0)));
+      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, -offset, 0)));
+      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, -offset, 0)));
     }
 
     return lights;
@@ -564,20 +564,20 @@ public class JoglRenderer3D implements Observer {
 
     float offset = softShadowOffset;
 
-    lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, 0)));
-    lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, 0)));
-    lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, offset, 0)));
-    lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, -offset, 0)));
-    lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, offset)));
-    lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(0, 0, -offset)));
-    lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, offset, 0)));
-    lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, -offset, 0)));
-    lights[8].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, offset)));
-    lights[9].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(offset, 0, -offset)));
-    lights[10].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, offset, 0)));
-    lights[11].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, -offset, 0)));
-    lights[12].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, offset)));
-    lights[13].setPosition(light.getPosition().add(VectorMatrixFactory.newIVector3(-offset, 0, -offset)));
+    lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, 0)));
+    lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, 0)));
+    lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, 0)));
+    lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, 0)));
+    lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, offset)));
+    lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, -offset)));
+    lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, offset, 0)));
+    lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, -offset, 0)));
+    lights[8].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, offset)));
+    lights[9].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, -offset)));
+    lights[10].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, offset, 0)));
+    lights[11].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, -offset, 0)));
+    lights[12].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, offset)));
+    lights[13].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, -offset)));
 
     return lights;
   }
@@ -631,18 +631,18 @@ public class JoglRenderer3D implements Observer {
   }
 
   // private void drawBlackSquareFullscreen(GL2 gl) {
-  // IVector3 dir =
+  // Vector dir =
   // Camera.getInstance().getRef().subtract(Camera.getInstance().getEye()).getNormalized()
   // .multiply(nearClippingPlane * 1.5);
-  // IVector3 center = Camera.getInstance().getEye().add(dir);
-  // IVector3 x = VectorMatrixFactory.newIVector3(1, 1,
+  // Vector center = Camera.getInstance().getEye().add(dir);
+  // Vector x = VectorMatrixFactory.newVector(1, 1,
   // 1).cross(dir).getNormalized();
-  // IVector3 y = x.cross(dir).getNormalized();
+  // Vector y = x.cross(dir).getNormalized();
   // double length = 10;
-  // IVector3 p0 = center.add(x.multiply(length)).add(y.multiply(length));
-  // IVector3 p1 = center.add(x.multiply(length)).add(y.multiply(-length));
-  // IVector3 p2 = center.add(x.multiply(-length)).add(y.multiply(length));
-  // IVector3 p3 = center.add(x.multiply(-length)).add(y.multiply(-length));
+  // Vector p0 = center.add(x.multiply(length)).add(y.multiply(length));
+  // Vector p1 = center.add(x.multiply(length)).add(y.multiply(-length));
+  // Vector p2 = center.add(x.multiply(-length)).add(y.multiply(length));
+  // Vector p3 = center.add(x.multiply(-length)).add(y.multiply(-length));
   // gl.glBegin(GL2.GL_QUADS);
   // gl.glVertex3fv(p0.floatData(), 0);
   // gl.glVertex3fv(p1.floatData(), 0);
@@ -654,8 +654,8 @@ public class JoglRenderer3D implements Observer {
   /**
    * Creates a projection matrix which has no far plane
    */
-  private IMatrix4 getProjectionInfinity() {
-    IMatrix4 pInf = VectorMatrixFactory.newIMatrix4();
+  private Matrix getProjectionInfinity() {
+    Matrix pInf = VectorMatrixFactory.newMatrix(4,4);
     // Field of view in radians
     double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
     // Cotangent of the field of view
@@ -735,22 +735,22 @@ public class JoglRenderer3D implements Observer {
   private void updateNearPlaneInformation(GL2 gl) {
     // Field of View Y in radians
     double fieldOfViewY = Math.toRadians(Camera.getInstance().getOpeningAngle());
-    IVector3 cPos = Camera.getInstance().getEye();
-    IVector3 cUp = Camera.getInstance().getUp();
-    IVector3 dRef = Camera.getInstance().getRef().subtract(cPos);
-    IVector3 cRight = cUp.cross(dRef).multiply(-1).getNormalized();
-    IVector3 dNear = dRef.multiply(Camera.getInstance().getNearClippingPlane() / dRef.getNorm());
+    Vector cPos = Camera.getInstance().getEye();
+    Vector cUp = Camera.getInstance().getUp();
+    Vector dRef = Camera.getInstance().getRef().subtract(cPos);
+    Vector cRight = cUp.cross(dRef).multiply(-1).getNormalized();
+    Vector dNear = dRef.multiply(Camera.getInstance().getNearClippingPlane() / dRef.getNorm());
     // Middle of the near plane
-    IVector3 nearMiddle = cPos.add(dNear);
+    Vector nearMiddle = cPos.add(dNear);
 
     double halfHeight = Math.tan(fieldOfViewY / 2.0) * Camera.getInstance().getNearClippingPlane();
-    IVector3 heightUp = cUp.multiply(halfHeight);
-    IVector3 heightDown = heightUp.multiply(-1);
+    Vector heightUp = cUp.multiply(halfHeight);
+    Vector heightDown = heightUp.multiply(-1);
 
     double fieldOfViewX = 2 * Math.atan(Math.tan(fieldOfViewY * 0.5) * aspectRatio);
     double halfWidth = Math.tan(fieldOfViewX / 2.0) * Camera.getInstance().getNearClippingPlane();
-    IVector3 widthRight = cRight.multiply(halfWidth);
-    IVector3 widthLeft = widthRight.multiply(-1);
+    Vector widthRight = cRight.multiply(halfWidth);
+    Vector widthLeft = widthRight.multiply(-1);
 
     // Compute near plane corners
     nearPlaneCorners[0] = heightDown.add(widthLeft).add(nearMiddle); // lower
@@ -761,7 +761,7 @@ public class JoglRenderer3D implements Observer {
     nearPlaneCorners[3] = heightDown.add(widthRight).add(nearMiddle); // lower
                                                                       // right
 
-    // IVector3[] pyramidNormals = new IVector3[5];
+    // Vector[] pyramidNormals = new Vector[5];
     // pyramidNormals[0] = getNormal(rootNode.getLight(0).getPosition(),
     // nearPlaneCorners[1], nearPlaneCorners[0]);
     // pyramidNormals[1] = getNormal(rootNode.getLight(0).getPosition(),
@@ -796,10 +796,10 @@ public class JoglRenderer3D implements Observer {
     // gl.glEnd();
   }
 
-  // private IVector3 getNormal(IVector3 a, IVector3 b, IVector3 c) {
-  // IVector3 v1 = b.subtract(a);
-  // IVector3 v2 = c.subtract(a);
-  // IVector3 n = v1.cross(v2);
+  // private Vector getNormal(Vector a, Vector b, Vector c) {
+  // Vector v1 = b.subtract(a);
+  // Vector v2 = c.subtract(a);
+  // Vector n = v1.cross(v2);
   // n.normalize();
   // return n;
   // }
@@ -833,7 +833,7 @@ public class JoglRenderer3D implements Observer {
       gl.glColor3f(0.15f, 0.15f, 0.15f);
       for (int i = 0; i < RESOLUTION; i++) {
         float t = (float) i / (float) (RESOLUTION + 1);
-        IVector3 p = Camera.getInstance().getCameraPathInterpolation(t);
+        Vector p = Camera.getInstance().getCameraPathInterpolation(t);
         gl.glVertex3d(p.get(0), p.get(1), p.get(2));
       }
       gl.glEnd();
@@ -848,7 +848,7 @@ public class JoglRenderer3D implements Observer {
    * Recursive method to render nodes.
    */
   private void renderNode(CgNode node, GL2 gl, boolean renderShadowVolume, LightSource lightSource,
-      Transformation transformation, IVector3[] nearPlaneCorners) {
+      Transformation transformation, Vector[] nearPlaneCorners) {
     if (node == null) {
       return;
     }

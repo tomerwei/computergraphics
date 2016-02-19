@@ -73,7 +73,7 @@ public class ObjMaterialIO {
 		String line = strLine.trim();
 		String[] tokens = line.split("\\s+");
 		if (tokens.length >= 4 && currentMaterial != null) {
-			currentMaterial.setDiffuseColor(VectorMatrixFactory.newIVector3(
+			currentMaterial.setDiffuseColor(VectorMatrixFactory.newVector(
 					Double.parseDouble(tokens[1]),
 					Double.parseDouble(tokens[2]),
 					Double.parseDouble(tokens[3])));

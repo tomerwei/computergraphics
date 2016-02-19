@@ -25,10 +25,10 @@ public class LineSegmentsFrame extends CgApplication {
 
   public LineSegmentsFrame() {
     LineSegments lineSegments = new LineSegments();
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(0, 0, 0));
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(0, 1, 0));
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(1, 1, 0));
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(1, 0, 0));
+    lineSegments.addPoint(VectorMatrixFactory.newVector(0, 0, 0));
+    lineSegments.addPoint(VectorMatrixFactory.newVector(0, 1, 0));
+    lineSegments.addPoint(VectorMatrixFactory.newVector(1, 1, 0));
+    lineSegments.addPoint(VectorMatrixFactory.newVector(1, 0, 0));
     lineSegments.addLine(0, 1);
     lineSegments.addLine(1, 2);
     lineSegments.addLine(2, 3);

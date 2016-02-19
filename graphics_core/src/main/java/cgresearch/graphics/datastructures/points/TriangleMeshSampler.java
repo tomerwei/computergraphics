@@ -7,7 +7,7 @@ package cgresearch.graphics.datastructures.points;
 
 import java.util.Random;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -30,9 +30,9 @@ public class TriangleMeshSampler {
     for (int i = 0; i < numberOfSamples; i++) {
       int triangleIndex = new Random().nextInt(mesh.getNumberOfTriangles());
       ITriangle t = mesh.getTriangle(triangleIndex);
-      IVector3 va = mesh.getVertex(t.getA()).getPosition();
-      IVector3 vb = mesh.getVertex(t.getB()).getPosition();
-      IVector3 vc = mesh.getVertex(t.getC()).getPosition();
+      Vector va = mesh.getVertex(t.getA()).getPosition();
+      Vector vb = mesh.getVertex(t.getB()).getPosition();
+      Vector vc = mesh.getVertex(t.getC()).getPosition();
       float alpha = new Random().nextInt(RANDOM_INT) / (float) RANDOM_INT;
       float beta = 1;
       if (alpha > 0.99) {
@@ -43,8 +43,8 @@ public class TriangleMeshSampler {
         }
       }
       float gamma = 1 - alpha - beta;
-      IVector3 position = va.multiply(alpha).add(vb.multiply(beta).add(vc.multiply(gamma)));
-      pointCloud.addPoint(new Point(position, VectorMatrixFactory.newIVector3(0.5, 0.5, 0.5), t.getNormal()));
+      Vector position = va.multiply(alpha).add(vb.multiply(beta).add(vc.multiply(gamma)));
+      pointCloud.addPoint(new Point(position, VectorMatrixFactory.newVector(0.5, 0.5, 0.5), t.getNormal()));
     }
     return pointCloud;
   }
@@ -57,7 +57,7 @@ public class TriangleMeshSampler {
     for (int vertexIndex = 0; vertexIndex < mesh.getNumberOfVertices(); vertexIndex++) {
       IVertex vertex = mesh.getVertex(vertexIndex);
       pointCloud
-          .addPoint(new Point(vertex.getPosition(), VectorMatrixFactory.newIVector3(0, 0, 0), vertex.getNormal()));
+          .addPoint(new Point(vertex.getPosition(), VectorMatrixFactory.newVector(0, 0, 0), vertex.getNormal()));
     }
     return pointCloud;
   }

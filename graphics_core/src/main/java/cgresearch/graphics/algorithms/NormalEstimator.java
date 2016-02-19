@@ -1,7 +1,7 @@
 package cgresearch.graphics.algorithms;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.PrincipalComponentAnalysis;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.PointNeighborsQuery;
@@ -27,7 +27,7 @@ public class NormalEstimator {
 				pca.add(pointCloud.getPoint(query.getNeigbor(i)).getPosition());
 			}
 			pca.applyPCA();
-			IVector3 normal = pca.getNormal();
+			Vector normal = pca.getNormal();
 
 			// Point into same direction as old normal
 			if (normal.multiply(pointCloud.getPoint(pointIndex).getNormal()) < 0) {

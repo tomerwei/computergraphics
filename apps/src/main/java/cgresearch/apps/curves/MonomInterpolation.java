@@ -12,7 +12,7 @@ import cgresearch.AppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.curves.MonomialCurve;
@@ -35,10 +35,10 @@ public class MonomInterpolation extends CgApplication {
    * Constructor.
    */
   public MonomInterpolation() {
-    List<IVector3> interpolationPoints = new ArrayList<IVector3>();
-    interpolationPoints.add(VectorMatrixFactory.newIVector3(1, 1, -0.5));
-    interpolationPoints.add(VectorMatrixFactory.newIVector3(0.5, 1, 1));
-    interpolationPoints.add(VectorMatrixFactory.newIVector3(-0.5, -0.5, 0.5));
+    List<Vector> interpolationPoints = new ArrayList<Vector>();
+    interpolationPoints.add(VectorMatrixFactory.newVector(1, 1, -0.5));
+    interpolationPoints.add(VectorMatrixFactory.newVector(0.5, 1, 1));
+    interpolationPoints.add(VectorMatrixFactory.newVector(-0.5, -0.5, 0.5));
     MonomialCurve curve = computeInterpolatedCurve(interpolationPoints);
     getCgRootNode().addChild(new CgNode(curve, "Interpolated monom curve"));
 
@@ -59,14 +59,14 @@ public class MonomInterpolation extends CgApplication {
   }
 
   private MonomialCurve computeInterpolatedCurve(
-      List<IVector3> interpolationPoints) {
+      List<Vector> interpolationPoints) {
     MonomialCurve monomialCurve = new MonomialCurve(2);
-    IVector3 c0 = interpolationPoints.get(0);
-    IVector3 c1 =
+    Vector c0 = interpolationPoints.get(0);
+    Vector c1 =
         interpolationPoints.get(0).multiply(-3)
             .add(interpolationPoints.get(1).multiply(4))
             .subtract(interpolationPoints.get(2));
-    IVector3 c2 =
+    Vector c2 =
         interpolationPoints.get(2).subtract(interpolationPoints.get(0))
             .subtract(c1);
     monomialCurve.setControlPoint(0, c0);

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPDataType;
 import smarthomevis.groundplan.config.GPLine;
@@ -102,7 +102,7 @@ public class GPAnalyzer
 		// Zugriffshaeufigkeit zu reduzieren
 		double angle_tolerance = type.getGPConfig().getValue(GPConfig.ANGLE_TOLERANCE);
 
-		Map<IVector3, List<GPLine>> directionMap = new HashMap<>();
+		Map<Vector, List<GPLine>> directionMap = new HashMap<>();
 		// Anmerkung: alle Linien verschiedenen Ebenen werden hier unter den
 		// Distanzen zusammengefasst!
 
@@ -112,10 +112,10 @@ public class GPAnalyzer
 			// fuer alle Linien einer Ebene
 			for (GPLine line : entry.getValue())
 			{
-				IVector3 dirVector = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
-				IVector3 normDirVector = GPUtility.normalizeVector(dirVector);
+				Vector dirVector = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
+				Vector normDirVector = GPUtility.normalizeVector(dirVector);
 
-				IVector3 listDirVector = testVectorFitsAngleOfDirVector(normDirVector, directionMap.keySet(),
+				Vector listDirVector = testVectorFitsAngleOfDirVector(normDirVector, directionMap.keySet(),
 					angle_tolerance);
 
 				if (listDirVector != null)
@@ -131,20 +131,20 @@ public class GPAnalyzer
 			}
 		}
 
-		for (Entry<IVector3, List<GPLine>> e : directionMap.entrySet())
+		for (Entry<Vector, List<GPLine>> e : directionMap.entrySet())
 		System.out.println("\nMap of " + e.getKey().toString(5) + " contains " + e.getValue().size() + " lines");
 
 		return countAllDistances(type, directionMap);
 	}
 
-	public IVector3 testVectorFitsAngleOfDirVector(IVector3 normDirVector, Set<IVector3> listDirVectors,
+	public Vector testVectorFitsAngleOfDirVector(Vector normDirVector, Set<Vector> listDirVectors,
 		double tolerance)
 	{
 		System.out.println("testing Vector " + normDirVector.toString(2));
 
 		// durch alle bereits gefundenen Richtungsvektoren der directionMap
 		// durchiterieren und den Winkel bestimmen
-		for (IVector3 vector : listDirVectors)
+		for (Vector vector : listDirVectors)
 		{
 			double angleOfNormDirVector = GPUtility.angleBetweenVectors(normDirVector, vector);
 			if ((angleOfNormDirVector < tolerance)
@@ -159,7 +159,7 @@ public class GPAnalyzer
 		return null;
 	}
 
-	private Map<Double, List<String[]>> countAllDistances(GPDataType type, Map<IVector3, List<GPLine>> directionMap)
+	private Map<Double, List<String[]>> countAllDistances(GPDataType type, Map<Vector, List<GPLine>> directionMap)
 	{
 		distanceMap.put(0.0, 0);
 
@@ -169,14 +169,14 @@ public class GPAnalyzer
 
 		double distanceInterval = type.getGPConfig().getValue(GPConfig.DISTANCE_INTERVAL);
 
-		for (Entry<IVector3, List<GPLine>> e : directionMap.entrySet())
+		for (Entry<Vector, List<GPLine>> e : directionMap.entrySet())
 		{
 			List<GPLine> lineListCopy = GPUtility.cloneList(e.getValue());
 
 			for (GPLine line : e.getValue())
 			{
-				// zur Vermeidung von Problemen bei nebenläufigen Zugriffen
-				// (Löschen der Einträge innerhalb der Iteration) eine Kopie der
+				// zur Vermeidung von Problemen bei nebenlï¿½ufigen Zugriffen
+				// (Lï¿½schen der Eintrï¿½ge innerhalb der Iteration) eine Kopie der
 				// Liste
 				// verwenden
 				lineListCopy.remove(line);
@@ -301,10 +301,10 @@ public class GPAnalyzer
 
 	public double distanceBetween(GPLine line, GPLine other)
 	{
-		IVector3 dirVector = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
-		IVector3 tempVector = GPUtility.substractOtherVector(other.getStart(), line.getStart());
+		Vector dirVector = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
+		Vector tempVector = GPUtility.substractOtherVector(other.getStart(), line.getStart());
 
-		IVector3 distanceVector = GPUtility.kreuzproduktVon(dirVector, tempVector);
+		Vector distanceVector = GPUtility.kreuzproduktVon(dirVector, tempVector);
 
 		double temp = GPUtility.calcVectorLength(distanceVector);
 		double temp2 = GPUtility.calcVectorLength(dirVector);
@@ -320,17 +320,17 @@ public class GPAnalyzer
 
 	public double calculateParallelOverlapOf(GPLine line, GPLine other)
 	{
-		IVector3 dirVec_line = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
+		Vector dirVec_line = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
 
 		double beta = (dirVec_line.get(0) * dirVec_line.get(0)) + (dirVec_line.get(1) * dirVec_line.get(1))
 			+ (dirVec_line.get(2) * dirVec_line.get(2));
 
-		IVector3 pVec_0 = GPUtility.substractOtherVector(other.getStart(), line.getStart());
+		Vector pVec_0 = GPUtility.substractOtherVector(other.getStart(), line.getStart());
 
 		double lambda_other_0 = (pVec_0.get(0) * dirVec_line.get(0)) + (pVec_0.get(1) * dirVec_line.get(1))
 			+ (pVec_0.get(2) * dirVec_line.get(2));
 
-		IVector3 pVec_1 = GPUtility.substractOtherVector(other.getEnd(), line.getStart());
+		Vector pVec_1 = GPUtility.substractOtherVector(other.getEnd(), line.getStart());
 
 		double lambda_other_1 = (pVec_1.get(0) * dirVec_line.get(0)) + (pVec_1.get(1) * dirVec_line.get(1))
 			+ (pVec_1.get(2) * dirVec_line.get(2));

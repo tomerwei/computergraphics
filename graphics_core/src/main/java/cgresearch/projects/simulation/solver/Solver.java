@@ -2,7 +2,7 @@ package cgresearch.projects.simulation.solver;
 
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 public abstract class Solver {
 
@@ -35,20 +35,20 @@ public abstract class Solver {
 	 * @param h
 	 *            Step size
 	 */
-	public abstract void solve(List<IVector3> x, List<IVector3> v,
-			List<IVector3> newX, List<IVector3> newV, double tolerance,
+	public abstract void solve(List<Vector> x, List<Vector> v,
+			List<Vector> newX, List<Vector> newV, double tolerance,
 			Accelleration acc);
 
 	/**
 	 * Compute the local t... error.
 	 */
-	protected double computeLte(List<IVector3> x, List<IVector3> v,
-			List<IVector3> newX, List<IVector3> newV, double totalSimulationTime) {
+	protected double computeLte(List<Vector> x, List<Vector> v,
+			List<Vector> newX, List<Vector> newV, double totalSimulationTime) {
 		double normXnewX = 0;
 		double normVnewV = 0;
 		for (int i = 0; i < x.size(); i++) {
-			IVector3 dx = x.get(i).subtract(newX.get(i));
-			IVector3 dv = v.get(i).subtract(newV.get(i));
+			Vector dx = x.get(i).subtract(newX.get(i));
+			Vector dv = v.get(i).subtract(newV.get(i));
 			normXnewX += dx.multiply(dx);
 			normVnewV += dv.multiply(dv);
 		}

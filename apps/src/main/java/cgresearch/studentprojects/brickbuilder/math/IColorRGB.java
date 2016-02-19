@@ -7,7 +7,7 @@ package cgresearch.studentprojects.brickbuilder.math;
 
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Interface of a super simple uneditable color.
@@ -43,7 +43,7 @@ public interface IColorRGB {
 	 * Get the color as vector.
 	 * @return
 	 */
-	public IVector3 getAsVector();
+	public Vector getAsVector();
 	
 	/**
 	 * Get the color as byte array.

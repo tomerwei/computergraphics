@@ -60,7 +60,7 @@ public class Demo extends CgApplication {
 				bunnyVoxelcloud, true);
 		TriangleMeshTransformation.scale(bunnyVoxelMesh, 1.3);
 		TriangleMeshTransformation.translate(bunnyVoxelMesh,
-				VectorMatrixFactory.newIVector3(1.5, 0.2, 0));
+				VectorMatrixFactory.newVector(1.5, 0.2, 0));
 		bunnies.addChild(new CgNode(bunnyVoxelMesh, "bunny voxel"));
 
 		IBrickCloud bunnyBrickcloud = BrickCloudReader
@@ -69,7 +69,7 @@ public class Demo extends CgApplication {
 				.transformCloud2Mesh(bunnyBrickcloud);
 		TriangleMeshTransformation.scale(bunnyBrickMesh, 0.3);
 		TriangleMeshTransformation.translate(bunnyBrickMesh,
-				VectorMatrixFactory.newIVector3(2.3, -0.35, -0.35));
+				VectorMatrixFactory.newVector(2.3, -0.35, -0.35));
 		bunnies.addChild(new CgNode(bunnyBrickMesh, "bunny brick"));
 
 		// CgNode lg = read.readFile("meshes/legoMan.obj");
@@ -80,7 +80,7 @@ public class Demo extends CgApplication {
 		ITriangleMesh lgcm = VoxelCloudMesher.transformCloud2Mesh(lgc, true);
 		TriangleMeshTransformation.scale(lgcm, 1.3);
 		TriangleMeshTransformation.translate(lgcm,
-				VectorMatrixFactory.newIVector3(1.5, 0.2, -3));
+				VectorMatrixFactory.newVector(1.5, 0.2, -3));
 		legoMen.addChild(new CgNode(lgcm, "legoman voxel"));
 
 		IBrickCloud lgb = BrickCloudReader
@@ -88,13 +88,13 @@ public class Demo extends CgApplication {
 		ITriangleMesh lgbm = BrickCloudMesher.transformCloud2Mesh(lgb);
 		TriangleMeshTransformation.scale(lgbm, 0.3);
 		TriangleMeshTransformation.translate(lgbm,
-				VectorMatrixFactory.newIVector3(2.3, -0.35, -3.35));
+				VectorMatrixFactory.newVector(2.3, -0.35, -3.35));
 		legoMen.addChild(new CgNode(lgbm, "legoman brick"));
 
 		ITriangleMesh lgbm2 = BrickCloudMesher.transformCloud2Mesh(lgb);
 		TriangleMeshTransformation.scale(lgbm2, 0.3);
 		TriangleMeshTransformation.translate(lgbm2,
-				VectorMatrixFactory.newIVector3(3.6, -0.35, -3.35));
+				VectorMatrixFactory.newVector(3.6, -0.35, -3.35));
 		legoMen.addChild(new CgNode(lgbm2, "legoman brick debug"));
 
 		rootNode.addChild(bunnies);

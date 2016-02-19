@@ -6,7 +6,7 @@
 package cgresearch.graphics.algorithms;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -34,9 +34,9 @@ public class NodeMerger {
                 .getNumberOfTriangles(); triangleIndex++) {
             ITriangle triangle = inputMesh.getTriangle(triangleIndex);
 
-            IVector3 a = inputMesh.getVertex(triangle.getA()).getPosition();
-            IVector3 b = inputMesh.getVertex(triangle.getB()).getPosition();
-            IVector3 c = inputMesh.getVertex(triangle.getC()).getPosition();
+            Vector a = inputMesh.getVertex(triangle.getA()).getPosition();
+            Vector b = inputMesh.getVertex(triangle.getB()).getPosition();
+            Vector c = inputMesh.getVertex(triangle.getC()).getPosition();
 
             outputMesh.addTriangle(new Triangle(getVertexIndexInNewMesh(a,
                     outputMesh, epsilon), getVertexIndexInNewMesh(b,
@@ -62,7 +62,7 @@ public class NodeMerger {
      * Check if the vertex exists in the mesh already (up to epsilon distance).
      * If not, add it to the mesh. Returns the index of the vertex in the mesh.
      * 
-     * @param IVector3
+     * @param Vector
      *            vertexPosition;
      * @param ITriangleMesh
      *            Mesh object
@@ -70,7 +70,7 @@ public class NodeMerger {
      *            Epsilon distance.
      * @return
      */
-    private static int getVertexIndexInNewMesh(IVector3 position,
+    private static int getVertexIndexInNewMesh(Vector position,
             ITriangleMesh mesh, double epsilon) {
 
         for (int vertexIndex = 0; vertexIndex < mesh.getNumberOfVertices(); vertexIndex++) {
@@ -92,8 +92,8 @@ public class NodeMerger {
      *            Second position
      * @return Distance.
      */
-    private static double getSquaredDistance(IVector3 position,
-            IVector3 position2) {
+    private static double getSquaredDistance(Vector position,
+            Vector position2) {
         return position.subtract(position2).getSqrNorm();
     }
 }

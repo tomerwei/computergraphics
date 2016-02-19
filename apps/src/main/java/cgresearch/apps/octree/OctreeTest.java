@@ -9,7 +9,7 @@ import java.util.Set;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTools;
 import cgresearch.graphics.bricks.CgApplication;
@@ -53,8 +53,8 @@ public class OctreeTest extends CgApplication {
   /**
    * Clipping plane
    */
-  private Plane plane = new Plane(VectorMatrixFactory.newIVector3(0, 0, 0),
-      VectorMatrixFactory.newIVector3(0.6, 0.3, -0.2).getNormalized());
+  private Plane plane = new Plane(VectorMatrixFactory.newVector(0, 0, 0),
+      VectorMatrixFactory.newVector(0.6, 0.3, -0.2).getNormalized());
 
   public OctreeTest() {
 
@@ -193,10 +193,10 @@ public class OctreeTest extends CgApplication {
     }
 
     // Determine corner positions
-    List<IVector3> corners = node.computeCornerPoints();
+    List<Vector> corners = node.computeCornerPoints();
 
     // Check if at least one corner point is on the positive plane side.
-    for (IVector3 point : corners) {
+    for (Vector point : corners) {
       if (plane.computeSignedDistance(point) > 0) {
         return true;
       }

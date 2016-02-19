@@ -24,11 +24,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cgresearch.core.math.IMatrix;
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.IVector4;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.PrincipalComponentAnalysis;
 import cgresearch.core.math.Vector;
@@ -777,15 +777,15 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void loadBild() {
 
-		int a = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-3, -0.4, -0.1)));
-		int b = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(3, -0.4, -0.1)));
-		int c = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-3, 2.6, -0.1)));
-		int d = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(3, 2.6, -0.1)));
+		int a = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-3, -0.4, -0.1)));
+		int b = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(3, -0.4, -0.1)));
+		int c = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-3, 2.6, -0.1)));
+		int d = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(3, 2.6, -0.1)));
 
-		int ta = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 0, -1));
-		int tb = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 0, -1));
-		int tc = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 1, -1));
-		int td = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 1, -1));
+		int ta = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 0, -1));
+		int tb = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 0, -1));
+		int tc = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 1, -1));
+		int td = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 1, -1));
 
 		triangleMesh.addTriangle(new Triangle(a, b, c, ta, tb, tc));
 		triangleMesh.addTriangle(new Triangle(b, c, d, tb, tc, td));
@@ -831,7 +831,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		car.getCurves().add(this.auto.getChassis().getLeft());
 
 		car.fillPoints();
-		for (IVector3 v : car.getPoints()) {
+		for (Vector v : car.getPoints()) {
 			System.out.println(v.get(0) + " / " + v.get(1) + " / " + v.get(2));
 		}
 		car.fillArrays();
@@ -900,11 +900,11 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		// System.out.println("Size " + this.data.getY().size());
 		// System.out.println("Size " + this.data.getZ().size());
 
-		IVector newX = new Vector(carVektor);
-		IVector newY = new Vector(carVektor);
-		IVector newZ = new Vector(carVektor);
+		Vector newX = new Vector(carVektor);
+		Vector newY = new Vector(carVektor);
+		Vector newZ = new Vector(carVektor);
 
-		for (IVector iv : data.getX()) {
+		for (Vector iv : data.getX()) {
 			newX = null;
 			newX = new Vector(carVektor);
 			newX.set(0, iv.get(0));
@@ -929,7 +929,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			data18.getX().add(newX);
 		}
 
-		for (IVector iv : data.getY()) {
+		for (Vector iv : data.getY()) {
 			newY = null;
 			newY = new Vector(carVektor);
 			newY.set(0, iv.get(0));
@@ -954,7 +954,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 			data18.getY().add(newY);
 		}
 
-		for (IVector iv : data.getZ()) {
+		for (Vector iv : data.getZ()) {
 			newZ = null;
 			newZ = new Vector(carVektor);
 			newZ.set(0, iv.get(0));
@@ -993,16 +993,16 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		// Reduziert
 
-		IVector x = new Vector(skalar);
-		IVector y = new Vector(skalar);
+		Vector x = new Vector(skalar);
+		Vector y = new Vector(skalar);
 
 		// Nicht reduziert
 
-		// IVector x = new Vector(carVektor);
-		// IVector y = new Vector(carVektor);
+		// Vector x = new Vector(carVektor);
+		// Vector y = new Vector(carVektor);
 
-		IVector xc = new Vector(carVektor);
-		IVector yc = new Vector(carVektor);
+		Vector xc = new Vector(carVektor);
+		Vector yc = new Vector(carVektor);
 
 		for (int i = 0; i < carVektor; i++) {
 			xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
@@ -1036,8 +1036,8 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		// Eigen Auto new
 
-		IVector xn = new Vector(carVektor);
-		IVector yn = new Vector(carVektor);
+		Vector xn = new Vector(carVektor);
+		Vector yn = new Vector(carVektor);
 
 		for (int i = 0; i < carVektor; i++) {
 			double xx = 0;
@@ -1055,9 +1055,9 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		// New Auto
 
-		IVector ax = new Vector(carVektor);
-		IVector ay = new Vector(carVektor);
-		IVector az = new Vector(carVektor);
+		Vector ax = new Vector(carVektor);
+		Vector ay = new Vector(carVektor);
+		Vector az = new Vector(carVektor);
 
 		for (int i = 0; i < carVektor; i++) {
 			double xx = 0;
@@ -1137,19 +1137,19 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void testPCA() {
 
-		List<IVector> alphasX = new ArrayList<IVector>();
-		List<IVector> alphasY = new ArrayList<IVector>();
-		IVector xs = new Vector(carVektor);
-		IVector ys = new Vector(carVektor);
+		List<Vector> alphasX = new ArrayList<Vector>();
+		List<Vector> alphasY = new ArrayList<Vector>();
+		Vector xs = new Vector(carVektor);
+		Vector ys = new Vector(carVektor);
 
 		for (int num = 0; num < 30; num++) {
 			Car car = new Car(this.data.getX().get(num), this.data.getY().get(num), this.data.getZ().get(num));
 
-			IVector x = new Vector(carVektor);
-			IVector y = new Vector(carVektor);
+			Vector x = new Vector(carVektor);
+			Vector y = new Vector(carVektor);
 
-			IVector xc = new Vector(carVektor);
-			IVector yc = new Vector(carVektor);
+			Vector xc = new Vector(carVektor);
+			Vector yc = new Vector(carVektor);
 
 			for (int i = 0; i < carVektor; i++) {
 				xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
@@ -1182,12 +1182,12 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		for (int i = 0; i < carVektor; i++) {
 
-			for (IVector v : alphasX) {
+			for (Vector v : alphasX) {
 
 				xxx += v.get(i);
 				System.out.println(v.get(i) + "+" + "     (" + xxx + ")");
 			}
-			for (IVector v : alphasY) {
+			for (Vector v : alphasY) {
 				yyy += v.get(i);
 			}
 
@@ -1203,9 +1203,9 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		// xs und ys Mittelwerte
 
-		IVector ax = new Vector(carVektor);
-		IVector ay = new Vector(carVektor);
-		IVector az = new Vector(carVektor);
+		Vector ax = new Vector(carVektor);
+		Vector ay = new Vector(carVektor);
+		Vector az = new Vector(carVektor);
 
 		for (int i = 0; i < carVektor; i++) {
 			double xx = 0;

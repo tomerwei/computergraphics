@@ -3,7 +3,7 @@ package cgresearch.studentprojects.scanner.calibration;
 import java.util.List;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.NormalEstimator;
@@ -40,8 +40,8 @@ public class Calibration {
 	 * Calibration object
 	 */
 	public Cylinder calibrationObject = new Cylinder(
-			VectorMatrixFactory.newIVector3(0, 0, 0),
-			VectorMatrixFactory.newIVector3(0, 1, 0), 0.065 / (2.0));
+			VectorMatrixFactory.newVector(0, 0, 0),
+			VectorMatrixFactory.newVector(0, 1, 0), 0.065 / (2.0));
 
 	/**
 	 * List of measurements.
@@ -69,11 +69,11 @@ public class Calibration {
 		pointCloud.clear();
 
 		for (int i = 0; i < measurements.size(); i++) {
-			IVector3 color = Material.PALETTE0_COLOR0;
+			Vector color = Material.PALETTE0_COLOR0;
 			ScannerMeasurement measurement = measurements.get(i);
-			IVector3 pos = registrationData
+			Vector pos = registrationData
 					.convert2WorldCoordinates(measurement);
-			IVector3 normal = VectorMatrixFactory.newIVector3(pos);
+			Vector normal = VectorMatrixFactory.newVector(pos);
 			normal.set(1, 0);
 			normal.normalize();
 			Point point = new Point(pos, color, normal);
@@ -136,7 +136,7 @@ public class Calibration {
 		double f = 0;
 		for (ScannerMeasurement measurement : measurements) {
 			f += MathHelpers.sqr(calibrationObject.getDistance(
-					VectorMatrixFactory.newIVector3(cx, 0, cz),
+					VectorMatrixFactory.newVector(cx, 0, cz),
 					registrationData.convert2WorldCoordinates(measurement, tdX,
 							tdZ)));
 		}

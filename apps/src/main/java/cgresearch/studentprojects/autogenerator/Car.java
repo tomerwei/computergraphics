@@ -3,8 +3,8 @@ package cgresearch.studentprojects.autogenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
@@ -14,16 +14,16 @@ public class Car {
 	private final int carVektor = 28;
 
 	private List<BezierCurve> curves = new ArrayList<BezierCurve>();
-	private List<IVector3> points = new ArrayList<IVector3>();
-	private IVector x = new Vector(carVektor);
-	private IVector y = new Vector(carVektor);
-	private IVector z = new Vector(carVektor);
+	private List<Vector> points = new ArrayList<Vector>();
+	private Vector x = new Vector(carVektor);
+	private Vector y = new Vector(carVektor);
+	private Vector z = new Vector(carVektor);
 
 	public Car() {
 
 	}
 
-	public Car(IVector x, IVector y, IVector z) {
+	public Car(Vector x, Vector y, Vector z) {
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -170,9 +170,9 @@ public class Car {
 	private void refillPoints() {
 		points = null;
 		if (x != null && y != null && z != null) {
-			points = new ArrayList<IVector3>();
+			points = new ArrayList<Vector>();
 			for (int i = 0; i < x.getDimension(); i++) {
-				IVector3 v = VectorMatrixFactory.newIVector3(x.get(i), y.get(i), z.get(i));
+				Vector v = VectorMatrixFactory.newVector(x.get(i), y.get(i), z.get(i));
 				points.add(v);
 			}
 
@@ -197,7 +197,7 @@ public class Car {
 	public void fillArrays() {
 		if (!points.isEmpty()) {
 			int i = 0;
-			for (IVector3 v : points) {
+			for (Vector v : points) {
 				x.set(i, v.get(0));
 				y.set(i, v.get(1));
 				z.set(i, v.get(2));
@@ -216,37 +216,37 @@ public class Car {
 		this.curves = curves;
 	}
 
-	public List<IVector3> getPoints() {
+	public List<Vector> getPoints() {
 		return points;
 	}
 
-	public void setPoints(List<IVector3> points) {
+	public void setPoints(List<Vector> points) {
 		this.points = points;
 	}
 
-	public IVector getX() {
+	public Vector getX() {
 		return x;
 	}
 
-	public void setX(IVector x) {
+	public void setX(Vector x) {
 		this.x = null;
 		this.x = x;
 	}
 
-	public IVector getY() {
+	public Vector getY() {
 		return y;
 	}
 
-	public void setY(IVector y) {
+	public void setY(Vector y) {
 		this.y = null;
 		this.y = y;
 	}
 
-	public IVector getZ() {
+	public Vector getZ() {
 		return z;
 	}
 
-	public void setZ(IVector z) {
+	public void setZ(Vector z) {
 		this.z = null;
 		this.z = z;
 	}

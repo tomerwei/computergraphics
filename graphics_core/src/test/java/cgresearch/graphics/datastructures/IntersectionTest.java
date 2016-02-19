@@ -19,13 +19,13 @@ public class IntersectionTest {
   @Test
   public void testTriangleBoxIntersection() {
     BoundingBox boundingBox = new BoundingBox();
-    boundingBox.add(VectorMatrixFactory.newIVector3(-0.5, -0.5, -0.5));
-    boundingBox.add(VectorMatrixFactory.newIVector3(0.5, 0.5, 0.5));
-    assertTrue(Intersection.intersect(boundingBox, VectorMatrixFactory.newIVector3(0, 0, 0),
-        VectorMatrixFactory.newIVector3(0.1, -0.1, 0.4), VectorMatrixFactory.newIVector3(-0.4, 0, 0.1)));
-    assertFalse(Intersection.intersect(boundingBox, VectorMatrixFactory.newIVector3(0.6, 0.6, 0.6),
-        VectorMatrixFactory.newIVector3(0.7, 0.8, 0.8), VectorMatrixFactory.newIVector3(0.6, 0.9, 1)));
-    assertTrue(Intersection.intersect(boundingBox, VectorMatrixFactory.newIVector3(-0.6, -0.6, 0.3),
-        VectorMatrixFactory.newIVector3(0.6, 0.6, 0.3), VectorMatrixFactory.newIVector3(0.2, 0.3, 0.3)));
+    boundingBox.add(VectorMatrixFactory.newVector(-0.5, -0.5, -0.5));
+    boundingBox.add(VectorMatrixFactory.newVector(0.5, 0.5, 0.5));
+    assertTrue(Intersection.intersect(boundingBox, VectorMatrixFactory.newVector(0, 0, 0),
+        VectorMatrixFactory.newVector(0.1, -0.1, 0.4), VectorMatrixFactory.newVector(-0.4, 0, 0.1)));
+    assertFalse(Intersection.intersect(boundingBox, VectorMatrixFactory.newVector(0.6, 0.6, 0.6),
+        VectorMatrixFactory.newVector(0.7, 0.8, 0.8), VectorMatrixFactory.newVector(0.6, 0.9, 1)));
+    assertTrue(Intersection.intersect(boundingBox, VectorMatrixFactory.newVector(-0.6, -0.6, 0.3),
+        VectorMatrixFactory.newVector(0.6, 0.6, 0.3), VectorMatrixFactory.newVector(0.2, 0.3, 0.3)));
   }
 }

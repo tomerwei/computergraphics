@@ -18,7 +18,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.scenegraph.CgRootNode;
 import cgresearch.graphics.scenegraph.LightSource;
@@ -113,7 +113,7 @@ public class LightEditor extends JFrame implements Observer, ActionListener {
 	 * Edit a cell in the table
 	 */
 	private void edit(int row, int column) {
-		IVector3 vNew = null;
+		Vector vNew = null;
 		switch (column) {
 		case 0:
 			break;
@@ -121,21 +121,21 @@ public class LightEditor extends JFrame implements Observer, ActionListener {
 			// Type
 			break;
 		case 2:
-			vNew = getEditVector3(rootNode.getLight(row).getPosition());
+			vNew = getEditVector(rootNode.getLight(row).getPosition());
 			if (vNew != null) {
 				rootNode.getLight(row).getPosition().copy(vNew);
 				rootNode.lightingChanged();
 			}
 			break;
 		case 3:
-			vNew = getEditVector3(rootNode.getLight(row).getDiffuseColor());
+			vNew = getEditVector(rootNode.getLight(row).getDiffuseColor());
 			if (vNew != null) {
 				rootNode.getLight(row).getDiffuseColor().copy(vNew);
 				rootNode.lightingChanged();
 			}
 			break;
 		case 4:
-			vNew = getEditVector3(rootNode.getLight(row).getDirection());
+			vNew = getEditVector(rootNode.getLight(row).getDirection());
 			if (vNew != null) {
 				rootNode.getLight(row).getDirection().copy(vNew);
 				rootNode.lightingChanged();
@@ -149,7 +149,7 @@ public class LightEditor extends JFrame implements Observer, ActionListener {
 	/**
 	 * Show an editor for a 3-vector.
 	 */
-	private IVector3 getEditVector3(IVector3 v) {
+	private Vector getEditVector(Vector v) {
 		JTextField tx = new JTextField(v.get(0) + "");
 		JTextField ty = new JTextField(v.get(1) + "");
 		JTextField tz = new JTextField(v.get(2) + "");
@@ -157,7 +157,7 @@ public class LightEditor extends JFrame implements Observer, ActionListener {
 		JOptionPane.showMessageDialog(null, inputs, "Edit vector",
 				JOptionPane.PLAIN_MESSAGE);
 		try {
-			return VectorMatrixFactory.newIVector3(
+			return VectorMatrixFactory.newVector(
 					Double.parseDouble(tx.getText()),
 					Double.parseDouble(ty.getText()),
 					Double.parseDouble(tz.getText()));

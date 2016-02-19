@@ -6,7 +6,7 @@
 package cgresearch.rendering.jmonkey;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
@@ -70,7 +70,7 @@ public class JMonkeyRenderObjectFactoryTriangleMesh implements IRenderObjectsFac
       geometry.setMaterial(mat);
     } else {
       Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-      IVector3 color = triangleMesh.getMaterial().getReflectionDiffuse();
+      Vector color = triangleMesh.getMaterial().getReflectionDiffuse();
       mat.setColor("Diffuse", new ColorRGBA((float) color.get(0), (float) color.get(1), (float) color.get(2), 1));
       // mat.set
       geometry.setMaterial(mat);
@@ -120,10 +120,10 @@ public class JMonkeyRenderObjectFactoryTriangleMesh implements IRenderObjectsFac
         int vertexIndex = t.get(vertexInTriangleIndex);
         int texCoordIndex = t.getTextureCoordinate(vertexInTriangleIndex);
         IVertex vertex = triangleMesh.getVertex(vertexIndex);
-        IVector3 pos = vertex.getPosition();
-        IVector3 normal = vertex.getNormal();
-        IVector3 color = triangleMesh.getMaterial().getReflectionDiffuse();
-        IVector3 texCoord = triangleMesh.getTextureCoordinate(texCoordIndex);
+        Vector pos = vertex.getPosition();
+        Vector normal = vertex.getNormal();
+        Vector color = triangleMesh.getMaterial().getReflectionDiffuse();
+        Vector texCoord = triangleMesh.getTextureCoordinate(texCoordIndex);
 
         // Position
         vertexBuffer[triangleIndex * 9 + vertexInTriangleIndex * 3] = (float) pos.get(0);

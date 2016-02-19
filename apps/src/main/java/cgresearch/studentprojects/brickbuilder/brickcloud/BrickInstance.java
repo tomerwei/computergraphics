@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
@@ -22,17 +22,17 @@ public class BrickInstance {
 	public static Map<Long, BrickInstance> brickMap = new HashMap<Long, BrickInstance>();
 	
 	private IBrick brick;
-	private IVectorInt3 pos;
+	private VectorInt3 pos;
 	private IColorRGB color;
 	private BrickRotation rotation;
-	private List<IVectorInt3> units;
+	private List<VectorInt3> units;
 	private long brickId;
 	
-	public BrickInstance(IBrick brick, IVectorInt3 pos, BrickRotation rot) {
+	public BrickInstance(IBrick brick, VectorInt3 pos, BrickRotation rot) {
 		this(brick, pos, rot, null);
 	}
 	
-	public BrickInstance(IBrick brick, IVectorInt3 pos, BrickRotation rot, IColorRGB color) {
+	public BrickInstance(IBrick brick, VectorInt3 pos, BrickRotation rot, IColorRGB color) {
 		this.brickId = id;
 		brickMap.put(id++, this);
 		
@@ -55,7 +55,7 @@ public class BrickInstance {
 		return brick;
 	}
 
-	public IVectorInt3 getPos() {
+	public VectorInt3 getPos() {
 		return pos;
 	}
 	
@@ -73,7 +73,7 @@ public class BrickInstance {
 //		return brick.getBrickType().name()+"/"+pos;
 	}
 	
-	public List<IVectorInt3> getBrickUnitPositions() {
+	public List<VectorInt3> getBrickUnitPositions() {
 		if (units == null) units = getBrickUnitPositions(brick, pos, rotation);
 		return units;
 	}
@@ -85,9 +85,9 @@ public class BrickInstance {
 	 * @param rot
 	 * @return
 	 */
-	public static List<IVectorInt3> getBrickUnitPositions(IBrick brick, IVectorInt3 pos, BrickRotation rot) {
-		List<IVectorInt3> units = new ArrayList<IVectorInt3>();
-		for (IVectorInt3 v : brick.getUnitPositions()) {
+	public static List<VectorInt3> getBrickUnitPositions(IBrick brick, VectorInt3 pos, BrickRotation rot) {
+		List<VectorInt3> units = new ArrayList<VectorInt3>();
+		for (VectorInt3 v : brick.getUnitPositions()) {
 			switch (rot) {
 				case XDIR_POS: 
 					units.add(pos.add(v));

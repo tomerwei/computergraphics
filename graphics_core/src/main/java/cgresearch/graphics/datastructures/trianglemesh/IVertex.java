@@ -1,6 +1,6 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.GenericVertex;
 
 /**
@@ -11,10 +11,10 @@ import cgresearch.graphics.datastructures.GenericVertex;
  */
 public interface IVertex extends GenericVertex {
 
-  public IVector3 getPosition();
+  public Vector getPosition();
 
-  public IVector3 getNormal();
+  public Vector getNormal();
 
-  public void setNormal(IVector3 newNormal);
+  public void setNormal(Vector newNormal);
 
 }

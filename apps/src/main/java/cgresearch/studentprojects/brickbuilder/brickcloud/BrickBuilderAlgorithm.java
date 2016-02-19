@@ -16,7 +16,7 @@ import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
 
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.voxelcloud.IVoxelCloud;
 import cgresearch.studentprojects.brickbuilder.voxelcloud.VoxelType;
@@ -54,7 +54,7 @@ public class BrickBuilderAlgorithm implements IBrickBuilderAlgorithm {
 		for (int z = 0; z < voxelCloud.getResolutions().getZ(); z++) {
 			for (int y = 0; y < voxelCloud.getResolutions().getY(); y++) {
 				for (int x = 0; x < voxelCloud.getResolutions().getX(); x++) {
-					IVectorInt3 vec = new VectorInt3(x, y, z);
+					VectorInt3 vec = new VectorInt3(x, y, z);
 					if (!preHollow || (preHollow &&
 							(voxelCloud.getVoxelAt(vec) == VoxelType.SURFACE || 
 							voxelCloud.getVoxelAt(vec) == VoxelType.SHELL))) {
@@ -99,7 +99,7 @@ public class BrickBuilderAlgorithm implements IBrickBuilderAlgorithm {
 			BrickInstance brick = brickCloud.getRandomBrick(y);
 //			// get current brick
 			if (brick == null || bricksUsed.contains(brick)) continue;
-			//IVectorInt3 pos = brick.getPos();
+			//VectorInt3 pos = brick.getPos();
 			// get next possible bricks
 			List<IChildBrick> possibleBricks = brickCloud.getBrickSet().getNextBricks(brick.getBrick());	
 			
@@ -109,7 +109,7 @@ public class BrickBuilderAlgorithm implements IBrickBuilderAlgorithm {
 				// calc cost values for each brick for every rotation //possible position
 				int maxCost = Integer.MIN_VALUE;
 				Map<IBrick, BrickRotation> maxBricks = new HashMap<IBrick, BrickRotation>();
-				Map<IBrick, IVectorInt3> maxPos = new HashMap<IBrick, IVectorInt3>();
+				Map<IBrick, VectorInt3> maxPos = new HashMap<IBrick, VectorInt3>();
 				for (IChildBrick b : possibleBricks) {
 					// only 2 rotations
 					if (b instanceof ComposedBrick) {
@@ -140,8 +140,8 @@ public class BrickBuilderAlgorithm implements IBrickBuilderAlgorithm {
 					else {
 						IColorRGB color = brick.getColor();
 						if (color == null) {
-							List<IVectorInt3> unitList = BrickInstance.getBrickUnitPositions(chosen, maxPos.get(chosen), maxBricks.get(chosen));
-							for (IVectorInt3 v : unitList) {
+							List<VectorInt3> unitList = BrickInstance.getBrickUnitPositions(chosen, maxPos.get(chosen), maxBricks.get(chosen));
+							for (VectorInt3 v : unitList) {
 								BrickInstance b = brickCloud.getBrickAt(v);
 								if (b != null && b.getColor() != null) color = b.getColor();
 							}
@@ -261,7 +261,7 @@ public class BrickBuilderAlgorithm implements IBrickBuilderAlgorithm {
 					heights.add(brick.getPos().getY());			
 					
 					if (brick.getPos().getY() > 0) {
-						IVectorInt3 pos = brick.getPos().add(new VectorInt3(0, -1, 0));
+						VectorInt3 pos = brick.getPos().add(new VectorInt3(0, -1, 0));
 						BrickInstance bottom = brickCloud.getBrickAt(pos);
 						
 						if (bottom != null) {
@@ -274,7 +274,7 @@ public class BrickBuilderAlgorithm implements IBrickBuilderAlgorithm {
 					}
 					
 					if (brick.getPos().getY() < brickCloud.getResolutions().getY() - 1) {
-						IVectorInt3 pos = brick.getPos().add(new VectorInt3(0, 1, 0));
+						VectorInt3 pos = brick.getPos().add(new VectorInt3(0, 1, 0));
 						BrickInstance top = brickCloud.getBrickAt(pos);
 						
 						if (top != null) {
@@ -316,10 +316,10 @@ public class BrickBuilderAlgorithm implements IBrickBuilderAlgorithm {
 	}
 	
 	private int checkBrickPosition(IBrickCloud brickCloud, IBrickBuilderMergeFunction func,
-			BrickInstance brick, int maxCost, Map<IBrick, BrickRotation> maxBricks, Map<IBrick, IVectorInt3> maxPos, 
+			BrickInstance brick, int maxCost, Map<IBrick, BrickRotation> maxBricks, Map<IBrick, VectorInt3> maxPos, 
 			IChildBrick b, BrickRotation rot, boolean checkColor) {
 //		System.out.println(rot);
-		for (IVectorInt3 v : BrickInstance.getBrickUnitPositions(b, brick.getPos(), rot)) {	
+		for (VectorInt3 v : BrickInstance.getBrickUnitPositions(b, brick.getPos(), rot)) {	
 			if ((checkColor && brickCloud.canBrickReplaceBricksAt(b, v, rot, brick.getColor()) ||
 					!checkColor && brickCloud.canBrickReplaceBricksAt(b, v, rot))) {
 				int cost = func.valueFunction(brickCloud, b, v, rot);

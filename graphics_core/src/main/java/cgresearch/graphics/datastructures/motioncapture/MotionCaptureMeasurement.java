@@ -1,7 +1,7 @@
 package cgresearch.graphics.datastructures.motioncapture;
 
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 
 /**
  * Representation of a measurement of a data point.
@@ -19,18 +19,18 @@ public class MotionCaptureMeasurement {
 	/**
 	 * Position in 3-space (required).
 	 */
-	private final IVector3 position;
+	private final Vector position;
 
 	/**
 	 * Orientation in 3-space (optional)
 	 */
-	private final IMatrix3 orientation;
+	private final Matrix orientation;
 
 	/**
 	 * Constructor.
 	 */
-	public MotionCaptureMeasurement(String id, IVector3 position,
-			IMatrix3 orientation) {
+	public MotionCaptureMeasurement(String id, Vector position,
+			Matrix orientation) {
 		this.id = id;
 		this.position = position;
 		this.orientation = orientation;
@@ -39,7 +39,7 @@ public class MotionCaptureMeasurement {
 	/**
 	 * Constructor.
 	 */
-	public MotionCaptureMeasurement(String id, IVector3 position) {
+	public MotionCaptureMeasurement(String id, Vector position) {
 		this(id, position, null);
 	}
 
@@ -53,14 +53,14 @@ public class MotionCaptureMeasurement {
 	/**
 	 * Getter.
 	 */
-	public IVector3 getPosition() {
+	public Vector getPosition() {
 		return position;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public IMatrix3 getOrientation() {
+	public Matrix getOrientation() {
 		return orientation;
 	}
 

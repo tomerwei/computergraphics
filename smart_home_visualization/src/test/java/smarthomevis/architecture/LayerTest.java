@@ -1,6 +1,6 @@
 package smarthomevis.architecture;
 
-import cgresearch.core.math.Vector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.primitives.Cylinder;
 import cgresearch.graphics.scenegraph.CgNode;
 import org.bson.types.ObjectId;
@@ -32,7 +32,7 @@ public class LayerTest {
 
     @Before
     public void setUp() {
-        node = new CgNode(new Cylinder(new Vector3(0.0, 0.0, 0.0), new Vector3(1.0, 1.0, 1.0), 1.0), "cylinder");
+        node = new CgNode(new Cylinder(new Vector(0.0, 0.0, 0.0), new Vector(1.0, 1.0, 1.0), 1.0), "cylinder");
         layerController = new LayerController(datastore, new SmartHome().getCgRootNode());
     }
 

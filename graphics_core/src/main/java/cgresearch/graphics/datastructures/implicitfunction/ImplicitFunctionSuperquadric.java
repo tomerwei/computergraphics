@@ -5,7 +5,7 @@
  */
 package cgresearch.graphics.datastructures.implicitfunction;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 
 /**
@@ -39,12 +39,12 @@ public class ImplicitFunctionSuperquadric implements IImplicitFunction3D {
      * 
      * @see
      * edu.haw.cg.datastructures.implicitfunction.IImplicitFunction3D#f(edu.
-     * haw.cg.math.IVector3)
+     * haw.cg.math.Vector)
      */
     @Override
-    public double f(IVector3 p) {
-        IVector3 center = VectorMatrixFactory.newIVector3(0, 0, 0);
-        IVector3 extend = VectorMatrixFactory.newIVector3(1, 1, 1);
+    public double f(Vector p) {
+        Vector center = VectorMatrixFactory.newVector(0, 0, 0);
+        Vector extend = VectorMatrixFactory.newVector(1, 1, 1);
         return Math.pow(
                 Math.pow((p.get(0) - center.get(0)) / extend.get(0), 2.0 / e2)
                         + Math.pow((p.get(1) - center.get(1)) / extend.get(1),

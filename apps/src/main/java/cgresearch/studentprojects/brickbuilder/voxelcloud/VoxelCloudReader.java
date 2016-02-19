@@ -12,10 +12,10 @@ import java.io.IOException;
 
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.studentprojects.brickbuilder.math.ColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
@@ -62,9 +62,9 @@ public class VoxelCloudReader {
 	 * @throws IOException
 	 */
 	private static IVoxelCloud readHeader(DataInputStream reader) throws IOException {
-		IVector3 loc = null;
-		IVector3 dim = null;
-		IVectorInt3 res = null;
+		Vector loc = null;
+		Vector dim = null;
+		VectorInt3 res = null;
 		int colors = 0;
 		StringBuilder s = new StringBuilder();
 		
@@ -74,9 +74,9 @@ public class VoxelCloudReader {
 			while ((c = (char) reader.readByte()) != '\n') s.append(c);
 			
 			if (s.toString().startsWith("loc"))
-				loc = readVector3(s.toString());
+				loc = readVector(s.toString());
 			else if (s.toString().startsWith("dim"))
-				dim = readVector3(s.toString());
+				dim = readVector(s.toString());
 			else if (s.toString().startsWith("res")) {
 				int[] v = readInt(s.toString());
 				if (v.length != 3) continue;
@@ -97,7 +97,7 @@ public class VoxelCloudReader {
 		return cloud;
 	}
 
-	private static IVector3 readVector3(String s) {
+	private static Vector readVector(String s) {
 		String[] data = s.trim().split("\\s+");
 		if (data.length != 4) return null;
 		double[] d = new double[3];
@@ -107,7 +107,7 @@ public class VoxelCloudReader {
 		catch (Exception e) {
 			return null;
 		}
-		return VectorMatrixFactory.newIVector3(d[0], d[1], d[2]);
+		return VectorMatrixFactory.newVector(d[0], d[1], d[2]);
 	}
 	
 	private static int[] readInt(String s) {

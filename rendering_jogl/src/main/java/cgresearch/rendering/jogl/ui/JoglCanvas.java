@@ -20,7 +20,7 @@ import java.util.Observer;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.misc.AnimationTimer;
@@ -71,7 +71,7 @@ public class JoglCanvas extends GLJPanel
   /**
    * Last coordinates of the mouse
    */
-  private IVector3 lastMouseCoordinates = VectorMatrixFactory.newIVector3(-1, -1, 0);
+  private Vector lastMouseCoordinates = VectorMatrixFactory.newVector(-1, -1, 0);
 
   /**
    * Remember last clicked button.
@@ -137,7 +137,7 @@ public class JoglCanvas extends GLJPanel
   @Override
   public void mouseReleased(MouseEvent event) {
     currentButton = -1;
-    lastMouseCoordinates = VectorMatrixFactory.newIVector3(event.getX(), event.getY(), 0);
+    lastMouseCoordinates = VectorMatrixFactory.newVector(event.getX(), event.getY(), 0);
 
     if (Picking.getInstance().isActive()) {
       Picking.getInstance().handleSelectionClick(event.getX(), event.getY(), getWidth(), getHeight(),

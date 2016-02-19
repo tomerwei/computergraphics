@@ -45,9 +45,9 @@ public class MarchingCubesGui extends IApplicationControllerGui implements Chang
    * Settings values
    */
   // private int isoValue = 0;
-  // private IVector3 center = VectorMatrixFactory.newIVector3(0, 0, 0);
-  // private IVector3 dx = VectorMatrixFactory.newIVector3(1, 0, 0);
-  // private IVector3 dy = VectorMatrixFactory.newIVector3(0, 1, 0);
+  // private Vector center = VectorMatrixFactory.newVector(0, 0, 0);
+  // private Vector dx = VectorMatrixFactory.newVector(1, 0, 0);
+  // private Vector dy = VectorMatrixFactory.newVector(0, 1, 0);
 
   private enum Functions {
     Torus, Sphere, Superquadric, GourSat
@@ -96,11 +96,11 @@ public class MarchingCubesGui extends IApplicationControllerGui implements Chang
     // if (sliderX != null && sliderY != null && vis != null) {
     // double alpha = (double) sliderX.getValue() / 100.0 * Math.PI * 2.0;
     // double beta = (double) sliderY.getValue() / 100.0 * Math.PI * 2.0;
-    // IMatrix3 rotX =
-    // VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(1,
+    // Matrix rotX =
+    // VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newVector(1,
     // 0, 0), alpha);
-    // IMatrix3 rotY =
-    // VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,
+    // Matrix rotY =
+    // VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newVector(0,
     // 1, 0), beta);
     // vis.create(implicitFunction, center, rotY.multiply(rotX.multiply(dx)),
     // rotY.multiply(rotX.multiply(dy)), 4,

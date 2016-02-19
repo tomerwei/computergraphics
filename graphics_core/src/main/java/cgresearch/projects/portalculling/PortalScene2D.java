@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.Ray2D;
 import cgresearch.graphics.misc.AnimationTimer;
 
@@ -32,7 +32,7 @@ public class PortalScene2D {
 	/**
 	 * List of nodes (end points of the edges).
 	 */
-	private List<IVector3> nodes = new ArrayList<IVector3>();
+	private List<Vector> nodes = new ArrayList<Vector>();
 
 	/**
 	 * List of already visited cell indices during the pvs computation.
@@ -127,7 +127,7 @@ public class PortalScene2D {
 	/**
 	 * Getter.
 	 */
-	public IVector3 getNode(int index) {
+	public Vector getNode(int index) {
 		return nodes.get(index);
 	}
 
@@ -157,7 +157,7 @@ public class PortalScene2D {
 	 * Find the cell which contains the origin point and return its index.
 	 * Return -1 if the cell cannot be found.
 	 */
-	public int getStartCellIndex(IVector3 origin) {
+	public int getStartCellIndex(Vector origin) {
 		for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
 			if (cellContainsPoint(cells.get(cellIndex), origin)) {
 				return cellIndex;
@@ -170,14 +170,14 @@ public class PortalScene2D {
 	 * Return true if the specified cell contains the given point, false
 	 * otherwise.
 	 */
-	public boolean cellContainsPoint(PortalCell cell, IVector3 p) {
-		List<IVector3> cellNodesList = getCellNodes(cell);
-		IVector3 e01 = cellNodesList.get(1).subtract(cellNodesList.get(0));
-		IVector3 e12 = cellNodesList.get(2).subtract(cellNodesList.get(1));
-		IVector3 e20 = cellNodesList.get(0).subtract(cellNodesList.get(2));
-		IVector3 e0p = p.subtract(cellNodesList.get(0));
-		IVector3 e1p = p.subtract(cellNodesList.get(1));
-		IVector3 e2p = p.subtract(cellNodesList.get(2));
+	public boolean cellContainsPoint(PortalCell cell, Vector p) {
+		List<Vector> cellNodesList = getCellNodes(cell);
+		Vector e01 = cellNodesList.get(1).subtract(cellNodesList.get(0));
+		Vector e12 = cellNodesList.get(2).subtract(cellNodesList.get(1));
+		Vector e20 = cellNodesList.get(0).subtract(cellNodesList.get(2));
+		Vector e0p = p.subtract(cellNodesList.get(0));
+		Vector e1p = p.subtract(cellNodesList.get(1));
+		Vector e2p = p.subtract(cellNodesList.get(2));
 		double A = 0.5 * Math.abs(e01.cross(e20).getNorm());
 		double A1 = 0.5 * Math.abs(e01.cross(e0p).getNorm());
 		double A2 = 0.5 * Math.abs(e12.cross(e1p).getNorm());
@@ -197,8 +197,8 @@ public class PortalScene2D {
 	/**
 	 * Get the three nodes of a cell.
 	 */
-	public List<IVector3> getCellNodes(PortalCell cell) {
-		Set<IVector3> cellNodes = new HashSet<IVector3>();
+	public List<Vector> getCellNodes(PortalCell cell) {
+		Set<Vector> cellNodes = new HashSet<Vector>();
 		for (int i = 0; i < 3; i++) {
 			int edgeIndex = cell.getEdgeIndex(i);
 			PortalEdge edge = edges.get(edgeIndex);
@@ -208,7 +208,7 @@ public class PortalScene2D {
 		if (cellNodes.size() != 3) {
 			Logger.getInstance().error("Cell does not have three nodes - invalid.");
 		}
-		List<IVector3> cellNodesList = new ArrayList<IVector3>(cellNodes);
+		List<Vector> cellNodesList = new ArrayList<Vector>(cellNodes);
 		return cellNodesList;
 	}
 
@@ -287,7 +287,7 @@ public class PortalScene2D {
 	/**
 	 * Add a node to the scene.
 	 */
-	public void addNode(IVector3 node) {
+	public void addNode(Vector node) {
 		nodes.add(node);
 	}
 
