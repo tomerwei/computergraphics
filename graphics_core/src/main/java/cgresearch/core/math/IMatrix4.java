@@ -11,59 +11,54 @@ package cgresearch.core.math;
  * @author Philipp Jenke
  * 
  */
-public interface IMatrix4 {
-	/**
-	 * Set the row 'index'. Attentions: sets the reference, no copy!
-	 */
-	public void setRow(final int index, IVector4 row);
+public interface IMatrix4 extends IMatrix {
+  /**
+   * Set the row 'index'. Attentions: sets the reference, no copy!
+   */
+  public void setRow(final int index, IVector4 row);
 
-	/**
-	 * Compute the product of this matrix and a vector.
-	 */
-	public IVector4 multiply(final IVector4 other);
+  /**
+   * Compute the product of this matrix and a vector.
+   */
+  public IVector4 multiply(final IVector other);
 
-	/**
-	 * Getter.
-	 */
-	public IVector4 getRow(final int index);
+  /**
+   * Sets the value at row rowIndex and column columnIndex.
+   */
+  public void set(int rowIndex, int columnIndex, double value);
 
-	/**
-	 * Sets the value at row rowIndex and column columnIndex.
-	 */
-	public void setRow(int rowIndex, int columnIndex, double value);
+  /**
+   * Return the value at row rowIndex and column columnIndex.
+   */
+  public double get(int rowIndex, int columnIndex);
 
-	/**
-	 * Return the value at row rowIndex and column columnIndex.
-	 */
-	public double get(int rowIndex, int columnIndex);
+  /**
+   * Return an array representation of the matrix.
+   */
+  public double[] toArray();
 
-	/**
-	 * Return an array representation of the matrix.
-	 */
-	public double[] toArray();
+  /**
+   * Return the transposed of the matrix.
+   */
+  public IMatrix4 getTransposed();
 
-	/**
-	 * Return the transposed of the matrix.
-	 */
-	public IMatrix4 getTransposed();
+  /**
+   * Return an array of row-first values.
+   */
+  public double[] data();
 
-	/**
-	 * Return an array of row-first values.
-	 */
-	public double[] data();
+  /**
+   * Multiply matrix with another matrix, return result.
+   */
+  public IMatrix4 multiply(IMatrix other);
 
-	/**
-	 * Multiply matrix with another matrix, return result.
-	 */
-	public IMatrix4 multiply(IMatrix4 other);
+  /**
+   * Return the i'th column
+   */
+  public IVector4 getColumn(int i);
 
-	/**
-	 * Return the i'th column
-	 */
-	public IVector4 getColumn(int i);
-
-	/**
-	 * Set the value at (rown, column).
-	 */
-	public void set(int row, int column, double value);
+  /**
+   * Returns the inverse of the matrix, returns null if the computation failed.
+   */
+  public IMatrix4 getInverse();
 }

@@ -1,13 +1,20 @@
 package cgresearch.graphics.algorithms;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import cgresearch.core.logging.Logger;
 import cgresearch.core.math.IMatrix;
+import cgresearch.core.math.IVector;
 import cgresearch.core.math.IVector3;
+import cgresearch.core.math.IVector4;
+import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.GenericVertex;
+import cgresearch.graphics.datastructures.polygon.PolygonEdge;
 
 /**
  * Parent class for surface simplification methods in 2D and 3D
@@ -58,4 +65,178 @@ public abstract class QuadrikErrorMetricsSimplification {
    * Contains the edges ordered bei increasing collapse error.
    */
   protected PriorityQueue<GenericEdge> queue = null;
+
+  public QuadrikErrorMetricsSimplification() {
+    queue = new PriorityQueue<GenericEdge>((e1, e2) -> (getError(e1) < getError(e2)) ? -1 : 1);
+  }
+
+  /**
+   * Reset state.
+   */
+  public void reset() {
+    pointQems.clear();
+    edgesQems.clear();
+    queue.clear();
+    // Compute QEM for each vertex.
+    for (int i = 0; i < getNumberOfVertices(); i++) {
+      GenericVertex vertex = getVertex(i);
+      pointQems.put(vertex, computePointQem(vertex));
+    }
+    for (int edgeIndex = 0; edgeIndex < getNumberOfEdges(); edgeIndex++) {
+      GenericEdge edge = getEdge(edgeIndex);
+      edgesQems.put(edge, computeEdgeCollapseResult(edge));
+      queue.add(edge);
+    }
+  }
+
+  /**
+   * Compute the QEM for the vertex at the specified index (initialization).
+   */
+  protected abstract IMatrix computePointQem(GenericVertex vertex);
+
+  /**
+   * Compute the result of a possible edge collapse of the specified edge
+   * (error, QEM, optimal vertex position).
+   */
+  protected EdgeCollapse computeEdgeCollapseResult(GenericEdge edge) {
+    GenericVertex p0 = edge.getStartVertex();
+    GenericVertex p1 = edge.getEndVertex();
+    IMatrix qem = pointQems.get(p0).add(pointQems.get(p1));
+    IMatrix derivQem = VectorMatrixFactory.newIMatrix4(qem);
+    derivQem.set(3, 0, 0);
+    derivQem.set(3, 1, 0);
+    derivQem.set(3, 2, 0);
+    derivQem.set(3, 3, 1);
+    double det = Math.abs(derivQem.getDeterminant());
+    if (det > 1e-5) {
+      // Matrix is invertible
+      IMatrix invQ = derivQem.getInverse();
+      IVector pos = invQ.multiply(VectorMatrixFactory.newIVector4(0, 0, 0, 1));
+      double error = pos.multiply(qem.multiply(pos));
+      return new EdgeCollapse(error, qem, VectorMatrixFactory.newIVector3(pos.get(0), pos.get(1), pos.get(2)));
+    } else {
+      // Matrix cannot be inverted, use corner points or midpoint
+      List<IVector3> candidates = new ArrayList<IVector3>();
+      candidates.add(p0.getPosition());
+      candidates.add(p1.getPosition());
+      candidates.add((p0.getPosition().add(p1.getPosition())).multiply(0.5));
+      double minError = Double.POSITIVE_INFINITY;
+      IVector3 minPos = null;
+      for (IVector3 p : candidates) {
+        IVector4 pos = p.makeHomogenious();
+        pos.set(3, 1);
+        double error = pos.multiply(qem.multiply(pos));
+        if (error < minError) {
+          minError = error;
+          minPos = VectorMatrixFactory.newIVector3(pos.get(0), pos.get(1), pos.get(2));
+        }
+      }
+      return new EdgeCollapse(minError, qem, minPos);
+    }
+  }
+
+  /**
+   * Return the edge with the specified index.
+   */
+  protected abstract GenericEdge getEdge(int edgeIndex);
+
+  /**
+   * Return the vertex with the specified index.
+   */
+  protected abstract GenericVertex getVertex(int vertexIndex);
+
+  /**
+   * Return the number of vertices in the datastructure.
+   */
+  protected abstract int getNumberOfVertices();
+
+  /**
+   * Return the number of edges in the datastructure.
+   */
+  protected abstract int getNumberOfEdges();
+
+  /**
+   * Apply one simplification step.
+   */
+  public void simplify() {
+    if (getNumberOfEdges() == 0) {
+      Logger.getInstance().error("Cannot collapse with less than 2 points.");
+      return;
+    }
+
+    PolygonEdge queueEdge = (PolygonEdge) queue.poll();
+    GenericVertex p = collapse(queueEdge, edgesQems.get(queueEdge).newPos);
+    pointQems.put(p, edgesQems.get(queueEdge).Q);
+
+    // TODO: Remove collapsed edges from queue
+
+    // Update incident edges
+    List<GenericEdge> incidentEdges = getIncidentEdges(p);
+    for (GenericEdge edge : incidentEdges) {
+      edgesQems.put(edge, computeEdgeCollapseResult(edge));
+    }
+
+    // Old version without queue
+    // double errorMin = Double.POSITIVE_INFINITY;
+    // int optimalEdgeIndex = -1;
+    // IVector3 optimalPos = VectorMatrixFactory.newIVector3();
+    // IMatrix3 optimalQ = VectorMatrixFactory.newIMatrix3();
+    // for (int edgeIndex = 0; edgeIndex < polygon.getNumEdges(); edgeIndex++) {
+    // ErrorComputationResult result = computeError(polygon.getEdge(edgeIndex));
+    // if (result.error < errorMin) {
+    // errorMin = result.error;
+    // optimalEdgeIndex = edgeIndex;
+    // optimalPos.copy(result.newPos);
+    // optimalQ.copy(result.Q);
+    // }
+    // }
+    // if (optimalEdgeIndex >= 0) {
+    // optimalPos.set(2, 0);
+    // PolygonVertex p = polygon.collapse(optimalEdgeIndex, optimalPos);
+    // pointQems.put(p, optimalQ);
+    // } else {
+    // Logger.getInstance().error("Invalid edge index - should not happen.");
+    // }
+  }
+
+  protected abstract List<GenericEdge> getIncidentEdges(GenericVertex p);
+
+  /**
+   * Collapse the specified edge, provides the new vertex position.
+   */
+  protected abstract GenericVertex collapse(GenericEdge edge, IVector3 newPos);
+
+  /**
+   * Color-code edge by error.
+   */
+  public void computeEdgeErrorColor() {
+    double errorMin = Double.POSITIVE_INFINITY;
+    double errorMax = Double.NEGATIVE_INFINITY;
+    for (int edgeIndex = 0; edgeIndex < getNumberOfEdges(); edgeIndex++) {
+      EdgeCollapse result = computeEdgeCollapseResult(getEdge(edgeIndex));
+      if (result.error < errorMin) {
+        errorMin = result.error;
+      }
+      if (result.error > errorMax) {
+        errorMax = result.error;
+      }
+    }
+    for (int edgeIndex = 0; edgeIndex < getNumberOfEdges(); edgeIndex++) {
+      EdgeCollapse result = computeEdgeCollapseResult(getEdge(edgeIndex));
+      IVector3 color =
+          VectorMatrixFactory.newIVector3(transferFunction((result.error - errorMin) / (errorMax - errorMin)), 0, 0);
+      getEdge(edgeIndex).setColor(color);
+    }
+  }
+
+  private double transferFunction(double x) {
+    return Math.pow(1 - x, 8);
+  }
+
+  /**
+   * Returns the error for the specified edge.
+   */
+  protected double getError(GenericEdge edge) {
+    return edgesQems.get(edge).error;
+  }
 }

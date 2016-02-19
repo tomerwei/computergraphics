@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 public class Vector implements IVector, Serializable {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = 1L;
+
   private double[] values;
 
   public Vector(int dimension) {

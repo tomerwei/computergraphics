@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.QuadricErrorMetricsSimplification2D;
+import cgresearch.graphics.algorithms.QuadricErrorMetricsSimplification3D;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMesh;
@@ -38,13 +39,10 @@ import cgresearch.ui.IApplicationControllerGui;
 public class SimplificationToolbar extends IApplicationControllerGui implements ActionListener {
   private static final long serialVersionUID = -6897703772468146995L;
 
-  /**
-   * Half edge data structure
-   */
-  private final HalfEdgeTriangleMesh heMesh;
-
   private final QuadricErrorMetricsSimplification2D simplification2D;
+  private final QuadricErrorMetricsSimplification3D simplification3D;
   private final Polygon polygon;
+  private final HalfEdgeTriangleMesh heMesh;
 
   /**
    * Action command for the simplify button.
@@ -63,6 +61,7 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     this.heMesh = heMesh;
     this.polygon = polygon;
     simplification2D = new QuadricErrorMetricsSimplification2D(polygon);
+    simplification3D = new QuadricErrorMetricsSimplification3D(heMesh);
 
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -115,6 +114,10 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     heMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     heMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
     heMesh.checkConsistency();
+
+    simplification3D.reset();
+    simplification3D.computeEdgeErrorColor();
+
     heMesh.updateRenderStructures();
   }
 

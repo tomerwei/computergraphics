@@ -47,6 +47,6 @@ public interface IMatrix {
   /**
    * Returns the inverse of the matrix, returns null if the computation failed.
    */
-  public IMatrix3 getInverse();
+  public IMatrix getInverse();
 
 }
