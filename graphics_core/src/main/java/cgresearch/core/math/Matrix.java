@@ -166,6 +166,23 @@ public class Matrix {
   }
 
   /**
+   * Scale matrix, return result as new matrix.
+   * 
+   * @param d
+   *          Scaling factor.
+   * @return New scaled vertex.
+   */
+  public Matrix multiply(double d) {
+    Matrix result = new Matrix(getNumberOfRows(), getNumberOfColumns());
+    for (int row = 0; row < getNumberOfRows(); row++) {
+      for (int column = 0; column < getNumberOfColumns(); column++) {
+        result.set(row, column, get(row, column) * d);
+      }
+    }
+    return result;
+  }
+
+  /**
    * Add other matrix, return result as new matrix.
    * 
    * @param other
@@ -179,6 +196,28 @@ public class Matrix {
       for (int i = 0; i < result.getNumberOfRows(); i++) {
         for (int j = 0; j < result.getNumberOfColumns(); j++) {
           result.set(i, j, this.get(i, j) + other.get(i, j));
+        }
+      }
+    } else {
+      System.err.println("Dimensions Conflict!");
+    }
+    return result;
+  }
+
+  /**
+   * Subtract other matrix, return result as new matrix.
+   * 
+   * @param other
+   *          Matrix to be added.
+   * @return New matrix containing the result.
+   */
+  public Matrix subtract(Matrix other) {
+    Matrix result = null;
+    if (this.getNumberOfColumns() == other.getNumberOfColumns() && this.getNumberOfRows() == other.getNumberOfRows()) {
+      result = new Matrix(getNumberOfRows(), getNumberOfColumns());
+      for (int i = 0; i < result.getNumberOfRows(); i++) {
+        for (int j = 0; j < result.getNumberOfColumns(); j++) {
+          result.set(i, j, this.get(i, j) - other.get(i, j));
         }
       }
     } else {
@@ -269,23 +308,6 @@ public class Matrix {
       }
     }
     return data;
-  }
-
-  /**
-   * Scale matrix, return result as new matrix.
-   * 
-   * @param d
-   *          Scaling factor.
-   * @return New scaled vertex.
-   */
-  public Matrix multiply(double d) {
-    Matrix result = new Matrix(getNumberOfRows(), getNumberOfColumns());
-    for (int row = 0; row < getNumberOfRows(); row++) {
-      for (int column = 0; column < getNumberOfColumns(); column++) {
-        result.set(row, column, get(row, column) * d);
-      }
-    }
-    return result;
   }
 
   @Override

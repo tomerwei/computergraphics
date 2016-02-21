@@ -7,27 +7,6 @@ import org.junit.Test;
 public class TestMatrix {
 
   @Test
-  public void testInverse() {
-    Matrix A = VectorMatrixFactory.newMatrix(-1, 2, 0.5, 3, -4, 2, 1, 1, 7, -4, -3, 2, 4, -2, 1, -5);
-    Matrix invA = A.getInverse();
-    Matrix result = A.multiply(invA);
-    for (int rowIndex = 0; rowIndex < A.getNumberOfRows(); rowIndex++) {
-      for (int columnIndex = 0; columnIndex < A.getNumberOfColumns(); columnIndex++) {
-        assertEquals((rowIndex == columnIndex) ? 1 : 0, result.get(rowIndex, columnIndex), 1e-5);
-      }
-    }
-
-    Matrix matrix = VectorMatrixFactory.newMatrix(2, -4, 1, 3, -5, -3, 2, 1, -4);
-    Matrix inverse = matrix.getInverse();
-    Matrix result2 = matrix.multiply(inverse);
-    for (int row = 0; row < matrix.getNumberOfRows(); row++) {
-      for (int column = 0; column < matrix.getNumberOfColumns(); column++) {
-        assertEquals((row == column) ? 1 : 0, result2.get(row, column), 1e-5);
-      }
-    }
-  }
-
-  @Test
   public void testConstructor() {
     Matrix A = new Matrix(2, 3);
     A.set(0, 0, 1);
@@ -42,14 +21,47 @@ public class TestMatrix {
     assertEquals(-3, A.get(1, 0), 1e-5);
     assertEquals(2, A.get(1, 1), 1e-5);
     assertEquals(-1, A.get(1, 2), 1e-5);
-
     Matrix B = VectorMatrixFactory.newMatrix(1, 2, 3, 4, 5, 6, 7, 8, 9);
     Vector v = VectorMatrixFactory.newVector(0.5, 1.5, 2.5);
     Vector result = B.multiply(v);
-    // System.out.println("B:\n" + B);
-    // System.out.println("v:\n" + v);
-    // System.out.println("B*v:\n" + result);
     assertEquals(result, VectorMatrixFactory.newVector(11, 24.5, 38));
+  }
+
+  @Test
+  public void testConstructor3() {
+    Matrix A = new Matrix(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    assertEquals(3, A.getNumberOfRows());
+    assertEquals(3, A.getNumberOfColumns());
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        assertEquals(row * 3 + col + 1, A.get(row, col), MathHelpers.EPSILON);
+      }
+    }
+  }
+
+  @Test
+  public void testConstructor4() {
+    Matrix A = new Matrix(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    assertEquals(4, A.getNumberOfRows());
+    assertEquals(4, A.getNumberOfColumns());
+    for (int row = 0; row < 4; row++) {
+      for (int col = 0; col < 4; col++) {
+        assertEquals(row * 4 + col + 1, A.get(row, col), MathHelpers.EPSILON);
+      }
+    }
+  }
+
+  @Test
+  public void testCopyConstructor() {
+    Matrix A = new Matrix(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    Matrix B = new Matrix(A);
+    assertEquals(B.getNumberOfRows(), A.getNumberOfRows());
+    assertEquals(B.getNumberOfColumns(), A.getNumberOfColumns());
+    for (int row = 0; row < 4; row++) {
+      for (int col = 0; col < 4; col++) {
+        assertEquals(B.get(row, col), A.get(row, col), MathHelpers.EPSILON);
+      }
+    }
   }
 
   @Test
@@ -115,16 +127,95 @@ public class TestMatrix {
   }
 
   @Test
-  /**
-   * Test divide.
-   */
-  public void testMultiply() {
-    Matrix matrixA = VectorMatrixFactory.newMatrix(VectorMatrixFactory.newVector(1, 2, 1),
-        VectorMatrixFactory.newVector(3, 4, 5), VectorMatrixFactory.newVector(-4, 4, 2));
-    Vector vector = VectorMatrixFactory.newVector(1, -1, 2);
-    Vector expected = VectorMatrixFactory.newVector(1, 9, -4);
-    Vector result = matrixA.multiply(vector);
-    assertEquals(result, expected);
+  public void testScale() {
+    int numberOfRows = (int) (Math.random() * 9) + 1;
+    int numberOfCols = (int) (Math.random() * 9) + 1;
+    Matrix A = new Matrix(numberOfRows, numberOfCols);
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int col = 0; col < numberOfCols; col++) {
+        A.set(row, col, Math.random());
+      }
+    }
+    double factor = Math.random();
+    Matrix C = A.multiply(factor);
+    assertEquals(numberOfRows, C.getNumberOfRows());
+    assertEquals(numberOfCols, C.getNumberOfColumns());
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int col = 0; col < numberOfCols; col++) {
+        assertEquals(A.get(row, col) * factor, C.get(row, col), MathHelpers.EPSILON);
+      }
+    }
+  }
+
+  @Test
+  public void testAdd() {
+    int numberOfRows = (int) (Math.random() * 9) + 1;
+    int numberOfCols = (int) (Math.random() * 9) + 1;
+    Matrix A = new Matrix(numberOfRows, numberOfCols);
+    Matrix B = new Matrix(numberOfRows, numberOfCols);
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int col = 0; col < numberOfCols; col++) {
+        A.set(row, col, Math.random());
+        B.set(row, col, Math.random());
+      }
+    }
+    Matrix C = A.add(B);
+    assertEquals(numberOfRows, C.getNumberOfRows());
+    assertEquals(numberOfCols, C.getNumberOfColumns());
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int col = 0; col < numberOfCols; col++) {
+        assertEquals(A.get(row, col) + B.get(row, col), C.get(row, col), MathHelpers.EPSILON);
+      }
+    }
+  }
+
+  @Test
+  public void testSubtract() {
+    int numberOfRows = (int) (Math.random() * 9) + 1;
+    int numberOfCols = (int) (Math.random() * 9) + 1;
+    Matrix A = new Matrix(numberOfRows, numberOfCols);
+    Matrix B = new Matrix(numberOfRows, numberOfCols);
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int col = 0; col < numberOfCols; col++) {
+        A.set(row, col, Math.random());
+        B.set(row, col, Math.random());
+      }
+    }
+    Matrix C = A.subtract(B);
+    assertEquals(numberOfRows, C.getNumberOfRows());
+    assertEquals(numberOfCols, C.getNumberOfColumns());
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int col = 0; col < numberOfCols; col++) {
+        assertEquals(A.get(row, col) - B.get(row, col), C.get(row, col), MathHelpers.EPSILON);
+        ;
+      }
+    }
+  }
+
+  @Test
+  public void testGetDeterminant() {
+    Matrix A = new Matrix(0, 1, 2, 3, 2, 1, 1, 1, 0);
+    assertEquals(3, A.getDeterminant(), MathHelpers.EPSILON);
+  }
+
+  @Test
+  public void testInverse() {
+    Matrix A = VectorMatrixFactory.newMatrix(-1, 2, 0.5, 3, -4, 2, 1, 1, 7, -4, -3, 2, 4, -2, 1, -5);
+    Matrix invA = A.getInverse();
+    Matrix result = A.multiply(invA);
+    for (int rowIndex = 0; rowIndex < A.getNumberOfRows(); rowIndex++) {
+      for (int columnIndex = 0; columnIndex < A.getNumberOfColumns(); columnIndex++) {
+        assertEquals((rowIndex == columnIndex) ? 1 : 0, result.get(rowIndex, columnIndex), 1e-5);
+      }
+    }
+    Matrix matrix = VectorMatrixFactory.newMatrix(2, -4, 1, 3, -5, -3, 2, 1, -4);
+    Matrix inverse = matrix.getInverse();
+    Matrix result2 = matrix.multiply(inverse);
+    for (int row = 0; row < matrix.getNumberOfRows(); row++) {
+      for (int column = 0; column < matrix.getNumberOfColumns(); column++) {
+        assertEquals((row == column) ? 1 : 0, result2.get(row, column), 1e-5);
+      }
+    }
   }
 
   @Test
@@ -148,15 +239,20 @@ public class TestMatrix {
   }
 
   @Test
-  public void testMultiplyMatrix() {
-    Matrix A = VectorMatrixFactory.newMatrix(1, 2, 3, 4, 5, 6, 7, 8, 9);
-    Matrix B = VectorMatrixFactory.newMatrix(0.5, 0.5, 0.5, 2, 2, 2, 1, 1, 1);
-    Matrix result = A.multiply(B);
-    // System.out.println("A:\n" + A);
-    // System.out.println("(B:\n" + (B);
-    // System.out.println("A*(B:\n" + result);
-    Matrix expectedResult = VectorMatrixFactory.newMatrix(7.5, 7.5, 7.5, 18, 18, 18, 28.5, 28.5, 28.5);
-    assertEquals(expectedResult, result);
+  public void testData() {
+    int numberOfRows = (int) (Math.random() * 9) + 1;
+    int numberOfCols = (int) (Math.random() * 9) + 1;
+    Matrix A = new Matrix(numberOfRows, numberOfCols);
+    for (int row = 0; row < numberOfRows; row++) {
+      for (int col = 0; col < numberOfCols; col++) {
+        A.set(row, col, numberOfCols * row + col);
+      }
+    }
+    double[] data = A.data();
+    assertEquals(numberOfRows * numberOfCols, data.length);
+    for (int i = 0; i < data.length; i++) {
+      assertEquals(i, data[i], MathHelpers.EPSILON);
+    }
   }
 
   @Test

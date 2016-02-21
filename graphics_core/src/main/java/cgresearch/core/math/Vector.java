@@ -78,6 +78,21 @@ public class Vector implements Serializable {
   }
 
   /**
+   * Copy coordinates of other vector.
+   * 
+   * @param other
+   *          Vector to copy from.
+   */
+  public void copy(Vector other) {
+    if (other.getDimension() != getDimension()) {
+      throw new IllegalArgumentException();
+    }
+    for (int i = 0; i < getDimension(); i++) {
+      set(i, other.get(i));
+    }
+  }
+
+  /**
    * Getter for the dimension.
    * 
    * @return Dimension of the vector.
@@ -218,21 +233,6 @@ public class Vector implements Serializable {
   }
 
   /**
-   * Copy coordinates of other vector.
-   * 
-   * @param other
-   *          Vector to copy from.
-   */
-  public void copy(Vector other) {
-    if (other.getDimension() != getDimension()) {
-      throw new IllegalArgumentException();
-    }
-    for (int i = 0; i < getDimension(); i++) {
-      set(i, other.get(i));
-    }
-  }
-
-  /**
    * Create a normalized version of the vector, return as result.
    * 
    * @return Normalized vector.
@@ -277,7 +277,7 @@ public class Vector implements Serializable {
   }
 
   /**
-   * Add another vector to this-object, changed the coordinates.
+   * Add another vector to this-object, change this coordinates.
    * 
    * @param other
    *          Vector to be added.
@@ -288,6 +288,21 @@ public class Vector implements Serializable {
     }
     for (int i = 0; i < getDimension(); i++) {
       set(i, get(i) + other.get(i));
+    }
+  }
+
+  /**
+   * Subtract another vector from this-object, change this coordinates.
+   * 
+   * @param other
+   *          Vector to be added.
+   */
+  public void subtractSelf(Vector other) {
+    if (other.getDimension() != getDimension()) {
+      throw new IllegalArgumentException();
+    }
+    for (int i = 0; i < getDimension(); i++) {
+      set(i, get(i) - other.get(i));
     }
   }
 
