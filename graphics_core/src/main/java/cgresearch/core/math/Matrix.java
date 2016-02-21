@@ -1,9 +1,27 @@
 package cgresearch.core.math;
 
+/**
+ * Representation of a matrix with arbitrary dimension.
+ * 
+ * @author Philipp Jenke
+ *
+ */
 public class Matrix {
 
+  /**
+   * Coordinates as 3D aray with row-based order (values[0] contains the values
+   * of the first row).
+   */
   private double[][] values;
 
+  /**
+   * Create matrix with given dimensions.
+   * 
+   * @param numberOfRows
+   *          Number of rows.
+   * @param numberOfColumns
+   *          Number of columns.
+   */
   public Matrix(int numberOfRows, int numberOfColumns) {
     if (numberOfColumns < 1 || numberOfColumns < 1) {
       throw new IllegalArgumentException();
@@ -12,7 +30,7 @@ public class Matrix {
   }
 
   /**
-   * Constructor for 3x3 matrix
+   * Constructor for 3x3 matrix.
    */
   public Matrix(double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21,
       double v22) {
@@ -29,7 +47,7 @@ public class Matrix {
   }
 
   /**
-   * Constructor for 4x4 matrix
+   * Constructor for 4x4 matrix.
    */
   public Matrix(double v00, double v01, double v02, double v03, double v10, double v11, double v12, double v13,
       double v20, double v21, double v22, double v23, double v30, double v31, double v32, double v33) {
@@ -75,14 +93,39 @@ public class Matrix {
     return values[0].length;
   }
 
+  /**
+   * Get the coordinate at the specified position.
+   * 
+   * @param rowIndex
+   *          Row index (0-based).
+   * @param columnIndex
+   *          Column index (0-based).
+   * @return Coordinate at the specified position.
+   */
   public double get(int rowIndex, int columnIndex) {
     return values[rowIndex][columnIndex];
   }
 
+  /**
+   * Set the coordinate at the specified position.
+   * 
+   * @param rowIndex
+   *          Row index (0-based).
+   * @param columnIndex
+   *          Column index (0-based).
+   * @return Coordinate at the specified position.
+   */
   public void set(int rowIndex, int columnIndex, double value) {
     values[rowIndex][columnIndex] = value;
   }
 
+  /**
+   * Multiply this with vector, return result as new vector.
+   * 
+   * @param other
+   *          Vector to be multiplied
+   * @return New vector containing the result.
+   */
   public Vector multiply(Vector other) {
     if (getNumberOfColumns() != other.getDimension()) {
       throw new IllegalArgumentException();
@@ -98,6 +141,13 @@ public class Matrix {
     return result;
   }
 
+  /**
+   * Multiply this with other matrix, return result as new matrix.
+   * 
+   * @param other
+   *          Matrix to be multiplied.
+   * @return New matrix containing the result.
+   */
   public Matrix multiply(Matrix other) {
     if (getNumberOfColumns() != other.getNumberOfRows()) {
       throw new IllegalArgumentException();
@@ -115,6 +165,13 @@ public class Matrix {
     return result;
   }
 
+  /**
+   * Add other matrix, return result as new matrix.
+   * 
+   * @param other
+   *          Matrix to be added.
+   * @return New matrix containing the result.
+   */
   public Matrix add(Matrix other) {
     Matrix result = null;
     if (this.getNumberOfColumns() == other.getNumberOfColumns() && this.getNumberOfRows() == other.getNumberOfRows()) {
@@ -130,6 +187,11 @@ public class Matrix {
     return result;
   }
 
+  /**
+   * Compute and return the matrix determinant. Matrix must be squared.
+   * 
+   * @return Determinant of the matrix.
+   */
   public double getDeterminant() {
     if (getNumberOfRows() != getNumberOfColumns()) {
       throw new IllegalArgumentException();
@@ -143,6 +205,11 @@ public class Matrix {
     }
   }
 
+  /**
+   * Compute and return the inverse of the matrix. Matrix must be invertible.
+   * 
+   * @return New matrix containing the inverse.
+   */
   public Matrix getInverse() {
     if (getNumberOfRows() != getNumberOfColumns()) {
       throw new IllegalArgumentException();
@@ -174,6 +241,11 @@ public class Matrix {
     }
   }
 
+  /**
+   * Compute and return the transposed of the matrix.
+   * 
+   * @return New matrix containing the transposed.
+   */
   public Matrix getTransposed() {
     Matrix result = new Matrix(getNumberOfColumns(), getNumberOfRows());
     for (int rowIndex = 0; rowIndex < getNumberOfRows(); rowIndex++) {
@@ -184,6 +256,11 @@ public class Matrix {
     return result;
   }
 
+  /**
+   * Return 1-dimensional row-based array of the matrix coordinates.
+   * 
+   * @return Array with coordinates.
+   */
   public double[] data() {
     double[] data = new double[getNumberOfRows() * getNumberOfColumns()];
     for (int row = 0; row < getNumberOfRows(); row++) {
@@ -194,6 +271,13 @@ public class Matrix {
     return data;
   }
 
+  /**
+   * Scale matrix, return result as new matrix.
+   * 
+   * @param d
+   *          Scaling factor.
+   * @return New scaled vertex.
+   */
   public Matrix multiply(double d) {
     Matrix result = new Matrix(getNumberOfRows(), getNumberOfColumns());
     for (int row = 0; row < getNumberOfRows(); row++) {

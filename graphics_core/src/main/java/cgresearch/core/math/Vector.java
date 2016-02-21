@@ -11,12 +11,28 @@ public class Vector implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Array contaising the values of the vector. Length of the array matches the
+   * vector dimension.
+   */
   private double[] values;
 
+  /**
+   * Create a vector.
+   * 
+   * @param dimension
+   *          Dimension of the created vector.
+   */
   public Vector(int dimension) {
     values = new double[dimension];
   }
 
+  /**
+   * Copy contructor
+   * 
+   * @param other
+   *          Vector to be copied from.
+   */
   public Vector(Vector other) {
     this(other.getDimension());
     for (int index = 0; index < getDimension(); index++) {
@@ -24,6 +40,16 @@ public class Vector implements Serializable {
     }
   }
 
+  /**
+   * Convenience constructor for 3-dimensional vectors.
+   * 
+   * @param x
+   *          x-coordinate.
+   * @param y
+   *          y-coordinate.
+   * @param z
+   *          z-coordinate.
+   */
   public Vector(double x, double y, double z) {
     this(3);
     set(0, x);
@@ -31,6 +57,18 @@ public class Vector implements Serializable {
     set(2, z);
   }
 
+  /**
+   * Convenience constructor for 3-dimensional vectors.
+   * 
+   * @param x
+   *          x-coordinate.
+   * @param y
+   *          y-coordinate.
+   * @param z
+   *          z-coordinate.
+   * @param w
+   *          w-coordinate (forth coordinate).
+   */
   public Vector(double x, double y, double z, double w) {
     this(4);
     set(0, x);
@@ -39,18 +77,45 @@ public class Vector implements Serializable {
     set(3, w);
   }
 
+  /**
+   * Getter for the dimension.
+   * 
+   * @return Dimension of the vector.
+   */
   public int getDimension() {
     return values.length;
   }
 
+  /**
+   * Getter for a specified coordinate.
+   * 
+   * @param index
+   *          Index of the coordinate.
+   * @return Coordinate value.
+   */
   public double get(int index) {
     return values[index];
   }
 
+  /**
+   * Setter for value.
+   *
+   * @param index
+   *          Coordinate index
+   * @param value
+   *          new value.
+   */
   public void set(int index, double value) {
     values[index] = value;
   }
 
+  /**
+   * Subtract other vector, return result as new vector.
+   * 
+   * @param other
+   *          Vector to be subtracted.
+   * @return Vector containing the result.
+   */
   public Vector subtract(Vector other) {
     if (other == null || other.getDimension() != getDimension()) {
       throw new IllegalArgumentException();
@@ -62,6 +127,13 @@ public class Vector implements Serializable {
     return result;
   }
 
+  /**
+   * Add other vector, return result as new vector.
+   * 
+   * @param other
+   *          Vector to be added.
+   * @return Vector containing the result.
+   */
   public Vector add(Vector other) {
     if (other == null || other.getDimension() != getDimension()) {
       throw new IllegalArgumentException();
@@ -73,10 +145,20 @@ public class Vector implements Serializable {
     return result;
   }
 
+  /**
+   * Getter for norm of the vector.
+   * 
+   * @return Norm (length) of the vector.
+   */
   public double getNorm() {
     return Math.sqrt(getSqrNorm());
   }
 
+  /**
+   * Getter for squared norm of the vector.
+   * 
+   * @return Squared norm (squared length).
+   */
   public double getSqrNorm() {
     double norm = 0;
     for (int index = 0; index < getDimension(); index++) {
@@ -85,11 +167,17 @@ public class Vector implements Serializable {
     return norm;
   }
 
+  /**
+   * Multiply other vector, compute scalar product.
+   * 
+   * @param other
+   *          Vector to be mutiplied.
+   * @return Scalar product of the two vector.
+   */
   public double multiply(Vector other) {
     if (other == null || other.getDimension() != getDimension()) {
       throw new IllegalArgumentException();
     }
-
     double result = 0;
     for (int index = 0; index < getDimension(); index++) {
       result += get(index) * other.get(index);
@@ -97,6 +185,13 @@ public class Vector implements Serializable {
     return result;
   }
 
+  /**
+   * Scale vector, return result as new vector.
+   * 
+   * @param factor
+   *          Scaling factor.
+   * @return Scaled vector.
+   */
   public Vector multiply(double factor) {
     Vector result = new Vector(getDimension());
     for (int index = 0; index < getDimension(); index++) {
@@ -105,16 +200,29 @@ public class Vector implements Serializable {
     return result;
   }
 
-  public Matrix innerProduct(Vector d) {
-    Matrix M = new Matrix(d.getDimension(), d.getDimension());
-    for (int rowIndex = 0; rowIndex < d.getDimension(); rowIndex++) {
-      for (int columnIndex = 0; columnIndex < d.getDimension(); columnIndex++) {
-        M.set(rowIndex, columnIndex, get(rowIndex) * d.get(columnIndex));
+  /**
+   * Compute the inner product of the vector with another vector.
+   * 
+   * @param other
+   *          Other vector
+   * @return Resulting matrix.
+   */
+  public Matrix innerProduct(Vector other) {
+    Matrix M = new Matrix(other.getDimension(), other.getDimension());
+    for (int rowIndex = 0; rowIndex < other.getDimension(); rowIndex++) {
+      for (int columnIndex = 0; columnIndex < other.getDimension(); columnIndex++) {
+        M.set(rowIndex, columnIndex, get(rowIndex) * other.get(columnIndex));
       }
     }
     return M;
   }
 
+  /**
+   * Copy coordinates of other vector.
+   * 
+   * @param other
+   *          Vector to copy from.
+   */
   public void copy(Vector other) {
     if (other.getDimension() != getDimension()) {
       throw new IllegalArgumentException();
@@ -124,6 +232,11 @@ public class Vector implements Serializable {
     }
   }
 
+  /**
+   * Create a normalized version of the vector, return as result.
+   * 
+   * @return Normalized vector.
+   */
   public Vector getNormalized() {
     final double d = getNorm();
     if (Math.abs(d) < MathHelpers.EPSILON) {
@@ -132,6 +245,9 @@ public class Vector implements Serializable {
     return this.multiply(1.0 / d);
   }
 
+  /**
+   * Normalize the vector.
+   */
   public void normalize() {
     double norm = getNorm();
     for (int i = 0; i < getDimension(); i++) {
@@ -139,6 +255,13 @@ public class Vector implements Serializable {
     }
   }
 
+  /**
+   * Compute the cross product of two vectors (only on 3-space).
+   * 
+   * @param other
+   *          Vector to be computed with
+   * @return Cross product result vector.
+   */
   public Vector cross(final Vector other) {
     if (getDimension() != 3 || other.getDimension() != 3) {
       throw new IllegalArgumentException();
@@ -153,6 +276,12 @@ public class Vector implements Serializable {
     return result;
   }
 
+  /**
+   * Add another vector to this-object, changed the coordinates.
+   * 
+   * @param other
+   *          Vector to be added.
+   */
   public void addSelf(Vector other) {
     if (other.getDimension() != getDimension()) {
       throw new IllegalArgumentException();
@@ -162,12 +291,23 @@ public class Vector implements Serializable {
     }
   }
 
+  /**
+   * Scale vector, change this.
+   * 
+   * @param d
+   *          Scaling factor.
+   */
   public void multiplySelf(double d) {
     for (int i = 0; i < getDimension(); i++) {
       set(i, get(i) * d);
     }
   }
 
+  /**
+   * Create array of the coordinates in float format.
+   * 
+   * @return Coordinate array.
+   */
   public float[] floatData() {
     float[] floatData = new float[values.length];
     for (int i = 0; i < values.length; i++) {
@@ -176,6 +316,11 @@ public class Vector implements Serializable {
     return floatData;
   }
 
+  /**
+   * Create array of the coordinates in double format.
+   * 
+   * @return Coordinate array.
+   */
   public double[] data() {
     double[] data = new double[values.length];
     for (int i = 0; i < values.length; i++) {
@@ -184,6 +329,14 @@ public class Vector implements Serializable {
     return data;
   }
 
+  /**
+   * Specialized version of the toString() method with given precision for the
+   * coordinates.
+   * 
+   * @param precision
+   *          Number of digits after the . or ,
+   * @return String representation of the vector.
+   */
   public String toString(int precision) {
     String result = "(";
     for (int i = 0; i < getDimension(); i++) {
