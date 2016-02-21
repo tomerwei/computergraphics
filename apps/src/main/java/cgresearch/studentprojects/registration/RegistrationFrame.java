@@ -11,7 +11,8 @@ import cgresearch.core.logging.ConsoleLogger;
 import cgresearch.core.logging.Logger.VerboseMode;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Matrix;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.points.IPointCloud;
@@ -83,7 +84,7 @@ public class RegistrationFrame extends CgApplication {
 	  int x =0, y =1, z=2;
 	  
 	 
-	  Vector translation = VectorMatrixFactory.newVector(1, 1, 1);
+	  Vector translation = VectorFactory.createVector3(1, 1, 1);
 
     // Load cube from file
     ObjFileReader reader = new ObjFileReader();
@@ -125,7 +126,7 @@ public class RegistrationFrame extends CgApplication {
     // Rotation of the second point cloud: 10 degrees in degrees - transformed
     // to radiens. Rotation axis: (1,1,1)
     double rotationAngle = 10 * Math.PI / 180;
-    TriangleMeshTransformation.transform(cubeMesh, VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newVector(1, 1, 1), rotationAngle));
+    TriangleMeshTransformation.transform(cubeMesh, MatrixFactory.createRotationMatrix(VectorFactory.createVector3(1, 1, 1), rotationAngle));
     // Optional: translation
     TriangleMeshTransformation.translate(cubeMesh, translation);
     registerPointCloud = TriangleMeshSampler.sample(cubeMesh, 1000);

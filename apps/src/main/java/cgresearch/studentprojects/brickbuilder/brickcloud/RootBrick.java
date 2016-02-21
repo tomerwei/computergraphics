@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
@@ -34,7 +34,7 @@ public class RootBrick implements IBrick {
 	private List<VectorInt3> unitPos;
 	
 	public RootBrick(Vector dimensions, ITriangleMesh model) {
-		this.dimensions = VectorMatrixFactory.newVector(dimensions);
+		this.dimensions = VectorFactory.createVector(dimensions);
 		this.model = model;
 		this.unitPos = new ArrayList<VectorInt3>();
 		this.unitPos.add(new VectorInt3(0, 0, 0));
@@ -42,7 +42,7 @@ public class RootBrick implements IBrick {
 	
 	@Override
 	public Vector getDimensions() {
-		return VectorMatrixFactory.newVector(dimensions);
+		return VectorFactory.createVector(dimensions);
 	}
 
 	@Override

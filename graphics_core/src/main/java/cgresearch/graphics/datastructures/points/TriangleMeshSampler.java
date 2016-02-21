@@ -8,7 +8,7 @@ package cgresearch.graphics.datastructures.points;
 import java.util.Random;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
@@ -44,7 +44,7 @@ public class TriangleMeshSampler {
       }
       float gamma = 1 - alpha - beta;
       Vector position = va.multiply(alpha).add(vb.multiply(beta).add(vc.multiply(gamma)));
-      pointCloud.addPoint(new Point(position, VectorMatrixFactory.newVector(0.5, 0.5, 0.5), t.getNormal()));
+      pointCloud.addPoint(new Point(position, VectorFactory.createVector3(0.5, 0.5, 0.5), t.getNormal()));
     }
     return pointCloud;
   }
@@ -57,7 +57,7 @@ public class TriangleMeshSampler {
     for (int vertexIndex = 0; vertexIndex < mesh.getNumberOfVertices(); vertexIndex++) {
       IVertex vertex = mesh.getVertex(vertexIndex);
       pointCloud
-          .addPoint(new Point(vertex.getPosition(), VectorMatrixFactory.newVector(0, 0, 0), vertex.getNormal()));
+          .addPoint(new Point(vertex.getPosition(), VectorFactory.createVector3(0, 0, 0), vertex.getNormal()));
     }
     return pointCloud;
   }

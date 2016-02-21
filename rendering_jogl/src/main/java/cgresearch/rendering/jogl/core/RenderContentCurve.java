@@ -12,8 +12,9 @@ import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.curves.ICurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
@@ -82,7 +83,7 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
   private void updateTransformation() {
     transformation.reset();
     transformation.addTranslation(getCurve().eval(getCurve().getParameter()));
-    Matrix T = VectorMatrixFactory.createCoordinateFrameX(getCurve().derivative(getCurve().getParameter()));
+    Matrix T = MatrixFactory.createCoordinateFrameX(getCurve().derivative(getCurve().getParameter()));
     transformation.addTransformation(T);
 
   }
@@ -105,7 +106,7 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
   private ITriangleMesh createControlPointsMesh() {
     // Control points
     ITriangleMesh mesh = new TriangleMesh();
-    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.6, 0.6, 0.9));
+    mesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.6, 0.6, 0.9));
     for (int i = 0; i <= getCurve().getDegree(); i++) {
       mesh.unite(TriangleMeshFactory.createSphere(getCurve().getControlPoint(i), 0.03f, 10));
     }
@@ -132,7 +133,7 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
     ITriangleMesh mesh = new TriangleMesh();
 
     // Eval-position
-    mesh.unite(TriangleMeshFactory.createSphere(VectorMatrixFactory.newVector(0, 0, 0), 0.1f, 10));
+    mesh.unite(TriangleMeshFactory.createSphere(VectorFactory.createVector3(0, 0, 0), 0.1f, 10));
 
     // Derivative arrow
     ITriangleMesh arrowMesh = TriangleMeshFactory.createArrow();
@@ -162,10 +163,10 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
       double t = (double) i / (double) (resolution - 1);
       Vector center = getCurve().eval(t);
       Vector tangent = getCurve().derivative(t);
-      Matrix frame = VectorMatrixFactory.createCoordinateFrameX(tangent).getTransposed();
+      Matrix frame = MatrixFactory.createCoordinateFrameX(tangent).getTransposed();
 
-      Vector y = VectorMatrixFactory.newVector(frame.get(1, 0), frame.get(1, 1), frame.get(1, 2));
-      Vector z = VectorMatrixFactory.newVector(frame.get(2, 0), frame.get(2, 1), frame.get(2, 2));
+      Vector y = VectorFactory.createVector3(frame.get(1, 0), frame.get(1, 1), frame.get(1, 2));
+      Vector z = VectorFactory.createVector3(frame.get(2, 0), frame.get(2, 1), frame.get(2, 2));
       Vector dx = y.multiply(radius);
       Vector dy = z.multiply(radius);
       for (int j = 0; j < circleResolution; j++) {

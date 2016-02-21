@@ -10,7 +10,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -40,7 +40,7 @@ public class SubdivisionFrame extends CgApplication {
     getCgRootNode().addChild(new CoordinateSystem(0.01));
 
     LightSource light = new LightSource(Type.POINT);
-    light.setPosition(VectorMatrixFactory.newVector(-5, -5, -5));
+    light.setPosition(VectorFactory.createVector3(-5, -5, -5));
     getCgRootNode().addLight(light);
   }
 

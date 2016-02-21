@@ -45,7 +45,7 @@ public class JoglRenderer3D implements Observer {
   private static final int SCREEN_WIDTH = 640;
   private static final int SCREEN_HEIGHT = 480;
   private static final float OPAQUE = 1.0f;
-  private static final Vector CLEAR_COLOR = VectorMatrixFactory.newVector(1, 1, 1);
+  private static final Vector CLEAR_COLOR = VectorFactory.createVector3(1, 1, 1);
   private static final int JOGL_NUMBER_OF_LIGHTS = 8;
 
   /**
@@ -515,32 +515,32 @@ public class JoglRenderer3D implements Observer {
     float offset = softShadowOffset;
 
     if (coord == 0) {
-      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, 0)));
-      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, 0)));
-      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, offset)));
-      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, -offset)));
-      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, offset)));
-      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, offset)));
-      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, -offset)));
-      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, -offset)));
+      lights[0].setPosition(light.getPosition().add(VectorFactory.createVector3(0, offset, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorFactory.createVector3(0, -offset, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorFactory.createVector3(0, 0, offset)));
+      lights[3].setPosition(light.getPosition().add(VectorFactory.createVector3(0, 0, -offset)));
+      lights[4].setPosition(light.getPosition().add(VectorFactory.createVector3(0, offset, offset)));
+      lights[5].setPosition(light.getPosition().add(VectorFactory.createVector3(0, -offset, offset)));
+      lights[6].setPosition(light.getPosition().add(VectorFactory.createVector3(0, offset, -offset)));
+      lights[7].setPosition(light.getPosition().add(VectorFactory.createVector3(0, -offset, -offset)));
     } else if (coord == 1) {
-      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, 0)));
-      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, 0)));
-      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, offset)));
-      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, -offset)));
-      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, offset)));
-      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, offset)));
-      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, -offset)));
-      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, -offset)));
+      lights[0].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, 0, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, 0, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorFactory.createVector3(0, 0, offset)));
+      lights[3].setPosition(light.getPosition().add(VectorFactory.createVector3(0, 0, -offset)));
+      lights[4].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, 0, offset)));
+      lights[5].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, 0, offset)));
+      lights[6].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, 0, -offset)));
+      lights[7].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, 0, -offset)));
     } else {
-      lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, 0)));
-      lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, 0)));
-      lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, 0)));
-      lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, 0)));
-      lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, offset, 0)));
-      lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, offset, 0)));
-      lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, -offset, 0)));
-      lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, -offset, 0)));
+      lights[0].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, 0, 0)));
+      lights[1].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, 0, 0)));
+      lights[2].setPosition(light.getPosition().add(VectorFactory.createVector3(0, offset, 0)));
+      lights[3].setPosition(light.getPosition().add(VectorFactory.createVector3(0, -offset, 0)));
+      lights[4].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, offset, 0)));
+      lights[5].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, offset, 0)));
+      lights[6].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, -offset, 0)));
+      lights[7].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, -offset, 0)));
     }
 
     return lights;
@@ -564,20 +564,20 @@ public class JoglRenderer3D implements Observer {
 
     float offset = softShadowOffset;
 
-    lights[0].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, 0)));
-    lights[1].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, 0)));
-    lights[2].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, offset, 0)));
-    lights[3].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, -offset, 0)));
-    lights[4].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, offset)));
-    lights[5].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(0, 0, -offset)));
-    lights[6].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, offset, 0)));
-    lights[7].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, -offset, 0)));
-    lights[8].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, offset)));
-    lights[9].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(offset, 0, -offset)));
-    lights[10].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, offset, 0)));
-    lights[11].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, -offset, 0)));
-    lights[12].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, offset)));
-    lights[13].setPosition(light.getPosition().add(VectorMatrixFactory.newVector(-offset, 0, -offset)));
+    lights[0].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, 0, 0)));
+    lights[1].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, 0, 0)));
+    lights[2].setPosition(light.getPosition().add(VectorFactory.createVector3(0, offset, 0)));
+    lights[3].setPosition(light.getPosition().add(VectorFactory.createVector3(0, -offset, 0)));
+    lights[4].setPosition(light.getPosition().add(VectorFactory.createVector3(0, 0, offset)));
+    lights[5].setPosition(light.getPosition().add(VectorFactory.createVector3(0, 0, -offset)));
+    lights[6].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, offset, 0)));
+    lights[7].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, -offset, 0)));
+    lights[8].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, 0, offset)));
+    lights[9].setPosition(light.getPosition().add(VectorFactory.createVector3(offset, 0, -offset)));
+    lights[10].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, offset, 0)));
+    lights[11].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, -offset, 0)));
+    lights[12].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, 0, offset)));
+    lights[13].setPosition(light.getPosition().add(VectorFactory.createVector3(-offset, 0, -offset)));
 
     return lights;
   }
@@ -655,7 +655,7 @@ public class JoglRenderer3D implements Observer {
    * Creates a projection matrix which has no far plane
    */
   private Matrix getProjectionInfinity() {
-    Matrix pInf = VectorMatrixFactory.newMatrix(4,4);
+    Matrix pInf = MatrixFactory.createMatrix(4,4);
     // Field of view in radians
     double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
     // Cotangent of the field of view

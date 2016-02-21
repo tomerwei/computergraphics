@@ -9,7 +9,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.primitives.Plane;
 import cgresearch.graphics.datastructures.primitives.Sphere;
@@ -26,24 +26,24 @@ public class RaytracingFrame extends CgApplication {
    */
   public RaytracingFrame() {
 
-    Sphere sphere1 = new Sphere(VectorMatrixFactory.newVector(1, 0, 1), 0.5);
-    sphere1.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(1, 0, 0));
+    Sphere sphere1 = new Sphere(VectorFactory.createVector3(1, 0, 1), 0.5);
+    sphere1.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(1, 0, 0));
     sphere1.getMaterial().setReflection(0);
     sphere1.getMaterial().setRefraction(0);
     sphere1.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     CgNode sphere1Node = new CgNode(sphere1, "sphere1");
     getCgRootNode().addChild(sphere1Node);
 
-    Sphere sphere2 = new Sphere(VectorMatrixFactory.newVector(-1, 0, -1), 0.5);
-    sphere2.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.25, .55, .55));
+    Sphere sphere2 = new Sphere(VectorFactory.createVector3(-1, 0, -1), 0.5);
+    sphere2.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.25, .55, .55));
     sphere2.getMaterial().setReflection(0.5);
     sphere2.getMaterial().setRefraction(0);
     sphere2.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     CgNode sphere2Node = new CgNode(sphere2, "sphere2");
     getCgRootNode().addChild(sphere2Node);
 
-    Sphere sphere3 = new Sphere(VectorMatrixFactory.newVector(0, 0, 0), 0.5);
-    sphere3.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.55, .25, .55));
+    Sphere sphere3 = new Sphere(VectorFactory.createVector3(0, 0, 0), 0.5);
+    sphere3.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.55, .25, .55));
     sphere3.getMaterial().setReflection(1);
     sphere3.getMaterial().setRefraction(0);
     sphere3.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
@@ -59,8 +59,8 @@ public class RaytracingFrame extends CgApplication {
     // mesh.getMaterial().setRefraction(0);
     // getCgRootNode().addChild(new CgNode(mesh, "tetrahedron"));
 
-    Plane plane = new Plane(VectorMatrixFactory.newVector(0, -1, 0), VectorMatrixFactory.newVector(0, 1, 0));
-    plane.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.8, 0.8, 0.8));
+    Plane plane = new Plane(VectorFactory.createVector3(0, -1, 0), VectorFactory.createVector3(0, 1, 0));
+    plane.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.8, 0.8, 0.8));
     plane.getMaterial().setReflection(0.5);
     plane.getMaterial().setRefraction(0.0);
     plane.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);

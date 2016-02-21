@@ -6,7 +6,7 @@ import java.util.List;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
 /**
@@ -64,7 +64,7 @@ public class OctreeNode<T> extends ICgNodeContent {
       for (int j = 0; j < 2; j++) {
         for (int k = 0; k < 2; k++) {
           Vector childLowerLeftCorner =
-              lowerLeftCorner.add(VectorMatrixFactory.newVector(i * childLength, j * childLength, k * childLength));
+              lowerLeftCorner.add(VectorFactory.createVector3(i * childLength, j * childLength, k * childLength));
           OctreeNode<T> childNode = new OctreeNode<T>(childLowerLeftCorner, childLength);
           children.set(getChildIndex(i, j, k), childNode);
         }
@@ -153,19 +153,19 @@ public class OctreeNode<T> extends ICgNodeContent {
   public List<Vector> computeCornerPoints() {
     List<Vector> corners = new ArrayList<Vector>();
     corners.add(getLowerLeft());
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(getLength(), 0, 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(getLength(), getLength(), 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(0, getLength(), 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(0, 0, getLength())));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(getLength(), 0, getLength())));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(getLength(), getLength(), getLength())));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(0, getLength(), getLength())));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(getLength(), 0, 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(getLength(), getLength(), 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, getLength(), 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, 0, getLength())));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(getLength(), 0, getLength())));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(getLength(), getLength(), getLength())));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, getLength(), getLength())));
     return corners;
   }
 
   @Override
   public BoundingBox getBoundingBox() {
     return new BoundingBox(lowerLeftCorner,
-        lowerLeftCorner.add(VectorMatrixFactory.newVector(length, length, length)));
+        lowerLeftCorner.add(VectorFactory.createVector3(length, length, length)));
   }
 }

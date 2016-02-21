@@ -23,7 +23,7 @@ import org.jgrapht.graph.ListenableUndirectedGraph;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.studentprojects.brickbuilder.brickcloud.BrickRotation;
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
@@ -75,12 +75,12 @@ public class BrickCloud implements IBrickCloud {
 	 * @param brickSet
 	 */
 	public BrickCloud(Vector locationLowerLeft, VectorInt3 resolution, IBrickSet brickSet) {
-		this.locationLowerLeft = VectorMatrixFactory.newVector(locationLowerLeft);
+		this.locationLowerLeft = VectorFactory.createVector(locationLowerLeft);
 		this.resolution = resolution;
 		this.brickSet = brickSet;
 		
 		this.boundingBox = new BoundingBox(this.locationLowerLeft,
-				this.locationLowerLeft.add(VectorMatrixFactory.newVector(
+				this.locationLowerLeft.add(VectorFactory.createVector3(
 						brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_0) * this.resolution.getX(), 
 						brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_1) * this.resolution.getY(),
 						brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_2) * this.resolution.getZ()
@@ -122,7 +122,7 @@ public class BrickCloud implements IBrickCloud {
 
 	@Override
 	public Vector getDimensions() {
-		return VectorMatrixFactory.newVector(
+		return VectorFactory.createVector3(
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_0) * resolution.getX(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_1) * resolution.getY(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_2) * resolution.getZ());
@@ -130,7 +130,7 @@ public class BrickCloud implements IBrickCloud {
 
 	@Override
 	public Vector getLocationLowerLeft() {
-		return VectorMatrixFactory.newVector(locationLowerLeft);
+		return VectorFactory.createVector(locationLowerLeft);
 	}
 
 	@Override
@@ -362,9 +362,9 @@ public class BrickCloud implements IBrickCloud {
 
 	@Override
 	public Vector getBrickPosition(BrickInstance brick) {
-		Vector location = VectorMatrixFactory.newVector(locationLowerLeft);
+		Vector location = VectorFactory.createVector(locationLowerLeft);
 		location = location.add(brickSet.getRootBrick().getDimensions().multiply(0.5));
-		location = location.add(VectorMatrixFactory.newVector(
+		location = location.add(VectorFactory.createVector3(
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_0) * brick.getPos().getX(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_1) * brick.getPos().getY(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_2) * brick.getPos().getZ()));
@@ -378,7 +378,7 @@ public class BrickCloud implements IBrickCloud {
 		switch (brick.getRotation()) {			
 			case ZDIR_POS:
 			case ZDIR_NEG:
-				return VectorMatrixFactory.newVector(dim.get(2), dim.get(1), dim.get(0));
+				return VectorFactory.createVector3(dim.get(2), dim.get(1), dim.get(0));
 			case XDIR_POS: 
 			case XDIR_NEG:
 			default:

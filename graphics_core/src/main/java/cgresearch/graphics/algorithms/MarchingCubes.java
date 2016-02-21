@@ -7,7 +7,7 @@ package cgresearch.graphics.algorithms;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.implicitfunction.IImplicitFunction3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -27,7 +27,7 @@ public class MarchingCubes {
   /**
    * Origin of the triangulated space (lower-left corner).
    */
-  private Vector origin = VectorMatrixFactory.newVector(-2, -2, -2);
+  private Vector origin = VectorFactory.createVector3(-2, -2, -2);
 
   /**
    * Length (in all spatial directions) of the triangulated space
@@ -70,21 +70,21 @@ public class MarchingCubes {
     for (int i = 0; i < resolution; i++) {
       for (int j = 0; j < resolution; j++) {
         for (int k = 0; k < resolution; k++) {
-          Vector p1 = origin.add(VectorMatrixFactory.newVector(i * delta, j * delta, k * delta));
+          Vector p1 = origin.add(VectorFactory.createVector3(i * delta, j * delta, k * delta));
 
-          Vector p2 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, j * delta, k * delta));
+          Vector p2 = origin.add(VectorFactory.createVector3((i + 1) * delta, j * delta, k * delta));
 
-          Vector p3 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, (j + 1) * delta, k * delta));
+          Vector p3 = origin.add(VectorFactory.createVector3((i + 1) * delta, (j + 1) * delta, k * delta));
 
-          Vector p4 = origin.add(VectorMatrixFactory.newVector(i * delta, (j + 1) * delta, k * delta));
+          Vector p4 = origin.add(VectorFactory.createVector3(i * delta, (j + 1) * delta, k * delta));
 
-          Vector p5 = origin.add(VectorMatrixFactory.newVector(i * delta, j * delta, (k + 1) * delta));
+          Vector p5 = origin.add(VectorFactory.createVector3(i * delta, j * delta, (k + 1) * delta));
 
-          Vector p6 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, j * delta, (k + 1) * delta));
+          Vector p6 = origin.add(VectorFactory.createVector3((i + 1) * delta, j * delta, (k + 1) * delta));
 
-          Vector p7 = origin.add(VectorMatrixFactory.newVector((i + 1) * delta, (j + 1) * delta, (k + 1) * delta));
+          Vector p7 = origin.add(VectorFactory.createVector3((i + 1) * delta, (j + 1) * delta, (k + 1) * delta));
 
-          Vector p8 = origin.add(VectorMatrixFactory.newVector(i * delta, (j + 1) * delta, (k + 1) * delta));
+          Vector p8 = origin.add(VectorFactory.createVector3(i * delta, (j + 1) * delta, (k + 1) * delta));
 
           createTriangulation(p1, p2, p3, p4, p5, p6, p7, p8);
         }
@@ -159,9 +159,9 @@ public class MarchingCubes {
         Vector pA = getEdgePoint(edgeIndex0, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
         Vector pB = getEdgePoint(edgeIndex1, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
         Vector pC = getEdgePoint(edgeIndex2, p1, p2, p3, p4, p5, p6, p7, p8, v1, v2, v3, v4, v5, v6, v7, v8);
-        int a = mesh.addVertex(new Vertex(pA, VectorMatrixFactory.newVector(1, 0, 0)));
-        int b = mesh.addVertex(new Vertex(pB, VectorMatrixFactory.newVector(1, 0, 0)));
-        int c = mesh.addVertex(new Vertex(pC, VectorMatrixFactory.newVector(1, 0, 0)));
+        int a = mesh.addVertex(new Vertex(pA, VectorFactory.createVector3(1, 0, 0)));
+        int b = mesh.addVertex(new Vertex(pB, VectorFactory.createVector3(1, 0, 0)));
+        int c = mesh.addVertex(new Vertex(pC, VectorFactory.createVector3(1, 0, 0)));
         Triangle t = new Triangle(a, b, c);
         mesh.addTriangle(t);
       }

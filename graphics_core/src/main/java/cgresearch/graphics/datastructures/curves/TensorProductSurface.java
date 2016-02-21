@@ -3,7 +3,7 @@ package cgresearch.graphics.datastructures.curves;
 import java.util.Observable;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Tensor product surface Based of Bezier curves.
@@ -38,7 +38,7 @@ public class TensorProductSurface extends Observable {
 		// }
 		for (int i = 0; i <= getDegreeU(); i++) {
 			for (int j = 0; j <= getDegreeV(); j++) {
-				controlPoints[i][j] = VectorMatrixFactory.newVector(
+				controlPoints[i][j] = VectorFactory.createVector3(
 						(double) i / (double) getDegreeU(), 0, (double) j
 								/ (double) getDegreeV());
 			}
@@ -51,7 +51,7 @@ public class TensorProductSurface extends Observable {
 	 * Evaluate the surface at (u,v). Both parameters are defined in [0,1].
 	 */
 	public Vector eval(double u, double v) {
-		Vector p = VectorMatrixFactory.newVector(0, 0, 0);
+		Vector p = VectorFactory.createVector3(0, 0, 0);
 		for (int i = 0; i <= getDegreeU(); i++) {
 			for (int j = 0; j <= getDegreeV(); j++) {
 				p.addSelf(getControlPoint(i, j).multiply(

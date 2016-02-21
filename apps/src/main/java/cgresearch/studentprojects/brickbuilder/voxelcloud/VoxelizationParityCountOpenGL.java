@@ -24,7 +24,7 @@ import com.jogamp.opengl.glu.GLU;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -90,13 +90,13 @@ public class VoxelizationParityCountOpenGL implements
     double offsetZ =
         ((resolutionAxisAll * zRes) - depth) * 0.5;
     location =
-        location.subtract(VectorMatrixFactory.newVector(
+        location.subtract(VectorFactory.createVector3(
             offsetX, offsetY, offsetZ));
 
     // create voxel cloud
     IVoxelCloud cloud =
         new VoxelCloud(location,
-            VectorMatrixFactory.newVector(xRes, yRes,
+            VectorFactory.createVector3(xRes, yRes,
                 zRes), new VectorInt3(resolutionAxisAll,
                 resolutionAxisAll, resolutionAxisAll));
 
@@ -104,9 +104,9 @@ public class VoxelizationParityCountOpenGL implements
     ITriangleMesh mesh = copyMesh(meshOriginal);
     mesh.fitToUnitBox();
     TriangleMeshTransformation.translate(mesh,
-        VectorMatrixFactory.newVector(0.5, 0.5, 0.5));
+        VectorFactory.createVector3(0.5, 0.5, 0.5));
     mesh.getMaterial().setReflectionDiffuse(
-        VectorMatrixFactory.newVector(1.0, 0, 0));
+        VectorFactory.createVector3(1.0, 0, 0));
 
     // create a rendercontent node to use cg_jogl rendering
     node = new RenderContentTriangleMesh(mesh);

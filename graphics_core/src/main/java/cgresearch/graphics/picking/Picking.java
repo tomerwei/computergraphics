@@ -7,7 +7,7 @@ import java.util.Observable;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.Ray3D;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.camera.Camera;
 
 /**
@@ -253,7 +253,7 @@ public class Picking extends Observable {
 	public void moveX(float deltaX) {
 		PickingItem selectedItem = Picking.getInstance().getSelectedItem();
 		if (selectedItem != null) {
-			Vector dx = VectorMatrixFactory.newVector(1, 0, 0);
+			Vector dx = VectorFactory.createVector3(1, 0, 0);
 			selectedItem.setPosition(selectedItem.getPosition().add(
 					dx.multiply(deltaX * scaling * 0.2)));
 
@@ -273,7 +273,7 @@ public class Picking extends Observable {
 	public void moveY(float deltaX) {
 		PickingItem selectedItem = Picking.getInstance().getSelectedItem();
 		if (selectedItem != null) {
-			Vector dy = VectorMatrixFactory.newVector(0, 1, 0);
+			Vector dy = VectorFactory.createVector3(0, 1, 0);
 			selectedItem.setPosition(selectedItem.getPosition().add(
 					dy.multiply(deltaX * scaling * 0.2)));
 
@@ -288,7 +288,7 @@ public class Picking extends Observable {
 	public void moveZ(float deltaX) {
 		PickingItem selectedItem = Picking.getInstance().getSelectedItem();
 		if (selectedItem != null) {
-			Vector dz = VectorMatrixFactory.newVector(0, 0, 1);
+			Vector dz = VectorFactory.createVector3(0, 0, 1);
 			selectedItem.setPosition(selectedItem.getPosition().add(
 					dz.multiply(deltaX * scaling * 0.2)));
 

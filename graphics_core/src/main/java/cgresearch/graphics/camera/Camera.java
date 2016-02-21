@@ -18,8 +18,9 @@ import java.util.Observable;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Represents a camera.
@@ -110,9 +111,9 @@ public class Camera extends Observable {
    * Constructor.
    */
   private Camera() {
-    eye = VectorMatrixFactory.newVector(0, 0, 5);
-    ref = VectorMatrixFactory.newVector(0, 0, 0);
-    up = VectorMatrixFactory.newVector(0, 1, 0);
+    eye = VectorFactory.createVector3(0, 0, 5);
+    ref = VectorFactory.createVector3(0, 0, 0);
+    up = VectorFactory.createVector3(0, 1, 0);
 
     setChanged();
     notifyObservers();
@@ -171,7 +172,7 @@ public class Camera extends Observable {
    * Setter.
    */
   public void setEye(Vector e) {
-    eye = VectorMatrixFactory.newVector(e);
+    eye = VectorFactory.createVector(e);
 
     setChanged();
     notifyObservers();
@@ -181,7 +182,7 @@ public class Camera extends Observable {
    * Setter.
    */
   public void setRef(Vector e) {
-    ref = VectorMatrixFactory.newVector(e);
+    ref = VectorFactory.createVector(e);
 
     setChanged();
     notifyObservers();
@@ -191,7 +192,7 @@ public class Camera extends Observable {
    * Setter.
    */
   public void setUp(Vector e) {
-    up = VectorMatrixFactory.newVector(e);
+    up = VectorFactory.createVector(e);
 
     setChanged();
     notifyObservers();
@@ -234,7 +235,7 @@ public class Camera extends Observable {
     oldDirection = oldDirection.multiply(1.0 / length);
 
     // Apply rotation
-    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
+    Matrix rotationMatrix = MatrixFactory.createRotationMatrix(up, angle);
     Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
     Vector newEye = ref.add(newDirection.multiply(length));
 
@@ -255,13 +256,13 @@ public class Camera extends Observable {
     Vector axis = oldDirection.cross(up).getNormalized();
 
     // Apply rotation
-    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
+    Matrix rotationMatrix = MatrixFactory.createRotationMatrix(axis, angle);
     Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
     Vector newEye = ref.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setEye(newEye);
-    setUp(VectorMatrixFactory.newVector(axis.cross(newDirection)).getNormalized());
+    setUp(VectorFactory.createVector(axis.cross(newDirection)).getNormalized());
   }
 
   /**
@@ -274,7 +275,7 @@ public class Camera extends Observable {
     oldDirection = oldDirection.multiply(1.0 / length);
 
     // Apply rotation
-    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(up, angle);
+    Matrix rotationMatrix = MatrixFactory.createRotationMatrix(up, angle);
     Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
     Vector newRef = eye.add(newDirection.multiply(length));
 
@@ -295,13 +296,13 @@ public class Camera extends Observable {
     Vector axis = oldDirection.cross(up).getNormalized();
 
     // Apply rotation
-    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
+    Matrix rotationMatrix = MatrixFactory.createRotationMatrix(axis, angle);
     Vector newDirection = rotationMatrix.multiply(oldDirection).getNormalized();
     Vector newRef = eye.add(newDirection.multiply(length));
 
     // Assign new coordinate frame
     setRef(newRef);
-    setUp(VectorMatrixFactory.newVector(axis.cross(newDirection)).getNormalized());
+    setUp(VectorFactory.createVector(axis.cross(newDirection)).getNormalized());
   }
 
   /**

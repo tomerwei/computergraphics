@@ -22,7 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.material.CgGlslShader;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.GenericManager;
@@ -265,7 +265,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 					"Select ambient reflection", new Color((float) c.get(0),
 							(float) c.get(1), (float) c.get(2)));
 			if (color != null) {
-				material.setReflectionAmbient(VectorMatrixFactory.newVector(
+				material.setReflectionAmbient(VectorFactory.createVector3(
 						color.getRed() / 255.0, color.getGreen() / 255.0,
 						color.getBlue() / 255.0));
 			}
@@ -278,7 +278,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 					"Select diffuse reflection", new Color((float) c.get(0),
 							(float) c.get(1), (float) c.get(2)));
 			if (color != null) {
-				material.setReflectionDiffuse(VectorMatrixFactory.newVector(
+				material.setReflectionDiffuse(VectorFactory.createVector3(
 						color.getRed() / 255.0, color.getGreen() / 255.0,
 						color.getBlue() / 255.0));
 			}
@@ -291,7 +291,7 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 					"Select specular reflection", new Color((float) c.get(0),
 							(float) c.get(1), (float) c.get(2)));
 			if (color != null) {
-				material.setReflectionSpecular(VectorMatrixFactory.newVector(
+				material.setReflectionSpecular(VectorFactory.createVector3(
 						color.getRed() / 255.0, color.getGreen() / 255.0,
 						color.getBlue() / 255.0));
 			}

@@ -9,9 +9,10 @@ import java.util.List;
 import cgresearch.core.StopWatch;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Ray3D;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.datastructures.primitives.Plane;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -45,7 +46,7 @@ public class Raytracer {
   /**
    * Background color
    */
-  private Vector backgroundColor = VectorMatrixFactory.newVector(0, 0, 0);
+  private Vector backgroundColor = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Use checkerboard texture for planes.
@@ -149,7 +150,7 @@ public class Raytracer {
 
     // Check for recursion depth
     if (recursion > maxRecursionDepth) {
-      return VectorMatrixFactory.newVector(0, 0, 0);
+      return VectorFactory.createVector3(0, 0, 0);
     }
 
     // Find the first intersection with an object.
@@ -159,7 +160,7 @@ public class Raytracer {
       double factorReflection = Math.max(0, Math.min(1, result.object.getMaterial().getReflection()));
       double factorRefraction = Math.max(0, Math.min(1, result.object.getMaterial().getRefraction()));
       double factorLighting = Math.max(0, Math.min(1, 1 - factorReflection - factorRefraction));
-      Vector color = VectorMatrixFactory.newVector(0, 0, 0);
+      Vector color = VectorFactory.createVector3(0, 0, 0);
 
       // Lighting
       if (factorLighting > 0) {
@@ -201,7 +202,7 @@ public class Raytracer {
     double incomingAngle = Math.acos(inverseNormal.multiply(ray.getDirection()));
     double exitAngle = Math.asin(Math.sin(incomingAngle) * r);
     Vector rotationAxis = inverseNormal.cross(ray.getDirection()).getNormalized();
-    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(rotationAxis, -exitAngle);
+    Matrix rotationMatrix = MatrixFactory.createRotationMatrix(rotationAxis, -exitAngle);
     Vector refractionDirection = rotationMatrix.multiply(inverseNormal).getNormalized();
 
     // System.out.println(ray.getDirection());
@@ -248,7 +249,7 @@ public class Raytracer {
       return result.object.getMaterial().getReflectionDiffuse();
     }
 
-    Vector color = VectorMatrixFactory.newVector(0, 0, 0);
+    Vector color = VectorFactory.createVector3(0, 0, 0);
 
     // Iterate over all light sources
     for (int lightIndex = 0; lightIndex < rootNode.getNumberOfLights(); lightIndex++) {
@@ -262,7 +263,7 @@ public class Raytracer {
       boolean isInShadow = computeIsInShadow(result.point, lightPosition, lightDirection);
 
       if (!isInShadow) {
-        Vector lighting = VectorMatrixFactory.newVector(0, 0, 0);
+        Vector lighting = VectorFactory.createVector3(0, 0, 0);
 
         // Diffuse
         double diffuseFactor = lightDirection.multiply(result.normal);

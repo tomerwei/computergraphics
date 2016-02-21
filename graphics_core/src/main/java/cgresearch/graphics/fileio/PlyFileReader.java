@@ -14,7 +14,7 @@ import java.util.List;
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -341,7 +341,7 @@ public class PlyFileReader {
 					}
 				}
 			}
-			Vertex vertex = new Vertex(VectorMatrixFactory.newVector(x, y, z));
+			Vertex vertex = new Vertex(VectorFactory.createVector3(x, y, z));
 			mesh.addVertex(vertex);
 		}
 	}
@@ -381,7 +381,7 @@ public class PlyFileReader {
 				.getVertexPropertyPosition(PlyProperty.ProperyName.NZ);
 		if (xIndex >= 0 && yIndex >= 0 && zIndex >= 0 && xIndex < tokens.length
 				&& yIndex < tokens.length && zIndex < tokens.length) {
-			Vector normal = VectorMatrixFactory.newVector(
+			Vector normal = VectorFactory.createVector3(
 					Double.parseDouble(tokens[xIndex]),
 					Double.parseDouble(tokens[yIndex]),
 					Double.parseDouble(tokens[zIndex]));
@@ -405,7 +405,7 @@ public class PlyFileReader {
 		// Read position
 		if (xIndex >= 0 && yIndex >= 0 && zIndex >= 0 && xIndex < tokens.length
 				&& yIndex < tokens.length && zIndex < tokens.length) {
-			Vector position = VectorMatrixFactory.newVector(
+			Vector position = VectorFactory.createVector3(
 					Double.parseDouble(tokens[xIndex]),
 					Double.parseDouble(tokens[yIndex]),
 					Double.parseDouble(tokens[zIndex]));

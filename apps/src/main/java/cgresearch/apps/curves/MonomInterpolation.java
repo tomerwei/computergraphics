@@ -13,7 +13,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.curves.MonomialCurve;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -36,9 +36,9 @@ public class MonomInterpolation extends CgApplication {
    */
   public MonomInterpolation() {
     List<Vector> interpolationPoints = new ArrayList<Vector>();
-    interpolationPoints.add(VectorMatrixFactory.newVector(1, 1, -0.5));
-    interpolationPoints.add(VectorMatrixFactory.newVector(0.5, 1, 1));
-    interpolationPoints.add(VectorMatrixFactory.newVector(-0.5, -0.5, 0.5));
+    interpolationPoints.add(VectorFactory.createVector3(1, 1, -0.5));
+    interpolationPoints.add(VectorFactory.createVector3(0.5, 1, 1));
+    interpolationPoints.add(VectorFactory.createVector3(-0.5, -0.5, 0.5));
     MonomialCurve curve = computeInterpolatedCurve(interpolationPoints);
     getCgRootNode().addChild(new CgNode(curve, "Interpolated monom curve"));
 

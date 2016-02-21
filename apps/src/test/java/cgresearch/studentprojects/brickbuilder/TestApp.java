@@ -12,7 +12,7 @@ import javax.imageio.spi.IIORegistry;
 import javax.swing.SwingUtilities;
 
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.tree.OctreeFactory;
@@ -113,7 +113,7 @@ public class TestApp extends CgApplication {
 		ITriangleMesh mesh1 = VoxelCloudMesher.transformCloud2Mesh(cloud, true);
 		TriangleMeshTransformation.scale(mesh1, 1.3);
 		TriangleMeshTransformation.translate(mesh1,
-				VectorMatrixFactory.newVector(-1.2, 0.1, -0.1));
+				VectorFactory.createVector3(-1.2, 0.1, -0.1));
 		rootNode.addChild(new CgNode(mesh1, "bunny 01"));
 
 		CgNode child = list2node(
@@ -171,7 +171,7 @@ public class TestApp extends CgApplication {
 				.get(0);
 		TriangleMeshTransformation.scale(mesh, 4.0);
 		TriangleMeshTransformation.translate(mesh,
-				VectorMatrixFactory.newVector(0.4, -0.1, 0.2));
+				VectorFactory.createVector3(0.4, -0.1, 0.2));
 		rootNode.addChild(new CgNode(mesh, "bunny"));
 	}
 

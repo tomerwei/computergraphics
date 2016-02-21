@@ -119,8 +119,8 @@ public class TestVector {
 
   @Test
   public void testMultiplyVector() {
-    Vector vector = VectorMatrixFactory.newVector(1, 2, 3);
-    double result = vector.multiply(VectorMatrixFactory.newVector(-3, -1, 2));
+    Vector vector = VectorFactory.createVector3(1, 2, 3);
+    double result = vector.multiply(VectorFactory.createVector3(-3, -1, 2));
     double expected = 1;
     assertEquals(result, expected, MathHelpers.EPSILON);
   }
@@ -176,8 +176,8 @@ public class TestVector {
 
   @Test
   public void testCross() {
-    Vector result = VectorMatrixFactory.newVector(1, 0, 0).cross(VectorMatrixFactory.newVector(0, 1, 0));
-    Vector expected = VectorMatrixFactory.newVector(0, 0, 1);
+    Vector result = VectorFactory.createVector3(1, 0, 0).cross(VectorFactory.createVector3(0, 1, 0));
+    Vector expected = VectorFactory.createVector3(0, 0, 1);
     assertEquals(result, expected);
   }
 

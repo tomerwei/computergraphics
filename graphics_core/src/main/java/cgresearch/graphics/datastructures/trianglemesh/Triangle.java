@@ -7,7 +7,7 @@ package cgresearch.graphics.datastructures.trianglemesh;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a triangle consisting of three indices. The indices
@@ -31,7 +31,7 @@ public class Triangle implements ITriangle {
   /**
    * Normal of the triangle, initialized with a default direction.
    */
-  private Vector normal = VectorMatrixFactory.newVector(1, 0, 0);
+  private Vector normal = VectorFactory.createVector3(1, 0, 0);
 
   /**
    * Default constructor

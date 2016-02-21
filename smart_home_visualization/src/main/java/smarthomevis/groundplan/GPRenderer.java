@@ -10,7 +10,7 @@ import org.kabeja.dxf.helpers.Point;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.linesegments.LineSegments;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -98,7 +98,7 @@ public class GPRenderer
 	mesh.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	// mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 	mesh.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR3));
+		VectorFactory.createVector(Material.PALETTE1_COLOR3));
 	mesh.getMaterial().setRenderMode(Normals.PER_FACET);
 	mesh.computeTriangleNormals();
 	mesh.computeVertexNormals();
@@ -270,7 +270,7 @@ public class GPRenderer
 		
 	segment.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	segment.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR0));
+		VectorFactory.createVector(Material.PALETTE1_COLOR0));
 		
 	return new CgNode(segment, layerName);
 	}
@@ -432,7 +432,7 @@ public class GPRenderer
 		
 	wallSegment.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	wallSegment.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR0));
+		VectorFactory.createVector(Material.PALETTE1_COLOR0));
 		
 	return wallSegment;
 	}
@@ -482,7 +482,7 @@ public class GPRenderer
 		
 	unit.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 	unit.getMaterial().setReflectionDiffuse(
-		VectorMatrixFactory.newVector(Material.PALETTE1_COLOR0));
+		VectorFactory.createVector(Material.PALETTE1_COLOR0));
 	return unit;
 	}
 	
@@ -502,9 +502,9 @@ public class GPRenderer
 	Point startPoint = line.getStartPoint();
 	Point endPoint = line.getEndPoint();
 	
-	segments.addPoint(VectorMatrixFactory.newVector(startPoint.getX(),
+	segments.addPoint(VectorFactory.createVector3(startPoint.getX(),
 		startPoint.getY(), startPoint.getZ()));
-	segments.addPoint(VectorMatrixFactory.newVector(endPoint.getX(),
+	segments.addPoint(VectorFactory.createVector3(endPoint.getX(),
 		endPoint.getY(), endPoint.getZ()));
 		
 	segments.addLine(index, index + 1);

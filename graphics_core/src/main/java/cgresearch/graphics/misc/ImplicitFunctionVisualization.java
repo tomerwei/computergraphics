@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.implicitfunction.IImplicitFunction3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -62,13 +62,13 @@ public class ImplicitFunctionVisualization {
 		int i01 = mesh.addVertex(new Vertex());
 		int i10 = mesh.addVertex(new Vertex());
 		int i11 = mesh.addVertex(new Vertex());
-		int t00 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0,
+		int t00 = mesh.addTextureCoordinate(VectorFactory.createVector3(0,
 				0, 0));
-		int t01 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0,
+		int t01 = mesh.addTextureCoordinate(VectorFactory.createVector3(0,
 				1, 0));
-		int t10 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1,
+		int t10 = mesh.addTextureCoordinate(VectorFactory.createVector3(1,
 				0, 0));
-		int t11 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1,
+		int t11 = mesh.addTextureCoordinate(VectorFactory.createVector3(1,
 				1, 0));
 		mesh.addTriangle(new Triangle(i00, i01, i11, t00, t01, t11));
 		mesh.addTriangle(new Triangle(i00, i11, i10, t00, t11, t10));
@@ -121,7 +121,7 @@ public class ImplicitFunctionVisualization {
 	 */
 	private Vector getMinMaxValues(IImplicitFunction3D implicitFunction,
 			Vector center, Vector dx, Vector dy, double size) {
-		Vector minMax = VectorMatrixFactory.newVector(
+		Vector minMax = VectorFactory.createVector3(
 				Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 0);
 		Vector upperLeft = center.subtract(dx.multiply(size * 0.5)).subtract(
 				dy.multiply(size * 0.5));
@@ -185,13 +185,13 @@ public class ImplicitFunctionVisualization {
 		mesh.getVertex(2).getPosition().copy(v10);
 		mesh.getVertex(3).getPosition().copy(v11);
 		mesh.getTextureCoordinate(0).copy(
-				VectorMatrixFactory.newVector(0, 0, 0));
+				VectorFactory.createVector3(0, 0, 0));
 		mesh.getTextureCoordinate(1).copy(
-				VectorMatrixFactory.newVector(0, 1, 0));
+				VectorFactory.createVector3(0, 1, 0));
 		mesh.getTextureCoordinate(2).copy(
-				VectorMatrixFactory.newVector(1, 0, 0));
+				VectorFactory.createVector3(1, 0, 0));
 		mesh.getTextureCoordinate(3).copy(
-				VectorMatrixFactory.newVector(1, 1, 0));
+				VectorFactory.createVector3(1, 1, 0));
 		mesh.computeTriangleNormals();
 		mesh.computeVertexNormals();
 		mesh.updateRenderStructures();

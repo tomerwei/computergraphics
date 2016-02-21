@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.datastructures.primitives.Cylinder;
@@ -30,7 +31,7 @@ public class TriangleMeshFactory {
    * the origin with radius 1.
    */
   public static ITriangleMesh createHalfSphere(int resolution) {
-    ITriangleMesh mesh = createSphere(VectorMatrixFactory.newVector(0, 0, 0), 1, resolution);
+    ITriangleMesh mesh = createSphere(VectorFactory.createVector3(0, 0, 0), 1, resolution);
     List<Integer> removeVertices = new ArrayList<Integer>();
     // Find vertices to remove
     for (int i = 0; i < mesh.getNumberOfVertices(); i++) {
@@ -54,10 +55,10 @@ public class TriangleMeshFactory {
 
   public static ITriangleMesh createSquare() {
     ITriangleMesh triangleMesh = new TriangleMesh();
-    int a = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, 0, -0.5)));
-    int b = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, 0, -0.5)));
-    int c = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, 0, 0.5)));
-    int d = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, 0, 0.5)));
+    int a = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, 0, -0.5)));
+    int b = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, 0, -0.5)));
+    int c = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, 0, 0.5)));
+    int d = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, 0, 0.5)));
     triangleMesh.addTriangle(new Triangle(a, b, c));
     triangleMesh.addTriangle(new Triangle(b, c, d));
     triangleMesh.computeTriangleNormals();
@@ -74,9 +75,9 @@ public class TriangleMeshFactory {
     ITriangleMesh mesh = new TriangleMesh();
 
     // Corner points
-    Vector pA = VectorMatrixFactory.newVector(0.5f, 0, 0);
-    Vector pB = VectorMatrixFactory.newVector(0.5f, 1, 0);
-    Vector pC = VectorMatrixFactory.newVector(0, 0.5f, 1);
+    Vector pA = VectorFactory.createVector3(0.5f, 0, 0);
+    Vector pB = VectorFactory.createVector3(0.5f, 1, 0);
+    Vector pC = VectorFactory.createVector3(0, 0.5f, 1);
 
     // Add vertices to mesh
     mesh.addVertex(new Vertex(pA));
@@ -114,24 +115,24 @@ public class TriangleMeshFactory {
 
     // Vertices
     float size = 1.0f;
-    Vertex p00 = new Vertex(VectorMatrixFactory.newVector(-size / 2.0f, 0, -size / 2.0f),
-        VectorMatrixFactory.newVector(0, 1, 0));
-    Vertex p01 = new Vertex(VectorMatrixFactory.newVector(-size / 2.0f, 0, size / 2.0f),
-        VectorMatrixFactory.newVector(0, 1, 0));
-    Vertex p10 = new Vertex(VectorMatrixFactory.newVector(size / 2.0f, 0, -size / 2.0f),
-        VectorMatrixFactory.newVector(0, 1, 0));
-    Vertex p11 = new Vertex(VectorMatrixFactory.newVector(size / 2.0f, 0, size / 2.0f),
-        VectorMatrixFactory.newVector(0, 1, 0));
+    Vertex p00 = new Vertex(VectorFactory.createVector3(-size / 2.0f, 0, -size / 2.0f),
+        VectorFactory.createVector3(0, 1, 0));
+    Vertex p01 = new Vertex(VectorFactory.createVector3(-size / 2.0f, 0, size / 2.0f),
+        VectorFactory.createVector3(0, 1, 0));
+    Vertex p10 = new Vertex(VectorFactory.createVector3(size / 2.0f, 0, -size / 2.0f),
+        VectorFactory.createVector3(0, 1, 0));
+    Vertex p11 = new Vertex(VectorFactory.createVector3(size / 2.0f, 0, size / 2.0f),
+        VectorFactory.createVector3(0, 1, 0));
     int i00 = mesh.addVertex(p00);
     int i01 = mesh.addVertex(p01);
     int i10 = mesh.addVertex(p10);
     int i11 = mesh.addVertex(p11);
 
     // Texture coordinates
-    int texCoord00 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 0, 0));
-    int texCoord01 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 1, 0));
-    int texCoord10 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 0, 0));
-    int texCoord11 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 1, 0));
+    int texCoord00 = mesh.addTextureCoordinate(VectorFactory.createVector3(0, 0, 0));
+    int texCoord01 = mesh.addTextureCoordinate(VectorFactory.createVector3(0, 1, 0));
+    int texCoord10 = mesh.addTextureCoordinate(VectorFactory.createVector3(1, 0, 0));
+    int texCoord11 = mesh.addTextureCoordinate(VectorFactory.createVector3(1, 1, 0));
 
     // Triangles
     Triangle t1 = new Triangle(i00, i10, i01, texCoord00, texCoord10, texCoord01);
@@ -154,19 +155,19 @@ public class TriangleMeshFactory {
     mesh.clear();
 
     double d = 0.5;
-    int v000 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-d, -d, -d)));
-    int v010 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-d, d, -d)));
-    int v110 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(d, d, -d)));
-    int v100 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(d, -d, -d)));
-    int v001 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-d, -d, d)));
-    int v011 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-d, d, d)));
-    int v111 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(d, d, d)));
-    int v101 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(d, -d, d)));
+    int v000 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, -d, -d)));
+    int v010 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, d, -d)));
+    int v110 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, d, -d)));
+    int v100 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, -d, -d)));
+    int v001 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, -d, d)));
+    int v011 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, d, d)));
+    int v111 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, d, d)));
+    int v101 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, -d, d)));
 
-    int t00 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 0, 0));
-    int t01 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 1, 0));
-    int t10 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 0, 0));
-    int t11 = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 1, 0));
+    int t00 = mesh.addTextureCoordinate(VectorFactory.createVector3(0, 0, 0));
+    int t01 = mesh.addTextureCoordinate(VectorFactory.createVector3(0, 1, 0));
+    int t10 = mesh.addTextureCoordinate(VectorFactory.createVector3(1, 0, 0));
+    int t11 = mesh.addTextureCoordinate(VectorFactory.createVector3(1, 1, 0));
 
     // front
     mesh.addTriangle(new Triangle(v000, v100, v110, t00, t10, t11));
@@ -210,13 +211,13 @@ public class TriangleMeshFactory {
     for (int i = 0; i < resolution; i++) {
       double alpha = (double) i / (double) resolution * 2.0 * Math.PI;
       mesh.addVertex(
-          new Vertex(VectorMatrixFactory.newVector(0, Math.sin(alpha) * radiusSmall, Math.cos(alpha) * radiusSmall)));
+          new Vertex(VectorFactory.createVector3(0, Math.sin(alpha) * radiusSmall, Math.cos(alpha) * radiusSmall)));
     }
     // Top
     for (int i = 0; i < resolution; i++) {
       double alpha = (double) i / (double) resolution * 2.0 * Math.PI;
       mesh.addVertex(new Vertex(
-          VectorMatrixFactory.newVector(1.0f, Math.sin(alpha) * radiusSmall, Math.cos(alpha) * radiusSmall)));
+          VectorFactory.createVector3(1.0f, Math.sin(alpha) * radiusSmall, Math.cos(alpha) * radiusSmall)));
     }
 
     // Triangles
@@ -244,22 +245,22 @@ public class TriangleMeshFactory {
     for (int i = 0; i < RESOLUTION; i++) {
       double alpha = (double) i / (double) RESOLUTION * 2.0 * Math.PI;
       mesh.addVertex(
-          new Vertex(VectorMatrixFactory.newVector(0, Math.sin(alpha) * radiusSmall, Math.cos(alpha) * radiusSmall)));
+          new Vertex(VectorFactory.createVector3(0, Math.sin(alpha) * radiusSmall, Math.cos(alpha) * radiusSmall)));
     }
     // Shaft inner vertices
     for (int i = 0; i < RESOLUTION; i++) {
       double alpha = (double) i / (double) RESOLUTION * 2.0 * Math.PI;
-      mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(segmentLength, Math.sin(alpha) * radiusSmall,
+      mesh.addVertex(new Vertex(VectorFactory.createVector3(segmentLength, Math.sin(alpha) * radiusSmall,
           Math.cos(alpha) * radiusSmall)));
     }
     // Shaft outer vertices
     for (int i = 0; i < RESOLUTION; i++) {
       double alpha = (double) i / (double) RESOLUTION * 2.0 * Math.PI;
-      mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(segmentLength, Math.sin(alpha) * radiusLarge,
+      mesh.addVertex(new Vertex(VectorFactory.createVector3(segmentLength, Math.sin(alpha) * radiusLarge,
           Math.cos(alpha) * radiusLarge)));
     }
-    int bottomIndex = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0, 0, 0)));
-    int topIndex = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(1, 0, 0)));
+    int bottomIndex = mesh.addVertex(new Vertex(VectorFactory.createVector3(0, 0, 0)));
+    int topIndex = mesh.addVertex(new Vertex(VectorFactory.createVector3(1, 0, 0)));
 
     // Triangles at the bottom
     for (int i = 0; i < RESOLUTION; i++) {
@@ -298,10 +299,10 @@ public class TriangleMeshFactory {
     // Vertices
     // (±1, 0, −1/√2)
     // (0, ±1, 1/√2)
-    int v0 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, 0.0, -0.5 / Math.sqrt(2))));
-    int v1 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, 0.0, -0.5 / Math.sqrt(2))));
-    int v2 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.0, 0.5, 0.5 / Math.sqrt(2))));
-    int v3 = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.0, -0.5, 0.5 / Math.sqrt(2))));
+    int v0 = mesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, 0.0, -0.5 / Math.sqrt(2))));
+    int v1 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, 0.0, -0.5 / Math.sqrt(2))));
+    int v2 = mesh.addVertex(new Vertex(VectorFactory.createVector3(0.0, 0.5, 0.5 / Math.sqrt(2))));
+    int v3 = mesh.addVertex(new Vertex(VectorFactory.createVector3(0.0, -0.5, 0.5 / Math.sqrt(2))));
 
     // Faces
     mesh.addTriangle(new Triangle(v0, v2, v1));
@@ -329,7 +330,7 @@ public class TriangleMeshFactory {
     // Rotate
     Vector direction = line.getEnd().subtract(line.getStart());
     direction.normalize();
-    Matrix T = VectorMatrixFactory.createCoordinateFrameX(direction);
+    Matrix T = MatrixFactory.createCoordinateFrameX(direction);
     TriangleMeshTransformation.transform(mesh, T);
 
     // Translate start
@@ -351,7 +352,7 @@ public class TriangleMeshFactory {
     // Rotate
     Vector direction = arrow.getEnd().subtract(arrow.getStart());
     direction.normalize();
-    Matrix T = VectorMatrixFactory.createCoordinateFrameX(direction);
+    Matrix T = MatrixFactory.createCoordinateFrameX(direction);
     TriangleMeshTransformation.transform(mesh, T);
 
     // Translate start
@@ -367,7 +368,7 @@ public class TriangleMeshFactory {
    * Create the triangle mesh for a unit sphere at the origin with radius 1.
    */
   public static ITriangleMesh createSphere(int resolution) {
-    return createSphere(VectorMatrixFactory.newVector(0, 0, 0), 1, resolution);
+    return createSphere(VectorFactory.createVector3(0, 0, 0), 1, resolution);
   }
 
   /**
@@ -389,17 +390,17 @@ public class TriangleMeshFactory {
         double theta = (y + 1) * deltaY;
         double u = phi / Math.PI;
         double v = theta / Math.PI;
-        Vector p00 = VectorMatrixFactory.newVector(radius * Math.sin(theta) * Math.cos(phi) + center.get(0),
+        Vector p00 = VectorFactory.createVector3(radius * Math.sin(theta) * Math.cos(phi) + center.get(0),
             radius * Math.sin(theta) * Math.sin(phi) + center.get(1), radius * Math.cos(theta) + center.get(2));
         mesh.addVertex(new Vertex(p00));
-        mesh.addTextureCoordinate(VectorMatrixFactory.newVector(u, v, 0));
+        mesh.addTextureCoordinate(VectorFactory.createVector3(u, v, 0));
       }
     }
     // Add top and bottom index
     int bottomIndex = mesh
-        .addVertex(new Vertex(VectorMatrixFactory.newVector(center.get(0), center.get(1), center.get(2) - radius)));
+        .addVertex(new Vertex(VectorFactory.createVector3(center.get(0), center.get(1), center.get(2) - radius)));
     int topIndex = mesh
-        .addVertex(new Vertex(VectorMatrixFactory.newVector(center.get(0), center.get(1), center.get(2) + radius)));
+        .addVertex(new Vertex(VectorFactory.createVector3(center.get(0), center.get(1), center.get(2) + radius)));
 
     // Compute triangles
     for (int x = 0; x < resolutionX; x++) {
@@ -418,13 +419,13 @@ public class TriangleMeshFactory {
       int a = computeCircleIndex(resolutionX, resolutionY, x, 0);
       int b = computeCircleIndex(resolutionX, resolutionY, x + 1, 0);
       int c = topIndex;
-      int cTexIndex = mesh.addTextureCoordinate(VectorMatrixFactory.newVector((float) x / (float) resolutionX, 0, 0));
+      int cTexIndex = mesh.addTextureCoordinate(VectorFactory.createVector3((float) x / (float) resolutionX, 0, 0));
       mesh.addTriangle(new Triangle(a, b, c, a, b, cTexIndex));
 
       a = bottomIndex;
       b = computeCircleIndex(resolutionX, resolutionY, x + 1, resolutionY - 1);
       c = computeCircleIndex(resolutionX, resolutionY, x, resolutionY - 1);
-      Vector texCoord = VectorMatrixFactory.newVector((x + 0.5) / (float) resolutionX, 0.95, 0);
+      Vector texCoord = VectorFactory.createVector3((x + 0.5) / (float) resolutionX, 0.95, 0);
       int aTexIndex = mesh.addTextureCoordinate(texCoord);
       mesh.addTriangle(new Triangle(a, b, c, aTexIndex, b, c));
     }
@@ -444,8 +445,8 @@ public class TriangleMeshFactory {
   public static ITriangleMesh createCylinder(Cylinder cylinder, int resolution) {
 
     Vector dir = cylinder.getDirection();
-    Matrix T = VectorMatrixFactory.createCoordinateFrameY(dir);
-    Vector d = VectorMatrixFactory.newVector(T.get(0, 0), T.get(0, 1), T.get(0, 2));
+    Matrix T = MatrixFactory.createCoordinateFrameY(dir);
+    Vector d = VectorFactory.createVector3(T.get(0, 0), T.get(0, 1), T.get(0, 2));
     Vector x = d.multiply(cylinder.getRadius());
 
     ITriangleMesh mesh = new TriangleMesh();
@@ -455,13 +456,13 @@ public class TriangleMeshFactory {
 
     // Points in the bottom circle
     for (int i = 0; i < resolution; i++) {
-      Matrix R = VectorMatrixFactory.getRotationMatrix(dir, i * deltaAngle);
+      Matrix R = MatrixFactory.createRotationMatrix(dir, i * deltaAngle);
       Vector p = cylinder.getPoint().add(R.multiply(x));
       mesh.addVertex(new Vertex(p));
     }
     // Points in the top circle
     for (int i = 0; i < resolution; i++) {
-      Matrix R = VectorMatrixFactory.getRotationMatrix(dir, i * deltaAngle);
+      Matrix R = MatrixFactory.createRotationMatrix(dir, i * deltaAngle);
       Vector p = top.add(R.multiply(x));
       mesh.addVertex(new Vertex(p));
     }
@@ -489,9 +490,9 @@ public class TriangleMeshFactory {
    * Create a mesh that represents a plane.
    */
   public static ITriangleMesh createPlane(Vector point, Vector normal, double extend) {
-    Vector tangentU = VectorMatrixFactory.newVector(1, 0, 0);
+    Vector tangentU = VectorFactory.createVector3(1, 0, 0);
     if (Math.abs(tangentU.multiply(normal)) > 0.95) {
-      tangentU = VectorMatrixFactory.newVector(0, 1, 0);
+      tangentU = VectorFactory.createVector3(0, 1, 0);
     }
     Vector tangentV = normal.cross(tangentU).getNormalized();
     tangentU = tangentV.cross(normal).getNormalized();

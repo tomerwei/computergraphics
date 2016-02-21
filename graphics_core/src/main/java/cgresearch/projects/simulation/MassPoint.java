@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a mass point in a cloth simulation.
@@ -28,12 +28,12 @@ public class MassPoint {
 	/**
 	 * Current velocity of the mass point
 	 */
-	private Vector v = VectorMatrixFactory.newVector(0, 0, 0);
+	private Vector v = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Position of the point in 3-spaces
 	 */
-	private Vector x = VectorMatrixFactory.newVector(0, 0, 0);
+	private Vector x = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Constructor.

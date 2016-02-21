@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Implementation of the IColorRGB interface.
@@ -61,7 +61,7 @@ public class ColorRGB implements IColorRGB {
 
 	@Override
 	public Vector getAsVector() {
-		return VectorMatrixFactory.newVector(color[0], color[1], color[2]);
+		return VectorFactory.createVector3(color[0], color[1], color[2]);
 	}
 
 	@Override

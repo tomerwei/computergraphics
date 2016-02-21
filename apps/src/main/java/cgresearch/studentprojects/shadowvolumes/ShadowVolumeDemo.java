@@ -5,7 +5,8 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.*;
 import cgresearch.graphics.fileio.ObjFileReader;
@@ -44,14 +45,14 @@ public class ShadowVolumeDemo extends CgApplication {
     CgNode node = loadRoom();
     // Add objects
     if (node != null) {
-      loadTable("Table", VectorMatrixFactory.newVector(3), 0, node);
-      loadChair("Chair 1", VectorMatrixFactory.newVector(-5, 0, 0), 90, node);
-      loadChair("Chair 2", VectorMatrixFactory.newVector(5, 0, 0), 270, node);
+      loadTable("Table", VectorFactory.createVector(3), 0, node);
+      loadChair("Chair 1", VectorFactory.createVector3(-5, 0, 0), 90, node);
+      loadChair("Chair 2", VectorFactory.createVector3(5, 0, 0), 270, node);
     }
 
     // Set light source
-    lightSource.setPosition(VectorMatrixFactory.newVector(0, 30, 0));
-    lightSource.setColor(VectorMatrixFactory.newVector(1,1,1));
+    lightSource.setPosition(VectorFactory.createVector3(0, 30, 0));
+    lightSource.setColor(VectorFactory.createVector3(1,1,1));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
     getCgRootNode().setUseBlending(true);
@@ -96,7 +97,7 @@ public class ShadowVolumeDemo extends CgApplication {
         t.addTranslation(translate);
       }
       if (rotation != 0) {
-        t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newVector(0,1,0),
+        t.addTransformation(MatrixFactory.createRotationMatrix(VectorFactory.createVector3(0,1,0),
                 MathHelpers.degree2radiens(rotation)));
       }
       CgNode transformation = new CgNode(t, "Transformation");
@@ -122,7 +123,7 @@ public class ShadowVolumeDemo extends CgApplication {
   public void update(Observable o, Object arg) {
     if (o instanceof AnimationTimer) {
       lightSource
-          .setPosition(VectorMatrixFactory.newVector(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
+          .setPosition(VectorFactory.createVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
       alpha += 0.05;
     }
   }

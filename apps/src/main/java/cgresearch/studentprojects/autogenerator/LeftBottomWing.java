@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 
@@ -69,7 +69,7 @@ public class LeftBottomWing {
 	public void setA(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		A = VectorMatrixFactory.newVector(x, y, 0);
+		A = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getB() {
@@ -79,7 +79,7 @@ public class LeftBottomWing {
 	public void setB(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		B = VectorMatrixFactory.newVector(x, y, 0);
+		B = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getC() {
@@ -89,7 +89,7 @@ public class LeftBottomWing {
 	public void setC(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		C = VectorMatrixFactory.newVector(x, y, 0);
+		C = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getD() {
@@ -99,7 +99,7 @@ public class LeftBottomWing {
 	public void setD(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		D = VectorMatrixFactory.newVector(x, y, 0);
+		D = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Line3D getAB() {
@@ -168,13 +168,13 @@ public class LeftBottomWing {
 	public void setLeft(double bwlrh, double bwlrv, double bwtph, double bwtpv, double bwlr2h, double bwlr2v) {
 		BezierCurve curve = new BezierCurve(3);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newVector(A.get(0) - bwtph, A.get(1) + bwtpv, 0));
+		curve.setControlPoint(0, VectorFactory.createVector3(A.get(0) - bwtph, A.get(1) + bwtpv, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(A.get(0) - bwlr2h, A.get(1) + offset + bwlr2v, 0));
+		curve.setControlPoint(1, VectorFactory.createVector3(A.get(0) - bwlr2h, A.get(1) + offset + bwlr2v, 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newVector(A.get(0) - bwlrh, A.get(1) + hoehe / 2 + bwlrv, 0));
+		curve.setControlPoint(2, VectorFactory.createVector3(A.get(0) - bwlrh, A.get(1) + hoehe / 2 + bwlrv, 0));
 
-		curve.setControlPoint(3, VectorMatrixFactory.newVector(B.get(0), B.get(1), 0));
+		curve.setControlPoint(3, VectorFactory.createVector3(B.get(0), B.get(1), 0));
 
 		this.left = curve;
 	}
@@ -190,13 +190,13 @@ public class LeftBottomWing {
 
 		BezierCurve curve = new BezierCurve(3);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newVector(C.get(0), C.get(1) - breite, 0));
+		curve.setControlPoint(0, VectorFactory.createVector3(C.get(0), C.get(1) - breite, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(D.get(0) - bwbh, D.get(1) + bwbv, 0));
+		curve.setControlPoint(1, VectorFactory.createVector3(D.get(0) - bwbh, D.get(1) + bwbv, 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newVector(A.get(0) + offset - bwb2h, A.get(1) + bwb2v, 0));
+		curve.setControlPoint(2, VectorFactory.createVector3(A.get(0) + offset - bwb2h, A.get(1) + bwb2v, 0));
 
-		curve.setControlPoint(3, VectorMatrixFactory.newVector(A.get(0) - bwtph, A.get(1) + bwtpv, 0));
+		curve.setControlPoint(3, VectorFactory.createVector3(A.get(0) - bwtph, A.get(1) + bwtpv, 0));
 
 		this.bottom = curve;
 	}

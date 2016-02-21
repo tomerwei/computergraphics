@@ -3,7 +3,7 @@ package cgresearch.projects.simulation;
 import java.util.Iterator;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class Fabric extends Cloth {
 
@@ -20,7 +20,7 @@ public class Fabric extends Cloth {
 	/**
 	 * Translation of the fabric (required for reset call)
 	 */
-	private final Vector translation = VectorMatrixFactory.newVector(3);
+	private final Vector translation = VectorFactory.createVector(3);
 
 	/**
 	 * Combined mass for all mass points in the fabric
@@ -52,7 +52,7 @@ public class Fabric extends Cloth {
 	 */
 	private final double GRAVITATION = 9.81;
 	private final double WIND_ACCELERATION = 5;
-	private final Vector WIND_DIRECTION = VectorMatrixFactory.newVector(0,
+	private final Vector WIND_DIRECTION = VectorFactory.createVector3(0,
 			0, -1);
 
 	/**
@@ -109,7 +109,7 @@ public class Fabric extends Cloth {
 			double x = -1 + deltaStructure * i;
 			for (int j = 0; j < resolution; j++) {
 				double z = -1 + deltaStructure * j;
-				Vector pos = VectorMatrixFactory.newVector(x, 0, z)
+				Vector pos = VectorFactory.createVector3(x, 0, z)
 						.multiply(scale).add(translation);
 				addMassPoint(new MassPoint(pos, massPointMass));
 			}
@@ -132,7 +132,7 @@ public class Fabric extends Cloth {
 			double x = -1 + deltaStructure * i;
 			for (int j = 0; j < resolution; j++) {
 				double y = -1 + deltaStructure * j;
-				Vector pos = VectorMatrixFactory.newVector(x, y, 0)
+				Vector pos = VectorFactory.createVector3(x, y, 0)
 						.multiply(scale).add(translation);
 				addMassPoint(new MassPoint(pos, massPointMass));
 			}
@@ -241,7 +241,7 @@ public class Fabric extends Cloth {
 	private Vector computeSpringForce(int index, Vector x) {
 		Iterator<Spring> iteratorSpring = getMassPoint(index)
 				.getSpringsIterator();
-		Vector force = VectorMatrixFactory.newVector(0, 0, 0);
+		Vector force = VectorFactory.createVector3(0, 0, 0);
 		while (iteratorSpring.hasNext()) {
 			Spring spring = iteratorSpring.next();
 			force = force.add(computeSpringForce(index, x, spring));
@@ -254,7 +254,7 @@ public class Fabric extends Cloth {
 		MassPoint massPoint = getMassPoint(index);
 
 		// Gravitational force
-		Vector gravitationalForce = VectorMatrixFactory.newVector(0, -1, 0)
+		Vector gravitationalForce = VectorFactory.createVector3(0, -1, 0)
 				.multiply(GRAVITATION).multiply(massPoint.getMass());
 
 		// Wind
@@ -275,7 +275,7 @@ public class Fabric extends Cloth {
 	@Override
 	public Vector eval(int index, Vector pos) {
 		MassPoint massPoint = getMassPoint(index);
-		Vector gravitationalForce = VectorMatrixFactory.newVector(0, -1, 0)
+		Vector gravitationalForce = VectorFactory.createVector3(0, -1, 0)
 				.multiply(GRAVITATION).multiply(massPoint.getMass());
 		Vector springForce = computeSpringForce(index, pos);
 		Vector force = gravitationalForce.add(springForce);

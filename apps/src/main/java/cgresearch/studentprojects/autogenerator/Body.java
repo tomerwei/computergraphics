@@ -5,7 +5,7 @@ import java.util.List;
 
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 
@@ -69,7 +69,7 @@ public class Body {
 	public void setA(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		A = VectorMatrixFactory.newVector(x, y, 0);
+		A = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getB() {
@@ -79,7 +79,7 @@ public class Body {
 	public void setB(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		B = VectorMatrixFactory.newVector(x, y, 0);
+		B = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getC() {
@@ -89,7 +89,7 @@ public class Body {
 	public void setC(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		C = VectorMatrixFactory.newVector(x, y, 0);
+		C = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getD() {
@@ -99,7 +99,7 @@ public class Body {
 	public void setD(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		D = VectorMatrixFactory.newVector(x, y, 0);
+		D = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Line3D getAB() {
@@ -171,11 +171,11 @@ public class Body {
 
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newVector(tl.get(0), tl.get(1) + breite, 0));
+		curve.setControlPoint(0, VectorFactory.createVector3(tl.get(0), tl.get(1) + breite, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(B.get(0), B.get(1), 0));
+		curve.setControlPoint(1, VectorFactory.createVector3(B.get(0), B.get(1), 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newVector(B.get(0) + laenge / 2, B.get(1), 0));
+		curve.setControlPoint(2, VectorFactory.createVector3(B.get(0) + laenge / 2, B.get(1), 0));
 
 		this.topLeft = curve;
 	}
@@ -190,11 +190,11 @@ public class Body {
 
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newVector(B.get(0) + laenge / 2, B.get(1), 0));
+		curve.setControlPoint(0, VectorFactory.createVector3(B.get(0) + laenge / 2, B.get(1), 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(C.get(0), C.get(1), 0));
+		curve.setControlPoint(1, VectorFactory.createVector3(C.get(0), C.get(1), 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newVector(tr.get(0), tr.get(1) + breite, 0));
+		curve.setControlPoint(2, VectorFactory.createVector3(tr.get(0), tr.get(1) + breite, 0));
 
 		this.topRight = curve;
 	}
@@ -209,11 +209,11 @@ public class Body {
 
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newVector(A.get(0) + laenge / 2, A.get(1), 0));
+		curve.setControlPoint(0, VectorFactory.createVector3(A.get(0) + laenge / 2, A.get(1), 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(A.get(0), A.get(1), 0));
+		curve.setControlPoint(1, VectorFactory.createVector3(A.get(0), A.get(1), 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newVector(bl.get(0), bl.get(1) - breite, 0));
+		curve.setControlPoint(2, VectorFactory.createVector3(bl.get(0), bl.get(1) - breite, 0));
 
 		this.bottomLeft = curve;
 	}
@@ -228,11 +228,11 @@ public class Body {
 
 		BezierCurve curve = new BezierCurve(2);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newVector(br.get(0), br.get(1) - breite, 0));
+		curve.setControlPoint(0, VectorFactory.createVector3(br.get(0), br.get(1) - breite, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(D.get(0), D.get(1), 0));
+		curve.setControlPoint(1, VectorFactory.createVector3(D.get(0), D.get(1), 0));
 
-		curve.setControlPoint(2, VectorMatrixFactory.newVector(A.get(0) + laenge / 2, A.get(1), 0));
+		curve.setControlPoint(2, VectorFactory.createVector3(A.get(0) + laenge / 2, A.get(1), 0));
 
 		this.bottomRight = curve;
 	}

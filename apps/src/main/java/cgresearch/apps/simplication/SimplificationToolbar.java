@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.QuadricErrorMetricsSimplification2D;
 import cgresearch.graphics.algorithms.QuadricErrorMetricsSimplification3D;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
@@ -125,12 +125,12 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     polygon.clear();
 
     // Square
-    polygon.addPoint(VectorMatrixFactory.newVector(-1, -1, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(-1, -0.5, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(-1, 0.5, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(-1, 1, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(1, 1, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(1, -1, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, -1, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, -0.5, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, 0.5, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, 1, 0));
+    polygon.addPoint(VectorFactory.createVector3(1, 1, 0));
+    polygon.addPoint(VectorFactory.createVector3(1, -1, 0));
 
     PolygonIO reader = new PolygonIO();
     polygon.copy(reader.readPolygon("polygons/hamburg.polygon"));

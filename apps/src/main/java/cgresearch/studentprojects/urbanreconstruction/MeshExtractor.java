@@ -1,8 +1,8 @@
 package cgresearch.studentprojects.urbanreconstruction;
 
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.points.PointCloud;
@@ -21,7 +21,7 @@ public class MeshExtractor {
       RT = null;
       ebene[i] = new PointCloud();
       Plane pl = UrbanGUI.planes.get(i);
-      R = VectorMatrixFactory.createCoordinateFrameZ(pl.getNormal());
+      R = MatrixFactory.createCoordinateFrameZ(pl.getNormal());
       RT = R.getTransposed();
       IPointCloud temp = UrbanGUI.points.get(i);
 
@@ -48,7 +48,7 @@ public class MeshExtractor {
     for (int i = 0; i < ebene.length; i++) {
       R = null;
       Plane pl = UrbanGUI.planes.get(i);
-      R = VectorMatrixFactory.createCoordinateFrameZ(pl.getNormal());
+      R = MatrixFactory.createCoordinateFrameZ(pl.getNormal());
       IPointCloud pc = new PointCloud();
       IPointCloud temp = findMeshPoint(ebene[i]);
       for (int j = 0; j < temp.getNumberOfPoints(); j++) {

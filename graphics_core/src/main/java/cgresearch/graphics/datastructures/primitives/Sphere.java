@@ -7,7 +7,7 @@ package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a sphere.
@@ -20,7 +20,7 @@ public class Sphere extends IPrimitive {
     /**
      * Center of the sphere.
      */
-    private Vector center = VectorMatrixFactory.newVector(3);
+    private Vector center = VectorFactory.createVector(3);
 
     /**
      * Radius of the sphere.
@@ -63,9 +63,9 @@ public class Sphere extends IPrimitive {
     @Override
     public BoundingBox getBoundingBox() {
         BoundingBox bbox = new BoundingBox();
-        bbox.add(center.subtract(VectorMatrixFactory.newVector(radius,
+        bbox.add(center.subtract(VectorFactory.createVector3(radius,
                 radius, radius)));
-        bbox.add(center.add(VectorMatrixFactory.newVector(radius, radius,
+        bbox.add(center.add(VectorFactory.createVector3(radius, radius,
                 radius)));
         return bbox;
     }

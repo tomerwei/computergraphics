@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
@@ -76,7 +76,7 @@ public class SpecialBrick implements IChildBrick {
 	@Override
 	public Vector getDimensions() {
 		Vector dim = rootBrick.getDimensions();
-		return VectorMatrixFactory.newVector(dim.get(0) * resolution.getX(),
+		return VectorFactory.createVector3(dim.get(0) * resolution.getX(),
 				dim.get(1) * resolution.getY(),
 				dim.get(2) * resolution.getZ());
 	}

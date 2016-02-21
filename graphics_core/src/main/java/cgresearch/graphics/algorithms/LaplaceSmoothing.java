@@ -5,7 +5,7 @@ import java.util.List;
 
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
 /**
@@ -47,7 +47,7 @@ public class LaplaceSmoothing {
     Matrix L = TriangleMeshTools.createLaplacian(mesh);
     List<Vector> newVertexPositions = new ArrayList<Vector>();
     for (int rowIndex = 0; rowIndex < L.getNumberOfRows(); rowIndex++) {
-      Vector v = VectorMatrixFactory.newVector(0, 0, 0);
+      Vector v = VectorFactory.createVector3(0, 0, 0);
       for (int columnIndex = 0; columnIndex < L.getNumberOfColumns(); columnIndex++) {
         if (L.get(rowIndex, columnIndex) != 0 && rowIndex != columnIndex) {
           v = v.add(mesh.getVertex(columnIndex).getPosition());

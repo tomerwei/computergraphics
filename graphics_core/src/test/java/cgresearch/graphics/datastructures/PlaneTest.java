@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.primitives.Plane;
 
 /**
@@ -25,15 +25,15 @@ public class PlaneTest {
      * Test isInPositiveHalfSpace.
      */
     public void testIsOnPositiveHalfspace() {
-        Plane plane = new Plane(VectorMatrixFactory.newVector(0, 0, 0),
-                VectorMatrixFactory.newVector(0, 1, 0));
+        Plane plane = new Plane(VectorFactory.createVector3(0, 0, 0),
+                VectorFactory.createVector3(0, 1, 0));
 
-        Vector p = VectorMatrixFactory.newVector(0, 2, 1);
+        Vector p = VectorFactory.createVector3(0, 2, 1);
         boolean result = plane.isInPositiveHalfSpace(p);
         boolean expected = true;
         assertEquals(result, expected);
 
-        p = VectorMatrixFactory.newVector(3, -3, 3);
+        p = VectorFactory.createVector3(3, -3, 3);
         result = plane.isInPositiveHalfSpace(p);
         expected = false;
         assertEquals(result, expected);
@@ -44,12 +44,12 @@ public class PlaneTest {
      * Test project.
      */
     public void testProject() {
-        Plane plane = new Plane(VectorMatrixFactory.newVector(0, 0, 0),
-                VectorMatrixFactory.newVector(0, 1, 0));
+        Plane plane = new Plane(VectorFactory.createVector3(0, 0, 0),
+                VectorFactory.createVector3(0, 1, 0));
 
-        Vector p = VectorMatrixFactory.newVector(0, 2, 1);
+        Vector p = VectorFactory.createVector3(0, 2, 1);
         Vector result = plane.project(p);
-        Vector expected = VectorMatrixFactory.newVector(0, 0, 1);
+        Vector expected = VectorFactory.createVector3(0, 0, 1);
         assertEquals(result, expected);
     }
 }

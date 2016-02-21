@@ -11,12 +11,12 @@ public class Ray3D {
   /**
    * Starting point.
    */
-  private Vector p = VectorMatrixFactory.newVector(3);
+  private Vector p = VectorFactory.createVector(3);
 
   /**
    * Direction
    */
-  private Vector r = VectorMatrixFactory.newVector(3);
+  private Vector r = VectorFactory.createVector(3);
 
   /**
    * Constructor.

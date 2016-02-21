@@ -1,7 +1,7 @@
 package cgresearch.projects.simulation.collision;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.primitives.Plane;
 
 public class CollidablePlane implements Collidable {
@@ -16,7 +16,7 @@ public class CollidablePlane implements Collidable {
 	 */
 	public CollidablePlane(Vector point, Vector normal) {
 		plane.setPoint(point);
-		Vector normalizedNormal = VectorMatrixFactory.newVector(3);
+		Vector normalizedNormal = VectorFactory.createVector(3);
 		normalizedNormal.copy(normal);
 		normalizedNormal.normalize();
 		plane.setNormal(normalizedNormal);

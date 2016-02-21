@@ -2,8 +2,9 @@ package cgresearch.rendering.jogl.core;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -33,13 +34,13 @@ public class PointsAsDiscsMeshFactory {
 
     for (int pointIndex = 0; pointIndex < pointCloud.getNumberOfPoints(); pointIndex++) {
       Point p = pointCloud.getPoint(pointIndex);
-      Matrix T = VectorMatrixFactory.createCoordinateFrameX(p.getNormal());
+      Matrix T = MatrixFactory.createCoordinateFrameX(p.getNormal());
       // Create vertices
       int centerIndex = mesh.addVertex(new Vertex(p.getPosition()));
       for (int i = 0; i < resolution; i++) {
-        Matrix R = VectorMatrixFactory.getRotationMatrix(p.getNormal(), deltaAngle * i);
+        Matrix R = MatrixFactory.createRotationMatrix(p.getNormal(), deltaAngle * i);
         Matrix transT = T.getTransposed();
-        Vector d = VectorMatrixFactory.newVector(transT.get(1, 0), transT.get(1, 1), transT.get(1, 2));
+        Vector d = VectorFactory.createVector3(transT.get(1, 0), transT.get(1, 1), transT.get(1, 2));
         Vector v = p.getPosition().add(R.multiply(d).multiply(scale));
         // System.out.println(v);
         mesh.addVertex(new Vertex(v, p.getNormal()));

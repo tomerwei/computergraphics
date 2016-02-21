@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.algorithms.Subdivision2D;
 import cgresearch.graphics.algorithms.Subdivision3D;
@@ -123,10 +123,10 @@ public class SubdivisionGui extends IApplicationControllerGui implements ActionL
     // 2D
     PolygonIO polygonIO = new PolygonIO();
     polygon.clear();
-    polygon.addPoint(VectorMatrixFactory.newVector(-2, 0, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(0, 2, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(2, 0, 0));
-    polygon.addPoint(VectorMatrixFactory.newVector(0, -2, 0));
+    polygon.addPoint(VectorFactory.createVector3(-2, 0, 0));
+    polygon.addPoint(VectorFactory.createVector3(0, 2, 0));
+    polygon.addPoint(VectorFactory.createVector3(2, 0, 0));
+    polygon.addPoint(VectorFactory.createVector3(0, -2, 0));
 //    polygonIO.writePolygon(polygon, "/Users/abo781/abo781/code/computergraphics/assets/polygons/square.polygon");
 
     polygon.copy(polygonIO.readPolygon("polygons/bird.polygon"));

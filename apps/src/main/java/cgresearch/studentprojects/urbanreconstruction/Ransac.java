@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.points.PointCloud;
@@ -52,8 +52,8 @@ public class Ransac {
 		// System.out.println("Number of points: " + numberOfPoints);
 
 		int bestSupport = 0;
-		Plane bestPlane = new Plane(VectorMatrixFactory.newVector(0, 0, 0),
-				VectorMatrixFactory.newVector(0, 0, 0));
+		Plane bestPlane = new Plane(VectorFactory.createVector3(0, 0, 0),
+				VectorFactory.createVector3(0, 0, 0));
 		int i = 0;
 		double e = 1 - (double) forseeable_support / (double) numberOfPoints;
 		// System.out.println("e: " + e);
@@ -211,7 +211,7 @@ public class Ransac {
 		ny = y / l;
 		nz = z / l;
 
-		Vector norm = VectorMatrixFactory.newVector(nx, ny, nz);
+		Vector norm = VectorFactory.createVector3(nx, ny, nz);
 		this.plane.setNormal(norm);
 
 	}

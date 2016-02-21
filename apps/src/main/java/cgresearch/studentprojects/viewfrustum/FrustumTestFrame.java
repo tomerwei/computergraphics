@@ -11,7 +11,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.camera.Camera;
@@ -50,17 +50,17 @@ public class FrustumTestFrame extends CgApplication {
     ITriangleMesh pumpkin = loadMesh("meshes/pumpkin.obj");
 
     // ############### Transformationen ###############
-    TriangleMeshTransformation.translate(cow, VectorMatrixFactory.newVector(1.0, 0.0, 9.0));
-    TriangleMeshTransformation.translate(bunny, VectorMatrixFactory.newVector(0.0, 0.0 /*1.15*/, 9.0));
+    TriangleMeshTransformation.translate(cow, VectorFactory.createVector3(1.0, 0.0, 9.0));
+    TriangleMeshTransformation.translate(bunny, VectorFactory.createVector3(0.0, 0.0 /*1.15*/, 9.0));
     TriangleMeshTransformation.scale(bunny, 3.0);
     TriangleMeshTransformation.scale(fenja, 0.1);
-    TriangleMeshTransformation.translate(fenja, VectorMatrixFactory.newVector(0.5, 0.0, 25.0));
+    TriangleMeshTransformation.translate(fenja, VectorFactory.createVector3(0.5, 0.0, 25.0));
     TriangleMeshTransformation.scale(fenjaDown, 0.1);
-    TriangleMeshTransformation.translate(fenjaDown, VectorMatrixFactory.newVector(2.0, -8.0, 8.0));
+    TriangleMeshTransformation.translate(fenjaDown, VectorFactory.createVector3(2.0, -8.0, 8.0));
     TriangleMeshTransformation.scale(fenjaUp, 0.1);
-    TriangleMeshTransformation.translate(fenjaUp, VectorMatrixFactory.newVector(-1.0, 2.0, 0.5));
+    TriangleMeshTransformation.translate(fenjaUp, VectorFactory.createVector3(-1.0, 2.0, 0.5));
     TriangleMeshTransformation.scale(pumpkin, 0.02);
-    TriangleMeshTransformation.translate(pumpkin, VectorMatrixFactory.newVector(0.0, 0.0, 20.5));
+    TriangleMeshTransformation.translate(pumpkin, VectorFactory.createVector3(0.0, 0.0, 20.5));
     // ############### Transformationen ###############
 
     getCgRootNode().addChild(new CgNode(cow, "cow"));

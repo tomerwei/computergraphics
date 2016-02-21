@@ -7,7 +7,7 @@ import java.io.InputStream;
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
@@ -91,7 +91,7 @@ public class StlFileReader {
       double x = dataInputStream.readFloat();
       double y = dataInputStream.readFloat();
       double z = dataInputStream.readFloat();
-      return VectorMatrixFactory.newVector(x, y, z);
+      return VectorFactory.createVector3(x, y, z);
     } catch (IOException e) {
       Logger.getInstance().error("Failed to read vector.");
     }

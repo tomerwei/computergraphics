@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.polygon.Polygon;
 
 /**
@@ -24,7 +24,7 @@ public class PolygonIO {
   /**
    * Remember the last point for relative coordinates.s
    */
-  private Vector lastPoint = VectorMatrixFactory.newVector(0, 0, 0);
+  private Vector lastPoint = VectorFactory.createVector3(0, 0, 0);
 
   private Polygon polygon;
 
@@ -85,7 +85,7 @@ public class PolygonIO {
       double x = Double.valueOf(tokens[0].replace(',', '.'));
       double y = Double.valueOf(tokens[1].replace(',', '.'));
       double z = Double.valueOf(tokens[2].replace(',', '.'));
-      return VectorMatrixFactory.newVector(x, y, z);
+      return VectorFactory.createVector3(x, y, z);
     } catch (NumberFormatException e) {
       return null;
     }
@@ -245,7 +245,7 @@ public class PolygonIO {
   private Vector readPoint(String coordinates) {
     try {
       String[] tokens = coordinates.split("\\s*,\\s*");
-      return VectorMatrixFactory.newVector(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]), 0);
+      return VectorFactory.createVector3(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]), 0);
     } catch (Exception e) {
       return null;
     }

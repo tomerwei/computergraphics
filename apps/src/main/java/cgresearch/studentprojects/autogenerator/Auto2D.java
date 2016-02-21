@@ -1,7 +1,7 @@
 package cgresearch.studentprojects.autogenerator;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class Auto2D {
 	
@@ -43,7 +43,7 @@ public class Auto2D {
 		double l = laenge;
 
 		// Postition von Chassis = 0,0,0
-		Vector p = VectorMatrixFactory.newVector(0, 0, 0);
+		Vector p = VectorFactory.createVector3(0, 0, 0);
 
 		Chassis2D erg = new Chassis2D(p, h, l, degree, chassisv, chassish);
 		return erg;
@@ -60,7 +60,7 @@ public class Auto2D {
 
 		// Postition von Front = links von Chassis Center und um haelfte von
 		// Front Hoehe hoeher
-		Vector p = VectorMatrixFactory.newVector(0 - laenge / 2 + l / 2,
+		Vector p = VectorFactory.createVector3(0 - laenge / 2 + l / 2,
 				this.chassis.getHoehe() / 2 + h / 2, 0);
 
 		Front2D erg = new Front2D(p, h, l, degree, fronth, frontv);
@@ -78,7 +78,7 @@ public class Auto2D {
 
 		// Postition von Heck = rechts von Chassis Center und um haelfte von
 		// Heck Hoehe hoeher
-		Vector p = VectorMatrixFactory.newVector(this.chassis.getLaenge()
+		Vector p = VectorFactory.createVector3(this.chassis.getLaenge()
 				/ 2 - l / 2, this.chassis.getHoehe() / 2 + h / 2, 0);
 
 		Heck2D erg = new Heck2D(p, h, l, degree, heckh, heckv);
@@ -97,7 +97,7 @@ public class Auto2D {
 
 		// Postition von Gast = rechts von Front Center und um haelfte von
 		// Gast Hoehe hoeher
-		Vector p = VectorMatrixFactory.newVector(
+		Vector p = VectorFactory.createVector3(
 				0 - this.chassis.getLaenge() / 2 + this.front.getLaenge() + l
 						/ 2, this.chassis.getHoehe() / 2 + h / 2, 0);
 

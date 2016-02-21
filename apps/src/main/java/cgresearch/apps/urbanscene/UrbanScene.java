@@ -9,7 +9,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.graphics.scenegraph.LightSource;
@@ -38,11 +38,11 @@ public class UrbanScene extends CgApplication {
   private void setupLight() {
     getCgRootNode().clearLights();
     LightSource light1 = new LightSource(Type.POINT);
-    light1.setPosition(VectorMatrixFactory.newVector(3, 10, 3));
+    light1.setPosition(VectorFactory.createVector3(3, 10, 3));
     getCgRootNode().addLight(light1);
     
     LightSource light2 = new LightSource(Type.POINT);
-    light2.setPosition(VectorMatrixFactory.newVector(10, 10, 3));
+    light2.setPosition(VectorFactory.createVector3(10, 10, 3));
     getCgRootNode().addLight(light2);
   }
 

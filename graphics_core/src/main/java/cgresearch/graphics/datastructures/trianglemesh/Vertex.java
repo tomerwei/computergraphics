@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a vertex.
@@ -19,12 +19,12 @@ public class Vertex implements IVertex {
   /**
    * 3D position of the vertex.
    */
-  private final Vector position = VectorMatrixFactory.newVector(3);
+  private final Vector position = VectorFactory.createVector(3);
 
   /**
    * (Normalized) normal direction of the vertex.
    */
-  private Vector normal = VectorMatrixFactory.newVector(1, 0, 0);
+  private Vector normal = VectorFactory.createVector3(1, 0, 0);
 
   /**
    * Color
@@ -45,7 +45,7 @@ public class Vertex implements IVertex {
    */
   public Vertex(Vector position) {
     this.position.copy(position);
-    this.normal = VectorMatrixFactory.newVector(1, 0, 0);
+    this.normal = VectorFactory.createVector3(1, 0, 0);
   }
 
   /**
@@ -65,7 +65,7 @@ public class Vertex implements IVertex {
    * Copy constructor
    */
   public Vertex(IVertex vertex) {
-    this(VectorMatrixFactory.newVector(vertex.getPosition()), VectorMatrixFactory.newVector(vertex.getNormal()));
+    this(VectorFactory.createVector(vertex.getPosition()), VectorFactory.createVector(vertex.getNormal()));
   }
 
   /**

@@ -10,7 +10,7 @@ import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -75,7 +75,7 @@ public class ComposedBrick implements IChildBrick {
 	@Override
 	public Vector getDimensions() {
 		Vector dim = rootBrick.getDimensions();
-		return VectorMatrixFactory.newVector(dim.get(0) * resolution.getX(),
+		return VectorFactory.createVector3(dim.get(0) * resolution.getX(),
 				dim.get(1) * resolution.getY(),
 				dim.get(2) * resolution.getZ());
 	}
@@ -113,7 +113,7 @@ public class ComposedBrick implements IChildBrick {
 				for (int x = 0; x < resolution.getX(); x++) {
 					ITriangleMesh add = new TriangleMesh(rootBrick.getModel());
 					TriangleMeshTransformation.translate(add,
-							VectorMatrixFactory.newVector(
+							VectorFactory.createVector3(
 									x * diagonal.get(0),
 									y * diagonal.get(1),
 									z * diagonal.get(2)));

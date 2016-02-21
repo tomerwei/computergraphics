@@ -1,24 +1,24 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class HalfEdgeVertex implements IVertex {
 
   /**
    * 3D position of the vertex.
    */
-  private final Vector position = VectorMatrixFactory.newVector(0, 0, 0);
+  private final Vector position = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * (Normalized) normal direction of the vertex.
    */
-  private Vector normal = VectorMatrixFactory.newVector(1, 0, 0);
+  private Vector normal = VectorFactory.createVector3(1, 0, 0);
 
   /**
    * Color value at the vertex
    */
-  private Vector color = VectorMatrixFactory.newVector(0, 0, 0);
+  private Vector color = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Reference to one of the outgoing half edges.

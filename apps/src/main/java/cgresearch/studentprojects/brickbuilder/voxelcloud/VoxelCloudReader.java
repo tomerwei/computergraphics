@@ -13,7 +13,7 @@ import java.io.IOException;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.studentprojects.brickbuilder.math.ColorRGB;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
@@ -107,7 +107,7 @@ public class VoxelCloudReader {
 		catch (Exception e) {
 			return null;
 		}
-		return VectorMatrixFactory.newVector(d[0], d[1], d[2]);
+		return VectorFactory.createVector3(d[0], d[1], d[2]);
 	}
 	
 	private static int[] readInt(String s) {

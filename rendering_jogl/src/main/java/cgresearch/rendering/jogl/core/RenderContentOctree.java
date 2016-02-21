@@ -5,7 +5,7 @@ import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.tree.OctreeNode;
 
 /**
@@ -52,9 +52,9 @@ public class RenderContentOctree implements IRenderContent {
 			return;
 		}
 
-		Vector dx = VectorMatrixFactory.newVector(node.getLength(), 0, 0);
-		Vector dy = VectorMatrixFactory.newVector(0, node.getLength(), 0);
-		Vector dz = VectorMatrixFactory.newVector(0, 0, node.getLength());
+		Vector dx = VectorFactory.createVector3(node.getLength(), 0, 0);
+		Vector dy = VectorFactory.createVector3(0, node.getLength(), 0);
+		Vector dz = VectorFactory.createVector3(0, 0, node.getLength());
 		if (node.getNumberOfChildren() == 0) {
 			if (node.getNumberOfElements() > 0) {
 				drawCell(gl, node, dx, dy, dz);

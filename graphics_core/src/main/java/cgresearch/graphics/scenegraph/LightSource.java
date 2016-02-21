@@ -1,7 +1,7 @@
 package cgresearch.graphics.scenegraph;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a light source in the scene.
@@ -22,17 +22,17 @@ public class LightSource {
   /**
    * Position in 3-space.
    */
-  private Vector position = VectorMatrixFactory.newVector(3);
+  private Vector position = VectorFactory.createVector(3);
 
   /**
    * Color of the light source
    */
-  private Vector color = VectorMatrixFactory.newVector(1, 1, 1);
+  private Vector color = VectorFactory.createVector3(1, 1, 1);
 
   /**
    * Direction of the light (if required)
    */
-  private Vector direction = VectorMatrixFactory.newVector(0, 0, 0);
+  private Vector direction = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Type of the light source.

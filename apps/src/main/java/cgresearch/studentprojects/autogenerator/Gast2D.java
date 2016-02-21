@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 
@@ -80,7 +80,7 @@ public class Gast2D {
 	public void setA(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		A = VectorMatrixFactory.newVector(x, y, 0);
+		A = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getB() {
@@ -90,7 +90,7 @@ public class Gast2D {
 	public void setB(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) - laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		B = VectorMatrixFactory.newVector(x, y, 0);
+		B = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getC() {
@@ -100,7 +100,7 @@ public class Gast2D {
 	public void setC(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) + hoehe / 2;
-		C = VectorMatrixFactory.newVector(x, y, 0);
+		C = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Vector getD() {
@@ -110,7 +110,7 @@ public class Gast2D {
 	public void setD(Vector center, double hoehe, double laenge) {
 		double x = center.get(0) + laenge / 2;
 		double y = center.get(1) - hoehe / 2;
-		D = VectorMatrixFactory.newVector(x, y, 0);
+		D = VectorFactory.createVector3(x, y, 0);
 	}
 
 	public Line3D getAB() {
@@ -162,7 +162,7 @@ public class Gast2D {
 
 		curve.setControlPoint(
 				0,
-				VectorMatrixFactory.newVector(points[0].get(0),
+				VectorFactory.createVector3(points[0].get(0),
 						points[0].get(1), 0));
 
 		// for (int i = 1; i < degree; i++) {
@@ -178,12 +178,12 @@ public class Gast2D {
 		// VectorMatrixFactory.newVector(points[1].get(0),
 		// points[1].get(1) - 0.2, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(
+		curve.setControlPoint(1, VectorFactory.createVector3(
 				points[1].get(0) + xx, points[1].get(1) + yy, 0));
 
 		curve.setControlPoint(
 				2,
-				VectorMatrixFactory.newVector(points[1].get(0) + x,
+				VectorFactory.createVector3(points[1].get(0) + x,
 						points[1].get(1), 0));
 
 		this.left = curve;
@@ -200,7 +200,7 @@ public class Gast2D {
 
 		BezierCurve curve = new BezierCurve(1);
 
-		curve.setControlPoint(0, VectorMatrixFactory.newVector(
+		curve.setControlPoint(0, VectorFactory.createVector3(
 				points[0].get(0) + x1, points[0].get(1), 0));
 
 		// for (int i = 1; i < degree; i++) {
@@ -216,7 +216,7 @@ public class Gast2D {
 		// VectorMatrixFactory.newVector(points[1].get(0),
 		// points[1].get(1) - 0.2, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(
+		curve.setControlPoint(1, VectorFactory.createVector3(
 				points[1].get(0) - x2, points[1].get(1), 0));
 
 		this.top = curve;
@@ -237,7 +237,7 @@ public class Gast2D {
 
 		curve.setControlPoint(
 				0,
-				VectorMatrixFactory.newVector(points[0].get(0) - x,
+				VectorFactory.createVector3(points[0].get(0) - x,
 						points[0].get(1), 0));
 
 		// for (int i = 1; i < degree; i++) {
@@ -253,12 +253,12 @@ public class Gast2D {
 		// VectorMatrixFactory.newVector(points[1].get(0),
 		// points[1].get(1) - 0.2, 0));
 
-		curve.setControlPoint(1, VectorMatrixFactory.newVector(
+		curve.setControlPoint(1, VectorFactory.createVector3(
 				points[0].get(0) + xx, points[0].get(1) + yy, 0));
 
 		curve.setControlPoint(
 				2,
-				VectorMatrixFactory.newVector(points[1].get(0),
+				VectorFactory.createVector3(points[1].get(0),
 						points[1].get(1), 0));
 
 		this.right = curve;
@@ -275,7 +275,7 @@ public class Gast2D {
 		for (Vector p : points) {
 			curve.setControlPoint(
 					i,
-					VectorMatrixFactory.newVector(p.get(0), p.get(1),
+					VectorFactory.createVector3(p.get(0), p.get(1),
 							p.get(2)));
 			i++;
 		}

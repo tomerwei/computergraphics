@@ -7,7 +7,7 @@ import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.material.Material;
 
@@ -192,7 +192,7 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
 
   @Override
   public Vector getTextureCoordinate(int index) {
-    return VectorMatrixFactory.newVector(-1, -1, 0);
+    return VectorFactory.createVector3(-1, -1, 0);
   }
 
   @Override

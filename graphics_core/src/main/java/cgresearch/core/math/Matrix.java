@@ -264,13 +264,13 @@ public class Matrix {
       double g = get(2, 0);
       double h = get(2, 1);
       double i = get(2, 2);
-      Matrix inverse = VectorMatrixFactory.newMatrix(e * i - f * h, c * h - b * i, b * f - c * e, f * g - d * i,
+      Matrix inverse = MatrixFactory.createMatrix3(e * i - f * h, c * h - b * i, b * f - c * e, f * g - d * i,
           a * i - c * g, c * d - a * f, d * h - e * g, b * g - a * h, a * e - b * d).multiply(1.0 / det);
       return inverse;
     } else {
       Jama.Matrix M = new Jama.Matrix(values);
       Jama.Matrix invM = M.inverse();
-      Matrix result = VectorMatrixFactory.newMatrix(getNumberOfRows(), getNumberOfColumns());
+      Matrix result = MatrixFactory.createMatrix(getNumberOfRows(), getNumberOfColumns());
       for (int rowIndex = 0; rowIndex < getNumberOfRows(); rowIndex++) {
         for (int columnIndex = 0; columnIndex < getNumberOfColumns(); columnIndex++) {
           result.set(rowIndex, columnIndex, invM.getArray()[rowIndex][columnIndex]);

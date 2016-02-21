@@ -11,8 +11,9 @@ import java.util.regex.Pattern;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.motioncapture.MotionCaptureFrame;
 import cgresearch.graphics.datastructures.motioncapture.MotionCaptureMeasurement;
 import cgresearch.graphics.datastructures.motioncapture.MotionCaptureTopology;
@@ -172,11 +173,11 @@ public class MoCapImporter {
 		String[] translationTokens = translationToken.split("\\s+");
 		String[] rotationTokens = rotationToken.split("\\s+");
 		String id = idTokens[0];
-		Vector position = VectorMatrixFactory.newVector(
+		Vector position = VectorFactory.createVector3(
 				Double.parseDouble(translationTokens[0]),
 				Double.parseDouble(translationTokens[1]),
 				Double.parseDouble(translationTokens[2]));
-		Matrix oriantation = VectorMatrixFactory.newMatrix(
+		Matrix oriantation = MatrixFactory.createMatrix3(
 				Double.parseDouble(rotationTokens[0]),
 				Double.parseDouble(rotationTokens[1]),
 				Double.parseDouble(rotationTokens[2]),

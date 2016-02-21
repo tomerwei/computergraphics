@@ -23,7 +23,7 @@ import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.material.CgTexture;
@@ -90,11 +90,11 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
     double offsetX = ((resolutionAxisAll * xRes) - width) * 0.5;
     double offsetY = ((resolutionAxisAll * yRes) - height) * 0.5;
     double offsetZ = ((resolutionAxisAll * zRes) - depth) * 0.5;
-    location = location.subtract(VectorMatrixFactory.newVector(offsetX, offsetY, offsetZ));
-    final Vector locationCenter = location.add(VectorMatrixFactory.newVector(xRes * 0.5, yRes * 0.5, zRes * 0.5));
+    location = location.subtract(VectorFactory.createVector3(offsetX, offsetY, offsetZ));
+    final Vector locationCenter = location.add(VectorFactory.createVector3(xRes * 0.5, yRes * 0.5, zRes * 0.5));
 
     // create voxel cloud
-    IVoxelCloud cloud = new VoxelCloud(location, VectorMatrixFactory.newVector(xRes, yRes, zRes),
+    IVoxelCloud cloud = new VoxelCloud(location, VectorFactory.createVector3(xRes, yRes, zRes),
         new VectorInt3(resolutionAxisAll, resolutionAxisAll, resolutionAxisAll));
 
     final int[] count = new int[resolutionAxisAll * resolutionAxisAll * resolutionAxisAll];
@@ -142,7 +142,7 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
           int index = (resolutionAxisAll * resolutionAxisAll * z) + (resolutionAxisAll * y) + x;
           if (count[index] > 0) {
             VectorInt3 vec = new VectorInt3(x, y, z);
-            Vector pos = locationCenter.add(VectorMatrixFactory.newVector(x * res[0], y * res[1], z * res[2]));
+            Vector pos = locationCenter.add(VectorFactory.createVector3(x * res[0], y * res[1], z * res[2]));
 
             // color?
             if (tex != null) {
@@ -276,7 +276,7 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
   private void castRay(ITriangleMesh mesh, final int axiz, int res, double[] step, Vector locCenter, int[] count,
       double[][][] bbs, Vector[] colorPoints, int[] colorTriangles) {
     // create ray direction
-    Vector dir = VectorMatrixFactory.newVector(0, 0, 0);
+    Vector dir = VectorFactory.createVector3(0, 0, 0);
     dir.set(axiz, 1);
     // create intersects comperator
     Comparator<Vector> comp = new Comparator<Vector>() {
@@ -294,7 +294,7 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
     for (pos[a] = 0; pos[a] < res; pos[a]++) {
       for (pos[b] = 0; pos[b] < res; pos[b]++) {
         // calc ray start location
-        Vector loc = locCenter.add(VectorMatrixFactory.newVector((axiz == 0 ? -step[0] : pos[0] * step[0]),
+        Vector loc = locCenter.add(VectorFactory.createVector3((axiz == 0 ? -step[0] : pos[0] * step[0]),
             (axiz == 1 ? -step[1] : pos[1] * step[1]), (axiz == 2 ? -step[2] : pos[2] * step[2])));
         Map<Vector, Integer> intersectsMap = findIntersects(mesh, loc, dir, bbs);
         // broken ray? no vote

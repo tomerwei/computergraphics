@@ -38,7 +38,7 @@ import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.primitives.Plane;
 
 import static java.lang.Math.max;
@@ -231,7 +231,7 @@ public class Intersection {
     // that direction -- this is equivalent to testing a minimal AABB around
     // the triangle against the AABB
 
-    Vector minMax = VectorMatrixFactory.newVector(0, 0, 0);
+    Vector minMax = VectorFactory.createVector3(0, 0, 0);
 
     // test in X-direction
     findMinMax(tmp0.get(X), tmp1.get(X), tmp2.get(X), minMax);

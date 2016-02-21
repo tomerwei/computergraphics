@@ -4,7 +4,7 @@ import java.util.List;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;
@@ -21,8 +21,8 @@ import cgresearch.projects.simulation.solver.Solver.SolverType;
  */
 public class BallSimulation extends Simulation implements Accelleration {
 
-	private Vector x = VectorMatrixFactory.newVector(3);
-	private Vector v = VectorMatrixFactory.newVector(3);
+	private Vector x = VectorFactory.createVector(3);
+	private Vector v = VectorFactory.createVector(3);
 	private double mass = 1;
 
 	/**
@@ -43,10 +43,10 @@ public class BallSimulation extends Simulation implements Accelleration {
 			v.clear();
 		}
 		while (x.size() < 1) {
-			x.add(VectorMatrixFactory.newVector(3));
+			x.add(VectorFactory.createVector(3));
 		}
 		while (v.size() < 1) {
-			v.add(VectorMatrixFactory.newVector(3));
+			v.add(VectorFactory.createVector(3));
 		}
 
 		x.get(0).copy(this.x);
@@ -74,7 +74,7 @@ public class BallSimulation extends Simulation implements Accelleration {
 	protected void createOutput() {
 		ITriangleMesh mesh = TriangleMeshFactory.createSphere(x, 0.1, 20);
 		mesh.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newVector(1, 0, 0));
+				VectorFactory.createVector3(1, 0, 0));
 		mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 		String name = String.format("ball_%d", getCurrentSimulationStep());
 		CgNode node = new CgNode(mesh, name);
@@ -83,18 +83,18 @@ public class BallSimulation extends Simulation implements Accelleration {
 
 	@Override
 	protected void resetSimulation() {
-		x = VectorMatrixFactory.newVector(0, 0, 0);
-		v = VectorMatrixFactory.newVector(2, 4, 2);
+		x = VectorFactory.createVector3(0, 0, 0);
+		v = VectorFactory.createVector3(2, 4, 2);
 	}
 
 	@Override
 	public Vector eval(int index) {
-		return VectorMatrixFactory.newVector(0, -1, 0).multiply(9.81 / mass);
+		return VectorFactory.createVector3(0, -1, 0).multiply(9.81 / mass);
 	}
 
 	@Override
 	public Vector eval(int index, Vector pos) {
-		return VectorMatrixFactory.newVector(0, -1, 0).multiply(9.81 / mass);
+		return VectorFactory.createVector3(0, -1, 0).multiply(9.81 / mass);
 	}
 
 	@Override

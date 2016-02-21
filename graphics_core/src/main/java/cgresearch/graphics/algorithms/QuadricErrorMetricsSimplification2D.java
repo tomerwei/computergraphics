@@ -5,7 +5,7 @@ import java.util.List;
 
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.GenericVertex;
 import cgresearch.graphics.datastructures.polygon.Polygon;
@@ -61,10 +61,10 @@ public class QuadricErrorMetricsSimplification2D extends QuadrikErrorMetricsSimp
     Vector p = edge.getStartVertex().getPosition();
     Vector q = edge.getEndVertex().getPosition();
     Vector perp = p.subtract(q);
-    Vector normal = VectorMatrixFactory.newVector(perp.get(1), -perp.get(0), 0);
+    Vector normal = VectorFactory.createVector3(perp.get(1), -perp.get(0), 0);
     normal.normalize();
     double distance = normal.multiply(p);
-    Vector v = VectorMatrixFactory.newVector(normal.get(0), normal.get(1), normal.get(2), 1);
+    Vector v = VectorFactory.createVector4(normal.get(0), normal.get(1), normal.get(2), 1);
     v.set(3, -distance);
     Matrix Q = v.innerProduct(v);
     return Q;

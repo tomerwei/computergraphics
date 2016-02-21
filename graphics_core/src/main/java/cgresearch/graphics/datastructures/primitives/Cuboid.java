@@ -7,7 +7,7 @@ package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a axis-aligned cuboid.
@@ -20,12 +20,12 @@ public class Cuboid extends IPrimitive {
     /**
      * Center of the cuboid.
      */
-    private Vector center = VectorMatrixFactory.newVector(3);
+    private Vector center = VectorFactory.createVector(3);
 
     /**
      * Dimension of the cuboid in x, y and z-direction.
      */
-    private Vector dimensions = VectorMatrixFactory.newVector(1, 1, 1);
+    private Vector dimensions = VectorFactory.createVector3(1, 1, 1);
 
     /**
      * Constructor
@@ -103,7 +103,7 @@ public class Cuboid extends IPrimitive {
      * @return
      */
     private Vector getUpperRight() {
-        return center.add(VectorMatrixFactory.newVector(
+        return center.add(VectorFactory.createVector3(
                 dimensions.get(0) / 2.0, dimensions.get(1) / 2.0,
                 dimensions.get(2) / 2.0));
     }
@@ -112,7 +112,7 @@ public class Cuboid extends IPrimitive {
      * @return
      */
     private Vector getLowerLeft() {
-        return center.subtract(VectorMatrixFactory.newVector(
+        return center.subtract(VectorFactory.createVector3(
                 dimensions.get(0) / 2.0, dimensions.get(1) / 2.0,
                 dimensions.get(2) / 2.0));
     }

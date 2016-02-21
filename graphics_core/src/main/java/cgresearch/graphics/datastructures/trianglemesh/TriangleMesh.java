@@ -12,7 +12,7 @@ import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.material.Material;
 
@@ -84,7 +84,7 @@ public class TriangleMesh extends ITriangleMesh {
 
     textureCoordinates = new ArrayList<Vector>();
     for (int i = 0; i < other.getNumberOfTextureCoordinates(); i++) {
-      Vector texCoord = VectorMatrixFactory.newVector(other.getTextureCoordinate(i));
+      Vector texCoord = VectorFactory.createVector(other.getTextureCoordinate(i));
       textureCoordinates.add(texCoord);
     }
 
@@ -192,7 +192,7 @@ public class TriangleMesh extends ITriangleMesh {
         helperNormal.normalize();
         t.setNormal(helperNormal);
       } else {
-        t.setNormal(VectorMatrixFactory.newVector(1, 0, 0));
+        t.setNormal(VectorFactory.createVector3(1, 0, 0));
       }
     }
   }
@@ -230,11 +230,11 @@ public class TriangleMesh extends ITriangleMesh {
   @Override
   public Vector getTextureCoordinate(int index) {
     if (textureCoordinates.size() == 0 || index < 0) {
-      return VectorMatrixFactory.newVector(0, 0, 0);
+      return VectorFactory.createVector3(0, 0, 0);
     }
     if (index >= textureCoordinates.size()) {
       Logger.getInstance().error("Invalid texture coordinate index.");
-      return VectorMatrixFactory.newVector(0, 0, 0);
+      return VectorFactory.createVector3(0, 0, 0);
     }
     return textureCoordinates.get(index);
   }
@@ -248,7 +248,7 @@ public class TriangleMesh extends ITriangleMesh {
   @Override
   public void computeVertexNormals() {
     for (int vertexIndex = 0; vertexIndex < getNumberOfVertices(); vertexIndex++) {
-      getVertex(vertexIndex).getNormal().copy(VectorMatrixFactory.newVector(0, 0, 0));
+      getVertex(vertexIndex).getNormal().copy(VectorFactory.createVector3(0, 0, 0));
     }
 
     for (int triangleIndex = 0; triangleIndex < getNumberOfTriangles(); triangleIndex++) {

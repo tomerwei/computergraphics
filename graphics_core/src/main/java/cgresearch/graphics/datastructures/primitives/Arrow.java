@@ -7,7 +7,7 @@ package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of an arrow
@@ -20,12 +20,12 @@ public class Arrow extends IPrimitive {
     /**
      * Start point of the arrow.
      */
-    public Vector start = VectorMatrixFactory.newVector(0, 0, 0);
+    public Vector start = VectorFactory.createVector3(0, 0, 0);
 
     /**
      * End point of the arrow.
      */
-    public Vector end = VectorMatrixFactory.newVector(1, 0, 0);
+    public Vector end = VectorFactory.createVector3(1, 0, 0);
 
     /**
      * Constructor.

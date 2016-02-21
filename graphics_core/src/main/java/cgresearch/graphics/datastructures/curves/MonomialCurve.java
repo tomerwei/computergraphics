@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.curves;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Implementation of a monomial curve of arbitrary degree.
@@ -63,7 +63,7 @@ public class MonomialCurve extends ICurve {
      */
     @Override
     public Vector eval(double t) {
-        Vector result = VectorMatrixFactory.newVector(0, 0, 0);
+        Vector result = VectorFactory.createVector3(0, 0, 0);
         for (int i = 0; i < getDegree() + 1; i++) {
             result = result.add(controlPoints[i].multiply(Math.pow(t, i)));
         }
@@ -77,7 +77,7 @@ public class MonomialCurve extends ICurve {
      */
     @Override
     public Vector derivative(double t) {
-        Vector result = VectorMatrixFactory.newVector(0, 0, 0);
+        Vector result = VectorFactory.createVector3(0, 0, 0);
         for (int i = 1; i < getDegree() + 1; i++) {
             result = result.add(controlPoints[i].multiply(Math.pow(t, i - 1)
                     * i));
@@ -92,7 +92,7 @@ public class MonomialCurve extends ICurve {
     public static MonomialCurve interpolate(Vector p0, Vector p1) {
 
         MonomialCurve curve = new MonomialCurve(1);
-        Vector c0 = VectorMatrixFactory.newVector(p0);
+        Vector c0 = VectorFactory.createVector(p0);
         Vector c1 = p1.subtract(p0);
         curve.setControlPoint(0, c0);
         curve.setControlPoint(1, c1);
@@ -106,7 +106,7 @@ public class MonomialCurve extends ICurve {
     public static MonomialCurve interpolate(Vector p0, Vector p1,
             Vector p2) {
         MonomialCurve curve = new MonomialCurve(2);
-        Vector c0 = VectorMatrixFactory.newVector(p0);
+        Vector c0 = VectorFactory.createVector(p0);
         Vector h1 = p1.subtract(p0);
         Vector h2 = p2.subtract(p0);
         Vector c1 = h1.multiply(4).add(h2.multiply(-1));

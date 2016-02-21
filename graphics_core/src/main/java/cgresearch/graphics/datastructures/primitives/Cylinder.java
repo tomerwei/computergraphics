@@ -2,7 +2,7 @@ package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a cylinder. The base of the cylinders is at the point
@@ -13,12 +13,12 @@ import cgresearch.core.math.VectorMatrixFactory;
  */
 public class Cylinder extends IPrimitive {
 
-	private Vector point = VectorMatrixFactory.newVector(0, 0, 0);
+	private Vector point = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Always normalized.
 	 */
-	private Vector direction = VectorMatrixFactory.newVector(0, 1, 0);
+	private Vector direction = VectorFactory.createVector3(0, 1, 0);
 
 	/**
 	 * Radius of the cylinder in [mm].

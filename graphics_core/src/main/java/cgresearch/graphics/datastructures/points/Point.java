@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.points;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a point in a @see PointCloud.
@@ -19,22 +19,22 @@ public class Point {
   /**
    * Position of the point in 3-space.
    */
-  private Vector position = VectorMatrixFactory.newVector(3);
+  private Vector position = VectorFactory.createVector(3);
 
   /**
    * Color of the point.
    */
-  private Vector color = VectorMatrixFactory.newVector(3);
+  private Vector color = VectorFactory.createVector(3);
 
   /**
    * Point normal
    */
-  private Vector normal = VectorMatrixFactory.newVector(3);
+  private Vector normal = VectorFactory.createVector(3);
 
   /**
    * Texture coordinate
    */
-  private Vector texCoord = VectorMatrixFactory.newVector(3);
+  private Vector texCoord = VectorFactory.createVector(3);
 
   /**
    * Constructor.
@@ -52,21 +52,21 @@ public class Point {
    * Constructor.
    */
   public Point(Vector position) {
-    this(position, VectorMatrixFactory.newVector(3), VectorMatrixFactory.newVector(3));
+    this(position, VectorFactory.createVector(3), VectorFactory.createVector(3));
   }
 
   /**
    * Constructor.
    */
   public Point(Vector position, Vector normal) {
-    this(position, normal, VectorMatrixFactory.newVector(3));
+    this(position, normal, VectorFactory.createVector(3));
   }
 
   /**
    * Constructor.
    */
   public Point() {
-    this(VectorMatrixFactory.newVector(3), VectorMatrixFactory.newVector(3), VectorMatrixFactory.newVector(3));
+    this(VectorFactory.createVector(3), VectorFactory.createVector(3), VectorFactory.createVector(3));
   }
 
   /**

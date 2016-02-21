@@ -32,7 +32,7 @@ import cgresearch.core.math.Vector;
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.PrincipalComponentAnalysis;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -777,15 +777,15 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 	public void loadBild() {
 
-		int a = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-3, -0.4, -0.1)));
-		int b = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(3, -0.4, -0.1)));
-		int c = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-3, 2.6, -0.1)));
-		int d = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(3, 2.6, -0.1)));
+		int a = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-3, -0.4, -0.1)));
+		int b = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(3, -0.4, -0.1)));
+		int c = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-3, 2.6, -0.1)));
+		int d = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(3, 2.6, -0.1)));
 
-		int ta = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 0, -1));
-		int tb = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 0, -1));
-		int tc = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 1, -1));
-		int td = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 1, -1));
+		int ta = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(0, 0, -1));
+		int tb = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(1, 0, -1));
+		int tc = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(0, 1, -1));
+		int td = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(1, 1, -1));
 
 		triangleMesh.addTriangle(new Triangle(a, b, c, ta, tb, tc));
 		triangleMesh.addTriangle(new Triangle(b, c, d, tb, tc, td));

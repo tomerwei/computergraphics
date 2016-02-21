@@ -73,14 +73,14 @@ public class PrincipalComponentAnalysis {
     }
 
     // Compute centroid
-    centroid = VectorMatrixFactory.newVector(0, 0, 0);
+    centroid = VectorFactory.createVector3(0, 0, 0);
     for (Vector p : points) {
       centroid = centroid.add(p);
     }
     centroid = centroid.multiply(1.0 / points.size());
 
     // Compute the covariance matrix
-    Matrix M = VectorMatrixFactory.newMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    Matrix M = MatrixFactory.createMatrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
     for (Vector p : points) {
       Vector d = p.subtract(centroid);
       M = M.add(d.innerProduct(d));
@@ -97,10 +97,10 @@ public class PrincipalComponentAnalysis {
     Jama.Matrix V = e.getV();
     Jama.Matrix D = e.getD();
 
-    normal = VectorMatrixFactory.newVector(V.get(0, 0), V.get(1, 0), V.get(2, 0));
-    tangentU = VectorMatrixFactory.newVector(V.get(0, 1), V.get(1, 1), V.get(2, 1));
-    tangentV = VectorMatrixFactory.newVector(V.get(0, 2), V.get(1, 2), V.get(2, 2));
-    eigenValues = VectorMatrixFactory.newVector(D.get(0, 0), D.get(1, 1), D.get(2, 2));
+    normal = VectorFactory.createVector3(V.get(0, 0), V.get(1, 0), V.get(2, 0));
+    tangentU = VectorFactory.createVector3(V.get(0, 1), V.get(1, 1), V.get(2, 1));
+    tangentV = VectorFactory.createVector3(V.get(0, 2), V.get(1, 2), V.get(2, 2));
+    eigenValues = VectorFactory.createVector3(D.get(0, 0), D.get(1, 1), D.get(2, 2));
 
   }
 

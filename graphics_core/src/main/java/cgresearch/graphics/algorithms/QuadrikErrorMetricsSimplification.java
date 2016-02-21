@@ -8,8 +8,9 @@ import java.util.PriorityQueue;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.GenericVertex;
 import cgresearch.graphics.datastructures.polygon.PolygonEdge;
@@ -100,7 +101,7 @@ public abstract class QuadrikErrorMetricsSimplification {
     GenericVertex p0 = edge.getStartVertex();
     GenericVertex p1 = edge.getEndVertex();
     Matrix qem = pointQems.get(p0).add(pointQems.get(p1));
-    Matrix derivQem = VectorMatrixFactory.newMatrix(qem);
+    Matrix derivQem = MatrixFactory.createMatrix(qem);
     derivQem.set(3, 0, 0);
     derivQem.set(3, 1, 0);
     derivQem.set(3, 2, 0);
@@ -109,9 +110,9 @@ public abstract class QuadrikErrorMetricsSimplification {
     if (det > 1e-5) {
       // Matrix is invertible
       Matrix invQ = derivQem.getInverse();
-      Vector pos = invQ.multiply(VectorMatrixFactory.newVector(0, 0, 0, 1));
+      Vector pos = invQ.multiply(VectorFactory.createVector4(0, 0, 0, 1));
       double error = pos.multiply(qem.multiply(pos));
-      return new EdgeCollapse(error, qem, VectorMatrixFactory.newVector(pos.get(0), pos.get(1), pos.get(2)));
+      return new EdgeCollapse(error, qem, VectorFactory.createVector3(pos.get(0), pos.get(1), pos.get(2)));
     } else {
       // Matrix cannot be inverted, use corner points or midpoint
       List<Vector> candidates = new ArrayList<Vector>();
@@ -121,12 +122,12 @@ public abstract class QuadrikErrorMetricsSimplification {
       double minError = Double.POSITIVE_INFINITY;
       Vector minPos = null;
       for (Vector p : candidates) {
-        Vector pos = VectorMatrixFactory.dim3toDim4(p);
+        Vector pos = VectorFactory.createHomogeniousFor3spaceVector(p);
         pos.set(3, 1);
         double error = pos.multiply(qem.multiply(pos));
         if (error < minError) {
           minError = error;
-          minPos = VectorMatrixFactory.newVector(pos.get(0), pos.get(1), pos.get(2));
+          minPos = VectorFactory.createVector3(pos.get(0), pos.get(1), pos.get(2));
         }
       }
       return new EdgeCollapse(minError, qem, minPos);
@@ -222,7 +223,7 @@ public abstract class QuadrikErrorMetricsSimplification {
     for (int edgeIndex = 0; edgeIndex < getNumberOfEdges(); edgeIndex++) {
       EdgeCollapse result = computeEdgeCollapseResult(getEdge(edgeIndex));
       Vector color =
-          VectorMatrixFactory.newVector(transferFunction((result.error - errorMin) / (errorMax - errorMin)), 0, 0);
+          VectorFactory.createVector3(transferFunction((result.error - errorMin) / (errorMax - errorMin)), 0, 0);
       getEdge(edgeIndex).setColor(color);
     }
   }

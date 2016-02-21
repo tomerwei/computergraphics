@@ -3,7 +3,8 @@ package cgresearch.studentprojects.registration;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Matrix;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import Jama.EigenvalueDecomposition;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
@@ -70,7 +71,7 @@ public class IcpDistanceFunction {
 
   public Point centerOfMassyBase(IPointCloud ipc) {
 
-    Vector newPoint = VectorMatrixFactory.newVector(0, 0, 0);
+    Vector newPoint = VectorFactory.createVector3(0, 0, 0);
 
     for (int i = 0; i < ipc.getNumberOfPoints(); i++) {
       newPoint.set(x, (newPoint.get(x) + ipc.getPoint(i).getPosition().get(x)));
@@ -95,7 +96,7 @@ public class IcpDistanceFunction {
    */
   public Point centerOfMassyRegister(IPointCloud ipc, int[] next) {
 
-    Vector newPoint = VectorMatrixFactory.newVector(0, 0, 0);
+    Vector newPoint = VectorFactory.createVector3(0, 0, 0);
     for (int i = 0; i < ipc.getNumberOfPoints(); i++) {
       newPoint.set(x, (newPoint.get(x) + ipc.getPoint(next[i]).getPosition().get(x)));
       newPoint.set(y, (newPoint.get(y) + ipc.getPoint(next[i]).getPosition().get(y)));
@@ -119,7 +120,7 @@ public class IcpDistanceFunction {
     // if(Base.getNumberOfPoints()!= Register.getNumberOfPoints())
     // return null;
 
-    Matrix covariance = VectorMatrixFactory.newMatrix(3, 3);
+    Matrix covariance = MatrixFactory.createMatrix(3, 3);
 
     for (int i = 0; i < Base.getNumberOfPoints(); i++) {
 
@@ -372,7 +373,7 @@ public class IcpDistanceFunction {
           + (rotation.get(2, 1) * Base.getPoint(i).getPosition().get(y)
               + (rotation.get(2, 2) * Base.getPoint(i).getPosition().get(z))));
 
-      Vector position = VectorMatrixFactory.newVector(x1, y1, z1);
+      Vector position = VectorFactory.createVector3(x1, y1, z1);
       temp.addPoint(new Point(position));
 
       // (R*pi)-t temp anstatt Register
@@ -393,7 +394,7 @@ public class IcpDistanceFunction {
       y2 = (Register.getPoint(next[i]).getPosition().get(y) - temp.getPoint(i).getPosition().get(y));
       z2 = (Register.getPoint(next[i]).getPosition().get(z) - temp.getPoint(i).getPosition().get(z));
 
-      Vector position2 = VectorMatrixFactory.newVector(x2, y2, z2);
+      Vector position2 = VectorFactory.createVector3(x2, y2, z2);
       temp2.addPoint(new Point(position2));
 
       error = error + (temp2.getPoint(i).getPosition().get(x) * temp2.getPoint(i).getPosition().get(x)
@@ -435,7 +436,7 @@ public class IcpDistanceFunction {
       z1 = ((rotationMatrix.getTransposed().get(2, 0) * Register.getPoint(i).getPosition().get(x))
           + (rotationMatrix.getTransposed().get(2, 1) * Register.getPoint(i).getPosition().get(y)
               + (rotationMatrix.getTransposed().get(2, 2) * Register.getPoint(i).getPosition().get(z))));
-      Vector position = VectorMatrixFactory.newVector(x1, y1, z1);
+      Vector position = VectorFactory.createVector3(x1, y1, z1);
       newPoints.addPoint(new Point(position));
 
       // Pk+1 = Pk * R + t

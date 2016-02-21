@@ -29,7 +29,7 @@ import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 import cgresearch.rendering.jogl.core.IRenderContent;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class ViewFrustumCulling implements Observer {
 
@@ -88,7 +88,7 @@ public class ViewFrustumCulling implements Observer {
     this.angle = cam.getOpeningAngle();
     this.refPoint = cam.getRef();
     this.up = cam.getUp();
-    this.cameraRight = VectorMatrixFactory.newVector(1.0, 0.0, 0.0);
+    this.cameraRight = VectorFactory.createVector3(1.0, 0.0, 0.0);
     this.cameraRight.normalize();
     frustum = new Plane[6];
     cornerPoints = new Vector[8];
@@ -122,7 +122,7 @@ public class ViewFrustumCulling implements Observer {
     this.angle = cam.getOpeningAngle();
     this.refPoint = cam.getRef();
     this.up = cam.getUp();
-    this.cameraRight = VectorMatrixFactory.newVector(1.0, 0.0, 0.0);
+    this.cameraRight = VectorFactory.createVector3(1.0, 0.0, 0.0);
     System.out.println("CAMERA RIGHT =" + cameraRight);
     this.cameraRight.normalize();
     frustum = new Plane[6];
@@ -151,32 +151,32 @@ public class ViewFrustumCulling implements Observer {
   public ViewFrustumCulling getTest() {
     ViewFrustumCulling vfc = new ViewFrustumCulling();
     Vector fbr, fbl, ftr, ftl, nbr, nbl, ntr, ntl;
-    nbr = VectorMatrixFactory.newVector(1.0, -1.0, -1.0);
-    nbl = VectorMatrixFactory.newVector(-1.0, -1.0, -1.0);
-    ntr = VectorMatrixFactory.newVector(1.0, 1.0, -1.0);
-    ntl = VectorMatrixFactory.newVector(-1.0, 1.0, -1.0);
-    fbr = VectorMatrixFactory.newVector(1.0, -1.0, 1.0);
-    fbl = VectorMatrixFactory.newVector(-1.0, -1.0, 1.0);
-    ftr = VectorMatrixFactory.newVector(1.0, 1.0, 1.0);
-    ftl = VectorMatrixFactory.newVector(-1.0, 1.0, 1.0);
+    nbr = VectorFactory.createVector3(1.0, -1.0, -1.0);
+    nbl = VectorFactory.createVector3(-1.0, -1.0, -1.0);
+    ntr = VectorFactory.createVector3(1.0, 1.0, -1.0);
+    ntl = VectorFactory.createVector3(-1.0, 1.0, -1.0);
+    fbr = VectorFactory.createVector3(1.0, -1.0, 1.0);
+    fbl = VectorFactory.createVector3(-1.0, -1.0, 1.0);
+    ftr = VectorFactory.createVector3(1.0, 1.0, 1.0);
+    ftl = VectorFactory.createVector3(-1.0, 1.0, 1.0);
     Vector[] corner_points = { fbr, fbl, ftr, ftl, nbr, nbl, ntr, ntl };
     vfc.setCornerPoints(corner_points);
 
     Plane[] planes = new Plane[6];
-    planes[0] = vfc.calcPlane(VectorMatrixFactory.newVector(-1.0, 1.0, 1.0),
-        VectorMatrixFactory.newVector(-1.0, -1.0, 1.0), (VectorMatrixFactory.newVector(1.0, -1.0, 1.0))); // near
-    planes[1] = vfc.calcPlane(VectorMatrixFactory.newVector(-1.0, 1.0, -1.0),
-        VectorMatrixFactory.newVector(-1.0, -1.0, -1.0), (VectorMatrixFactory.newVector(1.0, -1.0, -1.0))); // far
+    planes[0] = vfc.calcPlane(VectorFactory.createVector3(-1.0, 1.0, 1.0),
+        VectorFactory.createVector3(-1.0, -1.0, 1.0), (VectorFactory.createVector3(1.0, -1.0, 1.0))); // near
+    planes[1] = vfc.calcPlane(VectorFactory.createVector3(-1.0, 1.0, -1.0),
+        VectorFactory.createVector3(-1.0, -1.0, -1.0), (VectorFactory.createVector3(1.0, -1.0, -1.0))); // far
     planes[1].setNormal(planes[1].getNormal().multiply(-1.0));
-    planes[2] = vfc.calcPlane(VectorMatrixFactory.newVector(-1.0, 1.0, 1.0),
-        VectorMatrixFactory.newVector(-1.0, -1.0, 1.0), (VectorMatrixFactory.newVector(-1.0, -1.0, -1.0))); // left
+    planes[2] = vfc.calcPlane(VectorFactory.createVector3(-1.0, 1.0, 1.0),
+        VectorFactory.createVector3(-1.0, -1.0, 1.0), (VectorFactory.createVector3(-1.0, -1.0, -1.0))); // left
     planes[2].setNormal(planes[2].getNormal().multiply(-1.0));
-    planes[3] = vfc.calcPlane(VectorMatrixFactory.newVector(1.0, 1.0, 1.0),
-        VectorMatrixFactory.newVector(1.0, -1.0, 1.0), (VectorMatrixFactory.newVector(1.0, -1.0, -1.0))); // right
-    planes[4] = vfc.calcPlane(VectorMatrixFactory.newVector(-1.0, 1.0, 1.0),
-        VectorMatrixFactory.newVector(1.0, 1.0, 1.0), (VectorMatrixFactory.newVector(1.0, 1.0, -1.0))); // top
-    planes[5] = vfc.calcPlane(VectorMatrixFactory.newVector(-1.0, -1.0, 1.0),
-        VectorMatrixFactory.newVector(1.0, -1.0, 1.0), (VectorMatrixFactory.newVector(1.0, -1.0, -1.0))); // bottom
+    planes[3] = vfc.calcPlane(VectorFactory.createVector3(1.0, 1.0, 1.0),
+        VectorFactory.createVector3(1.0, -1.0, 1.0), (VectorFactory.createVector3(1.0, -1.0, -1.0))); // right
+    planes[4] = vfc.calcPlane(VectorFactory.createVector3(-1.0, 1.0, 1.0),
+        VectorFactory.createVector3(1.0, 1.0, 1.0), (VectorFactory.createVector3(1.0, 1.0, -1.0))); // top
+    planes[5] = vfc.calcPlane(VectorFactory.createVector3(-1.0, -1.0, 1.0),
+        VectorFactory.createVector3(1.0, -1.0, 1.0), (VectorFactory.createVector3(1.0, -1.0, -1.0))); // bottom
     planes[5].setNormal(planes[5].getNormal().multiply(-1.0));
     vfc.setFrustum(planes);
 
@@ -444,7 +444,7 @@ public class ViewFrustumCulling implements Observer {
 
     if (obj.getClass() == OctreeNode.class) {
       Vector ur =
-          VectorMatrixFactory.newVector(((OctreeNode) obj).getLowerLeft().get(0) + ((OctreeNode) obj).getLength(),
+          VectorFactory.createVector3(((OctreeNode) obj).getLowerLeft().get(0) + ((OctreeNode) obj).getLength(),
               ((OctreeNode) obj).getLowerLeft().get(1) + ((OctreeNode) obj).getLength(),
               ((OctreeNode) obj).getLowerLeft().get(2) + ((OctreeNode) obj).getLength());
       bb = new BoundingBox(((OctreeNode) obj).getLowerLeft(), ur);
@@ -510,7 +510,7 @@ public class ViewFrustumCulling implements Observer {
     mesh.addTriangle(new Triangle(2, 3, 7));
 
     for (int i = 0; i < corner_points.length; i++) {
-      mesh.addVertex(new Vertex(corner_points[i], VectorMatrixFactory.newVector(1, 0, 0)));
+      mesh.addVertex(new Vertex(corner_points[i], VectorFactory.createVector3(1, 0, 0)));
     }
     mesh.getMaterial().setTransparency(frustumTransparency);
     mesh.getMaterial().setRenderMode(Normals.PER_FACET);
@@ -534,7 +534,7 @@ public class ViewFrustumCulling implements Observer {
 
     Vector[] cornerPoints = new Vector[8];
     for (int i = 0; i < cornerPoints.length; ++i) {
-      cornerPoints[i] = VectorMatrixFactory.newVector(3);
+      cornerPoints[i] = VectorFactory.createVector(3);
     }
 
     Vector center = b_box.getCenter();
@@ -548,17 +548,17 @@ public class ViewFrustumCulling implements Observer {
 
     // low far left
     double z = lnl.get(Z) + (center.get(Z) - lnl.get(Z)) * 2.0;
-    lfl = VectorMatrixFactory.newVector(lnl.get(X), lnl.get(Y), z);
+    lfl = VectorFactory.createVector3(lnl.get(X), lnl.get(Y), z);
     cornerPoints[1] = lfl;
 
     // low far right
     double x = lfl.get(X) + (center.get(X) - lnl.get(X)) * 2.0;
-    lfr = VectorMatrixFactory.newVector(x, lfl.get(Y), lfl.get(Z));
+    lfr = VectorFactory.createVector3(x, lfl.get(Y), lfl.get(Z));
     cornerPoints[2] = lfr;
 
     // low near right
     x = b_box.getLowerLeft().get(X) + (center.get(X) - b_box.getLowerLeft().get(X)) * 2.0;
-    lnr = VectorMatrixFactory.newVector(x, lnl.get(Y), lnl.get(Z));
+    lnr = VectorFactory.createVector3(x, lnl.get(Y), lnl.get(Z));
     cornerPoints[3] = lnr;
 
     // up far right
@@ -567,17 +567,17 @@ public class ViewFrustumCulling implements Observer {
 
     // up near right
     z = ufr.get(Z) - (ufr.get(Z) - center.get(Z)) * 2.0;
-    unr = VectorMatrixFactory.newVector(ufr.get(X), ufr.get(Y), z);
+    unr = VectorFactory.createVector3(ufr.get(X), ufr.get(Y), z);
     cornerPoints[5] = unr;
 
     // up near left
     x = unr.get(X) - (ufr.get(X) - center.get(X)) * 2.0;
-    unl = VectorMatrixFactory.newVector(x, unr.get(Y), unr.get(Z));
+    unl = VectorFactory.createVector3(x, unr.get(Y), unr.get(Z));
     cornerPoints[6] = unl;
 
     // up far left
     x = ufr.get(X) - (ufr.get(X) - center.get(X)) * 2.0;
-    ufl = VectorMatrixFactory.newVector(x, ufr.get(Y), ufr.get(Z));
+    ufl = VectorFactory.createVector3(x, ufr.get(Y), ufr.get(Z));
     cornerPoints[7] = ufl;
 
     return cornerPoints;

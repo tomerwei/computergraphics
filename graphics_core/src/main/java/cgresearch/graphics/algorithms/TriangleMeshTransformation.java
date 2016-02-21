@@ -6,8 +6,9 @@
 package cgresearch.graphics.algorithms;
 
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
 /**
@@ -62,10 +63,10 @@ public class TriangleMeshTransformation {
 	 *            Scaling factors in x-, y- and z-direction.
 	 */
 	public static void scale(ITriangleMesh mesh, Vector scale) {
-		transform(mesh, VectorMatrixFactory.newMatrix(
-				VectorMatrixFactory.newVector(scale.get(0), 0, 0),
-				VectorMatrixFactory.newVector(0, scale.get(1), 0),
-				VectorMatrixFactory.newVector(0, 0, scale.get(2))));
+		transform(mesh, MatrixFactory.createMatrix3(
+				VectorFactory.createVector3(scale.get(0), 0, 0),
+				VectorFactory.createVector3(0, scale.get(1), 0),
+				VectorFactory.createVector3(0, 0, scale.get(2))));
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class TriangleMeshTransformation {
 	 *            Scaling factors for all directions
 	 */
 	public static void scale(ITriangleMesh mesh, double scale) {
-		scale(mesh, VectorMatrixFactory.newVector(scale, scale, scale));
+		scale(mesh, VectorFactory.createVector3(scale, scale, scale));
 	}
 
 	/**

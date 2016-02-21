@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.implicitfunction;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Implicit function of a superquadric.
@@ -43,8 +43,8 @@ public class ImplicitFunctionSuperquadric implements IImplicitFunction3D {
      */
     @Override
     public double f(Vector p) {
-        Vector center = VectorMatrixFactory.newVector(0, 0, 0);
-        Vector extend = VectorMatrixFactory.newVector(1, 1, 1);
+        Vector center = VectorFactory.createVector3(0, 0, 0);
+        Vector extend = VectorFactory.createVector3(1, 1, 1);
         return Math.pow(
                 Math.pow((p.get(0) - center.get(0)) / extend.get(0), 2.0 / e2)
                         + Math.pow((p.get(1) - center.get(1)) / extend.get(1),

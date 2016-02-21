@@ -5,7 +5,7 @@ import java.util.List;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.NormalEstimator;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
@@ -40,8 +40,8 @@ public class Calibration {
 	 * Calibration object
 	 */
 	public Cylinder calibrationObject = new Cylinder(
-			VectorMatrixFactory.newVector(0, 0, 0),
-			VectorMatrixFactory.newVector(0, 1, 0), 0.065 / (2.0));
+			VectorFactory.createVector3(0, 0, 0),
+			VectorFactory.createVector3(0, 1, 0), 0.065 / (2.0));
 
 	/**
 	 * List of measurements.
@@ -73,7 +73,7 @@ public class Calibration {
 			ScannerMeasurement measurement = measurements.get(i);
 			Vector pos = registrationData
 					.convert2WorldCoordinates(measurement);
-			Vector normal = VectorMatrixFactory.newVector(pos);
+			Vector normal = VectorFactory.createVector(pos);
 			normal.set(1, 0);
 			normal.normalize();
 			Point point = new Point(pos, color, normal);
@@ -136,7 +136,7 @@ public class Calibration {
 		double f = 0;
 		for (ScannerMeasurement measurement : measurements) {
 			f += MathHelpers.sqr(calibrationObject.getDistance(
-					VectorMatrixFactory.newVector(cx, 0, cz),
+					VectorFactory.createVector3(cx, 0, cz),
 					registrationData.convert2WorldCoordinates(measurement, tdX,
 							tdZ)));
 		}

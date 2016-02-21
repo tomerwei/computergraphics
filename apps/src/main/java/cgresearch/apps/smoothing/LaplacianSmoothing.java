@@ -11,7 +11,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTools;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -44,7 +44,7 @@ public class LaplacianSmoothing extends CgApplication {
     }
     originalMesh = meshes.get(0);
     originalMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    originalMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(Material.PALETTE2_COLOR4));
+    originalMesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector(Material.PALETTE2_COLOR4));
     originalMesh.computeTriangleNormals();
     originalMesh.computeVertexNormals();
     TriangleMeshTools.addNoise(originalMesh, 0.5e-1);
@@ -52,10 +52,10 @@ public class LaplacianSmoothing extends CgApplication {
 
     smoothedMesh = new TriangleMesh(originalMesh);
     Transformation transformation = new Transformation();
-    transformation.addTranslation(VectorMatrixFactory.newVector(1, 0, 0));
+    transformation.addTranslation(VectorFactory.createVector3(1, 0, 0));
     CgNode transformationNode = new CgNode(transformation, "transformation");
     smoothedMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    smoothedMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(Material.PALETTE2_COLOR3));
+    smoothedMesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector(Material.PALETTE2_COLOR3));
     getCgRootNode().addChild(transformationNode);
     transformationNode.addChild(new CgNode(smoothedMesh, "smoothed mesh"));
   }

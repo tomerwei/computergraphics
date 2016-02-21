@@ -6,7 +6,7 @@ import java.util.List;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 
 public class ButModel {
@@ -204,7 +204,7 @@ public class ButModel {
 		if (x != null && y != null && z != null) {
 			points = new ArrayList<Vector>();
 			for (int i = 0; i < x.getDimension(); i++) {
-				Vector v = VectorMatrixFactory.newVector(x.get(i), y.get(i), z.get(i));
+				Vector v = VectorFactory.createVector3(x.get(i), y.get(i), z.get(i));
 				points.add(v);
 			}
 

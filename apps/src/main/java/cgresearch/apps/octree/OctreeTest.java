@@ -10,7 +10,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTools;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.primitives.Plane;
@@ -53,8 +53,8 @@ public class OctreeTest extends CgApplication {
   /**
    * Clipping plane
    */
-  private Plane plane = new Plane(VectorMatrixFactory.newVector(0, 0, 0),
-      VectorMatrixFactory.newVector(0.6, 0.3, -0.2).getNormalized());
+  private Plane plane = new Plane(VectorFactory.createVector3(0, 0, 0),
+      VectorFactory.createVector3(0.6, 0.3, -0.2).getNormalized());
 
   public OctreeTest() {
 

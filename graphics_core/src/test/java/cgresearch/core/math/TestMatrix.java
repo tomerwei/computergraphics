@@ -21,10 +21,10 @@ public class TestMatrix {
     assertEquals(-3, A.get(1, 0), 1e-5);
     assertEquals(2, A.get(1, 1), 1e-5);
     assertEquals(-1, A.get(1, 2), 1e-5);
-    Matrix B = VectorMatrixFactory.newMatrix(1, 2, 3, 4, 5, 6, 7, 8, 9);
-    Vector v = VectorMatrixFactory.newVector(0.5, 1.5, 2.5);
+    Matrix B = MatrixFactory.createMatrix3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    Vector v = VectorFactory.createVector3(0.5, 1.5, 2.5);
     Vector result = B.multiply(v);
-    assertEquals(result, VectorMatrixFactory.newVector(11, 24.5, 38));
+    assertEquals(result, VectorFactory.createVector3(11, 24.5, 38));
   }
 
   @Test
@@ -200,7 +200,7 @@ public class TestMatrix {
 
   @Test
   public void testInverse() {
-    Matrix A = VectorMatrixFactory.newMatrix(-1, 2, 0.5, 3, -4, 2, 1, 1, 7, -4, -3, 2, 4, -2, 1, -5);
+    Matrix A = MatrixFactory.createMatrix4(-1, 2, 0.5, 3, -4, 2, 1, 1, 7, -4, -3, 2, 4, -2, 1, -5);
     Matrix invA = A.getInverse();
     Matrix result = A.multiply(invA);
     for (int rowIndex = 0; rowIndex < A.getNumberOfRows(); rowIndex++) {
@@ -208,7 +208,7 @@ public class TestMatrix {
         assertEquals((rowIndex == columnIndex) ? 1 : 0, result.get(rowIndex, columnIndex), 1e-5);
       }
     }
-    Matrix matrix = VectorMatrixFactory.newMatrix(2, -4, 1, 3, -5, -3, 2, 1, -4);
+    Matrix matrix = MatrixFactory.createMatrix3(2, -4, 1, 3, -5, -3, 2, 1, -4);
     Matrix inverse = matrix.getInverse();
     Matrix result2 = matrix.multiply(inverse);
     for (int row = 0; row < matrix.getNumberOfRows(); row++) {
@@ -223,10 +223,10 @@ public class TestMatrix {
    * Test getTranspose()
    */
   public void testTranspose() {
-    Matrix A = VectorMatrixFactory.newMatrix(VectorMatrixFactory.newVector(1, 2, 3),
-        VectorMatrixFactory.newVector(4, 5, 6), VectorMatrixFactory.newVector(7, 8, 9));
-    Matrix B = VectorMatrixFactory.newMatrix(VectorMatrixFactory.newVector(1, 4, 7),
-        VectorMatrixFactory.newVector(2, 5, 8), VectorMatrixFactory.newVector(3, 6, 9));
+    Matrix A = MatrixFactory.createMatrix3(VectorFactory.createVector3(1, 2, 3),
+        VectorFactory.createVector3(4, 5, 6), VectorFactory.createVector3(7, 8, 9));
+    Matrix B = MatrixFactory.createMatrix3(VectorFactory.createVector3(1, 4, 7),
+        VectorFactory.createVector3(2, 5, 8), VectorFactory.createVector3(3, 6, 9));
     Matrix transposedA = A.getTransposed();
     Matrix transposedB = B.getTransposed();
 
@@ -257,10 +257,10 @@ public class TestMatrix {
 
   @Test
   public void testRotation() {
-    Vector axis = VectorMatrixFactory.newVector(1, 0, 0);
+    Vector axis = VectorFactory.createVector3(1, 0, 0);
     double angle = 45.0 * Math.PI / 180.0;
-    Matrix rotationMatrix = VectorMatrixFactory.getRotationMatrix(axis, angle);
-    Vector x = VectorMatrixFactory.newVector(0, 1, 0);
+    Matrix rotationMatrix = MatrixFactory.createRotationMatrix(axis, angle);
+    Vector x = VectorFactory.createVector3(0, 1, 0);
     System.out.println(rotationMatrix.multiply(x));
   }
 }

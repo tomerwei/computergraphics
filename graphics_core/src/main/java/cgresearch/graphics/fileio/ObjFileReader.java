@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -262,7 +262,7 @@ public class ObjFileReader {
       v = getFloatValue(allCoords[2]);
     }
 
-    textureCoordinates.add(VectorMatrixFactory.newVector(u, v, 0));
+    textureCoordinates.add(VectorFactory.createVector3(u, v, 0));
   }
 
   private float getFloatValue(String string) {
@@ -389,7 +389,7 @@ public class ObjFileReader {
       float x = Float.parseFloat(components[1]);
       float y = Float.parseFloat(components[2]);
       float z = Float.parseFloat(components[3]);
-      vertices.add(new Vertex(VectorMatrixFactory.newVector(x, y, z), VectorMatrixFactory.newVector(1, 0, 0)));
+      vertices.add(new Vertex(VectorFactory.createVector3(x, y, z), VectorFactory.createVector3(1, 0, 0)));
     }
   }
 

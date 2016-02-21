@@ -1,7 +1,7 @@
 package cgresearch.studentprojects.autogenerator;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class Butterfly {
 
@@ -35,7 +35,7 @@ public class Butterfly {
 
 	public Body generateBody(double bh, double bl, Vector topLeft, Vector topRight, double wingMitteBreite) {
 
-		Vector c = VectorMatrixFactory.newVector(0, 0, 0);
+		Vector c = VectorFactory.createVector3(0, 0, 0);
 
 		Body erg = new Body(c, bh, bl, topLeft, topRight, wingMitteBreite);
 
@@ -50,7 +50,7 @@ public class Butterfly {
 
 		double y = 0 + wings + twh / 2;
 
-		Vector c = VectorMatrixFactory.newVector(x, y, 0);
+		Vector c = VectorFactory.createVector3(x, y, 0);
 
 		LeftTopWing erg = new LeftTopWing(c, twh, twl, tp, wingMitteBreite, twth, twtv, twlrh, twlrv, twtph, twtpv,
 				twbh, twbv);
@@ -66,7 +66,7 @@ public class Butterfly {
 
 		double y = 0 + wings - bwh / 2;
 
-		Vector c = VectorMatrixFactory.newVector(x, y, 0);
+		Vector c = VectorFactory.createVector3(x, y, 0);
 
 		LeftBottomWing erg = new LeftBottomWing(c, bwh, bwl, wingMitteBreite, bwlrh, bwlrv, bwbh, bwbv, bwtph, bwtpv,
 				bwb2h, bwb2v, bwlr2h, bwlr2v);
@@ -82,7 +82,7 @@ public class Butterfly {
 
 		double y = 0 + wings + twh / 2;
 
-		Vector c = VectorMatrixFactory.newVector(x, y, 0);
+		Vector c = VectorFactory.createVector3(x, y, 0);
 
 		RightTopWing erg = new RightTopWing(c, twh, twl, tp, wingMitteBreite, twth, twtv, twlrh, twlrv, twtph, twtpv,
 				twbh, twbv);
@@ -98,7 +98,7 @@ public class Butterfly {
 
 		double y = 0 + wings - bwh / 2;
 
-		Vector c = VectorMatrixFactory.newVector(x, y, 0);
+		Vector c = VectorFactory.createVector3(x, y, 0);
 
 		RightBottomWing erg = new RightBottomWing(c, bwh, bwl, wingMitteBreite, bwlrh, bwlrv, bwbh, bwbv, bwtph, bwtpv,
 				bwb2h, bwb2v, bwlr2h, bwlr2v);

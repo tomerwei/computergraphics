@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.points;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.material.Material;
 
 /**
@@ -24,12 +24,12 @@ public class PointCloudFactory {
 		int NUMBER_OF_POINTS = 5000;
 		IPointCloud pointCloud = new PointCloud();
 		for (int i = 0; i < NUMBER_OF_POINTS; i++) {
-			Vector position = VectorMatrixFactory.newVector(
+			Vector position = VectorFactory.createVector3(
 					Math.random() - 0.5, Math.random() - 0.5,
 					Math.random() - 0.5);
-			Vector color = VectorMatrixFactory.newVector(Math.random(),
+			Vector color = VectorFactory.createVector3(Math.random(),
 					Math.random(), Math.random());
-			Vector normal = VectorMatrixFactory.newVector(Math.random(),
+			Vector normal = VectorFactory.createVector3(Math.random(),
 					Math.random(), Math.random());
 			pointCloud.addPoint(new Point(position, color, normal));
 		}
@@ -51,7 +51,7 @@ public class PointCloudFactory {
 			for (int y = 0; y < resolutionY; y++) {
 				double phi = x * deltaX;
 				double theta = (y + 1) * deltaY;
-				Vector normal = VectorMatrixFactory.newVector(
+				Vector normal = VectorFactory.createVector3(
 						radius * Math.sin(theta) * Math.cos(phi)
 								+ center.get(0), radius * Math.sin(theta)
 								* Math.sin(phi) + center.get(1),

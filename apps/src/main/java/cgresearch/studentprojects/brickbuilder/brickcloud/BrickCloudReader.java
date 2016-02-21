@@ -18,7 +18,7 @@ import java.util.Map;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.studentprojects.brickbuilder.math.ColorRGB;
@@ -142,7 +142,7 @@ public class BrickCloudReader {
 		catch (Exception e) {
 			return null;
 		}
-		return VectorMatrixFactory.newVector(d[0], d[1], d[2]);
+		return VectorFactory.createVector3(d[0], d[1], d[2]);
 	}
 	
 	private static int[] readInt(String s) {
@@ -164,7 +164,7 @@ public class BrickCloudReader {
 		double dimX = reader.readDouble();
 		double dimY = reader.readDouble();
 		double dimZ = reader.readDouble();
-		RootBrick rootBrick = new RootBrick(VectorMatrixFactory.newVector(dimX, dimY, dimZ), meshes.get("root"));
+		RootBrick rootBrick = new RootBrick(VectorFactory.createVector3(dimX, dimY, dimZ), meshes.get("root"));
 		IBrickSet brickSet = new BrickSet(rootBrick);
 		
 		// read other types

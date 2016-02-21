@@ -1,7 +1,7 @@
 package cgresearch.graphics.camera;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.HermiteCurve;
 
 /**
@@ -109,7 +109,7 @@ public class CameraPathInterpolator {
    */
   public Vector getInterpolatedUp(float t) {
     // TODO
-    return VectorMatrixFactory.newVector(0, 1, 0);
+    return VectorFactory.createVector3(0, 1, 0);
   }
 
   /**

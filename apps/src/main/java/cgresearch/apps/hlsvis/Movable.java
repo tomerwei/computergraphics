@@ -5,8 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.Transformation;
 
@@ -99,9 +100,9 @@ public class Movable extends CgNode {
 	 */
 	protected Matrix getOrientation() {
 		Vector x = getNormalizedOrientation();
-		Vector y = VectorMatrixFactory.newVector(0, 1, 0);
+		Vector y = VectorFactory.createVector3(0, 1, 0);
 		Vector z = x.cross(y);
-		return VectorMatrixFactory.newMatrix(x, y, z);
+		return MatrixFactory.createMatrix3(x, y, z);
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class Movable extends CgNode {
 	 */
 	private Vector getNormalizedOrientation() {
 		if (path.size() < 2) {
-			return VectorMatrixFactory.newVector(1, 0, 0);
+			return VectorFactory.createVector3(1, 0, 0);
 		} else {
 			Vector dir = path.get(1).subtract(path.get(0));
 			dir.normalize();

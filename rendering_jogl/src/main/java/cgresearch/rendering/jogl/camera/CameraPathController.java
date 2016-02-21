@@ -1,7 +1,7 @@
 package cgresearch.rendering.jogl.camera;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.camera.CameraController;
 import cgresearch.graphics.camera.CameraPathInterpolator;
@@ -40,24 +40,24 @@ public class CameraPathController extends CameraController {
 	private void createDummyPath() {
 		cameraPathInterPolator.clearKeyPoints();
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newVector(-1, 0.5, -1),
-				VectorMatrixFactory.newVector(0, 1, 0),
-				VectorMatrixFactory.newVector(0, 0, 0));
+				VectorFactory.createVector3(-1, 0.5, -1),
+				VectorFactory.createVector3(0, 1, 0),
+				VectorFactory.createVector3(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newVector(-1, 1, 1),
-				VectorMatrixFactory.newVector(0, 1, 0),
-				VectorMatrixFactory.newVector(0, 0, 0));
+				VectorFactory.createVector3(-1, 1, 1),
+				VectorFactory.createVector3(0, 1, 0),
+				VectorFactory.createVector3(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newVector(1, 0.5, 1),
-				VectorMatrixFactory.newVector(0, 1, 0),
-				VectorMatrixFactory.newVector(0, 0, 0));
+				VectorFactory.createVector3(1, 0.5, 1),
+				VectorFactory.createVector3(0, 1, 0),
+				VectorFactory.createVector3(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newVector(1, 1, -1),
-				VectorMatrixFactory.newVector(0, 1, 0),
-				VectorMatrixFactory.newVector(0, 0, 0));
+				VectorFactory.createVector3(1, 1, -1),
+				VectorFactory.createVector3(0, 1, 0),
+				VectorFactory.createVector3(0, 0, 0));
 		cameraPathInterPolator.addKeyPoint(
-				VectorMatrixFactory.newVector(-1, 1, -1),
-				VectorMatrixFactory.newVector(0, 1, 0),
-				VectorMatrixFactory.newVector(0, 0, 0));
+				VectorFactory.createVector3(-1, 1, -1),
+				VectorFactory.createVector3(0, 1, 0),
+				VectorFactory.createVector3(0, 0, 0));
 	}
 }

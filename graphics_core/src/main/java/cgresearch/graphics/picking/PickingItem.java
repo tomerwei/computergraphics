@@ -1,7 +1,7 @@
 package cgresearch.graphics.picking;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class PickingItem {
 
@@ -18,7 +18,7 @@ public class PickingItem {
 	/**
 	 * Current position of the item;
 	 */
-	private Vector position = VectorMatrixFactory.newVector(0, 0, 0);
+	private Vector position = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Constructor.

@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class ObjMaterialIO {
 
@@ -73,7 +73,7 @@ public class ObjMaterialIO {
 		String line = strLine.trim();
 		String[] tokens = line.split("\\s+");
 		if (tokens.length >= 4 && currentMaterial != null) {
-			currentMaterial.setDiffuseColor(VectorMatrixFactory.newVector(
+			currentMaterial.setDiffuseColor(VectorFactory.createVector3(
 					Double.parseDouble(tokens[1]),
 					Double.parseDouble(tokens[2]),
 					Double.parseDouble(tokens[3])));

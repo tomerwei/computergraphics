@@ -6,7 +6,7 @@ import com.jogamp.opengl.GL2;
 
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.motioncapture.MotionCaptureConnection;
 import cgresearch.graphics.datastructures.motioncapture.MotionCaptureFrame;
 import cgresearch.graphics.datastructures.motioncapture.MotionCaptureMeasurement;
@@ -45,9 +45,9 @@ public class RenderContentMotionCaptureFrame extends JoglRenderContent {
       Vector position = measurement.getPosition();
       Matrix orientation = measurement.getOrientation().getTransposed();
 
-      Vector _x = VectorMatrixFactory.newVector(orientation.get(0, 0), orientation.get(0, 1), orientation.get(0, 2));
-      Vector _y = VectorMatrixFactory.newVector(orientation.get(1, 0), orientation.get(1, 1), orientation.get(1, 2));
-      Vector _z = VectorMatrixFactory.newVector(orientation.get(2, 0), orientation.get(2, 1), orientation.get(2, 2));
+      Vector _x = VectorFactory.createVector3(orientation.get(0, 0), orientation.get(0, 1), orientation.get(0, 2));
+      Vector _y = VectorFactory.createVector3(orientation.get(1, 0), orientation.get(1, 1), orientation.get(1, 2));
+      Vector _z = VectorFactory.createVector3(orientation.get(2, 0), orientation.get(2, 1), orientation.get(2, 2));
 
       Vector x = position.add(_x.multiply(scale));
       Vector y = position.add(_y.multiply(scale));
@@ -56,7 +56,7 @@ public class RenderContentMotionCaptureFrame extends JoglRenderContent {
       // x
       Arrow arrowX = new Arrow(position, x);
       CgNode arrowXNode = new CgNode(arrowX, "x-orientation");
-      arrowX.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.75, 0.25, 0.25));
+      arrowX.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.75, 0.25, 0.25));
       arrowX.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       JoglRenderNode arrowXRenderNode = JoglRenderObjectFactoryPrimitive.createArrow(null, arrowXNode, arrowX);
       addSubContent(arrowXRenderNode);
@@ -64,7 +64,7 @@ public class RenderContentMotionCaptureFrame extends JoglRenderContent {
       // y
       Arrow arrowY = new Arrow(position, y);
       CgNode arrowYNode = new CgNode(arrowY, "y-orientation");
-      arrowY.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.25, 0.75, 0.25));
+      arrowY.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.25, 0.75, 0.25));
       arrowY.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       JoglRenderNode arrowYRenderNode = JoglRenderObjectFactoryPrimitive.createArrow(null, arrowYNode, arrowY);
       addSubContent(arrowYRenderNode);
@@ -72,7 +72,7 @@ public class RenderContentMotionCaptureFrame extends JoglRenderContent {
       // z
       Arrow arrowZ = new Arrow(position, z);
       CgNode arrowZNode = new CgNode(arrowZ, "z-orientation");
-      arrowZ.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0.25, 0.25, 0.75));
+      arrowZ.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.25, 0.25, 0.75));
       arrowZ.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       JoglRenderNode arrowZRenderNode = JoglRenderObjectFactoryPrimitive.createArrow(null, arrowZNode, arrowZ);
       addSubContent(arrowZRenderNode);

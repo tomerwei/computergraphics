@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.projects.portalculling.PortalEdge.State;
 
 /**
@@ -100,7 +100,7 @@ public class PortalSceneImporter {
 	private Vector readNode(BufferedReader br) throws IOException {
 		String line = readNextNonCommentLine(br);
 		String[] tokens = line.split("\\s+");
-		return VectorMatrixFactory.newVector(Float.parseFloat(tokens[0]), 0,
+		return VectorFactory.createVector3(Float.parseFloat(tokens[0]), 0,
 				Float.parseFloat(tokens[1]));
 	}
 

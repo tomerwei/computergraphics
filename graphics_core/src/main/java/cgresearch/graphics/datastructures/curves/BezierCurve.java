@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.curves;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Implementation of a Bezier curve.
@@ -33,7 +33,7 @@ public class BezierCurve extends ICurve {
 	 */
 	@Override
 	public Vector eval(double t) {
-		Vector p = VectorMatrixFactory.newVector(0, 0, 0);
+		Vector p = VectorFactory.createVector3(0, 0, 0);
 		for (int i = 0; i <= getDegree(); i++) {
 			p = p.add(controlPoints[i].multiply(basisFunction.eval(i, t)));
 		}

@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.curves;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Implementation of a lagrane curve.
@@ -29,7 +29,7 @@ public class LagrangeCurve extends ICurve {
      */
     @Override
     public Vector eval(double t) {
-        Vector p = VectorMatrixFactory.newVector(0, 0, 0);
+        Vector p = VectorFactory.createVector3(0, 0, 0);
         for (int i = 0; i <= getDegree(); i++) {
             p = p.add(controlPoints[i].multiply(evalBasisFunction(i, t)));
         }

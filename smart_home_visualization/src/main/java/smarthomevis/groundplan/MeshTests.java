@@ -4,7 +4,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -36,7 +36,7 @@ public class MeshTests extends CgApplication
 	{
 		ITriangleMesh mesh = createSimpleObject();
 		mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-		mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(Material.PALETTE2_COLOR1));
+		mesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector(Material.PALETTE2_COLOR1));
 		getCgRootNode().addChild(new CgNode(mesh, "simpleMesh"));
 	}
 
@@ -44,9 +44,9 @@ public class MeshTests extends CgApplication
 	{
 		ITriangleMesh mesh = new TriangleMesh();
 
-		int a = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(1.5, 0, 0)));
-		int b = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(1.5, 0, 1)));
-		int c = mesh.addVertex(new Vertex(VectorMatrixFactory.newVector(2.5, 0, 0.5)));
+		int a = mesh.addVertex(new Vertex(VectorFactory.createVector3(1.5, 0, 0)));
+		int b = mesh.addVertex(new Vertex(VectorFactory.createVector3(1.5, 0, 1)));
+		int c = mesh.addVertex(new Vertex(VectorFactory.createVector3(2.5, 0, 0.5)));
 
 		mesh.addTriangle(new Triangle(a, b, c));
 
@@ -60,7 +60,7 @@ public class MeshTests extends CgApplication
 		// ITriangleMesh mesh = TriangleMeshFactory.createCube();
 		ITriangleMesh mesh = createComplexObject();
 		mesh.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
-		mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(Material.PALETTE2_COLOR0));
+		mesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector(Material.PALETTE2_COLOR0));
 		getCgRootNode().addChild(new CgNode(mesh, "testmesh"));
 
 	}
@@ -68,23 +68,23 @@ public class MeshTests extends CgApplication
 	private ITriangleMesh createComplexObject()
 	{
 		ITriangleMesh triangleMesh = new TriangleMesh();
-		int a = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, 0, -0.5)));
-		int b = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, 0, -0.5)));
-		int c = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, 0, 0.5)));
-		int d = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, 0, 0.5)));
+		int a = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, 0, -0.5)));
+		int b = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, 0, -0.5)));
+		int c = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, 0, 0.5)));
+		int d = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, 0, 0.5)));
 
-		int e = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, -1, 0.5)));
-		int f = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, -1, 0.5)));
+		int e = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, -1, 0.5)));
+		int f = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, -1, 0.5)));
 
-		int g = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, 1, 0.5)));
-		int h = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, 1, 0.5)));
+		int g = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, 1, 0.5)));
+		int h = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, 1, 0.5)));
 
-		int i = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-0.5, 0, 1.5)));
-		int j = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(0.5, 0, 1.5)));
+		int i = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-0.5, 0, 1.5)));
+		int j = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(0.5, 0, 1.5)));
 
 		// punkte fuer die spitzen
-		int l = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(1, 0, 0.5)));
-		int m = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newVector(-1, 0, 0.5)));
+		int l = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(1, 0, 0.5)));
+		int m = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-1, 0, 0.5)));
 
 		triangleMesh.addTriangle(new Triangle(a, b, c));
 		triangleMesh.addTriangle(new Triangle(b, c, d));

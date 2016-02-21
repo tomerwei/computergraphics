@@ -3,7 +3,7 @@ package cgresearch.graphics.camera;
 import java.io.Serializable;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Key point of a camera path
@@ -20,9 +20,9 @@ public class CameraPathKeypoint implements Serializable {
   /**
    * All information about the key point is saved in the camera object.
    */
-  private Vector pos = VectorMatrixFactory.newVector(3);
-  private Vector up = VectorMatrixFactory.newVector(3);
-  private Vector ref = VectorMatrixFactory.newVector(3);
+  private Vector pos = VectorFactory.createVector(3);
+  private Vector up = VectorFactory.createVector(3);
+  private Vector ref = VectorFactory.createVector(3);
 
   /**
    * Constructor.

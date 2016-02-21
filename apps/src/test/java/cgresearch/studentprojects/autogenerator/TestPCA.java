@@ -7,7 +7,7 @@ import org.junit.Test;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.primitives.Plane;
 
 /**
@@ -29,8 +29,8 @@ public class TestPCA {
 		double px = Math.random();
 		double py = Math.random();
 		double pz = Math.random();
-		Vector p = VectorMatrixFactory.newVector(px, py, pz);
-		Vector normal = VectorMatrixFactory.newVector(Math.random(), Math.random(), Math.random()).getNormalized();
+		Vector p = VectorFactory.createVector3(px, py, pz);
+		Vector normal = VectorFactory.createVector3(Math.random(), Math.random(), Math.random()).getNormalized();
     Plane plane = new Plane(p, normal);
 
 		PCA pca = new PCA();

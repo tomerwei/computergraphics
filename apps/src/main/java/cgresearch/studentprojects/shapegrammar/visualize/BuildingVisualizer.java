@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -99,8 +99,8 @@ public class BuildingVisualizer implements Observer {
       ITriangleMesh mesh = new TriangleMesh();
       mesh.getMaterial().setTextureId(shape.getTexture());
       mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
-      mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newVector(0, 0, 0));
-      mesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newVector(1, 1, 1));
+      mesh.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0, 0, 0));
+      mesh.getMaterial().setReflectionAmbient(VectorFactory.createVector3(1, 1, 1));
       mesh.getMaterial().setSpecularShininess(50);
       Vector v1;
       Vector v2;
@@ -110,58 +110,58 @@ public class BuildingVisualizer implements Observer {
       int b = 0;
       int c = 0;
       int d = 0;
-      int ta = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 0, 0));
-      int tb = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 0, 0));
-      int tc = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(1, 1, 0));
-      int td = mesh.addTextureCoordinate(VectorMatrixFactory.newVector(0, 1, 0));
+      int ta = mesh.addTextureCoordinate(VectorFactory.createVector3(0, 0, 0));
+      int tb = mesh.addTextureCoordinate(VectorFactory.createVector3(1, 0, 0));
+      int tc = mesh.addTextureCoordinate(VectorFactory.createVector3(1, 1, 0));
+      int td = mesh.addTextureCoordinate(VectorFactory.createVector3(0, 1, 0));
       switch (shape.getPosition().getDirection()) {
         case Top:
-          v1 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ());
-          v2 = VectorMatrixFactory.newVector(position.getX() + shape.getWidth(), position.getY(), position.getZ());
-          v3 = VectorMatrixFactory.newVector(position.getX() + shape.getWidth(), position.getY(),
+          v1 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ());
+          v2 = VectorFactory.createVector3(position.getX() + shape.getWidth(), position.getY(), position.getZ());
+          v3 = VectorFactory.createVector3(position.getX() + shape.getWidth(), position.getY(),
               position.getZ() - shape.getHeight());
-          v4 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ() - shape.getHeight());
+          v4 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ() - shape.getHeight());
           break;
         case Left:
-          v1 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ());
-          v2 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ() + shape.getWidth());
-          v3 = VectorMatrixFactory.newVector(position.getX(), position.getY() + shape.getHeight(),
+          v1 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ());
+          v2 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ() + shape.getWidth());
+          v3 = VectorFactory.createVector3(position.getX(), position.getY() + shape.getHeight(),
               position.getZ() + shape.getWidth());
-          v4 = VectorMatrixFactory.newVector(position.getX(), position.getY() + shape.getHeight(), position.getZ());
+          v4 = VectorFactory.createVector3(position.getX(), position.getY() + shape.getHeight(), position.getZ());
           break;
         case Right:
-          v1 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ());
-          v2 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ() - shape.getWidth());
-          v3 = VectorMatrixFactory.newVector(position.getX(), position.getY() + shape.getHeight(),
+          v1 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ());
+          v2 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ() - shape.getWidth());
+          v3 = VectorFactory.createVector3(position.getX(), position.getY() + shape.getHeight(),
               position.getZ() - shape.getWidth());
-          v4 = VectorMatrixFactory.newVector(position.getX(), position.getY() + shape.getHeight(), position.getZ());
+          v4 = VectorFactory.createVector3(position.getX(), position.getY() + shape.getHeight(), position.getZ());
           break;
         case Front:
-          v1 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ());
-          v2 = VectorMatrixFactory.newVector(position.getX() + shape.getWidth(), position.getY(), position.getZ());
-          v3 = VectorMatrixFactory.newVector(position.getX() + shape.getWidth(), position.getY() + shape.getHeight(),
+          v1 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ());
+          v2 = VectorFactory.createVector3(position.getX() + shape.getWidth(), position.getY(), position.getZ());
+          v3 = VectorFactory.createVector3(position.getX() + shape.getWidth(), position.getY() + shape.getHeight(),
               position.getZ());
-          v4 = VectorMatrixFactory.newVector(position.getX(), position.getY() + shape.getHeight(), position.getZ());
+          v4 = VectorFactory.createVector3(position.getX(), position.getY() + shape.getHeight(), position.getZ());
           break;
         case Back:
-          v1 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ());
-          v2 = VectorMatrixFactory.newVector(position.getX() - shape.getWidth(), position.getY(), position.getZ());
-          v3 = VectorMatrixFactory.newVector(position.getX() - shape.getWidth(), position.getY() + shape.getHeight(),
+          v1 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ());
+          v2 = VectorFactory.createVector3(position.getX() - shape.getWidth(), position.getY(), position.getZ());
+          v3 = VectorFactory.createVector3(position.getX() - shape.getWidth(), position.getY() + shape.getHeight(),
               position.getZ());
-          v4 = VectorMatrixFactory.newVector(position.getX(), position.getY() + shape.getHeight(), position.getZ());
+          v4 = VectorFactory.createVector3(position.getX(), position.getY() + shape.getHeight(), position.getZ());
           break;
         case Bot:
-          v1 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ());
-          v2 = VectorMatrixFactory.newVector(position.getX() + shape.getWidth(), position.getY(), position.getZ());
-          v3 = VectorMatrixFactory.newVector(position.getX() + shape.getWidth(), position.getY(),
+          v1 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ());
+          v2 = VectorFactory.createVector3(position.getX() + shape.getWidth(), position.getY(), position.getZ());
+          v3 = VectorFactory.createVector3(position.getX() + shape.getWidth(), position.getY(),
               position.getZ() + shape.getHeight());
-          v4 = VectorMatrixFactory.newVector(position.getX(), position.getY(), position.getZ() + shape.getHeight());
+          v4 = VectorFactory.createVector3(position.getX(), position.getY(), position.getZ() + shape.getHeight());
           break;
         default:
-          v1 = VectorMatrixFactory.newVector(0, 0, 0);
-          v2 = VectorMatrixFactory.newVector(1, 0, 0);
-          v3 = VectorMatrixFactory.newVector(1, 1, 0);
-          v4 = VectorMatrixFactory.newVector(0, 1, 0);
+          v1 = VectorFactory.createVector3(0, 0, 0);
+          v2 = VectorFactory.createVector3(1, 0, 0);
+          v3 = VectorFactory.createVector3(1, 1, 0);
+          v4 = VectorFactory.createVector3(0, 1, 0);
           break;
       }
       a = mesh.addVertex(new Vertex(v1));

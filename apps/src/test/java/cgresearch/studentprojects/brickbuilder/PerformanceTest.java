@@ -6,7 +6,7 @@ import javax.imageio.spi.IIORegistry;
 
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.studentprojects.brickbuilder.voxelcloud.IVoxelCloud;
@@ -38,7 +38,7 @@ public class PerformanceTest {
 		
 		ObjFileReader r = new ObjFileReader();
 		IVoxelizationAlgorithm algo = new VoxelizationParityCount();
-		Vector voxelScale = VectorMatrixFactory.newVector(80, 96, 80);
+		Vector voxelScale = VectorFactory.createVector3(80, 96, 80);
 		
 		for (String m : models) {
 			String[] mA = m.split("/");

@@ -41,7 +41,7 @@ import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import Jama.Matrix;
 import cgresearch.graphics.bricks.CgApplication;
 

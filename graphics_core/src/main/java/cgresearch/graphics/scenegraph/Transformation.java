@@ -18,12 +18,12 @@ public class Transformation extends ICgNodeContent {
   /**
    * Representation of the transformation as homogenious 4x4 matrix
    */
-  private Matrix transformation = VectorMatrixFactory.newMatrixIdentity();
+  private Matrix transformation = MatrixFactory.createIdentityMatrix4();
 
   /**
    * Transposed transformation.
    */
-  private Matrix transposedTransformation = VectorMatrixFactory.newMatrixIdentity();
+  private Matrix transposedTransformation = MatrixFactory.createIdentityMatrix4();
 
   /**
    * Constructor
@@ -65,7 +65,7 @@ public class Transformation extends ICgNodeContent {
    * Include a translation.
    */
   public void addTranslation(Vector translation) {
-    transformation = transformation.multiply(VectorMatrixFactory.makeTranslationMatrix(translation));
+    transformation = transformation.multiply(MatrixFactory.createHomogeniousTranslationMatrix(translation));
     updateTransposedTransformation();
   }
 
@@ -73,7 +73,7 @@ public class Transformation extends ICgNodeContent {
    * Include a scaling factor.
    */
   public void addScale(double scale) {
-    transformation = transformation.multiply(VectorMatrixFactory.makeHomogeniousScaleMatrix(scale));
+    transformation = transformation.multiply(MatrixFactory.createHomogeniousScaleMatrix(scale));
     updateTransposedTransformation();
   }
 
@@ -81,7 +81,7 @@ public class Transformation extends ICgNodeContent {
    * Include a transformation
    */
   public void addTransformation(Matrix transform) {
-    Matrix homogeniousMatrix = VectorMatrixFactory.dim3toDim4(transform);
+    Matrix homogeniousMatrix = MatrixFactory.createHomogeniousFor3spaceMatrix(transform);
     transformation = transformation.multiply(homogeniousMatrix);
     updateTransposedTransformation();
   }
@@ -109,6 +109,6 @@ public class Transformation extends ICgNodeContent {
    * Returns the transformed vector as a Vector 4
    */
   public Vector getTransformedVector(Vector other) {
-    return transformation.multiply(VectorMatrixFactory.dim3toDim4(other));
+    return transformation.multiply(VectorFactory.createHomogeniousFor3spaceVector(other));
   }
 }

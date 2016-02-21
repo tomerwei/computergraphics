@@ -11,7 +11,7 @@ import java.util.Map;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
@@ -59,13 +59,13 @@ public class VoxelCloud implements IVoxelCloud {
 	 * @param resolution		resolution
 	 */
 	public VoxelCloud(Vector locationLowerLeft, Vector voxelDimensions, VectorInt3 resolution) {
-		this.locationLowerLeft = VectorMatrixFactory.newVector(locationLowerLeft);
-		this.voxelDimensions = VectorMatrixFactory.newVector(voxelDimensions);
+		this.locationLowerLeft = VectorFactory.createVector(locationLowerLeft);
+		this.voxelDimensions = VectorFactory.createVector(voxelDimensions);
 		this.resolution = resolution;
 		this.voxelArray = new VoxelType[resolution.getZ() * resolution.getY() * resolution.getX()];
 		this.voxelColors = new HashMap<VectorInt3, IColorRGB>();
 		this.boundingBox = new BoundingBox(this.locationLowerLeft,
-				this.locationLowerLeft.add(VectorMatrixFactory.newVector(
+				this.locationLowerLeft.add(VectorFactory.createVector3(
 						this.voxelDimensions.get(MathHelpers.INDEX_0) * this.resolution.getX(), 
 						this.voxelDimensions.get(MathHelpers.INDEX_1) * this.resolution.getY(),
 						this.voxelDimensions.get(MathHelpers.INDEX_2) * this.resolution.getZ()
@@ -78,15 +78,15 @@ public class VoxelCloud implements IVoxelCloud {
 	 * @param cloud
 	 */
 	public VoxelCloud(VoxelCloud cloud) {
-		this.locationLowerLeft = VectorMatrixFactory.newVector(cloud.locationLowerLeft);
-		this.voxelDimensions = VectorMatrixFactory.newVector(cloud.voxelDimensions);
+		this.locationLowerLeft = VectorFactory.createVector(cloud.locationLowerLeft);
+		this.voxelDimensions = VectorFactory.createVector(cloud.voxelDimensions);
 		this.resolution = cloud.resolution;
 		this.voxelArray = new VoxelType[resolution.getZ() * resolution.getY() * resolution.getX()];
 		for (int i = 0; i < this.voxelArray.length; i++) this.voxelArray[i] = cloud.voxelArray[i];
 		this.voxelColors = new HashMap<VectorInt3, IColorRGB>();
 		for (VectorInt3 key : cloud.voxelColors.keySet()) this.voxelColors.put(key, cloud.voxelColors.get(key));
 		this.boundingBox = new BoundingBox(this.locationLowerLeft,
-				this.locationLowerLeft.add(VectorMatrixFactory.newVector(
+				this.locationLowerLeft.add(VectorFactory.createVector3(
 						this.voxelDimensions.get(MathHelpers.INDEX_0) * this.resolution.getX(), 
 						this.voxelDimensions.get(MathHelpers.INDEX_1) * this.resolution.getY(),
 						this.voxelDimensions.get(MathHelpers.INDEX_2) * this.resolution.getZ()
@@ -100,7 +100,7 @@ public class VoxelCloud implements IVoxelCloud {
 
 	@Override
 	public Vector getDimensions() {
-		return VectorMatrixFactory.newVector(
+		return VectorFactory.createVector3(
 				voxelDimensions.get(MathHelpers.INDEX_0) * resolution.getX(),
 				voxelDimensions.get(MathHelpers.INDEX_1) * resolution.getY(),
 				voxelDimensions.get(MathHelpers.INDEX_2) * resolution.getZ());
@@ -108,12 +108,12 @@ public class VoxelCloud implements IVoxelCloud {
 	
 	@Override
 	public Vector getVoxelDimensions() {
-		return VectorMatrixFactory.newVector(voxelDimensions);
+		return VectorFactory.createVector(voxelDimensions);
 	}
 
 	@Override
 	public Vector getLocationLowerLeft() {
-		return VectorMatrixFactory.newVector(locationLowerLeft);
+		return VectorFactory.createVector(locationLowerLeft);
 	}
 
 	@Override
@@ -131,9 +131,9 @@ public class VoxelCloud implements IVoxelCloud {
 	@Override
 	public Vector getVoxelLocation(VectorInt3 vec) {
 		if (!existVoxelAt(vec)) return null;		
-		Vector location = VectorMatrixFactory.newVector(locationLowerLeft);
+		Vector location = VectorFactory.createVector(locationLowerLeft);
 		location = location.add(voxelDimensions.multiply(0.5));
-		location = location.add(VectorMatrixFactory.newVector(
+		location = location.add(VectorFactory.createVector3(
 				voxelDimensions.get(MathHelpers.INDEX_0) * vec.getX(),
 				voxelDimensions.get(MathHelpers.INDEX_1) * vec.getY(),
 				voxelDimensions.get(MathHelpers.INDEX_2) * vec.getZ()));

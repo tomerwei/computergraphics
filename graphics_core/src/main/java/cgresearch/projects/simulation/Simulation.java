@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;
@@ -157,10 +157,10 @@ public abstract class Simulation {
 			// Make sure, the array have the correct size
 			preSimulationStep(x, v);
 			while (newX.size() < x.size()) {
-				newX.add(VectorMatrixFactory.newVector(3));
+				newX.add(VectorFactory.createVector(3));
 			}
 			while (newV.size() < v.size()) {
-				newV.add(VectorMatrixFactory.newVector(3));
+				newV.add(VectorFactory.createVector(3));
 			}
 
 			// Compute integration step
@@ -181,7 +181,7 @@ public abstract class Simulation {
 						newX.set(massIndex, collidable.projectToSurface(newX
 								.get(massIndex)));
 						newV.set(massIndex,
-								VectorMatrixFactory.newVector(0, 0, 0));
+								VectorFactory.createVector3(0, 0, 0));
 					}
 				}
 			}
@@ -235,7 +235,7 @@ public abstract class Simulation {
 					.createSphere(pos, 0.05, 10);
 			mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 			mesh.getMaterial().setReflectionDiffuse(
-					VectorMatrixFactory.newVector(246.0 / 255.0,
+					VectorFactory.createVector3(246.0 / 255.0,
 							157.0 / 255.0, 0));
 			CgNode node = new CgNode(mesh, "boundary point");
 			supplementNode.addChild(node);
@@ -258,7 +258,7 @@ public abstract class Simulation {
 				.createQuadWithTextureCoordinates();
 		meshPlane.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		meshPlane.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newVector(0.75, 0.25, 0.25));
+				VectorFactory.createVector3(0.75, 0.25, 0.25));
 
 		Transformation transformation = new Transformation();
 		transformation.addTranslation(plane.getPoint());
@@ -276,7 +276,7 @@ public abstract class Simulation {
 				sphere.getCenter(), sphere.getRadius(), 10);
 		meshSphere.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		meshSphere.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newVector(0.75, 0.25, 0.25));
+				VectorFactory.createVector3(0.75, 0.25, 0.25));
 		CgNode sphereNode = new CgNode(meshSphere, "Sphere");
 		sphereNode.setVisible(false);
 		supplementNode.addChild(sphereNode);

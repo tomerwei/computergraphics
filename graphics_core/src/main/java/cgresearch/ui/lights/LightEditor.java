@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.scenegraph.CgRootNode;
 import cgresearch.graphics.scenegraph.LightSource;
 
@@ -157,7 +157,7 @@ public class LightEditor extends JFrame implements Observer, ActionListener {
 		JOptionPane.showMessageDialog(null, inputs, "Edit vector",
 				JOptionPane.PLAIN_MESSAGE);
 		try {
-			return VectorMatrixFactory.newVector(
+			return VectorFactory.createVector3(
 					Double.parseDouble(tx.getText()),
 					Double.parseDouble(ty.getText()),
 					Double.parseDouble(tz.getText()));

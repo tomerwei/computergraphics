@@ -7,7 +7,7 @@ package cgresearch.graphics.datastructures.curves;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Implementation of a Hermite curve.
@@ -42,7 +42,7 @@ public class HermiteCurve extends ICurve {
      */
     @Override
     public Vector eval(double t) {
-        Vector result = VectorMatrixFactory.newVector(0, 0, 0);
+        Vector result = VectorFactory.createVector3(0, 0, 0);
         for (int i = 0; i < 4; i++) {
             result = result.add(controlPoints[i].multiply(evalBasisFunction(i,
                     t)));
@@ -57,7 +57,7 @@ public class HermiteCurve extends ICurve {
      */
     @Override
     public Vector derivative(double t) {
-        Vector result = VectorMatrixFactory.newVector(0, 0, 0);
+        Vector result = VectorFactory.createVector3(0, 0, 0);
         for (int i = 0; i < 4; i++) {
             result = result
                     .add(controlPoints[i].multiply(evalDerivative(i, t)));

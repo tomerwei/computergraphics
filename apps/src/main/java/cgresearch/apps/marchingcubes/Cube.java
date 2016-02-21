@@ -3,19 +3,19 @@ package cgresearch.apps.marchingcubes;
 import java.util.Observable;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class Cube extends Observable {
 
   /**
    * Lower left corner point.
    */
-  private Vector lowerLeft = VectorMatrixFactory.newVector(-1, -1, -1);
+  private Vector lowerLeft = VectorFactory.createVector3(-1, -1, -1);
 
   /**
    * Upper right corner point.
    */
-  private Vector upperRight = VectorMatrixFactory.newVector(1, 1, 1);
+  private Vector upperRight = VectorFactory.createVector3(1, 1, 1);
 
   /**
    * Corner point function values.
@@ -40,21 +40,21 @@ public class Cube extends Observable {
     double dz = upperRight.get(2) - lowerLeft.get(2);
     switch (index) {
       case 0:
-        return lowerLeft.add(VectorMatrixFactory.newVector(0, 0, 0));
+        return lowerLeft.add(VectorFactory.createVector3(0, 0, 0));
       case 1:
-        return lowerLeft.add(VectorMatrixFactory.newVector(dx, 0, 0));
+        return lowerLeft.add(VectorFactory.createVector3(dx, 0, 0));
       case 2:
-        return lowerLeft.add(VectorMatrixFactory.newVector(dx, dy, 0));
+        return lowerLeft.add(VectorFactory.createVector3(dx, dy, 0));
       case 3:
-        return lowerLeft.add(VectorMatrixFactory.newVector(0, dy, 0));
+        return lowerLeft.add(VectorFactory.createVector3(0, dy, 0));
       case 4:
-        return lowerLeft.add(VectorMatrixFactory.newVector(0, 0, dz));
+        return lowerLeft.add(VectorFactory.createVector3(0, 0, dz));
       case 5:
-        return lowerLeft.add(VectorMatrixFactory.newVector(dx, 0, dz));
+        return lowerLeft.add(VectorFactory.createVector3(dx, 0, dz));
       case 6:
-        return lowerLeft.add(VectorMatrixFactory.newVector(dx, dy, dz));
+        return lowerLeft.add(VectorFactory.createVector3(dx, dy, dz));
       case 7:
-        return lowerLeft.add(VectorMatrixFactory.newVector(0, dy, dz));
+        return lowerLeft.add(VectorFactory.createVector3(0, dy, dz));
       default:
         return null;
     }

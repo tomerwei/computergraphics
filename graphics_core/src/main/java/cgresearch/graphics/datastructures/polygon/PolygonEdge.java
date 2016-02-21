@@ -1,7 +1,7 @@
 package cgresearch.graphics.datastructures.polygon;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 
 /**
@@ -24,7 +24,7 @@ public class PolygonEdge implements GenericEdge {
   /**
    * Color used for debugging.
    */
-  private Vector color = VectorMatrixFactory.newVector(0, 0, 0);
+  private Vector color = VectorFactory.createVector3(0, 0, 0);
 
   public PolygonEdge(PolygonVertex start, PolygonVertex end) {
     this.startVertex = start;

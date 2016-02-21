@@ -7,7 +7,7 @@ import java.util.Map;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -118,7 +118,7 @@ public class Subdivision3D {
     List<Vector> newPositions = new ArrayList<Vector>();
     int oldNumberOfVertices = mesh.getNumberOfVertices();
     for (int i = 0; i < oldNumberOfVertices + edges.size(); i++) {
-      newPositions.add(VectorMatrixFactory.newVector(0, 0, 0));
+      newPositions.add(VectorFactory.createVector3(0, 0, 0));
     }
 
     // Compute positions for old points

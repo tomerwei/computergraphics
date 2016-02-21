@@ -7,8 +7,9 @@ package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a plane in 3-space.
@@ -21,12 +22,12 @@ public class Plane extends IPrimitive {
   /**
    * A point in the plane;
    */
-  private Vector point = VectorMatrixFactory.newVector(0, 0, 0);
+  private Vector point = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Normal vector of the plane;
    */
-  private Vector normal = VectorMatrixFactory.newVector(0, 0, 0);
+  private Vector normal = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Cached precomputed coordinate frame of the plane: tangent in u-direction
@@ -49,7 +50,7 @@ public class Plane extends IPrimitive {
    * Constructor.
    */
   public Plane() {
-    this(VectorMatrixFactory.newVector(0, 0, 0), VectorMatrixFactory.newVector(0, 1, 0));
+    this(VectorFactory.createVector3(0, 0, 0), VectorFactory.createVector3(0, 1, 0));
   }
 
   /**
@@ -65,13 +66,13 @@ public class Plane extends IPrimitive {
    * Precompute the coordinate frame.
    */
   private void precomputeCoordinateFrame() {
-    tangentU = VectorMatrixFactory.newVector(1, 0, 0);
+    tangentU = VectorFactory.createVector3(1, 0, 0);
     if (Math.abs(tangentU.multiply(getNormal())) > 0.95) {
-      tangentU = VectorMatrixFactory.newVector(0, 1, 0);
+      tangentU = VectorFactory.createVector3(0, 1, 0);
     }
     tangentV = getNormal().cross(tangentU).getNormalized();
     tangentU = tangentV.cross(getNormal()).getNormalized();
-    planeCoordinateSystem = VectorMatrixFactory.newMatrix(tangentU, tangentV, getNormal()).getTransposed();
+    planeCoordinateSystem = MatrixFactory.createMatrix3(tangentU, tangentV, getNormal()).getTransposed();
   }
 
   /**
@@ -171,9 +172,9 @@ public class Plane extends IPrimitive {
   }
 
   public Vector getTangentU() {
-    Vector helper = VectorMatrixFactory.newVector(1, 0, 0);
+    Vector helper = VectorFactory.createVector3(1, 0, 0);
     if (Math.abs(helper.multiply(normal)) > PARALLEL_THRESHOLD) {
-      helper = VectorMatrixFactory.newVector(0, 1, 0);
+      helper = VectorFactory.createVector3(0, 1, 0);
     }
     return normal.cross(helper).getNormalized();
   }

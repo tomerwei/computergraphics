@@ -1,14 +1,14 @@
 package cgresearch.projects.simulation.collision;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 public class CollidableSphere implements Collidable {
 
 	/**
 	 * Sphere center
 	 */
-	private final Vector center = VectorMatrixFactory.newVector(0, 0, 0);
+	private final Vector center = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Radius of the sphere.

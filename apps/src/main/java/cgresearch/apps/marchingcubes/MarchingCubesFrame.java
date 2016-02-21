@@ -12,7 +12,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.MarchingCubes;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.bricks.CgApplication;
@@ -47,7 +47,7 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
    * Constructor.
    */
   public MarchingCubesFrame() {
-    marchingCubes = new MarchingCubes(50, VectorMatrixFactory.newVector(-3, -3, -3), 6);
+    marchingCubes = new MarchingCubes(50, VectorFactory.createVector3(-3, -3, -3), 6);
     vis = new ImplicitFunctionVisualization(256);
 
     createMesh(new ImplicitFunctionGourSat());

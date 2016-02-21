@@ -15,12 +15,12 @@ public class BoundingBox {
   /**
    * Lower left corner.
    */
-  private Vector ll = VectorMatrixFactory.newVector(3);
+  private Vector ll = VectorFactory.createVector(3);
 
   /**
    * Upper right corner
    */
-  private Vector ur = VectorMatrixFactory.newVector(3);
+  private Vector ur = VectorFactory.createVector(3);
 
   /**
    * This flag is false for invalid bounding boxes.
@@ -31,7 +31,7 @@ public class BoundingBox {
    * Constructor.
    */
   public BoundingBox() {
-    this(VectorMatrixFactory.newVector(3), VectorMatrixFactory.newVector(3));
+    this(VectorFactory.createVector(3), VectorFactory.createVector(3));
     isInitialized = false;
   }
 
@@ -111,11 +111,11 @@ public class BoundingBox {
       ur.copy(p);
       isInitialized = true;
     } else {
-      ll = VectorMatrixFactory.newVector(Math.min(ll.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
+      ll = VectorFactory.createVector3(Math.min(ll.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
           Math.min(ll.get(MathHelpers.INDEX_1), p.get(MathHelpers.INDEX_1)),
           Math.min(ll.get(MathHelpers.INDEX_2), p.get(MathHelpers.INDEX_2)));
 
-      ur = VectorMatrixFactory.newVector(Math.max(ur.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
+      ur = VectorFactory.createVector3(Math.max(ur.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
           Math.max(ur.get(MathHelpers.INDEX_1), p.get(MathHelpers.INDEX_1)),
           Math.max(ur.get(MathHelpers.INDEX_2), p.get(MathHelpers.INDEX_2)));
     }
@@ -147,7 +147,7 @@ public class BoundingBox {
     for (int x = 0; x < 2; x++) {
       for (int y = 0; y < 2; y++) {
         for (int z = 0; z < 2; z++) {
-          points.add(ll.add(VectorMatrixFactory.newVector(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
+          points.add(ll.add(VectorFactory.createVector3(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
         }
       }
     }
@@ -163,7 +163,7 @@ public class BoundingBox {
     }
     isInitialized = false;
     for (Vector p : points) {
-      add(VectorMatrixFactory.newVector(p.get(0), p.get(1), p.get(2)));
+      add(VectorFactory.createVector3(p.get(0), p.get(1), p.get(2)));
     }
   }
 
@@ -178,14 +178,14 @@ public class BoundingBox {
     for (int x = 0; x < 2; x++) {
       for (int y = 0; y < 2; y++) {
         for (int z = 0; z < 2; z++) {
-          points.add(ll.add(VectorMatrixFactory.newVector(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
+          points.add(ll.add(VectorFactory.createVector3(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
         }
       }
     }
     for (int i = 0; i < points.size(); i++) {
-      Vector p = VectorMatrixFactory.dim3toDim4(points.get(i));
+      Vector p = VectorFactory.createHomogeniousFor3spaceVector(points.get(i));
       Vector v = transformation.getTransformation().multiply(p);
-      points.get(i).copy(VectorMatrixFactory.newVector(v.get(0), v.get(1), v.get(2)));
+      points.get(i).copy(VectorFactory.createVector3(v.get(0), v.get(1), v.get(2)));
     }
     isInitialized = false;
     for (Vector p : points) {
@@ -217,13 +217,13 @@ public class BoundingBox {
     List<Vector> corners = new ArrayList<Vector>();
     Vector length = getExtent().multiply(2);
     corners.add(getLowerLeft());
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(length.get(0), 0, 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(length.get(0), length.get(1), 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(0, length.get(1), 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(0, 0, length.get(2))));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(length.get(0), 0, length.get(2))));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(length.get(0), length.get(1), length.get(2))));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newVector(0, length.get(1), length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), 0, 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), length.get(1), 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, length.get(1), 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, 0, length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), 0, length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), length.get(1), length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, length.get(1), length.get(2))));
     return corners;
   }
 }

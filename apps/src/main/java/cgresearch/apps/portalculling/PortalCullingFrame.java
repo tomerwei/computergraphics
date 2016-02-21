@@ -15,7 +15,7 @@ import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.projects.portalculling.PortalCell;
@@ -65,8 +65,8 @@ public class PortalCullingFrame extends CgApplication implements Observer, JoglR
     PortalSceneImporter importer = new PortalSceneImporter();
     importer.importScene(scene, "portal/scene.scene");
 
-    viewVolume = new ViewVolume2D(VectorMatrixFactory.newVector(2, 0, 6), VectorMatrixFactory.newVector(6, 0, 6),
-        VectorMatrixFactory.newVector(7, 0, -1));
+    viewVolume = new ViewVolume2D(VectorFactory.createVector3(2, 0, 6), VectorFactory.createVector3(6, 0, 6),
+        VectorFactory.createVector3(7, 0, -1));
 
     AnimationTimer.getInstance().setMaxValue(50);
   }

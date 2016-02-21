@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -72,10 +72,10 @@ public class HeightField {
 				float x = (float) i / (float) resolutionU;
 				float y = (float) j / (float) resolutionV;
 				double height = getHeight(x, y);
-				Vertex vertex = new Vertex(VectorMatrixFactory.newVector(
+				Vertex vertex = new Vertex(VectorFactory.createVector3(
 						deltaU * i, height, deltaV * j));
 				mesh.addVertex(vertex);
-				mesh.addTextureCoordinate(VectorMatrixFactory.newVector(i
+				mesh.addTextureCoordinate(VectorFactory.createVector3(i
 						* deltaU, 1 - j * deltaV, 0));
 			}
 		}
