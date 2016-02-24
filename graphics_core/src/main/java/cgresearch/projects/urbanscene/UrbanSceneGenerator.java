@@ -7,7 +7,9 @@ import cgresearch.core.math.IVector3;
 import cgresearch.core.math.VectorMatrixFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -97,6 +99,9 @@ public class UrbanSceneGenerator {
     double blockWidth = STREET_WIDTH + 2 * PROPERTY_WIDTH;
     double blockHeight = blockWidth;
     IVector3 origin = VectorMatrixFactory.newIVector3(xIndex * blockWidth, 0, yIndex * blockHeight);
+    ITriangleMesh ground = getGroundPlane(origin, blockWidth, blockHeight);
+    CgNode groundNode = new CgNode(ground, "Ground");
+    blockNode.addChild(groundNode);
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 2; j++) {
         IVector3 houseOrigin =
@@ -108,6 +113,29 @@ public class UrbanSceneGenerator {
       }
     }
     return blockNode;
+  }
+
+  /**
+   * Generates the ground for a block
+   *
+   * @param origin Origin of the block
+   * @param blockWidth Width of the block
+   * @param blockHeight Heightof the block
+   * @return Ground plane as triangle mesh
+   */
+  private ITriangleMesh getGroundPlane(IVector3 origin, double blockWidth, double blockHeight) {
+    ITriangleMesh mesh = new TriangleMesh();
+    for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < 2; j++) {
+        IVector3 corner = origin.add(VectorMatrixFactory.newIVector3(i * blockWidth, 0, j * blockHeight));
+        mesh.addVertex(new Vertex(corner));
+      }
+    }
+    mesh.addTriangle(0, 2, 1);
+    mesh.addTriangle(2, 3, 1);
+    mesh.computeTriangleNormals();
+    mesh.computeVertexNormals();
+    return mesh;
   }
 
   /**
@@ -125,6 +153,7 @@ public class UrbanSceneGenerator {
     mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
     mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.8, 0.8, 0.8));
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    mesh.getMaterial().setThrowsShadow(true);
     //mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
     TriangleMeshTransformation.multiply(mesh,
         VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0, 1, 0), Math.random() * Math.PI * 2));
