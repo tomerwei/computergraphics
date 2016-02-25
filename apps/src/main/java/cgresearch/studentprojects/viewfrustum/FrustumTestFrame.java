@@ -4,7 +4,6 @@ package cgresearch.studentprojects.viewfrustum;
  * Testframe fuer View Frustum Culling
  */
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cgresearch.JoglAppLauncher;
@@ -30,7 +29,6 @@ import cgresearch.rendering.jogl.misc.OctreeFactoryStrategyScene;
 import cgresearch.rendering.jogl.misc.ViewFrustumCulling;
 
 public class FrustumTestFrame extends CgApplication {
-
   public static OctreeFactoryStrategyScene scene;
 
   public static final double objectsTransparency = 0.5;
@@ -39,37 +37,44 @@ public class FrustumTestFrame extends CgApplication {
   public FrustumTestFrame() {
 
     getCgRootNode().setUseBlending(true);
-    getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum
+    getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View
+                                                    // Frustum
                                                     // Culling einschalten
 
     ITriangleMesh cow = loadMesh("meshes/cow.obj");
     ITriangleMesh bunny = loadMesh("meshes/bunny.obj");
     ITriangleMesh fenja = loadMesh("meshes/fenja02.obj");
-    ITriangleMesh fenjaDown = loadMesh("meshes/fenja02.obj");
-    ITriangleMesh fenjaUp = loadMesh("meshes/fenja02.obj");
+    ITriangleMesh bunnyDown = loadMesh("meshes/bunny.obj");
+    ITriangleMesh bunnyUp = loadMesh("meshes/bunny.obj");
     ITriangleMesh pumpkin = loadMesh("meshes/pumpkin.obj");
-
-    // ############### Transformationen ###############
+    //
+    //// // ############### Transformations ###############
     TriangleMeshTransformation.translate(cow, VectorFactory.createVector3(1.0, 0.0, 9.0));
-    TriangleMeshTransformation.translate(bunny, VectorFactory.createVector3(0.0, 0.0 /*1.15*/, 9.0));
+    TriangleMeshTransformation.translate(bunny,
+        VectorFactory.createVector3(0.0, 0.0 /* 1.15 */, 9.0));
     TriangleMeshTransformation.scale(bunny, 3.0);
     TriangleMeshTransformation.scale(fenja, 0.1);
     TriangleMeshTransformation.translate(fenja, VectorFactory.createVector3(0.5, 0.0, 25.0));
-    TriangleMeshTransformation.scale(fenjaDown, 0.1);
-    TriangleMeshTransformation.translate(fenjaDown, VectorFactory.createVector3(2.0, -8.0, 8.0));
-    TriangleMeshTransformation.scale(fenjaUp, 0.1);
-    TriangleMeshTransformation.translate(fenjaUp, VectorFactory.createVector3(-1.0, 2.0, 0.5));
+    // TriangleMeshTransformation.scale(bunnyDown, 0.1);
+    TriangleMeshTransformation.scale(bunnyDown, 3.0);
+    TriangleMeshTransformation.translate(bunnyDown, VectorFactory.createVector3(0.0, 0.0, -8.0));
+    TriangleMeshTransformation.scale(bunnyUp, 3.0);
+    TriangleMeshTransformation.translate(bunnyUp, VectorFactory.createVector3(0.0, 2.0, 0.5));
     TriangleMeshTransformation.scale(pumpkin, 0.02);
-    TriangleMeshTransformation.translate(pumpkin, VectorFactory.createVector3(0.0, 0.0, 20.5));
-    // ############### Transformationen ###############
-
+    TriangleMeshTransformation.translate(pumpkin, VectorFactory.createVector3(0.0, 0.0, 23.5));
+    // // ############### Transformationen ###############
+    //
     getCgRootNode().addChild(new CgNode(cow, "cow"));
     getCgRootNode().addChild(new CgNode(bunny, "bunny"));
     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
-    getCgRootNode().addChild(new CgNode(fenjaDown, "fenjaDown"));
-    getCgRootNode().addChild(new CgNode(fenjaUp, "fenjaUp"));
+    getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
+    getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
     getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
-    
+
+    // UrbanSceneGenerator usg = new UrbanSceneGenerator();
+    // CgNode usNode = usg.buildScene(2, 2);
+    // getCgRootNode().addChild(usNode);
+
     rootNode = getCgRootNode();
   }
 
@@ -111,9 +116,11 @@ public class FrustumTestFrame extends CgApplication {
     ResourcesLocator.getInstance().parseIniFile("resources.ini");
 
     CgApplication app = new FrustumTestFrame();
-    if(!rootNode.useViewFrustumCulling()){
-        ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), 0.1, 10.0, rootNode);
-        vfc.computeVisibleScenePart(app.getCgRootNode()); 
+    if (!rootNode.useViewFrustumCulling()) {
+      ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), Camera.getInstance().getNearClippingPlane(),
+          Camera.getInstance().getFarClippingPlane(), rootNode);
+      // 0.0, 230, rootNode);
+      vfc.computeVisibleScenePart(app.getCgRootNode());
     }
     JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
     appLauncher.create(app);

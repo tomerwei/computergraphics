@@ -13,7 +13,6 @@ import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 import cgresearch.graphics.datastructures.GenericVertex;
-import cgresearch.graphics.datastructures.polygon.PolygonEdge;
 
 /**
  * Parent class for surface simplification methods in 2D and 3D
@@ -163,11 +162,9 @@ public abstract class QuadrikErrorMetricsSimplification {
       return;
     }
 
-    PolygonEdge queueEdge = (PolygonEdge) queue.poll();
+    GenericEdge queueEdge = queue.poll();
     GenericVertex p = collapse(queueEdge, edgesQems.get(queueEdge).newPos);
     pointQems.put(p, edgesQems.get(queueEdge).Q);
-
-    // TODO: Remove collapsed edges from queue
 
     // Update incident edges
     List<GenericEdge> incidentEdges = getIncidentEdges(p);
@@ -198,10 +195,20 @@ public abstract class QuadrikErrorMetricsSimplification {
     // }
   }
 
-  protected abstract List<GenericEdge> getIncidentEdges(GenericVertex p);
+  /**
+   * Return list of incident edges of a vertex.
+   * 
+   * @param vertex
+   *          Vertex
+   * @return List of incident edges.
+   */
+  protected abstract List<GenericEdge> getIncidentEdges(GenericVertex vertex);
 
   /**
-   * Collapse the specified edge, provides the new vertex position.
+   * Collapse the specified edge, remove collapsed edges from queue, set new
+   * vertex position for remaining vertex.
+   * 
+   * @Return Remaining vertex
    */
   protected abstract GenericVertex collapse(GenericEdge edge, Vector newPos);
 

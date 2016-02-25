@@ -386,4 +386,13 @@ public class Vector implements Serializable {
     }
     return true;
   }
+
+  /**
+   * Set the coordinates of a 3D vector.
+   */
+  public void set(double x, double y, double z) {
+    set(0, x);
+    set(1, y);
+    set(2, z);
+  }
 }

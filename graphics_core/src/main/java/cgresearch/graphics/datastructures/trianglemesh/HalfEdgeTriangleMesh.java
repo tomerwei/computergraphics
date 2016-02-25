@@ -289,18 +289,22 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
       if (halfEdge.getOpposite() == null || halfEdge.getOpposite() == halfEdge
           || halfEdge != halfEdge.getOpposite().getOpposite()) {
         isConsistent = false;
+        throw new IllegalArgumentException();
       }
 
       // Test facet link
       if (halfEdge.getFacet() != getHalfEdge(i).getNext().getFacet()) {
         isConsistent = false;
+        throw new IllegalArgumentException();
       }
 
       // Test vertex
       if (halfEdge.getStartVertex() == null || !vertices.contains(halfEdge.getStartVertex())) {
         isConsistent = false;
+        throw new IllegalArgumentException();
       }
     }
+
     return isConsistent;
   }
 

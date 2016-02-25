@@ -36,11 +36,12 @@ public class SimplifcationFrame extends CgApplication {
   public SimplifcationFrame() {
     heMesh = new HalfEdgeTriangleMesh();
     CgNode meshNode = new CgNode(heMesh, "Mesh");
-    meshNode.setVisible(false);
+    meshNode.setVisible(true);
     getCgRootNode().addChild(meshNode);
 
     polygon = new Polygon();
     CgNode polyNode = new CgNode(polygon, "Polygon");
+    polyNode.setVisible(false);
     getCgRootNode().addChild(polyNode);
 
     // Coordinate system.
