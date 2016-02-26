@@ -6,6 +6,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
+import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
@@ -36,6 +37,10 @@ public class AnimationFrame extends CgApplication {
 
     CgNode node = new CgNode(arrow, "rotating arrow");
     getCgRootNode().addChild(node);
+
+    double d = Math.PI;
+    Vector v = VectorFactory.createVector3(d, d, d);
+    Logger.getInstance().message(v.toString(2));
   }
 
   /**

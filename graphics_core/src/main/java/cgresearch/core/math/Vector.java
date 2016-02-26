@@ -353,10 +353,11 @@ public class Vector implements Serializable {
    * @return String representation of the vector.
    */
   public String toString(int precision) {
-    String result = "(";
+    String result = "( ";
     for (int i = 0; i < getDimension(); i++) {
-      result += String.format("%." + precision, values[i]);
+      result += String.format("%." + precision + "f ", values[i]);
     }
+    result += ")\n";
     return result;
   }
 
