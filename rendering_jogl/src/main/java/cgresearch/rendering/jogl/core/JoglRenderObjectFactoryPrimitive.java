@@ -129,9 +129,11 @@ public class JoglRenderObjectFactoryPrimitive implements IRenderObjectsFactory<J
   public static JoglRenderNode createArrow(JoglRenderNode parentNode, CgNode cgNode, Arrow arrow) {
     ITriangleMesh mesh = TriangleMeshFactory.createArrow(arrow);
     mesh.computeTriangleNormals();
-    mesh.invertFaceNormals();
+    //mesh.invertFaceNormals();
     mesh.getMaterial().copyFrom(arrow.getMaterial());
-    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
+    // JoglRenderNode renderNode = new JoglRenderNode(cgNode, new
+    // RenderContentTriangleMesh(mesh));
+    JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentPrimitive(arrow, mesh));
     return renderNode;
   }
 
