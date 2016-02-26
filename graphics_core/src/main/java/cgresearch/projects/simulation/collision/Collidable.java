@@ -1,6 +1,6 @@
 package cgresearch.projects.simulation.collision;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 public interface Collidable {
 
@@ -9,11 +9,11 @@ public interface Collidable {
 	 * 
 	 * @return True on case of collision, false otherwise.
 	 */
-	public boolean collides(IVector3 x);
+	public boolean collides(Vector x);
 
 	/**
 	 * Compute the closest surface point for the given position.
 	 */
-	public IVector3 projectToSurface(IVector3 x);
+	public Vector projectToSurface(Vector x);
 
 }

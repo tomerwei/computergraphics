@@ -3,16 +3,14 @@ package cgresearch.studentprojects.shadowvolumes;
 import cgresearch.AppLauncher;
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.MathHelpers;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.MathHelpers;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.*;
 import cgresearch.graphics.fileio.ObjFileReader;
-import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
-import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.LightSource;
@@ -47,14 +45,14 @@ public class ShadowVolumeDemo extends CgApplication {
     CgNode node = loadRoom();
     // Add objects
     if (node != null) {
-      loadTable("Table", VectorMatrixFactory.newIVector3(), 0, node);
-      loadChair("Chair 1", VectorMatrixFactory.newIVector3(-5, 0, 0), 90, node);
-      loadChair("Chair 2", VectorMatrixFactory.newIVector3(5, 0, 0), 270, node);
+      loadTable("Table", VectorFactory.createVector(3), 0, node);
+      loadChair("Chair 1", VectorFactory.createVector3(-5, 0, 0), 90, node);
+      loadChair("Chair 2", VectorFactory.createVector3(5, 0, 0), 270, node);
     }
 
     // Set light source
-    lightSource.setPosition(VectorMatrixFactory.newIVector3(0, 30, 0));
-    lightSource.setColor(VectorMatrixFactory.newIVector3(1,1,1));
+    lightSource.setPosition(VectorFactory.createVector3(0, 30, 0));
+    lightSource.setColor(VectorFactory.createVector3(1,1,1));
     getCgRootNode().addLight(lightSource);
     getCgRootNode().setAllowShadows(true);
     getCgRootNode().setUseBlending(true);
@@ -72,15 +70,15 @@ public class ShadowVolumeDemo extends CgApplication {
     return null;
   }
 
-  private boolean loadChair(String name, IVector3 translate, int rotation, CgNode parent) {
+  private boolean loadChair(String name, Vector translate, int rotation, CgNode parent) {
     return loadObject(name, "meshes/scene_room/chair_01.obj", translate, rotation, parent);
   }
 
-  private boolean loadTable(String name, IVector3 translate, int rotation, CgNode parent) {
+  private boolean loadTable(String name, Vector translate, int rotation, CgNode parent) {
     return loadObject(name, "meshes/scene_room/table_01.obj", translate, rotation, parent);
   }
 
-  private boolean loadObject(String name, String path, IVector3 translate, int rotation, CgNode parent) {
+  private boolean loadObject(String name, String path, Vector translate, int rotation, CgNode parent) {
     CgNode node = getCgNode(path, translate, rotation);
     if (node != null) {
       node.getChildNode(0).setName(name);
@@ -90,7 +88,7 @@ public class ShadowVolumeDemo extends CgApplication {
     return false;
   }
 
-  private CgNode getCgNode(String meshPath, IVector3 translate, int rotation) {
+  private CgNode getCgNode(String meshPath, Vector translate, int rotation) {
     ITriangleMesh mesh = getObject(meshPath);
     if (mesh != null) {
       mesh.getMaterial().setThrowsShadow(true);
@@ -99,7 +97,7 @@ public class ShadowVolumeDemo extends CgApplication {
         t.addTranslation(translate);
       }
       if (rotation != 0) {
-        t.addTransformation(VectorMatrixFactory.getRotationMatrix(VectorMatrixFactory.newIVector3(0,1,0),
+        t.addTransformation(MatrixFactory.createRotationMatrix(VectorFactory.createVector3(0,1,0),
                 MathHelpers.degree2radiens(rotation)));
       }
       CgNode transformation = new CgNode(t, "Transformation");
@@ -125,7 +123,7 @@ public class ShadowVolumeDemo extends CgApplication {
   public void update(Observable o, Object arg) {
     if (o instanceof AnimationTimer) {
       lightSource
-          .setPosition(VectorMatrixFactory.newIVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
+          .setPosition(VectorFactory.createVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
       alpha += 0.05;
     }
   }

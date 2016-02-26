@@ -5,7 +5,7 @@
  */
 package cgresearch.graphics.datastructures.implicitfunction;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Implicit function of a 3-dimensional torus.
@@ -46,7 +46,7 @@ public class ImplicitFunction3DTorus implements IImplicitFunction3D {
      * )
      */
     @Override
-    public double f(IVector3 p) {
+    public double f(Vector p) {
         return Math
                 .pow((Math.pow(p.get(0), 2) + Math.pow(p.get(1), 2)
                         + Math.pow(p.get(2), 2) + Math.pow(radiusOuter, 2) - Math

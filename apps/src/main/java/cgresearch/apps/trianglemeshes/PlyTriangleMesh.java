@@ -9,7 +9,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.PlyFileReader;
@@ -43,7 +43,7 @@ public class PlyTriangleMesh extends CgApplication {
 
     mesh.fitToUnitBox();
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR4));
+    mesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector(Material.PALETTE2_COLOR4));
     mesh.computeTriangleNormals();
     mesh.computeVertexNormals();
     mesh.getMaterial().setRenderMode(Normals.PER_VERTEX);

@@ -17,7 +17,7 @@ public class Solver {
    *          Right-hand-side.
    * @return Solution vector x (if it exists), null (otherwise)
    */
-  public static IVector solveLUDecomposition(IMatrix A, IVector b) {
+  public static Vector solveLUDecomposition(Matrix A, Vector b) {
     if (A == null || A.getNumberOfRows() != A.getNumberOfColumns() || A.getNumberOfColumns() != b.getDimension()) {
       throw new IllegalArgumentException();
     }
@@ -26,7 +26,7 @@ public class Solver {
     // L = Triangular matrix below main diagonal + I
     // U = Triangular matrix above (including) main diagonal
     int n = A.getNumberOfColumns();
-    IMatrix LU = new Matrix(A);
+    Matrix LU = new Matrix(A);
     for (int k = 0; k < n - 1; k++) {
       for (int i = k + 1; i < n; i++) {
         LU.set(i, k, LU.get(i, k) / LU.get(k, k));
@@ -37,7 +37,7 @@ public class Solver {
     }
 
     // Ly = b
-    IVector y = new Vector(n);
+    Vector y = new Vector(n);
     for (int rowIndex = 0; rowIndex < n; rowIndex++) {
       double offset = 0;
       for (int columnIndex = 0; columnIndex < rowIndex; columnIndex++) {
@@ -47,7 +47,7 @@ public class Solver {
     }
 
     // Ux = y
-    IVector x = new Vector(n);
+    Vector x = new Vector(n);
     for (int rowIndex = n - 1; rowIndex >= 0; rowIndex--) {
       double offset = 0;
       for (int columnIndex = rowIndex + 1; columnIndex < n; columnIndex++) {
@@ -78,18 +78,18 @@ public class Solver {
    *          this threshold.
    * @return Solution vector x (if it exists), null (otherwise)
    */
-  public static IVector solveConjugateGradient(IMatrix A, IVector b, IVector x, int maxNumberOfIterations,
+  public static Vector solveConjugateGradient(Matrix A, Vector b, Vector x, int maxNumberOfIterations,
       double convergenceEpsilon) {
     if (A == null || x == null || b == null || A.getNumberOfRows() != A.getNumberOfColumns()
         || A.getNumberOfColumns() != b.getDimension() || x.getDimension() != b.getDimension()) {
       throw new IllegalArgumentException();
     }
 
-    IVector r = b.subtract(A.multiply(x));
-    IVector p = new Vector(r);
+    Vector r = b.subtract(A.multiply(x));
+    Vector p = new Vector(r);
     int iterationCounter = 0;
     while (iterationCounter < maxNumberOfIterations && r.getSqrNorm() > convergenceEpsilon * convergenceEpsilon) {
-      IVector s = A.multiply(p);
+      Vector s = A.multiply(p);
       double alpha = r.multiply(r) / p.multiply(s);
       x = x.add(p.multiply(alpha));
       double betaLower = r.multiply(r);

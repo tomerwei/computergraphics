@@ -3,8 +3,8 @@ package cgresearch.projects.simulation.ball;
 import java.util.List;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;
@@ -21,8 +21,8 @@ import cgresearch.projects.simulation.solver.Solver.SolverType;
  */
 public class BallSimulation extends Simulation implements Accelleration {
 
-	private IVector3 x = VectorMatrixFactory.newIVector3();
-	private IVector3 v = VectorMatrixFactory.newIVector3();
+	private Vector x = VectorFactory.createVector(3);
+	private Vector v = VectorFactory.createVector(3);
 	private double mass = 1;
 
 	/**
@@ -35,7 +35,7 @@ public class BallSimulation extends Simulation implements Accelleration {
 	}
 
 	@Override
-	protected void preSimulationStep(List<IVector3> x, List<IVector3> v) {
+	protected void preSimulationStep(List<Vector> x, List<Vector> v) {
 		if (x.size() > 1) {
 			x.clear();
 		}
@@ -43,10 +43,10 @@ public class BallSimulation extends Simulation implements Accelleration {
 			v.clear();
 		}
 		while (x.size() < 1) {
-			x.add(VectorMatrixFactory.newIVector3());
+			x.add(VectorFactory.createVector(3));
 		}
 		while (v.size() < 1) {
-			v.add(VectorMatrixFactory.newIVector3());
+			v.add(VectorFactory.createVector(3));
 		}
 
 		x.get(0).copy(this.x);
@@ -55,7 +55,7 @@ public class BallSimulation extends Simulation implements Accelleration {
 	}
 
 	@Override
-	protected void postSimulationStep(List<IVector3> x, List<IVector3> v) {
+	protected void postSimulationStep(List<Vector> x, List<Vector> v) {
 		this.x.copy(x.get(0));
 		this.v.copy(v.get(0));
 
@@ -74,7 +74,7 @@ public class BallSimulation extends Simulation implements Accelleration {
 	protected void createOutput() {
 		ITriangleMesh mesh = TriangleMeshFactory.createSphere(x, 0.1, 20);
 		mesh.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newIVector3(1, 0, 0));
+				VectorFactory.createVector3(1, 0, 0));
 		mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 		String name = String.format("ball_%d", getCurrentSimulationStep());
 		CgNode node = new CgNode(mesh, name);
@@ -83,22 +83,22 @@ public class BallSimulation extends Simulation implements Accelleration {
 
 	@Override
 	protected void resetSimulation() {
-		x = VectorMatrixFactory.newIVector3(0, 0, 0);
-		v = VectorMatrixFactory.newIVector3(2, 4, 2);
+		x = VectorFactory.createVector3(0, 0, 0);
+		v = VectorFactory.createVector3(2, 4, 2);
 	}
 
 	@Override
-	public IVector3 eval(int index) {
-		return VectorMatrixFactory.newIVector3(0, -1, 0).multiply(9.81 / mass);
+	public Vector eval(int index) {
+		return VectorFactory.createVector3(0, -1, 0).multiply(9.81 / mass);
 	}
 
 	@Override
-	public IVector3 eval(int index, IVector3 pos) {
-		return VectorMatrixFactory.newIVector3(0, -1, 0).multiply(9.81 / mass);
+	public Vector eval(int index, Vector pos) {
+		return VectorFactory.createVector3(0, -1, 0).multiply(9.81 / mass);
 	}
 
 	@Override
-	public IVector3 getMassPointPosition(int index) {
+	public Vector getMassPointPosition(int index) {
 		if (index == 0) {
 			return x;
 		} else {

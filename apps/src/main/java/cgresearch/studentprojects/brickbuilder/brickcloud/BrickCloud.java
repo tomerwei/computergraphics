@@ -21,12 +21,12 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.ListenableUndirectedGraph;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.studentprojects.brickbuilder.brickcloud.BrickRotation;
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
@@ -38,11 +38,11 @@ public class BrickCloud implements IBrickCloud {
 	/**
 	 * Location of the cloud (lower left corner).
 	 */
-	private IVector3 locationLowerLeft;
+	private Vector locationLowerLeft;
 	/**
 	 * Resolution of the cloud in every 3 axis.
 	 */
-	private IVectorInt3 resolution;
+	private VectorInt3 resolution;
 	/**
 	 * Bounding box of the brick cloud.
 	 */
@@ -74,13 +74,13 @@ public class BrickCloud implements IBrickCloud {
 	 * @param resolution
 	 * @param brickSet
 	 */
-	public BrickCloud(IVector3 locationLowerLeft, IVectorInt3 resolution, IBrickSet brickSet) {
-		this.locationLowerLeft = VectorMatrixFactory.newIVector3(locationLowerLeft);
+	public BrickCloud(Vector locationLowerLeft, VectorInt3 resolution, IBrickSet brickSet) {
+		this.locationLowerLeft = VectorFactory.createVector(locationLowerLeft);
 		this.resolution = resolution;
 		this.brickSet = brickSet;
 		
 		this.boundingBox = new BoundingBox(this.locationLowerLeft,
-				this.locationLowerLeft.add(VectorMatrixFactory.newIVector3(
+				this.locationLowerLeft.add(VectorFactory.createVector3(
 						brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_0) * this.resolution.getX(), 
 						brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_1) * this.resolution.getY(),
 						brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_2) * this.resolution.getZ()
@@ -121,20 +121,20 @@ public class BrickCloud implements IBrickCloud {
 	}
 
 	@Override
-	public IVector3 getDimensions() {
-		return VectorMatrixFactory.newIVector3(
+	public Vector getDimensions() {
+		return VectorFactory.createVector3(
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_0) * resolution.getX(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_1) * resolution.getY(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_2) * resolution.getZ());
 	}
 
 	@Override
-	public IVector3 getLocationLowerLeft() {
-		return VectorMatrixFactory.newIVector3(locationLowerLeft);
+	public Vector getLocationLowerLeft() {
+		return VectorFactory.createVector(locationLowerLeft);
 	}
 
 	@Override
-	public IVectorInt3 getResolutions() {
+	public VectorInt3 getResolutions() {
 		return resolution;
 	}
 
@@ -154,23 +154,23 @@ public class BrickCloud implements IBrickCloud {
 	}
 
 	@Override
-	public BrickInstance getBrickAt(IVectorInt3 pos) {
+	public BrickInstance getBrickAt(VectorInt3 pos) {
 		return brickArray[pos.getZ()][pos.getY()][pos.getX()];
 	}
 	
 	@Override
-	public void addBrick(IBrick brick, IVectorInt3 pos, BrickRotation rot) {
+	public void addBrick(IBrick brick, VectorInt3 pos, BrickRotation rot) {
 		addBrick(brick, pos, rot, null);
 	}
 
 	@Override
-	public void addBrick(IBrick brick, IVectorInt3 pos, BrickRotation rot, IColorRGB color) {
+	public void addBrick(IBrick brick, VectorInt3 pos, BrickRotation rot, IColorRGB color) {
 		IColorRGB col = (color != null ? color.getNearestColor(brickSet.getBrickColors()) : null);
 		BrickInstance b = new BrickInstance(brick, pos, rot, col);
 		brickList.get(pos.getY()).add(b);
 		brickGraph.addVertex(b.getBrickIdString());
 		
-		for (IVectorInt3 v : b.getBrickUnitPositions()) {
+		for (VectorInt3 v : b.getBrickUnitPositions()) {
 			int posX = v.getX();
 			int posY = v.getY();
 			int posZ = v.getZ();
@@ -189,27 +189,27 @@ public class BrickCloud implements IBrickCloud {
 	}
 	
 	@Override
-	public void removeBrick(IVectorInt3 pos) {
+	public void removeBrick(VectorInt3 pos) {
 		BrickInstance b = brickArray[pos.getZ()][pos.getY()][pos.getX()];
 		if (b == null) return;
 		
 		brickList.get(pos.getY()).remove(b);
 		brickGraph.removeVertex(b.getBrickIdString());
 		
-		for (IVectorInt3 v : b.getBrickUnitPositions()) {
+		for (VectorInt3 v : b.getBrickUnitPositions()) {
 			brickArray[v.getZ()][v.getY()][v.getX()] = null;
 		}
 	}
 
 	@Override
-	public void removeBrickAndFill(IVectorInt3 pos) {
+	public void removeBrickAndFill(VectorInt3 pos) {
 		BrickInstance b = brickArray[pos.getZ()][pos.getY()][pos.getX()];
 		if (b == null) return;
 		
 		brickList.get(pos.getY()).remove(b);
 		brickGraph.removeVertex(b.getBrickIdString());
 		
-		for (IVectorInt3 v : b.getBrickUnitPositions()) {
+		for (VectorInt3 v : b.getBrickUnitPositions()) {
 			int posX = v.getX();
 			int posY = v.getY();
 			int posZ = v.getZ();
@@ -228,10 +228,10 @@ public class BrickCloud implements IBrickCloud {
 	}
 
 	@Override
-	public boolean canBrickReplaceBricksAt(IBrick brick, IVectorInt3 pos, BrickRotation rot) {		
-		List<IVectorInt3> unitList = BrickInstance.getBrickUnitPositions(brick, pos, rot);
+	public boolean canBrickReplaceBricksAt(IBrick brick, VectorInt3 pos, BrickRotation rot) {		
+		List<VectorInt3> unitList = BrickInstance.getBrickUnitPositions(brick, pos, rot);
 		// loop though each unit
-		for (IVectorInt3 v : unitList) {
+		for (VectorInt3 v : unitList) {
 			int posX = v.getX();
 			int posY = v.getY();
 			int posZ = v.getZ();				
@@ -249,19 +249,19 @@ public class BrickCloud implements IBrickCloud {
 			// no special brick?
 			if (b.getBrick() instanceof SpecialBrick) return false;
 			// is brick "inside" of given brick?
-			List<IVectorInt3> units = b.getBrickUnitPositions();
-			for (IVectorInt3 u : units) if (!unitList.contains(u)) return false;
+			List<VectorInt3> units = b.getBrickUnitPositions();
+			for (VectorInt3 u : units) if (!unitList.contains(u)) return false;
 		}
 		
 		return true;
 	}
 	
-	public boolean canBrickReplaceBricksAt(IBrick brick, IVectorInt3 pos, BrickRotation rot, IColorRGB col) {		
-		List<IVectorInt3> unitList = BrickInstance.getBrickUnitPositions(brick, pos, rot);
+	public boolean canBrickReplaceBricksAt(IBrick brick, VectorInt3 pos, BrickRotation rot, IColorRGB col) {		
+		List<VectorInt3> unitList = BrickInstance.getBrickUnitPositions(brick, pos, rot);
 		IColorRGB color = col;
 		
 		// loop though each unit
-		for (IVectorInt3 v : unitList) {
+		for (VectorInt3 v : unitList) {
 			int posX = v.getX();
 			int posY = v.getY();
 			int posZ = v.getZ();				
@@ -279,8 +279,8 @@ public class BrickCloud implements IBrickCloud {
 			// no special brick?
 			if (b.getBrick() instanceof SpecialBrick) return false;
 			// is brick "inside" of given brick?
-			List<IVectorInt3> units = b.getBrickUnitPositions();
-			for (IVectorInt3 u : units) if (!unitList.contains(u)) return false;
+			List<VectorInt3> units = b.getBrickUnitPositions();
+			for (VectorInt3 u : units) if (!unitList.contains(u)) return false;
 			// check for same color (of each brick)?
 			if (color == null)  {
 				color = b.getColor();
@@ -294,10 +294,10 @@ public class BrickCloud implements IBrickCloud {
 	}
 	
 	@Override
-	public int getBrickConnections(IBrick brick, IVectorInt3 pos, BrickRotation rot) {
+	public int getBrickConnections(IBrick brick, VectorInt3 pos, BrickRotation rot) {
 		Set<BrickInstance> foundBricks = new HashSet<BrickInstance>();		
 		// loop though each unit
-		for (IVectorInt3 v : BrickInstance.getBrickUnitPositions(brick, pos, rot)) {
+		for (VectorInt3 v : BrickInstance.getBrickUnitPositions(brick, pos, rot)) {
 			int posX = v.getX();
 			int posY = v.getY();
 			int posZ = v.getZ();			
@@ -361,10 +361,10 @@ public class BrickCloud implements IBrickCloud {
 	}
 
 	@Override
-	public IVector3 getBrickPosition(BrickInstance brick) {
-		IVector3 location = VectorMatrixFactory.newIVector3(locationLowerLeft);
+	public Vector getBrickPosition(BrickInstance brick) {
+		Vector location = VectorFactory.createVector(locationLowerLeft);
 		location = location.add(brickSet.getRootBrick().getDimensions().multiply(0.5));
-		location = location.add(VectorMatrixFactory.newIVector3(
+		location = location.add(VectorFactory.createVector3(
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_0) * brick.getPos().getX(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_1) * brick.getPos().getY(),
 				brickSet.getRootBrick().getDimensions().get(MathHelpers.INDEX_2) * brick.getPos().getZ()));
@@ -373,12 +373,12 @@ public class BrickCloud implements IBrickCloud {
 	}
 
 	@Override
-	public IVector3 getBrickDimensions(BrickInstance brick) {
-		IVector3 dim = brick.getBrick().getDimensions();
+	public Vector getBrickDimensions(BrickInstance brick) {
+		Vector dim = brick.getBrick().getDimensions();
 		switch (brick.getRotation()) {			
 			case ZDIR_POS:
 			case ZDIR_NEG:
-				return VectorMatrixFactory.newIVector3(dim.get(2), dim.get(1), dim.get(0));
+				return VectorFactory.createVector3(dim.get(2), dim.get(1), dim.get(0));
 			case XDIR_POS: 
 			case XDIR_NEG:
 			default:
@@ -398,7 +398,7 @@ public class BrickCloud implements IBrickCloud {
 	@Override
 	public List<BrickInstance> getBrickNeighbors(BrickInstance brick) {
 		Set<BrickInstance> set = new HashSet<BrickInstance>();		
-		for (IVectorInt3 v : brick.getBrickUnitPositions()) {
+		for (VectorInt3 v : brick.getBrickUnitPositions()) {
 			int posX = v.getX();
 			int posY = v.getY();
 			int posZ = v.getZ();

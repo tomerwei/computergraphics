@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.Transformation;
 
@@ -23,7 +24,7 @@ public class Movable extends CgNode {
 	/**
 	 * Path objects
 	 */
-	protected List<IVector3> path = new ArrayList<IVector3>();
+	protected List<Vector> path = new ArrayList<Vector>();
 
 	/**
 	 * Current interpolation value along the path
@@ -84,12 +85,12 @@ public class Movable extends CgNode {
 	private void updateTranslation() {
 		Transformation transformation = getTransformation();
 		if (path.size() >= 2) {
-			IVector3 pos = path.get(0).multiply(1 - alpha)
+			Vector pos = path.get(0).multiply(1 - alpha)
 					.add(path.get(1).multiply(alpha));
 			pos.set(1, heightField.getHeight(pos.get(0), pos.get(2)));
 			transformation.reset();
 			transformation.addTranslation(pos);
-			IMatrix3 rotation = getOrientation();
+			Matrix rotation = getOrientation();
 			transformation.addTransformation(rotation);
 		}
 	}
@@ -97,21 +98,21 @@ public class Movable extends CgNode {
 	/**
 	 * Get the orientation matrix of the movable.
 	 */
-	protected IMatrix3 getOrientation() {
-		IVector3 x = getNormalizedOrientation();
-		IVector3 y = VectorMatrixFactory.newIVector3(0, 1, 0);
-		IVector3 z = x.cross(y);
-		return VectorMatrixFactory.newIMatrix3(x, y, z);
+	protected Matrix getOrientation() {
+		Vector x = getNormalizedOrientation();
+		Vector y = VectorFactory.createVector3(0, 1, 0);
+		Vector z = x.cross(y);
+		return MatrixFactory.createMatrix3(x, y, z);
 	}
 
 	/**
 	 * Return the normalized orientation of the movable.
 	 */
-	private IVector3 getNormalizedOrientation() {
+	private Vector getNormalizedOrientation() {
 		if (path.size() < 2) {
-			return VectorMatrixFactory.newIVector3(1, 0, 0);
+			return VectorFactory.createVector3(1, 0, 0);
 		} else {
-			IVector3 dir = path.get(1).subtract(path.get(0));
+			Vector dir = path.get(1).subtract(path.get(0));
 			dir.normalize();
 			return dir;
 		}
@@ -122,7 +123,7 @@ public class Movable extends CgNode {
 	 */
 	public void moveToNextPathPoint() {
 		if (path.size() >= 2) {
-			IVector3 first = path.get(0);
+			Vector first = path.get(0);
 			path.remove(0);
 			path.add(first);
 		}

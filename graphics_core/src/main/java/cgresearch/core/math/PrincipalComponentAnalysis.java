@@ -8,9 +8,8 @@ package cgresearch.core.math;
 import java.util.ArrayList;
 import java.util.List;
 
+import Jama.EigenvalueDecomposition;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.jama.EigenvalueDecomposition;
-import cgresearch.core.math.jama.Matrix;
 
 /**
  * Apply a principle component analysis on a list of points in 3-space.
@@ -23,32 +22,32 @@ public class PrincipalComponentAnalysis {
   /**
    * Tangent in u-direction.
    */
-  private IVector3 tangentU = null;
+  private Vector tangentU = null;
 
   /**
    * Tangent in v-direction.
    */
-  private IVector3 tangentV = null;
+  private Vector tangentV = null;
 
   /**
    * Normal
    */
-  private IVector3 normal = null;
+  private Vector normal = null;
 
   /**
    * Centroid
    */
-  private IVector3 centroid = null;
+  private Vector centroid = null;
 
   /**
    * Eigenvalues
    */
-  private IVector3 eigenValues = null;
+  private Vector eigenValues = null;
 
   /**
    * Container for the points.
    */
-  List<IVector3> points = new ArrayList<IVector3>();
+  List<Vector> points = new ArrayList<Vector>();
 
   /**
    * Constructor
@@ -59,7 +58,7 @@ public class PrincipalComponentAnalysis {
   /**
    * Add an additional point.
    */
-  public void add(IVector3 point) {
+  public void add(Vector point) {
     points.add(point);
   }
 
@@ -74,69 +73,69 @@ public class PrincipalComponentAnalysis {
     }
 
     // Compute centroid
-    centroid = VectorMatrixFactory.newIVector3(0, 0, 0);
-    for (IVector3 p : points) {
+    centroid = VectorFactory.createVector3(0, 0, 0);
+    for (Vector p : points) {
       centroid = centroid.add(p);
     }
     centroid = centroid.multiply(1.0 / points.size());
 
     // Compute the covariance matrix
-    IMatrix3 M = VectorMatrixFactory.newIMatrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
-    for (IVector3 p : points) {
-      IVector3 d = p.subtract(centroid);
+    Matrix M = MatrixFactory.createMatrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    for (Vector p : points) {
+      Vector d = p.subtract(centroid);
       M = M.add(d.innerProduct(d));
     }
 
     // Singular value decomposition
-    Matrix jamaM = new Matrix(3, 3);
+    Jama.Matrix jamaM = new Jama.Matrix(3, 3);
     for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
       for (int colIndex = 0; colIndex < 3; colIndex++) {
         jamaM.set(colIndex, rowIndex, M.get(colIndex, rowIndex));
       }
     }
     EigenvalueDecomposition e = jamaM.eig();
-    Matrix V = e.getV();
-    Matrix D = e.getD();
+    Jama.Matrix V = e.getV();
+    Jama.Matrix D = e.getD();
 
-    normal = VectorMatrixFactory.newIVector3(V.get(0, 0), V.get(1, 0), V.get(2, 0));
-    tangentU = VectorMatrixFactory.newIVector3(V.get(0, 1), V.get(1, 1), V.get(2, 1));
-    tangentV = VectorMatrixFactory.newIVector3(V.get(0, 2), V.get(1, 2), V.get(2, 2));
-    eigenValues = VectorMatrixFactory.newIVector3(D.get(0, 0), D.get(1, 1), D.get(2, 2));
+    normal = VectorFactory.createVector3(V.get(0, 0), V.get(1, 0), V.get(2, 0));
+    tangentU = VectorFactory.createVector3(V.get(0, 1), V.get(1, 1), V.get(2, 1));
+    tangentV = VectorFactory.createVector3(V.get(0, 2), V.get(1, 2), V.get(2, 2));
+    eigenValues = VectorFactory.createVector3(D.get(0, 0), D.get(1, 1), D.get(2, 2));
 
   }
 
   /**
    * Getter.
    */
-  public IVector3 getTangentU() {
+  public Vector getTangentU() {
     return tangentU;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getTangentV() {
+  public Vector getTangentV() {
     return tangentV;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getNormal() {
+  public Vector getNormal() {
     return normal;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getCentroid() {
+  public Vector getCentroid() {
     return centroid;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getEigenValues() {
+  public Vector getEigenValues() {
     return eigenValues;
   }
 

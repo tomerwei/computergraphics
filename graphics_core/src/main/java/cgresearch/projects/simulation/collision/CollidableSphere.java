@@ -1,14 +1,14 @@
 package cgresearch.projects.simulation.collision;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 public class CollidableSphere implements Collidable {
 
 	/**
 	 * Sphere center
 	 */
-	private final IVector3 center = VectorMatrixFactory.newIVector3(0, 0, 0);
+	private final Vector center = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Radius of the sphere.
@@ -18,12 +18,12 @@ public class CollidableSphere implements Collidable {
 	/**
 	 * Constructor.
 	 */
-	public CollidableSphere(IVector3 center, double radius) {
+	public CollidableSphere(Vector center, double radius) {
 		this.center.copy(center);
 		this.radius = radius;
 	}
 
-	public IVector3 getCenter() {
+	public Vector getCenter() {
 		return center;
 	}
 
@@ -32,13 +32,13 @@ public class CollidableSphere implements Collidable {
 	}
 
 	@Override
-	public boolean collides(IVector3 x) {
+	public boolean collides(Vector x) {
 		return x.subtract(center).getSqrNorm() < radius * radius;
 	}
 
 	@Override
-	public IVector3 projectToSurface(IVector3 x) {
-		IVector3 direction = x.subtract(center);
+	public Vector projectToSurface(Vector x) {
+		Vector direction = x.subtract(center);
 		direction.normalize();
 		direction = direction.multiply(radius);
 		return center.add(direction);

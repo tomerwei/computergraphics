@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a mass point in a cloth simulation.
@@ -28,26 +28,26 @@ public class MassPoint {
 	/**
 	 * Current velocity of the mass point
 	 */
-	private IVector3 v = VectorMatrixFactory.newIVector3(0, 0, 0);
+	private Vector v = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Position of the point in 3-spaces
 	 */
-	private IVector3 x = VectorMatrixFactory.newIVector3(0, 0, 0);
+	private Vector x = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Constructor.
 	 */
-	public MassPoint(IVector3 x, double mass) {
+	public MassPoint(Vector x, double mass) {
 		this.x.copy(x);
 		this.mass = mass;
 	}
 
-	public IVector3 getX() {
+	public Vector getX() {
 		return x;
 	}
 
-	public void setX(IVector3 x) {
+	public void setX(Vector x) {
 		this.x = x;
 	}
 
@@ -55,11 +55,11 @@ public class MassPoint {
 		return mass;
 	}
 
-	public IVector3 getVelocity() {
+	public Vector getVelocity() {
 		return v;
 	}
 
-	public void setVelocity(IVector3 velocity) {
+	public void setVelocity(Vector velocity) {
 		this.v.copy(velocity);
 	}
 

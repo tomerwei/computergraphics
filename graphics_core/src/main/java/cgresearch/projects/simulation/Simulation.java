@@ -3,8 +3,8 @@ package cgresearch.projects.simulation;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;
@@ -42,10 +42,10 @@ public abstract class Simulation {
 
 	private Thread simulationThread = null;
 
-	private List<IVector3> x = new ArrayList<IVector3>();
-	private List<IVector3> v = new ArrayList<IVector3>();
-	private List<IVector3> newX = new ArrayList<IVector3>();
-	private List<IVector3> newV = new ArrayList<IVector3>();
+	private List<Vector> x = new ArrayList<Vector>();
+	private List<Vector> v = new ArrayList<Vector>();
+	private List<Vector> newX = new ArrayList<Vector>();
+	private List<Vector> newV = new ArrayList<Vector>();
 
 	/**
 	 * These mass points are fixed
@@ -129,7 +129,7 @@ public abstract class Simulation {
 	 * @param v
 	 *            Velocities.
 	 */
-	protected abstract void preSimulationStep(List<IVector3> x, List<IVector3> v);
+	protected abstract void preSimulationStep(List<Vector> x, List<Vector> v);
 
 	/**
 	 * Provides the updated values for x an v.
@@ -139,8 +139,8 @@ public abstract class Simulation {
 	 * @param v
 	 *            Velocities.
 	 */
-	protected abstract void postSimulationStep(List<IVector3> x,
-			List<IVector3> v);
+	protected abstract void postSimulationStep(List<Vector> x,
+			List<Vector> v);
 
 	/**
 	 * Return an object which computes the acceleration values.
@@ -157,10 +157,10 @@ public abstract class Simulation {
 			// Make sure, the array have the correct size
 			preSimulationStep(x, v);
 			while (newX.size() < x.size()) {
-				newX.add(VectorMatrixFactory.newIVector3());
+				newX.add(VectorFactory.createVector(3));
 			}
 			while (newV.size() < v.size()) {
-				newV.add(VectorMatrixFactory.newIVector3());
+				newV.add(VectorFactory.createVector(3));
 			}
 
 			// Compute integration step
@@ -181,7 +181,7 @@ public abstract class Simulation {
 						newX.set(massIndex, collidable.projectToSurface(newX
 								.get(massIndex)));
 						newV.set(massIndex,
-								VectorMatrixFactory.newIVector3(0, 0, 0));
+								VectorFactory.createVector3(0, 0, 0));
 					}
 				}
 			}
@@ -230,12 +230,12 @@ public abstract class Simulation {
 	private void createBoundaryPointNodes() {
 		for (int i = 0; i < getNumberOfBoundaryPoints(); i++) {
 			Integer boundaryPointIndex = getBoundaryPoint(i);
-			IVector3 pos = getMassPointPosition(boundaryPointIndex);
+			Vector pos = getMassPointPosition(boundaryPointIndex);
 			ITriangleMesh mesh = TriangleMeshFactory
 					.createSphere(pos, 0.05, 10);
 			mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 			mesh.getMaterial().setReflectionDiffuse(
-					VectorMatrixFactory.newIVector3(246.0 / 255.0,
+					VectorFactory.createVector3(246.0 / 255.0,
 							157.0 / 255.0, 0));
 			CgNode node = new CgNode(mesh, "boundary point");
 			supplementNode.addChild(node);
@@ -258,7 +258,7 @@ public abstract class Simulation {
 				.createQuadWithTextureCoordinates();
 		meshPlane.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		meshPlane.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
+				VectorFactory.createVector3(0.75, 0.25, 0.25));
 
 		Transformation transformation = new Transformation();
 		transformation.addTranslation(plane.getPoint());
@@ -276,7 +276,7 @@ public abstract class Simulation {
 				sphere.getCenter(), sphere.getRadius(), 10);
 		meshSphere.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		meshSphere.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
+				VectorFactory.createVector3(0.75, 0.25, 0.25));
 		CgNode sphereNode = new CgNode(meshSphere, "Sphere");
 		sphereNode.setVisible(false);
 		supplementNode.addChild(sphereNode);
@@ -328,7 +328,7 @@ public abstract class Simulation {
 	/**
 	 * Return the position of the mass point with the specified index.
 	 */
-	public abstract IVector3 getMassPointPosition(int index);
+	public abstract Vector getMassPointPosition(int index);
 
 	/**
 	 * Getter.

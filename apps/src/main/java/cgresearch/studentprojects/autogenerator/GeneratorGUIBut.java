@@ -21,10 +21,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cgresearch.core.math.IVector;
-import cgresearch.core.math.IVector3;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -689,16 +689,16 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 		// Reduziert
 
-		IVector x = new Vector(skalar);
-		IVector y = new Vector(skalar);
+		Vector x = new Vector(skalar);
+		Vector y = new Vector(skalar);
 
 		// Nicht reduziert
 
-		// IVector x = new Vector(butVektor);
-		// IVector y = new Vector(butVektor);
+		// Vector x = new Vector(butVektor);
+		// Vector y = new Vector(butVektor);
 
-		IVector xc = new Vector(butVektor);
-		IVector yc = new Vector(butVektor);
+		Vector xc = new Vector(butVektor);
+		Vector yc = new Vector(butVektor);
 
 		for (int i = 0; i < butVektor; i++) {
 			xc.set(i, car.getX().get(i) - analyzer.getPcaX().getCentroid().get(i));
@@ -740,8 +740,8 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 		// Eigen Auto new
 
-		IVector xn = new Vector(butVektor);
-		IVector yn = new Vector(butVektor);
+		Vector xn = new Vector(butVektor);
+		Vector yn = new Vector(butVektor);
 
 		for (int i = 0; i < butVektor; i++) {
 			double xx = 0;
@@ -759,9 +759,9 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 		// New Auto
 
-		IVector ax = new Vector(butVektor);
-		IVector ay = new Vector(butVektor);
-		IVector az = new Vector(butVektor);
+		Vector ax = new Vector(butVektor);
+		Vector ay = new Vector(butVektor);
+		Vector az = new Vector(butVektor);
 
 		System.out.println("Alpha Y");
 		
@@ -1058,15 +1058,15 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 	public void loadBild() {
 
-		int a = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-3, -0.4, -0.1)));
-		int b = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(3, -0.4, -0.1)));
-		int c = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-3, 2.6, -0.1)));
-		int d = triangleMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(3, 2.6, -0.1)));
+		int a = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-3, -0.4, -0.1)));
+		int b = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(3, -0.4, -0.1)));
+		int c = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(-3, 2.6, -0.1)));
+		int d = triangleMesh.addVertex(new Vertex(VectorFactory.createVector3(3, 2.6, -0.1)));
 
-		int ta = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 0, -1));
-		int tb = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 0, -1));
-		int tc = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(0, 1, -1));
-		int td = triangleMesh.addTextureCoordinate(VectorMatrixFactory.newIVector3(1, 1, -1));
+		int ta = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(0, 0, -1));
+		int tb = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(1, 0, -1));
+		int tc = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(0, 1, -1));
+		int td = triangleMesh.addTextureCoordinate(VectorFactory.createVector3(1, 1, -1));
 
 		triangleMesh.addTriangle(new Triangle(a, b, c, ta, tb, tc));
 		triangleMesh.addTriangle(new Triangle(b, c, d, tb, tc, td));
@@ -1076,8 +1076,8 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 		triangleMesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 		triangleMesh.getMaterial().setRenderMode(Normals.PER_FACET);
-		triangleMesh.getMaterial().setReflectionAmbient(VectorMatrixFactory.newIVector3(1, 1, 1));
-		triangleMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(1, 1, 1));
+		triangleMesh.getMaterial().setReflectionAmbient(VectorFactory.createVector3(1, 1, 1));
+		triangleMesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(1, 1, 1));
 
 		final JFileChooser fc = new JFileChooser(
 				"C:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\");
@@ -1120,7 +1120,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		bm.getCurves().add(this.butterfly.getLeftTopWing().getTop());
 
 		bm.fillPoints();
-		for (IVector3 v : bm.getPoints()) {
+		for (Vector v : bm.getPoints()) {
 			System.out.println(v.get(0) + " / " + v.get(1) + " / " + v.get(2));
 		}
 		bm.fillArrays();
@@ -1193,11 +1193,11 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		// System.out.println("Size " + this.data.getY().size());
 		// System.out.println("Size " + this.data.getZ().size());
 
-		IVector newX = new Vector(butVektor);
-		IVector newY = new Vector(butVektor);
-		IVector newZ = new Vector(butVektor);
+		Vector newX = new Vector(butVektor);
+		Vector newY = new Vector(butVektor);
+		Vector newZ = new Vector(butVektor);
 
-		for (IVector iv : data.getX()) {
+		for (Vector iv : data.getX()) {
 			newX = null;
 			newX = new Vector(butVektor);
 			newX.set(0, iv.get(0));
@@ -1236,7 +1236,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 			data32.getX().add(newX);
 		}
 
-		for (IVector iv : data.getY()) {
+		for (Vector iv : data.getY()) {
 			newY = null;
 			newY = new Vector(butVektor);
 			newY.set(0, iv.get(0));
@@ -1275,7 +1275,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 			data32.getY().add(newY);
 		}
 
-		for (IVector iv : data.getZ()) {
+		for (Vector iv : data.getZ()) {
 			newZ = null;
 			newZ = new Vector(butVektor);
 			newZ.set(0, iv.get(0));

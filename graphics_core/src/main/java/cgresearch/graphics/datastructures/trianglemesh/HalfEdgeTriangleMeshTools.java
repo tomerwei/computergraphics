@@ -92,7 +92,7 @@ public class HalfEdgeTriangleMeshTools {
     return incidetFacets;
   }
 
-  public static List<HalfEdge> getIncidetEdges(HalfEdgeVertex vertex) {
+  public static List<HalfEdge> getIncidentHalfEdges(HalfEdgeVertex vertex) {
     List<HalfEdge> incidetEdges = new ArrayList<HalfEdge>();
     // Start with a the half edge connected to the vertex
     HalfEdge currentEdge = vertex.getHalfEdge();
@@ -175,11 +175,16 @@ public class HalfEdgeTriangleMeshTools {
     return incidentHalfEdges;
   }
 
-  public static boolean collapse(HalfEdgeTriangleMesh halfEdgeDataStructure, HalfEdge halfEdge) {
+  public class HalfEdgeCollapse {
+    public List<HalfEdge> removedHalfEdges = new ArrayList<HalfEdge>();
+    public HalfEdgeVertex remainingVertex = null;
+  }
+
+  public HalfEdgeCollapse collapse(HalfEdgeTriangleMesh halfEdgeDataStructure, HalfEdge halfEdge) {
 
     if (halfEdgeDataStructure.getNumberOfVertices() <= 4) {
       Logger.getInstance().error("Cannot collapse any further - tetrahedron reached.");
-      return false;
+      return null;
     }
 
     // Assemble information
@@ -187,20 +192,20 @@ public class HalfEdgeTriangleMeshTools {
     HalfEdge e0 = e2.getNext();
     if (e0.getNext() != halfEdge) {
       Logger.getInstance().error("Only valid half edge triangle meshes are supported - aborting collapse()");
-      return false;
+      return null;
     }
     HalfEdge e3 = halfEdge.getOpposite();
     HalfEdge e4 = e3.getNext();
     HalfEdge e5 = e4.getNext();
     if (e5.getNext() != e3) {
       Logger.getInstance().error("Only valid half edge triangle meshes are supported - aborting collapse()");
-      return false;
+      return null;
     }
     HalfEdgeVertex v0 = halfEdge.getStartVertex();
     HalfEdgeVertex v1 = e3.getStartVertex();
     HalfEdgeVertex v2 = e0.getStartVertex();
     HalfEdgeVertex v3 = e5.getStartVertex();
-    List<HalfEdge> v1HalfEdges = getIncidetEdges(v1);
+    List<HalfEdge> v1HalfEdges = getIncidentHalfEdges(v1);
     HalfEdge e0Opposite = e0.getOpposite();
     HalfEdge e2Opposite = e2.getOpposite();
     HalfEdge e4Opposite = e4.getOpposite();
@@ -238,10 +243,18 @@ public class HalfEdgeTriangleMeshTools {
 
     if (!halfEdgeDataStructure.checkConsistency()) {
       Logger.getInstance().error("Collapse caused an error!");
+      throw new IllegalArgumentException();
     }
 
     // Success!
-    return true;
+    HalfEdgeCollapse collapseInfo = new HalfEdgeCollapse();
+    collapseInfo.removedHalfEdges.add(e0);
+    collapseInfo.removedHalfEdges.add(halfEdge);
+    collapseInfo.removedHalfEdges.add(e2);
+    collapseInfo.removedHalfEdges.add(e3);
+    collapseInfo.removedHalfEdges.add(e4);
+    collapseInfo.removedHalfEdges.add(e5);
+    collapseInfo.remainingVertex = v0;
+    return collapseInfo;
   }
-
 }

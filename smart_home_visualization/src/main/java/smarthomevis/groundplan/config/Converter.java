@@ -20,7 +20,7 @@ import org.kabeja.parser.Parser;
 import org.kabeja.parser.ParserBuilder;
 
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import smarthomevis.groundplan.config.GPLine.LineType;
 
 /**
@@ -163,9 +163,9 @@ public class Converter
 			Point endPoint = l.getEndPoint();
 			
 			GPLine surface = new GPLine(currentLineId,
-				VectorMatrixFactory.newIVector3(startPoint.getX() * scale,
+				VectorFactory.createVector3(startPoint.getX() * scale,
 					startPoint.getY() * scale, startPoint.getZ() * scale),
-				VectorMatrixFactory.newIVector3(endPoint.getX() * scale,
+				VectorFactory.createVector3(endPoint.getX() * scale,
 					endPoint.getY() * scale, endPoint.getZ() * scale));
 					
 			surface.setLineType(lineType);

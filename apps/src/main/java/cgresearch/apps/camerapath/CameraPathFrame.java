@@ -24,7 +24,8 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -85,16 +86,16 @@ public class CameraPathFrame extends CgApplication {
         // Select random node
         ITriangleMesh mesh = new TriangleMesh(meshes.get((int) (Math.random() * meshes.size())));
         mesh.getMaterial()
-            .setReflectionDiffuse(VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random()));
+            .setReflectionDiffuse(VectorFactory.createVector3(Math.random(), Math.random(), Math.random()));
         mesh.getMaterial().setRenderMode(Material.Normals.PER_VERTEX);
 
         mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-        TriangleMeshTransformation.multiply(mesh, VectorMatrixFactory
-            .getRotationMatrix(VectorMatrixFactory.newIVector3(0, 1, 0), Math.random() * 2 * Math.PI));
+        TriangleMeshTransformation.multiply(mesh, MatrixFactory
+            .createRotationMatrix(VectorFactory.createVector3(0, 1, 0), Math.random() * 2 * Math.PI));
         CgNode node = new CgNode(mesh, "mesh (" + x + ", " + z + ")");
         Transformation transformation = new Transformation();
         CgNode transformationNode = new CgNode(transformation, "transformation");
-        transformation.addTranslation(VectorMatrixFactory.newIVector3(xPos, 0, zPos));
+        transformation.addTranslation(VectorFactory.createVector3(xPos, 0, zPos));
         transformationNode.addChild(node);
         getCgRootNode().addChild(transformationNode);
       }

@@ -5,7 +5,7 @@
  */
 package cgresearch.graphics.datastructures.trianglemesh;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
 /**
@@ -103,7 +103,7 @@ public abstract class ITriangleMesh extends ICgNodeContent {
    *          New texture coordinate.
    * @return Index of the texture coordinate.
    */
-  public abstract int addTextureCoordinate(IVector3 texCoord3f);
+  public abstract int addTextureCoordinate(Vector texCoord3f);
 
   /**
    * Getter.
@@ -119,7 +119,7 @@ public abstract class ITriangleMesh extends ICgNodeContent {
    *          Index of the texture coordinate
    * @return Texture coordinate at the specified index.
    */
-  public abstract IVector3 getTextureCoordinate(int index);
+  public abstract Vector getTextureCoordinate(int index);
 
   /**
    * Fit the mesh into the unit box centered at the origin.

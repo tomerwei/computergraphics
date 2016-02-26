@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.Vector3;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 import smarthomevis.groundplan.config.GPLine;
 
 public class GPUtility
 {
 	
-	public static IVector3 kreuzproduktVon(IVector3 a, IVector3 b)
+	public static Vector kreuzproduktVon(Vector a, Vector b)
 	{
 	BigDecimal aX = BigDecimal.valueOf(a.get(0));
 	BigDecimal aY = BigDecimal.valueOf(a.get(1));
@@ -33,10 +33,10 @@ public class GPUtility
 	double r_y = ((aZ.multiply(bX)).subtract(aX.multiply(bZ))).doubleValue();
 	double r_z = ((aX.multiply(bY)).subtract(aY.multiply(bX))).doubleValue();
 	
-	return new Vector3(r_x, r_y, r_z);
+	return new Vector(r_x, r_y, r_z);
 	}
 	
-	public static double punktproduktVon(IVector3 a, IVector3 b)
+	public static double punktproduktVon(Vector a, Vector b)
 	{
 	BigDecimal aX = BigDecimal.valueOf(a.get(0));
 	BigDecimal aY = BigDecimal.valueOf(a.get(1));
@@ -64,7 +64,7 @@ public class GPUtility
 	return cloneList;
 	}
 	
-	public static IVector3 normalizeVector(IVector3 vector)
+	public static Vector normalizeVector(Vector vector)
 	{
 	BigDecimal length = BigDecimal.valueOf(calcVectorLength(vector));
 	// System.out.println("Length: " + length);
@@ -81,16 +81,16 @@ public class GPUtility
 	// System.out.println(vX + "/" + length + " = " + x + "; " + vY + "/" +
 	// length
 	// + " = " + y + "; " + vZ + "/" + length + " = " + z);
-	return new Vector3(x.doubleValue(), y.doubleValue(), z.doubleValue());
+	return new Vector(x.doubleValue(), y.doubleValue(), z.doubleValue());
 	}
 	
-	public static double calcVectorLength(IVector3 vector)
+	public static double calcVectorLength(Vector vector)
 	{
 	return Math.sqrt(Math.pow(vector.get(0), 2.0) + Math.pow(vector.get(1), 2.0)
 		+ Math.pow(vector.get(2), 2.0));
 	}
 	
-	public static IVector3 substractOtherVector(IVector3 vector, IVector3 other)
+	public static Vector substractOtherVector(Vector vector, Vector other)
 	{
 	BigDecimal vX = BigDecimal.valueOf(vector.get(0));
 	BigDecimal vY = BigDecimal.valueOf(vector.get(1));
@@ -99,7 +99,7 @@ public class GPUtility
 	BigDecimal oY = BigDecimal.valueOf(other.get(1));
 	BigDecimal oZ = BigDecimal.valueOf(other.get(2));
 	
-	return new Vector3((vX.subtract(oX)).doubleValue(),
+	return new Vector((vX.subtract(oX)).doubleValue(),
 		(vY.subtract(oY)).doubleValue(), (vZ.subtract(oZ).doubleValue()));
 	}
 	
@@ -108,11 +108,11 @@ public class GPUtility
 	return (long) (d * 1e3) / 1e3;
 	}
 	
-	public static double angleBetweenVectors(IVector3 vector, IVector3 other)
+	public static double angleBetweenVectors(Vector vector, Vector other)
 	{
 	BigDecimal tmp_a = BigDecimal.valueOf(punktproduktVon(vector, other));
 	
-	// System.out.println("Punktprodukt von " + vector.toString(2) + " ° "
+	// System.out.println("Punktprodukt von " + vector.toString(2) + " ï¿½ "
 	// + other.toString(2) + " = " + tmp_a);
 	
 	BigDecimal lengthOfVector = BigDecimal.valueOf(calcVectorLength(vector));

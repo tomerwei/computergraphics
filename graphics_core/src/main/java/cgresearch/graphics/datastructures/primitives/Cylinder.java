@@ -1,8 +1,8 @@
 package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a cylinder. The base of the cylinders is at the point
@@ -13,12 +13,12 @@ import cgresearch.core.math.VectorMatrixFactory;
  */
 public class Cylinder extends IPrimitive {
 
-	private IVector3 point = VectorMatrixFactory.newIVector3(0, 0, 0);
+	private Vector point = VectorFactory.createVector3(0, 0, 0);
 
 	/**
 	 * Always normalized.
 	 */
-	private IVector3 direction = VectorMatrixFactory.newIVector3(0, 1, 0);
+	private Vector direction = VectorFactory.createVector3(0, 1, 0);
 
 	/**
 	 * Radius of the cylinder in [mm].
@@ -28,7 +28,7 @@ public class Cylinder extends IPrimitive {
 	/**
 	 * Constructor.
 	 */
-	public Cylinder(IVector3 point, IVector3 direction, double radius) {
+	public Cylinder(Vector point, Vector direction, double radius) {
 		this.point.copy(point);
 		this.direction.copy(direction);
 		this.direction.normalize();
@@ -58,14 +58,14 @@ public class Cylinder extends IPrimitive {
 	/**
 	 * Getter.
 	 */
-	public IVector3 getDirection() {
+	public Vector getDirection() {
 		return direction;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public IVector3 getPoint() {
+	public Vector getPoint() {
 		return point;
 	}
 
@@ -73,9 +73,9 @@ public class Cylinder extends IPrimitive {
 	 * Compute the squared distance of the distance of the point from the
 	 * cylinder's surface
 	 */
-	public double getDistance(IVector3 p) {
-		IVector3 start2P = p.subtract(point);
-		IVector3 projectedP = point.add(direction.multiply(start2P
+	public double getDistance(Vector p) {
+		Vector start2P = p.subtract(point);
+		Vector projectedP = point.add(direction.multiply(start2P
 				.multiply(direction)));
 		double distance = p.subtract(projectedP).getNorm();
 		return distance - radius;
@@ -84,9 +84,9 @@ public class Cylinder extends IPrimitive {
 	/**
 	 * Special version of the getDistance function which a new point vector.
 	 */
-	public double getDistance(IVector3 alternativePoint, IVector3 p) {
-		IVector3 start2P = p.subtract(alternativePoint);
-		IVector3 projectedP = alternativePoint.add(direction.multiply(start2P
+	public double getDistance(Vector alternativePoint, Vector p) {
+		Vector start2P = p.subtract(alternativePoint);
+		Vector projectedP = alternativePoint.add(direction.multiply(start2P
 				.multiply(direction)));
 		double distance = p.subtract(projectedP).getNorm();
 		return distance - radius;

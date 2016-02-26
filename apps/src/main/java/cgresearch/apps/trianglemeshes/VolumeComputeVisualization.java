@@ -14,7 +14,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
@@ -59,18 +59,18 @@ public class VolumeComputeVisualization extends CgApplication implements Observe
     }
     mesh = meshes.get(0);
     TriangleMeshTransformation.scale(mesh, 0.5);
-    TriangleMeshTransformation.translate(mesh, VectorMatrixFactory.newIVector3(1, 1, 1));
+    TriangleMeshTransformation.translate(mesh, VectorFactory.createVector3(1, 1, 1));
 
     mesh.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
-    mesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(Material.PALETTE2_COLOR4));
-    mesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+    mesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector(Material.PALETTE2_COLOR4));
+    mesh.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0, 0, 0));
     getCgRootNode().addChild(new CgNode(mesh, "mesh"));
 
     // Spat mesh
     spatMesh = new TriangleMesh();
     spatMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     spatMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
-    spatMesh.getMaterial().setReflectionSpecular(VectorMatrixFactory.newIVector3(0, 0, 0));
+    spatMesh.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0, 0, 0));
     getCgRootNode().addChild(new CgNode(spatMesh, "spat"));
 
     // Coordinate System
@@ -99,7 +99,7 @@ public class VolumeComputeVisualization extends CgApplication implements Observe
 
     spatMesh.clear();
     ITriangle triangle = mesh.getTriangle(index);
-    spatMesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(0, 0, 0)));
+    spatMesh.addVertex(new Vertex(VectorFactory.createVector3(0, 0, 0)));
     Vertex a = new Vertex(mesh.getVertex(triangle.getA()));
     Vertex b = new Vertex(mesh.getVertex(triangle.getB()));
     Vertex c = new Vertex(mesh.getVertex(triangle.getC()));
@@ -118,9 +118,9 @@ public class VolumeComputeVisualization extends CgApplication implements Observe
     // Set color depending on spat volume sign
     double spatVolume = a.getPosition().multiply(b.getPosition().cross(c.getPosition()));
     if (spatVolume < 0) {
-      spatMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
+      spatMesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.75, 0.25, 0.25));
     } else {
-      spatMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
+      spatMesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.25, 0.75, 0.25));
     }
     spatMesh.updateRenderStructures();
   }

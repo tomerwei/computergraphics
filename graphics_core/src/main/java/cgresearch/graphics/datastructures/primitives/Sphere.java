@@ -6,8 +6,8 @@
 package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a sphere.
@@ -20,7 +20,7 @@ public class Sphere extends IPrimitive {
     /**
      * Center of the sphere.
      */
-    private IVector3 center = VectorMatrixFactory.newIVector3();
+    private Vector center = VectorFactory.createVector(3);
 
     /**
      * Radius of the sphere.
@@ -36,7 +36,7 @@ public class Sphere extends IPrimitive {
     /**
      * Constructor.
      */
-    public Sphere(IVector3 center, double radius) {
+    public Sphere(Vector center, double radius) {
         this.center.copy(center);
         this.radius = radius;
     }
@@ -51,7 +51,7 @@ public class Sphere extends IPrimitive {
     /**
      * Getter.
      */
-    public IVector3 getCenter() {
+    public Vector getCenter() {
         return center;
     }
 
@@ -63,9 +63,9 @@ public class Sphere extends IPrimitive {
     @Override
     public BoundingBox getBoundingBox() {
         BoundingBox bbox = new BoundingBox();
-        bbox.add(center.subtract(VectorMatrixFactory.newIVector3(radius,
+        bbox.add(center.subtract(VectorFactory.createVector3(radius,
                 radius, radius)));
-        bbox.add(center.add(VectorMatrixFactory.newIVector3(radius, radius,
+        bbox.add(center.add(VectorFactory.createVector3(radius, radius,
                 radius)));
         return bbox;
     }

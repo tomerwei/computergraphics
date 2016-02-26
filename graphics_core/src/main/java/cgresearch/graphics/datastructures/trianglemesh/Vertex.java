@@ -5,8 +5,8 @@
  */
 package cgresearch.graphics.datastructures.trianglemesh;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a vertex.
@@ -19,17 +19,17 @@ public class Vertex implements IVertex {
   /**
    * 3D position of the vertex.
    */
-  private final IVector3 position = VectorMatrixFactory.newIVector3();
+  private final Vector position = VectorFactory.createVector(3);
 
   /**
    * (Normalized) normal direction of the vertex.
    */
-  private IVector3 normal = VectorMatrixFactory.newIVector3(1, 0, 0);
+  private Vector normal = VectorFactory.createVector3(1, 0, 0);
 
   /**
    * Color
    */
-  // private IVector3 color = VectorMatrixFactory.newIVector3(0, 0, 0);
+  // private Vector color = VectorMatrixFactory.newVector(0, 0, 0);
 
   /**
    * Constructor.
@@ -43,9 +43,9 @@ public class Vertex implements IVertex {
    * @param position
    *          Initial value for position.
    */
-  public Vertex(IVector3 position) {
+  public Vertex(Vector position) {
     this.position.copy(position);
-    this.normal = VectorMatrixFactory.newIVector3(1, 0, 0);
+    this.normal = VectorFactory.createVector3(1, 0, 0);
   }
 
   /**
@@ -56,7 +56,7 @@ public class Vertex implements IVertex {
    * @param normal
    *          Initial value for normal.
    */
-  public Vertex(IVector3 position, IVector3 normal) {
+  public Vertex(Vector position, Vector normal) {
     this.position.copy(position);
     this.normal = normal;
   }
@@ -65,41 +65,41 @@ public class Vertex implements IVertex {
    * Copy constructor
    */
   public Vertex(IVertex vertex) {
-    this(VectorMatrixFactory.newIVector3(vertex.getPosition()), VectorMatrixFactory.newIVector3(vertex.getNormal()));
+    this(VectorFactory.createVector(vertex.getPosition()), VectorFactory.createVector(vertex.getNormal()));
   }
 
   /**
    * Getter.
    */
-  public IVector3 getPosition() {
+  public Vector getPosition() {
     return position;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getNormal() {
+  public Vector getNormal() {
     return normal;
   }
 
   /**
    * Getter.
    */
-  // public IVector3 getColor() {
+  // public Vector getColor() {
   // return color;
   // }
 
   /**
    * @param normal
    */
-  public void setNormal(IVector3 normal) {
+  public void setNormal(Vector normal) {
     this.normal = normal;
   }
 
   /**
    * @param color
    */
-  // public void setColor(IVector3 color) {
+  // public void setColor(Vector color) {
   // this.color.copy(color);
   // }
 }

@@ -12,7 +12,7 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.MarchingCubes;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.bricks.CgApplication;
@@ -47,7 +47,7 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
    * Constructor.
    */
   public MarchingCubesFrame() {
-    marchingCubes = new MarchingCubes(50, VectorMatrixFactory.newIVector3(-3, -3, -3), 6);
+    marchingCubes = new MarchingCubes(50, VectorFactory.createVector3(-3, -3, -3), 6);
     vis = new ImplicitFunctionVisualization(256);
 
     createMesh(new ImplicitFunctionGourSat());
@@ -81,15 +81,15 @@ public class MarchingCubesFrame extends CgApplication implements JoglRenderable 
   public void draw3D(GL2 gl) {
     // Debugging
     // MarchingCubes marchingCubes = new MarchingCubes(50);
-    // IVector3[] vertices =
-    // { VectorMatrixFactory.newIVector3(-1, -1, -1),
-    // VectorMatrixFactory.newIVector3(1, -1, -1),
-    // VectorMatrixFactory.newIVector3(1, 1, -1),
-    // VectorMatrixFactory.newIVector3(-1, 1, -1),
-    // VectorMatrixFactory.newIVector3(-1, -1, 1),
-    // VectorMatrixFactory.newIVector3(1, -1, 1),
-    // VectorMatrixFactory.newIVector3(1, 1, 1),
-    // VectorMatrixFactory.newIVector3(-1, 1, 1) };
+    // Vector[] vertices =
+    // { VectorMatrixFactory.newVector(-1, -1, -1),
+    // VectorMatrixFactory.newVector(1, -1, -1),
+    // VectorMatrixFactory.newVector(1, 1, -1),
+    // VectorMatrixFactory.newVector(-1, 1, -1),
+    // VectorMatrixFactory.newVector(-1, -1, 1),
+    // VectorMatrixFactory.newVector(1, -1, 1),
+    // VectorMatrixFactory.newVector(1, 1, 1),
+    // VectorMatrixFactory.newVector(-1, 1, 1) };
     // double[] values = { 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0 };
     // marchingCubes.createTriangles(vertices[0], vertices[1], vertices[2],
     // vertices[3], vertices[4], vertices[5], vertices[6], vertices[7],

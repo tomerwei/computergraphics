@@ -1,13 +1,16 @@
-package cgresearch.core.math;
+package cgresearch.core.math.deprecated;
 
 import java.io.Serializable;
+
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 
 /**
  * Interface of a general vector of arbitrary dimension.
  * 
  * @author Philipp Jenke
  */
-public interface IVector extends Serializable {
+public interface DeprecatedVector extends Serializable {
 
   public int getDimension();
 
@@ -22,7 +25,7 @@ public interface IVector extends Serializable {
    *          Vector to be subtracted.
    * @return New vector containing the result.
    */
-  public IVector subtract(IVector other);
+  public Vector subtract(Vector other);
 
   /**
    * Return the eucledian norm of the vector.
@@ -38,15 +41,21 @@ public interface IVector extends Serializable {
    */
   public double getSqrNorm();
 
-  public double multiply(IVector other);
+  public double multiply(Vector other);
 
-  public IVector multiply(double alpha);
+  public Vector multiply(double alpha);
 
-  public IVector add(IVector multiply);
+  public Vector add(Vector multiply);
 
   /**
    * Compute the vector product of the two vectors
    */
-  public IMatrix innerProduct(IVector d);
+  public Matrix innerProduct(Vector d);
+
+  public float[] floatData();
+
+  public void copy(Vector other);
+
+  Vector getNormalized();
 
 }

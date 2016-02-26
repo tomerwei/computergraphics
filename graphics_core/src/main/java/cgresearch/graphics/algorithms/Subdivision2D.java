@@ -3,7 +3,7 @@ package cgresearch.graphics.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.polygon.PolygonVertex;
 
@@ -29,11 +29,11 @@ public class Subdivision2D {
     if (polygon == null) {
       return;
     }
-    List<IVector3> newPositions = new ArrayList<IVector3>();
+    List<Vector> newPositions = new ArrayList<Vector>();
     for (int pointIndex = 0; pointIndex < polygon.getNumPoints(); pointIndex++) {
       PolygonVertex p = polygon.getPoint(pointIndex);
       PolygonVertex q = p.getOutgoingEdge().getEndVertex();
-      IVector3 newPosition = computeNewPosition(p.getPosition(), q.getPosition());
+      Vector newPosition = computeNewPosition(p.getPosition(), q.getPosition());
       newPositions.add(newPosition);
     }
     for (int i = 0; i < polygon.getNumPoints(); i++) {
@@ -44,8 +44,8 @@ public class Subdivision2D {
   /**
    * Compute the averaged position.
    */
-  private IVector3 computeNewPosition(IVector3 p1, IVector3 p2) {
-    IVector3 result = p1.add(p2);
+  private Vector computeNewPosition(Vector p1, Vector p2) {
+    Vector result = p1.add(p2);
     result.multiplySelf(0.5);
     return result;
   }

@@ -14,8 +14,8 @@ import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.projects.portalculling.PortalCell;
@@ -65,8 +65,8 @@ public class PortalCullingFrame extends CgApplication implements Observer, JoglR
     PortalSceneImporter importer = new PortalSceneImporter();
     importer.importScene(scene, "portal/scene.scene");
 
-    viewVolume = new ViewVolume2D(VectorMatrixFactory.newIVector3(2, 0, 6), VectorMatrixFactory.newIVector3(6, 0, 6),
-        VectorMatrixFactory.newIVector3(7, 0, -1));
+    viewVolume = new ViewVolume2D(VectorFactory.createVector3(2, 0, 6), VectorFactory.createVector3(6, 0, 6),
+        VectorFactory.createVector3(7, 0, -1));
 
     AnimationTimer.getInstance().setMaxValue(50);
   }
@@ -82,8 +82,8 @@ public class PortalCullingFrame extends CgApplication implements Observer, JoglR
       gl.glColor3f(0.1f, 0.1f, 0.1f);
       for (int edgeIndex = 0; edgeIndex < scene.getNumberOfEdges(); edgeIndex++) {
         PortalEdge edge = scene.getEdge(edgeIndex);
-        IVector3 startNode = scene.getNode(edge.getStartNodeIndex());
-        IVector3 endNode = scene.getNode(edge.getEndNodeIndex());
+        Vector startNode = scene.getNode(edge.getStartNodeIndex());
+        Vector endNode = scene.getNode(edge.getEndNodeIndex());
         if (edge.getState() == PortalEdge.State.WALL) {
           gl.glLineWidth(4);
         } else {
@@ -113,9 +113,9 @@ public class PortalCullingFrame extends CgApplication implements Observer, JoglR
       gl.glColor3f(0.3f, 0.6f, 0.3f);
       for (Integer cellIndex : pvs) {
         PortalCell cell = scene.getCell(cellIndex);
-        List<IVector3> cellNodes = scene.getCellNodes(cell);
+        List<Vector> cellNodes = scene.getCellNodes(cell);
         for (int i = 0; i < cellNodes.size(); i++) {
-          IVector3 p = cellNodes.get(i);
+          Vector p = cellNodes.get(i);
           gl.glVertex3d(p.get(0), 0.01, p.get(2));
         }
       }
@@ -139,8 +139,8 @@ public class PortalCullingFrame extends CgApplication implements Observer, JoglR
         for (int i = 0; i < 3; i++) {
           int edgeIndex = cell.getEdgeIndex(i);
           PortalEdge edge = scene.getEdge(edgeIndex);
-          IVector3 v0 = scene.getNode(edge.getStartNodeIndex());
-          IVector3 v1 = scene.getNode(edge.getEndNodeIndex());
+          Vector v0 = scene.getNode(edge.getStartNodeIndex());
+          Vector v1 = scene.getNode(edge.getEndNodeIndex());
           if (edge.getState() == PortalEdge.State.WALL) {
             gl.glBegin(GL2.GL_QUADS);
             gl.glColor3f(1, 1, 1);
@@ -176,8 +176,8 @@ public class PortalCullingFrame extends CgApplication implements Observer, JoglR
         for (int i = 0; i < 3; i++) {
           int edgeIndex = cell.getEdgeIndex(i);
           PortalEdge edge = scene.getEdge(edgeIndex);
-          IVector3 v0 = scene.getNode(edge.getStartNodeIndex());
-          IVector3 v1 = scene.getNode(edge.getEndNodeIndex());
+          Vector v0 = scene.getNode(edge.getStartNodeIndex());
+          Vector v1 = scene.getNode(edge.getEndNodeIndex());
           if (edge.getState() == PortalEdge.State.WALL) {
             gl.glBegin(GL2.GL_QUADS);
             gl.glColor3f(1, 1, 1);

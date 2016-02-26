@@ -1,5 +1,10 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
+import cgresearch.graphics.datastructures.GenericEdge;
+import cgresearch.graphics.datastructures.GenericVertex;
+
 /**
  * A half edge has references to the next edge within the current facet, the
  * opposite edge, its start vertex and the facet it belongs to.
@@ -7,7 +12,7 @@ package cgresearch.graphics.datastructures.trianglemesh;
  * @author Philipp Jenke
  *
  */
-public class HalfEdge {
+public class HalfEdge implements GenericEdge {
 
   /**
    * Reference to the next edge in the mesh.
@@ -28,6 +33,11 @@ public class HalfEdge {
    * The half edge belongs to this facet.
    */
   private HalfEdgeTriangle facet;
+
+  /**
+   * Color for the edge (used for debugging)
+   */
+  private Vector color = VectorFactory.createVector(3);
 
   public HalfEdge getNext() {
     return next;
@@ -67,5 +77,15 @@ public class HalfEdge {
   @Override
   public String toString() {
     return "Half Edge";
+  }
+
+  @Override
+  public void setColor(Vector color) {
+    this.color.copy(color);
+  }
+
+  @Override
+  public GenericVertex getEndVertex() {
+    return getNext().getStartVertex();
   }
 }

@@ -10,9 +10,9 @@ import java.util.List;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
 import cgresearch.graphics.material.Material;
 
@@ -37,7 +37,7 @@ public class TriangleMesh extends ITriangleMesh {
   /**
    * Container for the texture coordinates..
    */
-  private List<IVector3> textureCoordinates = new ArrayList<IVector3>();
+  private List<Vector> textureCoordinates = new ArrayList<Vector>();
 
   /**
    * Bounding box
@@ -82,9 +82,9 @@ public class TriangleMesh extends ITriangleMesh {
       vertices.add(vertex);
     }
 
-    textureCoordinates = new ArrayList<IVector3>();
+    textureCoordinates = new ArrayList<Vector>();
     for (int i = 0; i < other.getNumberOfTextureCoordinates(); i++) {
-      IVector3 texCoord = VectorMatrixFactory.newIVector3(other.getTextureCoordinate(i));
+      Vector texCoord = VectorFactory.createVector(other.getTextureCoordinate(i));
       textureCoordinates.add(texCoord);
     }
 
@@ -186,13 +186,13 @@ public class TriangleMesh extends ITriangleMesh {
       IVertex pB = getVertex(t.getB());
       IVertex pC = getVertex(t.getC());
       if (pA != null && pB != null && pC != null) {
-        IVector3 v1 = pB.getPosition().subtract(pA.getPosition());
-        IVector3 v2 = pC.getPosition().subtract(pA.getPosition());
-        IVector3 helperNormal = v1.cross(v2);
+        Vector v1 = pB.getPosition().subtract(pA.getPosition());
+        Vector v2 = pC.getPosition().subtract(pA.getPosition());
+        Vector helperNormal = v1.cross(v2);
         helperNormal.normalize();
         t.setNormal(helperNormal);
       } else {
-        t.setNormal(VectorMatrixFactory.newIVector3(1, 0, 0));
+        t.setNormal(VectorFactory.createVector3(1, 0, 0));
       }
     }
   }
@@ -205,7 +205,7 @@ public class TriangleMesh extends ITriangleMesh {
    * .vecmath.TexCoord3f)
    */
   @Override
-  public int addTextureCoordinate(IVector3 texCoord3f) {
+  public int addTextureCoordinate(Vector texCoord3f) {
     textureCoordinates.add(texCoord3f);
     return textureCoordinates.size() - 1;
   }
@@ -228,13 +228,13 @@ public class TriangleMesh extends ITriangleMesh {
    * edu.cg1.exercises.shader.IAdvancedTriangleMesh#getTextureCoordinate(int)
    */
   @Override
-  public IVector3 getTextureCoordinate(int index) {
+  public Vector getTextureCoordinate(int index) {
     if (textureCoordinates.size() == 0 || index < 0) {
-      return VectorMatrixFactory.newIVector3(0, 0, 0);
+      return VectorFactory.createVector3(0, 0, 0);
     }
     if (index >= textureCoordinates.size()) {
       Logger.getInstance().error("Invalid texture coordinate index.");
-      return VectorMatrixFactory.newIVector3(0, 0, 0);
+      return VectorFactory.createVector3(0, 0, 0);
     }
     return textureCoordinates.get(index);
   }
@@ -248,7 +248,7 @@ public class TriangleMesh extends ITriangleMesh {
   @Override
   public void computeVertexNormals() {
     for (int vertexIndex = 0; vertexIndex < getNumberOfVertices(); vertexIndex++) {
-      getVertex(vertexIndex).getNormal().copy(VectorMatrixFactory.newIVector3(0, 0, 0));
+      getVertex(vertexIndex).getNormal().copy(VectorFactory.createVector3(0, 0, 0));
     }
 
     for (int triangleIndex = 0; triangleIndex < getNumberOfTriangles(); triangleIndex++) {
@@ -257,8 +257,8 @@ public class TriangleMesh extends ITriangleMesh {
         int vertexIndex = triangle.get(i);
         IVertex vertex = getVertex(vertexIndex);
         if (vertex != null) {
-          IVector3 oldNormal = vertex.getNormal();
-          IVector3 newNormal = oldNormal.add(triangle.getNormal());
+          Vector oldNormal = vertex.getNormal();
+          Vector newNormal = oldNormal.add(triangle.getNormal());
           vertex.setNormal(newNormal);
         } else {
           Logger.getInstance().error("Invalid vertex index!");
@@ -281,8 +281,8 @@ public class TriangleMesh extends ITriangleMesh {
   @Override
   public void fitToUnitBox() {
     BoundingBox bb = getBoundingBox();
-    IVector3 center = bb.getCenter();
-    IVector3 diagonal = bb.getUpperRight().subtract(bb.getLowerLeft());
+    Vector center = bb.getCenter();
+    Vector diagonal = bb.getUpperRight().subtract(bb.getLowerLeft());
     double scale = Math.max(Math.max(diagonal.get(MathHelpers.INDEX_0), diagonal.get(MathHelpers.INDEX_1)),
         diagonal.get(MathHelpers.INDEX_2));
     for (int i = 0; i < vertices.size(); i++) {
@@ -370,9 +370,9 @@ public class TriangleMesh extends ITriangleMesh {
       int a = triangle.getA();
       int b = triangle.getB();
       int c = triangle.getC();
-      IVector3 posAb = (vertices.get(a).getPosition().add(vertices.get(b).getPosition())).multiply(0.5);
-      IVector3 posBc = (vertices.get(b).getPosition().add(vertices.get(c).getPosition())).multiply(0.5);
-      IVector3 posCa = (vertices.get(c).getPosition().add(vertices.get(a).getPosition())).multiply(0.5);
+      Vector posAb = (vertices.get(a).getPosition().add(vertices.get(b).getPosition())).multiply(0.5);
+      Vector posBc = (vertices.get(b).getPosition().add(vertices.get(c).getPosition())).multiply(0.5);
+      Vector posCa = (vertices.get(c).getPosition().add(vertices.get(a).getPosition())).multiply(0.5);
       int ab = newMesh.addVertex(new Vertex(posAb));
       int bc = newMesh.addVertex(new Vertex(posBc));
       int ca = newMesh.addVertex(new Vertex(posCa));

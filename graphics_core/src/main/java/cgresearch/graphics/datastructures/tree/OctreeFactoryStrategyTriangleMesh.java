@@ -1,7 +1,7 @@
 package cgresearch.graphics.datastructures.tree;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
@@ -40,9 +40,9 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   @Override
   public boolean elementFitsInNode(int elementIndex, OctreeNode<Integer> node) {
     ITriangle triangle = mesh.getTriangle(elementIndex);
-    IVector3 a = mesh.getVertex(triangle.getA()).getPosition();
-    IVector3 b = mesh.getVertex(triangle.getB()).getPosition();
-    IVector3 c = mesh.getVertex(triangle.getC()).getPosition();
+    Vector a = mesh.getVertex(triangle.getA()).getPosition();
+    Vector b = mesh.getVertex(triangle.getB()).getPosition();
+    Vector c = mesh.getVertex(triangle.getC()).getPosition();
     return Intersection.intersect(node.getBoundingBox(), a, b, c);
     // return deprecatedNodeTriangleIntersectionTest(elementIndex, node);
   }
@@ -50,10 +50,10 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // /**
   // * Use the normal to check if the triangle plane and the box overlap.
   // */
-  // private boolean planeBoxOverlap(IVector3 normal, IVector3 vert, IVector3
+  // private boolean planeBoxOverlap(Vector normal, Vector vert, Vector
   // maxbox) {
-  // IVector3 vmin = VectorMatrixFactory.newIVector3();
-  // IVector3 vmax = VectorMatrixFactory.newIVector3();
+  // Vector vmin = VectorMatrixFactory.newVector();
+  // Vector vmax = VectorMatrixFactory.newVector();
   // double v;
   // for (int q = 0; q <= 2; q++) {
   // v = vert.get(q);
@@ -78,7 +78,7 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // /**
   // * Axis test.
   // */
-  // private boolean axisTestX01(IVector3 v0, IVector3 v2, IVector3 boxhalfsize,
+  // private boolean axisTestX01(Vector v0, Vector v2, Vector boxhalfsize,
   // double a, double b, double fa,
   // double fb) {
   // double p0 = a * v0.get(Y) - b * v0.get(Z);
@@ -102,7 +102,7 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // /**
   // * Axis test.
   // */
-  // private boolean axisTestX2(IVector3 v0, IVector3 v1, IVector3 boxhalfsize,
+  // private boolean axisTestX2(Vector v0, Vector v1, Vector boxhalfsize,
   // double a, double b, double fa, double fb) {
   // double p0 = a * v0.get(Y) - b * v0.get(Z);
   // double p1 = a * v1.get(Y) - b * v1.get(Z);
@@ -125,7 +125,7 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // /**
   // * Axis test.
   // */
-  // private boolean axisTestY02(IVector3 v0, IVector3 v2, IVector3 boxhalfsize,
+  // private boolean axisTestY02(Vector v0, Vector v2, Vector boxhalfsize,
   // double a, double b, double fa,
   // double fb) {
   // double p0 = -a * v0.get(X) + b * v0.get(Z);
@@ -149,7 +149,7 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // /**
   // * Axis test.
   // */
-  // private boolean axisTestY1(IVector3 v0, IVector3 v1, IVector3 boxhalfsize,
+  // private boolean axisTestY1(Vector v0, Vector v1, Vector boxhalfsize,
   // double a, double b, double fa, double fb) {
   // double p0 = -a * v0.get(X) + b * v0.get(Z);
   // double p1 = -a * v1.get(X) + b * v1.get(Z);
@@ -172,7 +172,7 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // /**
   // * Axis test.
   // */
-  // private boolean axisTestZ12(IVector3 v1, IVector3 v2, IVector3 boxhalfsize,
+  // private boolean axisTestZ12(Vector v1, Vector v2, Vector boxhalfsize,
   // double a, double b, double fa,
   // double fb) {
   // double p1 = a * v1.get(X) - b * v1.get(Y);
@@ -196,7 +196,7 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // /**
   // * Axis test.
   // */
-  // private boolean axisTestZ0(IVector3 v0, IVector3 v1, IVector3 boxhalfsize,
+  // private boolean axisTestZ0(Vector v0, Vector v1, Vector boxhalfsize,
   // double a, double b, double fa, double fb) {
   // double p0 = a * v0.get(X) - b * v0.get(Y);
   // double p1 = a * v1.get(X) - b * v1.get(Y);
@@ -220,25 +220,25 @@ public class OctreeFactoryStrategyTriangleMesh implements IOctreeFactoryStrategy
   // OctreeNode<Integer> node) {
   // double EPSILON = 1e-2;
   // ITriangle triangle = mesh.getTriangle(elementIndex);
-  // IVector3 boxhalfsize =
-  // VectorMatrixFactory.newIVector3(node.getLength() / 2.0, node.getLength() /
+  // Vector boxhalfsize =
+  // VectorMatrixFactory.newVector(node.getLength() / 2.0, node.getLength() /
   // 2.0, node.getLength() / 2.0);
-  // IVector3 boxcenter = node.getLowerLeft().add(boxhalfsize);
-  // IVector3 a = mesh.getVertex(triangle.getA()).getPosition();
-  // IVector3 b = mesh.getVertex(triangle.getB()).getPosition();
-  // IVector3 c = mesh.getVertex(triangle.getC()).getPosition();
-  // IVector3 numericalOffset = VectorMatrixFactory.newIVector3(EPSILON,
+  // Vector boxcenter = node.getLowerLeft().add(boxhalfsize);
+  // Vector a = mesh.getVertex(triangle.getA()).getPosition();
+  // Vector b = mesh.getVertex(triangle.getB()).getPosition();
+  // Vector c = mesh.getVertex(triangle.getC()).getPosition();
+  // Vector numericalOffset = VectorMatrixFactory.newVector(EPSILON,
   // EPSILON, EPSILON);
   //
-  // IVector3 v0, v1, v2;
+  // Vector v0, v1, v2;
   // double fex, fey, fez;
-  // IVector3 normal;
+  // Vector normal;
   // v0 = a.subtract(boxcenter);
   // v1 = b.subtract(boxcenter);
   // v2 = c.subtract(boxcenter);
-  // IVector3 e0 = v1.subtract(v0);
-  // IVector3 e1 = v2.subtract(v1);
-  // IVector3 e2 = v0.subtract(v2);
+  // Vector e0 = v1.subtract(v0);
+  // Vector e1 = v2.subtract(v1);
+  // Vector e2 = v0.subtract(v2);
   // fex = Math.abs(e0.get(X));
   // fey = Math.abs(e0.get(Y));
   // fez = Math.abs(e0.get(Z));

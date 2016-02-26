@@ -2,8 +2,8 @@ package cgresearch.projects.simulation;
 
 import java.util.Iterator;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 public class Fabric extends Cloth {
 
@@ -20,7 +20,7 @@ public class Fabric extends Cloth {
 	/**
 	 * Translation of the fabric (required for reset call)
 	 */
-	private final IVector3 translation = VectorMatrixFactory.newIVector3();
+	private final Vector translation = VectorFactory.createVector(3);
 
 	/**
 	 * Combined mass for all mass points in the fabric
@@ -52,7 +52,7 @@ public class Fabric extends Cloth {
 	 */
 	private final double GRAVITATION = 9.81;
 	private final double WIND_ACCELERATION = 5;
-	private final IVector3 WIND_DIRECTION = VectorMatrixFactory.newIVector3(0,
+	private final Vector WIND_DIRECTION = VectorFactory.createVector3(0,
 			0, -1);
 
 	/**
@@ -73,7 +73,7 @@ public class Fabric extends Cloth {
 	 *            Mass of the fabric in [kg].
 	 */
 	public Fabric(Type type, int resolution, double scale,
-			IVector3 translation, double mass) {
+			Vector translation, double mass) {
 		this.type = type;
 		this.resolution = resolution;
 		this.scale = scale;
@@ -109,7 +109,7 @@ public class Fabric extends Cloth {
 			double x = -1 + deltaStructure * i;
 			for (int j = 0; j < resolution; j++) {
 				double z = -1 + deltaStructure * j;
-				IVector3 pos = VectorMatrixFactory.newIVector3(x, 0, z)
+				Vector pos = VectorFactory.createVector3(x, 0, z)
 						.multiply(scale).add(translation);
 				addMassPoint(new MassPoint(pos, massPointMass));
 			}
@@ -132,7 +132,7 @@ public class Fabric extends Cloth {
 			double x = -1 + deltaStructure * i;
 			for (int j = 0; j < resolution; j++) {
 				double y = -1 + deltaStructure * j;
-				IVector3 pos = VectorMatrixFactory.newIVector3(x, y, 0)
+				Vector pos = VectorFactory.createVector3(x, y, 0)
 						.multiply(scale).add(translation);
 				addMassPoint(new MassPoint(pos, massPointMass));
 			}
@@ -221,16 +221,16 @@ public class Fabric extends Cloth {
 		return massPoint1.getX().subtract(massPoint2.getX()).getNorm();
 	}
 
-	public IVector3 getForceDirection(IVector3 x1, IVector3 x2) {
-		IVector3 direction = x1.subtract(x2);
+	public Vector getForceDirection(Vector x1, Vector x2) {
+		Vector direction = x1.subtract(x2);
 		direction.normalize();
 		return direction;
 	}
 
-	private IVector3 computeSpringForce(int index, IVector3 pos, Spring spring) {
+	private Vector computeSpringForce(int index, Vector pos, Spring spring) {
 		MassPoint otherMassPoint = getMassPoint(spring
 				.getOtherMassPointIndex(index));
-		IVector3 forceDirection = getForceDirection(pos, otherMassPoint.getX());
+		Vector forceDirection = getForceDirection(pos, otherMassPoint.getX());
 		return forceDirection.multiply(spring.getMaterialProperty()
 				* (spring.getRestLength() - getSpringLength(spring)));
 	}
@@ -238,10 +238,10 @@ public class Fabric extends Cloth {
 	/**
 	 * Compute the combined spring force at a mass node.
 	 */
-	private IVector3 computeSpringForce(int index, IVector3 x) {
+	private Vector computeSpringForce(int index, Vector x) {
 		Iterator<Spring> iteratorSpring = getMassPoint(index)
 				.getSpringsIterator();
-		IVector3 force = VectorMatrixFactory.newIVector3(0, 0, 0);
+		Vector force = VectorFactory.createVector3(0, 0, 0);
 		while (iteratorSpring.hasNext()) {
 			Spring spring = iteratorSpring.next();
 			force = force.add(computeSpringForce(index, x, spring));
@@ -250,36 +250,36 @@ public class Fabric extends Cloth {
 	}
 
 	@Override
-	public IVector3 eval(int index) {
+	public Vector eval(int index) {
 		MassPoint massPoint = getMassPoint(index);
 
 		// Gravitational force
-		IVector3 gravitationalForce = VectorMatrixFactory.newIVector3(0, -1, 0)
+		Vector gravitationalForce = VectorFactory.createVector3(0, -1, 0)
 				.multiply(GRAVITATION).multiply(massPoint.getMass());
 
 		// Wind
-		IVector3 windForce = WIND_DIRECTION.multiply(WIND_ACCELERATION)
+		Vector windForce = WIND_DIRECTION.multiply(WIND_ACCELERATION)
 				.multiply(massPoint.getMass());
 
 		// Spring force
-		IVector3 springForce = computeSpringForce(index, massPoint.getX());
+		Vector springForce = computeSpringForce(index, massPoint.getX());
 
 		// Assemble force
-		IVector3 force = gravitationalForce.add(springForce).add(windForce);
+		Vector force = gravitationalForce.add(springForce).add(windForce);
 
 		// Compute acceleration
-		IVector3 accelleration = force.multiply(1.0 / massPoint.getMass());
+		Vector accelleration = force.multiply(1.0 / massPoint.getMass());
 		return accelleration;
 	}
 
 	@Override
-	public IVector3 eval(int index, IVector3 pos) {
+	public Vector eval(int index, Vector pos) {
 		MassPoint massPoint = getMassPoint(index);
-		IVector3 gravitationalForce = VectorMatrixFactory.newIVector3(0, -1, 0)
+		Vector gravitationalForce = VectorFactory.createVector3(0, -1, 0)
 				.multiply(GRAVITATION).multiply(massPoint.getMass());
-		IVector3 springForce = computeSpringForce(index, pos);
-		IVector3 force = gravitationalForce.add(springForce);
-		IVector3 accelleration = force.multiply(1.0 / massPoint.getMass());
+		Vector springForce = computeSpringForce(index, pos);
+		Vector force = gravitationalForce.add(springForce);
+		Vector accelleration = force.multiply(1.0 / massPoint.getMass());
 		return accelleration;
 	}
 }

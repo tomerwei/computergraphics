@@ -9,7 +9,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.linesegments.LineSegments;
 import cgresearch.graphics.material.Material;
@@ -25,10 +25,10 @@ public class LineSegmentsFrame extends CgApplication {
 
   public LineSegmentsFrame() {
     LineSegments lineSegments = new LineSegments();
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(0, 0, 0));
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(0, 1, 0));
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(1, 1, 0));
-    lineSegments.addPoint(VectorMatrixFactory.newIVector3(1, 0, 0));
+    lineSegments.addPoint(VectorFactory.createVector3(0, 0, 0));
+    lineSegments.addPoint(VectorFactory.createVector3(0, 1, 0));
+    lineSegments.addPoint(VectorFactory.createVector3(1, 1, 0));
+    lineSegments.addPoint(VectorFactory.createVector3(1, 0, 0));
     lineSegments.addLine(0, 1);
     lineSegments.addLine(1, 2);
     lineSegments.addLine(2, 3);

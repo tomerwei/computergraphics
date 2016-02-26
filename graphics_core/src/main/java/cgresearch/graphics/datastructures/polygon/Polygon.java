@@ -5,7 +5,7 @@ import java.util.List;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.material.PolygonMaterial;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
@@ -58,7 +58,7 @@ public class Polygon extends ICgNodeContent {
    * Collapse edge, remove edge from list, remove edge-end from list. Returns
    * the remaining point.
    */
-  public PolygonVertex collapse(PolygonEdge polygonEdge, IVector3 newPosition) {
+  public PolygonVertex collapse(PolygonEdge polygonEdge, Vector newPosition) {
     PolygonVertex start = polygonEdge.getStartVertex();
     PolygonVertex end = polygonEdge.getEndVertex();
     edges.remove(polygonEdge);
@@ -109,11 +109,11 @@ public class Polygon extends ICgNodeContent {
     return (PolygonMaterial) material;
   }
 
-  public IVector3 getEdgeColor(int index) {
+  public Vector getEdgeColor(int index) {
     return edges.get(index).getColor();
   }
 
-  public void setEdgeColor(int index, IVector3 color) {
+  public void setEdgeColor(int index, Vector color) {
     edges.get(index).getColor().copy(color);
   }
 
@@ -129,7 +129,7 @@ public class Polygon extends ICgNodeContent {
     return type == Type.CLOSED;
   }
 
-  public void addPoint(IVector3 position) {
+  public void addPoint(Vector position) {
     addPoint(new PolygonVertex(position));
   }
 

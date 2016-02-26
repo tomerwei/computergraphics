@@ -1,8 +1,7 @@
 package cgresearch.graphics.algorithms;
 
-import cgresearch.core.math.IMatrix;
-import cgresearch.core.math.IVector3;
 import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
@@ -21,9 +20,9 @@ public class TriangleMeshTools {
    *          Considered mesh
    * @return Laplacian.
    */
-  public static IMatrix createLaplacian(ITriangleMesh mesh) {
+  public static Matrix createLaplacian(ITriangleMesh mesh) {
     // Create Laplacian
-    IMatrix L = new Matrix(mesh.getNumberOfVertices(), mesh.getNumberOfVertices());
+    Matrix L = new Matrix(mesh.getNumberOfVertices(), mesh.getNumberOfVertices());
     for (int triangleIndex = 0; triangleIndex < mesh.getNumberOfTriangles(); triangleIndex++) {
       ITriangle t = mesh.getTriangle(triangleIndex);
       L.set(t.getA(), t.getB(), -1);
@@ -53,8 +52,8 @@ public class TriangleMeshTools {
    */
   public static void addNoise(ITriangleMesh mesh, double noiseSigma) {
     for (int vertexIndex = 0; vertexIndex < mesh.getNumberOfVertices(); vertexIndex++) {
-      IVector3 pos = mesh.getVertex(vertexIndex).getPosition();
-      IVector3 normal = mesh.getVertex(vertexIndex).getNormal();
+      Vector pos = mesh.getVertex(vertexIndex).getPosition();
+      Vector normal = mesh.getVertex(vertexIndex).getNormal();
       mesh.getVertex(vertexIndex).getPosition()
           .copy(pos.add(normal.multiply((2.0 * Math.random() - 1.0) * noiseSigma)));
     }
@@ -69,9 +68,9 @@ public class TriangleMeshTools {
    */
   public static void cleanup(ITriangleMesh mesh) {
     for (int triangleIndex = 0; triangleIndex < mesh.getNumberOfTriangles(); triangleIndex++) {
-      IVector3 a = mesh.getVertex(mesh.getTriangle(triangleIndex).getA()).getPosition();
-      IVector3 b = mesh.getVertex(mesh.getTriangle(triangleIndex).getB()).getPosition();
-      IVector3 c = mesh.getVertex(mesh.getTriangle(triangleIndex).getC()).getPosition();
+      Vector a = mesh.getVertex(mesh.getTriangle(triangleIndex).getA()).getPosition();
+      Vector b = mesh.getVertex(mesh.getTriangle(triangleIndex).getB()).getPosition();
+      Vector c = mesh.getVertex(mesh.getTriangle(triangleIndex).getC()).getPosition();
       if (a.equals(b) || b.equals(c) || c.equals(a)) {
         mesh.removeTriangle(triangleIndex);
         triangleIndex--;

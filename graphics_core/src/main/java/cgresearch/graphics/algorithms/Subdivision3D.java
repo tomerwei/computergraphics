@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -46,7 +46,7 @@ public class Subdivision3D {
     }
 
     // Create vector of new positions
-    List<IVector3> newPositions = computeUpdatedVertexPositions(edges, vertex2edgesMapping, edge2Triangles);
+    List<Vector> newPositions = computeUpdatedVertexPositions(edges, vertex2edgesMapping, edge2Triangles);
 
     // Set updated positions
     setNewVertexPositions(newPositions);
@@ -99,7 +99,7 @@ public class Subdivision3D {
   /**
    * Add new vertices, updated positions (old + new).
    */
-  private void setNewVertexPositions(List<IVector3> newPositions) {
+  private void setNewVertexPositions(List<Vector> newPositions) {
     int numberOfOldPoints = mesh.getNumberOfVertices();
     for (int i = 0; i < numberOfOldPoints; i++) {
       mesh.getVertex(i).getPosition().copy(newPositions.get(i));
@@ -113,12 +113,12 @@ public class Subdivision3D {
   /**
    * Compute the updated vertex positions (old + new vertices).
    */
-  private List<IVector3> computeUpdatedVertexPositions(List<Edge> edges, Map<Integer, List<Edge>> vertex2edgesMapping,
+  private List<Vector> computeUpdatedVertexPositions(List<Edge> edges, Map<Integer, List<Edge>> vertex2edgesMapping,
       Map<Integer, List<Integer>> edge2Triangles) {
-    List<IVector3> newPositions = new ArrayList<IVector3>();
+    List<Vector> newPositions = new ArrayList<Vector>();
     int oldNumberOfVertices = mesh.getNumberOfVertices();
     for (int i = 0; i < oldNumberOfVertices + edges.size(); i++) {
-      newPositions.add(VectorMatrixFactory.newIVector3(0, 0, 0));
+      newPositions.add(VectorFactory.createVector3(0, 0, 0));
     }
 
     // Compute positions for old points
@@ -134,7 +134,7 @@ public class Subdivision3D {
   /**
    * Compute the updated vertex positions for the new points.
    */
-  private void computeUpdatedVertexPositionsNewPoints(List<Edge> edges, List<IVector3> newPositions,
+  private void computeUpdatedVertexPositionsNewPoints(List<Edge> edges, List<Vector> newPositions,
       int oldNumberOfVertices, Map<Integer, List<Integer>> edge2Triangles) {
 
     for (int edgeIndex = 0; edgeIndex < edges.size(); edgeIndex++) {
@@ -142,18 +142,18 @@ public class Subdivision3D {
         // TODO: Compute boundary new position
         Edge edge = edges.get(edgeIndex);
         int vertexIndex = oldNumberOfVertices + edgeIndex;
-        IVector3 a = mesh.getVertex(edge.getV0()).getPosition();
-        IVector3 b = mesh.getVertex(edge.getV1()).getPosition();
+        Vector a = mesh.getVertex(edge.getV0()).getPosition();
+        Vector b = mesh.getVertex(edge.getV1()).getPosition();
         newPositions.get(vertexIndex).copy((a.add(b)).multiply(0.5));
       } else if (edge2Triangles.get(edgeIndex).size() == 2) {
         Edge edge = edges.get(edgeIndex);
-        IVector3 a = mesh.getVertex(edge.getV0()).getPosition();
-        IVector3 b = mesh.getVertex(edge.getV1()).getPosition();
+        Vector a = mesh.getVertex(edge.getV0()).getPosition();
+        Vector b = mesh.getVertex(edge.getV1()).getPosition();
         ITriangle t0 = mesh.getTriangle(edge2Triangles.get(edgeIndex).get(0));
         ITriangle t1 = mesh.getTriangle(edge2Triangles.get(edgeIndex).get(1));
-        IVector3 c = mesh.getVertex(t0.getOther(edge.getV0(), edge.getV1())).getPosition();
-        IVector3 d = mesh.getVertex(t1.getOther(edge.getV0(), edge.getV1())).getPosition();
-        IVector3 newPosition =
+        Vector c = mesh.getVertex(t0.getOther(edge.getV0(), edge.getV1())).getPosition();
+        Vector d = mesh.getVertex(t1.getOther(edge.getV0(), edge.getV1())).getPosition();
+        Vector newPosition =
             (a.multiply(3.0 / 8.0)).add(b.multiply(3.0 / 8.0)).add(c.multiply(1.0 / 8.0)).add(d.multiply(1.0 / 8.0));
         int vertexIndex = oldNumberOfVertices + edgeIndex;
         newPositions.get(vertexIndex).copy(newPosition);
@@ -165,7 +165,7 @@ public class Subdivision3D {
    * Compute the updated vertex positions for the old points.
    */
   private void computeUpdatedVertexPositionsOldPoints(Map<Integer, List<Edge>> vertex2edgesMapping,
-      List<IVector3> newPositions, int oldNumberOfVertices) {
+      List<Vector> newPositions, int oldNumberOfVertices) {
     for (int vertexIndex = 0; vertexIndex < oldNumberOfVertices; vertexIndex++) {
       List<Edge> vertexEdges = vertex2edgesMapping.get(vertexIndex);
       boolean isBoundary = false;
@@ -176,7 +176,7 @@ public class Subdivision3D {
       }
       if (isBoundary) {
         // Boundary: neighbor vertices along boundary edges: 1/8, self: 3/4
-        IVector3 newPosition = mesh.getVertex(vertexIndex).getPosition().multiply(3.0 / 4.0);
+        Vector newPosition = mesh.getVertex(vertexIndex).getPosition().multiply(3.0 / 4.0);
         int numberOfNeighbors = 0;
         for (int nIndex = 0; nIndex < vertexEdges.size(); nIndex++) {
           Edge edge = vertexEdges.get(nIndex);
@@ -192,7 +192,7 @@ public class Subdivision3D {
         newPositions.get(vertexIndex).copy(newPosition);
       } else {
         double beta = (vertexEdges.size() > 3) ? 3.0 / (8.0 * vertexEdges.size()) : 3.0 / 16.0;
-        IVector3 newPosition = mesh.getVertex(vertexIndex).getPosition().multiply(1 - vertexEdges.size() * beta);
+        Vector newPosition = mesh.getVertex(vertexIndex).getPosition().multiply(1 - vertexEdges.size() * beta);
         for (int nIndex = 0; nIndex < vertexEdges.size(); nIndex++) {
           newPosition
               .addSelf(mesh.getVertex(vertexEdges.get(nIndex).getOther(vertexIndex)).getPosition().multiply(beta));

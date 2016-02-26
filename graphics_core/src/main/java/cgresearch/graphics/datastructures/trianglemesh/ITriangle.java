@@ -1,6 +1,6 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Parent interface for all triangle implementations
@@ -40,9 +40,9 @@ public interface ITriangle {
    */
   public int getTextureCoordinate(int index);
 
-  public IVector3 getNormal();
+  public Vector getNormal();
 
-  public void setNormal(IVector3 newNormal);
+  public void setNormal(Vector newNormal);
 
   /**
    * Returns the index of the i'th vertex.

@@ -1,6 +1,6 @@
 package cgresearch.projects.simulation.solver;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Parent interface for all systems, which allow to evaluate an accelleration.
@@ -18,7 +18,7 @@ public interface Accelleration {
 	 *            Index of the node to be evaluated.
 	 * @return Acceleration at the node.
 	 */
-	public IVector3 eval(int index);
+	public Vector eval(int index);
 
 	/**
 	 * Evaluate the acceleration at the node with the specified index.
@@ -29,6 +29,6 @@ public interface Accelleration {
 	 *            , where the force is evaluated.
 	 * @return Acceleration at the node.
 	 */
-	public IVector3 eval(int index, IVector3 pos);
+	public Vector eval(int index, Vector pos);
 
 }

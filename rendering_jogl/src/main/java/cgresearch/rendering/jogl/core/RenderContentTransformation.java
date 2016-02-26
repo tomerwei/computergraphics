@@ -1,6 +1,6 @@
 package cgresearch.rendering.jogl.core;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.scenegraph.LightSource;
 import com.jogamp.opengl.GL2;
 
@@ -32,7 +32,7 @@ public class RenderContentTransformation extends JoglRenderContent {
 	}
 
 	@Override
-	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners, boolean cameraPositionChanged) {
+	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners, boolean cameraPositionChanged) {
 		gl.glPushMatrix();
 		// If light source is null, we are rendering shadow volumes.
 		// No transformation required.

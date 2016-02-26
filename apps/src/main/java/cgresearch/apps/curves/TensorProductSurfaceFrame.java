@@ -6,7 +6,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.curves.TensorProductSurface;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -65,7 +65,7 @@ public class TensorProductSurfaceFrame extends CgApplication {
       double u = (double) i / (double) (tesselation - 1);
       for (int j = 0; j < tesselation; j++) {
         double v = (double) j / (double) (tesselation - 1);
-        IVector3 p = surface.eval(u, v);
+        Vector p = surface.eval(u, v);
         mesh.addVertex(new Vertex(p));
 
         if (i > 0 && j > 0) {

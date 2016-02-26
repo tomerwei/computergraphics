@@ -39,10 +39,10 @@ public class Test
 	// System.out.println("-1.00050: " + roundDown3(-1.00050));
 	// System.out.println("-1.00350: " + roundDown3(-1.00350));
 	
-	// IVector3 alpha_0 = new Vector3(0.0, 2.0, 0.0);
-	// IVector3 alpha_1 = new Vector3(0.0, 5.0, 0.0);
-	// IVector3 beta_0 = new Vector3(1.6, 2.0, 0.0);
-	// IVector3 beta_1 = new Vector3(1.6, 5.0, 0.0);
+	// Vector alpha_0 = new Vector(0.0, 2.0, 0.0);
+	// Vector alpha_1 = new Vector(0.0, 5.0, 0.0);
+	// Vector beta_0 = new Vector(1.6, 2.0, 0.0);
+	// Vector beta_1 = new Vector(1.6, 5.0, 0.0);
 	//
 	// GPLine A = new GPLine("Ahhh", alpha_0, alpha_1);
 	// GPLine B = new GPLine("Beeh", beta_0, beta_1);
@@ -70,8 +70,8 @@ public class Test
 	//
 	// System.out.println("result x-y = " + result1);
 	//
-	// IVector3 testResult = GPUtility.substractOtherVector(
-	// new Vector3(-0.5, 1.2, -32.0), new Vector3(1.0, -2.0, -33.0));
+	// Vector testResult = GPUtility.substractOtherVector(
+	// new Vector(-0.5, 1.2, -32.0), new Vector(1.0, -2.0, -33.0));
 	//
 	// System.out.println(
 	// "result of GPUtility.substractOtherVector: " +
@@ -120,15 +120,15 @@ public class Test
 	ResourcesLocator.getInstance().parseIniFile("resources.ini");
 	JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
 	GroundPlan app = new GroundPlan();
-	appLauncher.create(app);
-	appLauncher.setRenderSystem(RenderSystem.JOGL);
-	appLauncher.setUiSystem(UI.JOGL_SWING);
+//	appLauncher.create(app);
+//	appLauncher.setRenderSystem(RenderSystem.JOGL);
+//	appLauncher.setUiSystem(UI.JOGL_SWING);
 	
 	Test test = new Test();
 	// test.runTest();
-	// test.runAnalyzer(app);
+	test.runAnalyzer(app);
 	// test.testRender(app);
-	test.analyzeAndRender(app);
+	// test.analyzeAndRender(app);
 	}
 	
 }

@@ -35,7 +35,7 @@
 //        appLauncher.setRenderSystem(RenderSystem.JOGL);
 //        appLauncher.setUiSystem(UI.JOGL_SWING);
 //        
-////        Camera.getInstance().setEye(VectorMatrixFactory.newIVector3(0.0, 0.0, 10.0));
+////        Camera.getInstance().setEye(VectorMatrixFactory.newVector(0.0, 0.0, 10.0));
 //    
 //    }
 //}

@@ -17,13 +17,13 @@ import java.util.Map;
 
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.studentprojects.brickbuilder.math.ColorRGB;
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
@@ -69,8 +69,8 @@ public class BrickCloudReader {
 	 * @throws IOException
 	 */
 	private static IBrickCloud readFile(DataInputStream reader, String path) throws IOException {
-		IVector3 loc = null;
-		IVectorInt3 res = null;
+		Vector loc = null;
+		VectorInt3 res = null;
 		int colors = 0;
 		int brickTypes = 0;
 		int bricks = 0;
@@ -83,7 +83,7 @@ public class BrickCloudReader {
 			while ((c = (char) reader.readByte()) != '\n') s.append(c);
 			
 			if (s.toString().startsWith("loc"))
-				loc = readVector3(s.toString());
+				loc = readVector(s.toString());
 			else if (s.toString().startsWith("res")) {
 				int[] v = readInt(s.toString());
 				if (v.length != 3) continue;
@@ -132,7 +132,7 @@ public class BrickCloudReader {
 		return cloud;
 	}
 
-	private static IVector3 readVector3(String s) {
+	private static Vector readVector(String s) {
 		String[] data = s.trim().split("\\s+");
 		if (data.length != 4) return null;
 		double[] d = new double[3];
@@ -142,7 +142,7 @@ public class BrickCloudReader {
 		catch (Exception e) {
 			return null;
 		}
-		return VectorMatrixFactory.newIVector3(d[0], d[1], d[2]);
+		return VectorFactory.createVector3(d[0], d[1], d[2]);
 	}
 	
 	private static int[] readInt(String s) {
@@ -164,7 +164,7 @@ public class BrickCloudReader {
 		double dimX = reader.readDouble();
 		double dimY = reader.readDouble();
 		double dimZ = reader.readDouble();
-		RootBrick rootBrick = new RootBrick(VectorMatrixFactory.newIVector3(dimX, dimY, dimZ), meshes.get("root"));
+		RootBrick rootBrick = new RootBrick(VectorFactory.createVector3(dimX, dimY, dimZ), meshes.get("root"));
 		IBrickSet brickSet = new BrickSet(rootBrick);
 		
 		// read other types
@@ -186,7 +186,7 @@ public class BrickCloudReader {
 				// Special Brick
 				BrickType specialType = BrickType.values()[reader.readByte()];
 				int count = reader.readShort();
-				List<IVectorInt3> unitPos = new ArrayList<IVectorInt3>();			
+				List<VectorInt3> unitPos = new ArrayList<VectorInt3>();			
 				for (int j = 0; j < count; j++) {
 					int posX = reader.readByte();
 					int posY = reader.readByte();

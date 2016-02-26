@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
@@ -115,7 +115,7 @@ public class ObjFileWriter {
    */
   private void writeTextureCoordinates(BufferedWriter writer, ITriangleMesh mesh) {
     for (int texCoordIndex = 0; texCoordIndex < mesh.getNumberOfTextureCoordinates(); texCoordIndex++) {
-      IVector3 texCoord = mesh.getTextureCoordinate(texCoordIndex);
+      Vector texCoord = mesh.getTextureCoordinate(texCoordIndex);
       try {
         writer.write("vt " + texCoord.get(0) + " " + texCoord.get(1) + "\n");
       } catch (IOException e) {

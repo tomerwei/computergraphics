@@ -7,9 +7,9 @@ package cgresearch.studentprojects.brickbuilder.brickcloud;
 
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
  * Interface for every usable brick in the algorithm.
@@ -21,7 +21,7 @@ public interface IBrick {
 	 * Get the dimensions of the brick as a vector.
 	 * @return
 	 */
-	public IVector3 getDimensions();
+	public Vector getDimensions();
 	
 	/**
 	 * Get the 3d-model of the brick.
@@ -40,11 +40,11 @@ public interface IBrick {
 	 * For special bricks its the max length for each axiz.
 	 * @return
 	 */
-	public IVectorInt3 getResolution();
+	public VectorInt3 getResolution();
 	
 	/**
 	 * Get the brick unit positions.
 	 * @return
 	 */
-	public List<IVectorInt3> getUnitPositions();
+	public List<VectorInt3> getUnitPositions();
 }

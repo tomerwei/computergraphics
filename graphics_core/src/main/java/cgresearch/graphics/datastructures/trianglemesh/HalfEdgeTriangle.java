@@ -1,6 +1,6 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * A facet has a reference to one of oits half edges. This datastructure
@@ -20,7 +20,7 @@ public class HalfEdgeTriangle implements ITriangle {
   /**
    * Facet normal
    */
-  private IVector3 normal;
+  private Vector normal;
 
   public HalfEdge getHalfEdge() {
     return halfEdge;
@@ -35,11 +35,11 @@ public class HalfEdgeTriangle implements ITriangle {
     return "Triangular Facet";
   }
 
-  public IVector3 getNormal() {
+  public Vector getNormal() {
     return normal;
   }
 
-  public void setNormal(IVector3 normal) {
+  public void setNormal(Vector normal) {
     this.normal = normal;
   }
 
@@ -49,9 +49,9 @@ public class HalfEdgeTriangle implements ITriangle {
    * @return Area of the triangle.
    */
   public double getArea() {
-    IVector3 v0 = halfEdge.getStartVertex().getPosition();
-    IVector3 v1 = halfEdge.getNext().getStartVertex().getPosition();
-    IVector3 v2 = halfEdge.getNext().getNext().getStartVertex().getPosition();
+    Vector v0 = halfEdge.getStartVertex().getPosition();
+    Vector v1 = halfEdge.getNext().getStartVertex().getPosition();
+    Vector v2 = halfEdge.getNext().getNext().getStartVertex().getPosition();
     return v1.subtract(v0).cross(v2.subtract(v0)).getNorm() / 2.0;
   }
 
@@ -60,10 +60,10 @@ public class HalfEdgeTriangle implements ITriangle {
    * 
    * @return Centroid of the triangle.
    */
-  public IVector3 getCentroid() {
-    IVector3 v0 = halfEdge.getStartVertex().getPosition();
-    IVector3 v1 = halfEdge.getNext().getStartVertex().getPosition();
-    IVector3 v2 = halfEdge.getNext().getNext().getStartVertex().getPosition();
+  public Vector getCentroid() {
+    Vector v0 = halfEdge.getStartVertex().getPosition();
+    Vector v1 = halfEdge.getNext().getStartVertex().getPosition();
+    Vector v2 = halfEdge.getNext().getNext().getStartVertex().getPosition();
     return (v0.add(v1).add(v2)).multiply(1.0 / 3.0);
   }
 

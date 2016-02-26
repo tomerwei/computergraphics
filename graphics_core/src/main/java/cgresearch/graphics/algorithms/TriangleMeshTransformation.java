@@ -5,9 +5,10 @@
  */
 package cgresearch.graphics.algorithms;
 
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
 /**
@@ -27,7 +28,7 @@ public class TriangleMeshTransformation {
 	 * @param transformation
 	 *            Affine transformation.
 	 */
-	public static void transform(ITriangleMesh mesh, IMatrix3 transformation) {
+	public static void transform(ITriangleMesh mesh, Matrix transformation) {
 		for (int vertexIndex = 0; vertexIndex < mesh.getNumberOfVertices(); vertexIndex++) {
 			mesh.getVertex(vertexIndex)
 					.getPosition()
@@ -44,7 +45,7 @@ public class TriangleMeshTransformation {
 	 * @param translation
 	 *            Translation vector.
 	 */
-	public static void translate(ITriangleMesh mesh, IVector3 translation) {
+	public static void translate(ITriangleMesh mesh, Vector translation) {
 		for (int vertexIndex = 0; vertexIndex < mesh.getNumberOfVertices(); vertexIndex++) {
 			mesh.getVertex(vertexIndex)
 					.getPosition()
@@ -61,11 +62,11 @@ public class TriangleMeshTransformation {
 	 * @param scale
 	 *            Scaling factors in x-, y- and z-direction.
 	 */
-	public static void scale(ITriangleMesh mesh, IVector3 scale) {
-		transform(mesh, VectorMatrixFactory.newIMatrix3(
-				VectorMatrixFactory.newIVector3(scale.get(0), 0, 0),
-				VectorMatrixFactory.newIVector3(0, scale.get(1), 0),
-				VectorMatrixFactory.newIVector3(0, 0, scale.get(2))));
+	public static void scale(ITriangleMesh mesh, Vector scale) {
+		transform(mesh, MatrixFactory.createMatrix3(
+				VectorFactory.createVector3(scale.get(0), 0, 0),
+				VectorFactory.createVector3(0, scale.get(1), 0),
+				VectorFactory.createVector3(0, 0, scale.get(2))));
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class TriangleMeshTransformation {
 	 *            Scaling factors for all directions
 	 */
 	public static void scale(ITriangleMesh mesh, double scale) {
-		scale(mesh, VectorMatrixFactory.newIVector3(scale, scale, scale));
+		scale(mesh, VectorFactory.createVector3(scale, scale, scale));
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class TriangleMeshTransformation {
 	 * @param matrix
 	 *            Transformation matrix.
 	 */
-	public static void multiply(ITriangleMesh mesh, IMatrix3 matrix) {
+	public static void multiply(ITriangleMesh mesh, Matrix matrix) {
 		transform(mesh, matrix);
 
 	}

@@ -1,5 +1,5 @@
 package cgresearch.studentprojects.brickbuilder.brickcloud;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 
 public interface IBrickBuilderMergeFunction {
@@ -12,5 +12,5 @@ public interface IBrickBuilderMergeFunction {
 	 * @return				connections to other bricks above and under it
 	 */
 	public int valueFunction(IBrickCloud brickCloud, IBrick brick,
-			IVectorInt3 pos, BrickRotation rot);
+			VectorInt3 pos, BrickRotation rot);
 }

@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.points.PointCloud;
@@ -60,12 +60,12 @@ public class PlyConverter {
 		IPointCloud pointCloud = new PointCloud();
 		for (int i = 0; i < NUMBER_OF_POINTS; i++) {
 			divideString(point, points.get(i));
-			IVector3 position = VectorMatrixFactory.newIVector3(point[0],
+			Vector position = VectorFactory.createVector3(point[0],
 					point[1], point[2]);
-			IVector3 color = VectorMatrixFactory.newIVector3(point[6] / 255,
+			Vector color = VectorFactory.createVector3(point[6] / 255,
 					point[7] / 255, point[8] / 255);
 
-			IVector3 normal = VectorMatrixFactory.newIVector3(point[3],
+			Vector normal = VectorFactory.createVector3(point[3],
 					point[4], point[5]);
 			pointCloud.addPoint(new Point(position, color, normal));
 		}

@@ -5,7 +5,7 @@
  */
 package cgresearch.rendering.jmonkey;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.rendering.core.IRenderObjectsFactory;
@@ -84,8 +84,8 @@ public class JMonkeyRenderObjectFactoryPointCloud implements
         float[] colorBuffer = new float[pointCloud.getNumberOfPoints() * 3];
         int[] indexBuffer = new int[pointCloud.getNumberOfPoints()];
         for (int i = 0; i < pointCloud.getNumberOfPoints(); i++) {
-            IVector3 position = pointCloud.getPoint(i).getPosition();
-            IVector3 color = pointCloud.getPoint(i).getColor();
+            Vector position = pointCloud.getPoint(i).getPosition();
+            Vector color = pointCloud.getPoint(i).getColor();
             vertexBuffer[i * 3] = (float) position.get(0);
             vertexBuffer[i * 3 + 1] = (float) position.get(1);
             vertexBuffer[i * 3 + 2] = (float) position.get(2);

@@ -4,18 +4,18 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.Vector3;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
 
 public class VectorMathTest
 {
 	@Test
 	public void vectorSubstractionTest1()
 	{
-	IVector3 vector1 = new Vector3(-0.5, 3.4, 12);
-	IVector3 vector2 = new Vector3(1.0, 5.6, 6.2);
+	Vector vector1 = new Vector(-0.5, 3.4, 12);
+	Vector vector2 = new Vector(1.0, 5.6, 6.2);
 	
-	IVector3 resultVector = GPUtility.substractOtherVector(vector1, vector2);
+	Vector resultVector = GPUtility.substractOtherVector(vector1, vector2);
 	
 	double x = resultVector.get(0);
 	double y = resultVector.get(1);
@@ -29,10 +29,10 @@ public class VectorMathTest
 	@Test
 	public void kreuzProduktTest1()
 	{
-	IVector3 a = new Vector3(1.5, 2.0, -3.0);
-	IVector3 b = new Vector3(2.0, -1.0, 5.0);
+	Vector a = new Vector(1.5, 2.0, -3.0);
+	Vector b = new Vector(2.0, -1.0, 5.0);
 	
-	IVector3 result = GPUtility.kreuzproduktVon(a, b);
+	Vector result = GPUtility.kreuzproduktVon(a, b);
 	
 	double x = result.get(0);
 	double y = result.get(1);
@@ -46,10 +46,10 @@ public class VectorMathTest
 	@Test
 	public void kreuzProduktTest2()
 	{
-	IVector3 a = new Vector3(1.0, 2.0, 3.0);
-	IVector3 b = new Vector3(3.0, 2.0, 1.0);
+	Vector a = new Vector(1.0, 2.0, 3.0);
+	Vector b = new Vector(3.0, 2.0, 1.0);
 	
-	IVector3 result = GPUtility.kreuzproduktVon(a, b);
+	Vector result = GPUtility.kreuzproduktVon(a, b);
 	
 	double x = result.get(0);
 	double y = result.get(1);
@@ -63,8 +63,8 @@ public class VectorMathTest
 	@Test
 	public void punktProduktTest1()
 	{
-	IVector3 a = new Vector3(-4.0, 2.2, -0.2);
-	IVector3 b = new Vector3(0.5, 0.2, -9.0);
+	Vector a = new Vector(-4.0, 2.2, -0.2);
+	Vector b = new Vector(0.5, 0.2, -9.0);
 	
 	double result = GPUtility.punktproduktVon(a, b);
 	
@@ -74,7 +74,7 @@ public class VectorMathTest
 	@Test
 	public void vectorLengthTest1()
 	{
-	IVector3 a = new Vector3(3.0, 4.0, 7.0);
+	Vector a = new Vector(3.0, 4.0, 7.0);
 	
 	double result = GPUtility.calcVectorLength(a);
 	
@@ -84,7 +84,7 @@ public class VectorMathTest
 	@Test
 	public void vectorLengthTest2()
 	{
-	IVector3 a = new Vector3(-3.0, -4.0, 2.0);
+	Vector a = new Vector(-3.0, -4.0, 2.0);
 	
 	double result = GPUtility.calcVectorLength(a);
 	
@@ -94,10 +94,10 @@ public class VectorMathTest
 	@Test
 	public void normalizeVectorTest1()
 	{
-	IVector3 a = new Vector3(3.0, 4.0, 7.0);
+	Vector a = new Vector(3.0, 4.0, 7.0);
 	
-	IVector3 result = GPUtility.normalizeVector(a);
-	// IVector3 result = a.getNormalized();
+	Vector result = GPUtility.normalizeVector(a);
+	// Vector result = a.getNormalized();
 	
 	double x = result.get(0);
 	double y = result.get(1);
@@ -111,8 +111,8 @@ public class VectorMathTest
 	@Test
 	public void angleBetweenVectorsTest1()
 	{
-		IVector3 a = new Vector3(1.0, 3.0, -2.0);
-		IVector3 b = new Vector3(-1.0, 4.0, 3.0);
+		Vector a = new Vector(1.0, 3.0, -2.0);
+		Vector b = new Vector(-1.0, 4.0, 3.0);
 		
 		double angle = GPUtility.angleBetweenVectors(a, b);
 		
@@ -122,8 +122,8 @@ public class VectorMathTest
 	@Test
 	public void angleBetweenVectorsTest2()
 	{
-		IVector3 a = new Vector3(1.0, 4.0, -2.0);
-		IVector3 b = new Vector3(-3.0, 3.0, 1.0);
+		Vector a = new Vector(1.0, 4.0, -2.0);
+		Vector b = new Vector(-3.0, 3.0, 1.0);
 		
 		double angle = GPUtility.angleBetweenVectors(a, b);
 		

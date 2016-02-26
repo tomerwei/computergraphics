@@ -6,12 +6,12 @@
 package cgresearch.studentprojects.brickbuilder.voxelcloud;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
@@ -25,9 +25,9 @@ import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 public class VoxelizationBoundingBox implements IVoxelizationAlgorithm {
 
   @Override
-  public IVoxelCloud transformMesh2Cloud(ITriangleMesh mesh, int resolutionAxisX, IVector3 voxelScale) {
+  public IVoxelCloud transformMesh2Cloud(ITriangleMesh mesh, int resolutionAxisX, Vector voxelScale) {
     BoundingBox box = mesh.getBoundingBox();
-    IVector3 location = box.getLowerLeft();
+    Vector location = box.getLowerLeft();
     double width = box.getUpperRight().subtract(box.getLowerLeft()).get(MathHelpers.INDEX_0);
     double height = box.getUpperRight().subtract(box.getLowerLeft()).get(MathHelpers.INDEX_1);
     double depth = box.getUpperRight().subtract(box.getLowerLeft()).get(MathHelpers.INDEX_2);
@@ -42,17 +42,17 @@ public class VoxelizationBoundingBox implements IVoxelizationAlgorithm {
     // adjust location of y, z
     double offsetY = ((resolutionAxisY * yRes) - height) * 0.5;
     double offsetZ = ((resolutionAxisZ * zRes) - depth) * 0.5;
-    location = location.subtract(VectorMatrixFactory.newIVector3(0, offsetY, offsetZ));
+    location = location.subtract(VectorFactory.createVector3(0, offsetY, offsetZ));
 
     // create voxel cloud
-    IVoxelCloud cloud = new VoxelCloud(location, VectorMatrixFactory.newIVector3(xRes, yRes, zRes),
+    IVoxelCloud cloud = new VoxelCloud(location, VectorFactory.createVector3(xRes, yRes, zRes),
         new VectorInt3(resolutionAxisX, resolutionAxisY, resolutionAxisZ));
     for (int z = 0; z < cloud.getResolutions().getZ(); z++) {
       for (int y = 0; y < cloud.getResolutions().getY(); y++) {
         for (int x = 0; x < cloud.getResolutions().getX(); x++) {
-          IVectorInt3 p = new VectorInt3(x, y, z);
-          IVector3 ll = location.add(VectorMatrixFactory.newIVector3(xRes * x, yRes * y, zRes * z));
-          IVector3 ur = location.add(VectorMatrixFactory.newIVector3(xRes * (x + 1), yRes * (y + 1), zRes * (z + 1)));
+          VectorInt3 p = new VectorInt3(x, y, z);
+          Vector ll = location.add(VectorFactory.createVector3(xRes * x, yRes * y, zRes * z));
+          Vector ur = location.add(VectorFactory.createVector3(xRes * (x + 1), yRes * (y + 1), zRes * (z + 1)));
           if (vertexInBox(mesh, ll, ur))
             cloud.setVoxelAt(p, VoxelType.INTERIOR);
         }
@@ -62,7 +62,7 @@ public class VoxelizationBoundingBox implements IVoxelizationAlgorithm {
     return cloud;
   }
 
-  private boolean vertexInBox(ITriangleMesh mesh, IVector3 ll, IVector3 ur) {
+  private boolean vertexInBox(ITriangleMesh mesh, Vector ll, Vector ur) {
     for (int i = 0; i < mesh.getNumberOfVertices(); i++) {
       IVertex v = mesh.getVertex(i);
       double[] l = ll.data();

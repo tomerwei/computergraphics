@@ -1,7 +1,7 @@
 package cgresearch.graphics.datastructures.polygon;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.GenericEdge;
 
 /**
@@ -24,7 +24,7 @@ public class PolygonEdge implements GenericEdge {
   /**
    * Color used for debugging.
    */
-  private IVector3 color = VectorMatrixFactory.newIVector3(0, 0, 0);
+  private Vector color = VectorFactory.createVector3(0, 0, 0);
 
   public PolygonEdge(PolygonVertex start, PolygonVertex end) {
     this.startVertex = start;
@@ -41,11 +41,11 @@ public class PolygonEdge implements GenericEdge {
     return endVertex;
   }
 
-  public IVector3 getColor() {
+  public Vector getColor() {
     return color;
   }
 
-  public void setColor(IVector3 color) {
+  public void setColor(Vector color) {
     this.color = color;
   }
 

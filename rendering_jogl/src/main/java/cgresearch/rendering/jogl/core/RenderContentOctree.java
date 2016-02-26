@@ -4,8 +4,8 @@ import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.Transformation;
 import com.jogamp.opengl.GL2;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.tree.OctreeNode;
 
 /**
@@ -40,7 +40,7 @@ public class RenderContentOctree implements IRenderContent {
 	}
 
 	@Override
-	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners, boolean cameraPositionChanged) {
+	public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners, boolean cameraPositionChanged) {
 
 	}
 
@@ -52,9 +52,9 @@ public class RenderContentOctree implements IRenderContent {
 			return;
 		}
 
-		IVector3 dx = VectorMatrixFactory.newIVector3(node.getLength(), 0, 0);
-		IVector3 dy = VectorMatrixFactory.newIVector3(0, node.getLength(), 0);
-		IVector3 dz = VectorMatrixFactory.newIVector3(0, 0, node.getLength());
+		Vector dx = VectorFactory.createVector3(node.getLength(), 0, 0);
+		Vector dy = VectorFactory.createVector3(0, node.getLength(), 0);
+		Vector dz = VectorFactory.createVector3(0, 0, node.getLength());
 		if (node.getNumberOfChildren() == 0) {
 			if (node.getNumberOfElements() > 0) {
 				drawCell(gl, node, dx, dy, dz);
@@ -71,8 +71,8 @@ public class RenderContentOctree implements IRenderContent {
 	 * Draw the ouline of a cell. The cell is only drawn, if it contains
 	 * elements.
 	 */
-	private void drawCell(GL2 gl, OctreeNode<?> node, IVector3 dx, IVector3 dy,
-			IVector3 dz) {
+	private void drawCell(GL2 gl, OctreeNode<?> node, Vector dx, Vector dy,
+			Vector dz) {
 		// Render node
 		gl.glBegin(GL2.GL_LINES);
 		// Bottom
@@ -109,9 +109,9 @@ public class RenderContentOctree implements IRenderContent {
 	}
 
 	/**
-	 * Call the glVertex method on a IVector3.
+	 * Call the glVertex method on a Vector.
 	 */
-	private void glVertex(GL2 gl, IVector3 v) {
+	private void glVertex(GL2 gl, Vector v) {
 		gl.glVertex3d(v.get(0), v.get(1), v.get(2));
 	}
 

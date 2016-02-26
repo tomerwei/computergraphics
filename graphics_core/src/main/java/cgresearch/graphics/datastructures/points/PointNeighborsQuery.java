@@ -3,7 +3,7 @@ package cgresearch.graphics.datastructures.points;
 import java.util.List;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.kd.KDTree;
 import cgresearch.graphics.datastructures.kd.KeyDuplicateException;
 import cgresearch.graphics.datastructures.kd.KeySizeException;
@@ -72,7 +72,7 @@ public class PointNeighborsQuery {
 	/**
 	 * Run a query to find the knn nearest points from a given point 'point'.
 	 */
-	public void queryKnn(IVector3 point, int knn) {
+	public void queryKnn(Vector point, int knn) {
 		neighborIndices = null;
 		try {
 			neighborIndices = tree.nearest(point.data(), knn);
@@ -104,7 +104,7 @@ public class PointNeighborsQuery {
 	 * Run a query to find the nearest points in epsilon-distance from a given
 	 * point.
 	 */
-	public void queryEpsilon(IVector3 point, double epsilon) {
+	public void queryEpsilon(Vector point, double epsilon) {
 		neighborIndices = null;
 		try {
 			neighborIndices = tree.nearestEuclidean(point.data(), epsilon);

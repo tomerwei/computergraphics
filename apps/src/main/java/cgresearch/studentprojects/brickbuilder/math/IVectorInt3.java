@@ -47,12 +47,12 @@ public interface IVectorInt3 {
 	 * @param other
 	 * return
 	 */
-	public IVectorInt3 add(IVectorInt3 other);
+	public VectorInt3 add(VectorInt3 other);
 	
 	/**
 	 * Subtracts another vector and returns the result.
 	 * @param other
 	 * return
 	 */
-	public IVectorInt3 sub(IVectorInt3 other);
+	public VectorInt3 sub(VectorInt3 other);
 }

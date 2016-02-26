@@ -21,8 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.material.CgGlslShader;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.GenericManager;
@@ -260,12 +260,12 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 			material.setRenderMode(renderMode);
 			node.getContent().updateRenderStructures();
 		} else if (e.getActionCommand().equals(ACTION_REFLECTION_AMBIENT)) {
-			IVector3 c = material.getReflectionAmbient();
+			Vector c = material.getReflectionAmbient();
 			Color color = JColorChooser.showDialog(null,
 					"Select ambient reflection", new Color((float) c.get(0),
 							(float) c.get(1), (float) c.get(2)));
 			if (color != null) {
-				material.setReflectionAmbient(VectorMatrixFactory.newIVector3(
+				material.setReflectionAmbient(VectorFactory.createVector3(
 						color.getRed() / 255.0, color.getGreen() / 255.0,
 						color.getBlue() / 255.0));
 			}
@@ -273,12 +273,12 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 					.toString());
 			node.getContent().updateRenderStructures();
 		} else if (e.getActionCommand().equals(ACTION_REFLECTION_DIFFUSE)) {
-			IVector3 c = material.getReflectionDiffuse();
+			Vector c = material.getReflectionDiffuse();
 			Color color = JColorChooser.showDialog(null,
 					"Select diffuse reflection", new Color((float) c.get(0),
 							(float) c.get(1), (float) c.get(2)));
 			if (color != null) {
-				material.setReflectionDiffuse(VectorMatrixFactory.newIVector3(
+				material.setReflectionDiffuse(VectorFactory.createVector3(
 						color.getRed() / 255.0, color.getGreen() / 255.0,
 						color.getBlue() / 255.0));
 			}
@@ -286,12 +286,12 @@ public class InfoEditMaterial extends InfoEditDialog implements ActionListener,
 					.toString());
 			node.getContent().updateRenderStructures();
 		} else if (e.getActionCommand().equals(ACTION_REFLECTION_SPECULAR)) {
-			IVector3 c = material.getReflectionSpecular();
+			Vector c = material.getReflectionSpecular();
 			Color color = JColorChooser.showDialog(null,
 					"Select specular reflection", new Color((float) c.get(0),
 							(float) c.get(1), (float) c.get(2)));
 			if (color != null) {
-				material.setReflectionSpecular(VectorMatrixFactory.newIVector3(
+				material.setReflectionSpecular(VectorFactory.createVector3(
 						color.getRed() / 255.0, color.getGreen() / 255.0,
 						color.getBlue() / 255.0));
 			}

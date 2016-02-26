@@ -3,7 +3,11 @@
  * Hochschule für Angewandte Wissenschaften (HAW), Hamburg
  * Lecture demo program.
  */
-package cgresearch.core.math;
+package cgresearch.core.math.deprecated;
+
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.Vector;
 
 /**
  * 
@@ -12,7 +16,7 @@ package cgresearch.core.math;
  * @author Philipp Jenke
  * 
  */
-public interface IVector3 extends IVector {
+public interface DeprecatedIVector3 {
 
   /**
    * Copy all values.
@@ -20,12 +24,12 @@ public interface IVector3 extends IVector {
    * @param other
    *          Copy source.
    */
-  void copy(final IVector3 other);
+  void copy(final Vector other);
 
   /**
    * Multiply vector with a scalar, return result.
    */
-  public IVector3 multiply(final double s);
+  public Vector multiply(final double s);
 
   /**
    * Multiply vector with a scalar, result is saved in this
@@ -35,7 +39,7 @@ public interface IVector3 extends IVector {
   /**
    * Scalar product
    */
-  public double multiply(final IVector other);
+  public double multiply(final Vector other);
 
   /**
    * Return the squared norm of the vector
@@ -61,27 +65,27 @@ public interface IVector3 extends IVector {
    * Compute the cross product of two vectors. Only works for 3-dimensional
    * vectors.
    */
-  public IVector3 cross(final IVector other);
+  public Vector cross(final Vector other);
 
   /**
    * Subtract vector from this vector, return result.
    */
-  public IVector3 subtract(IVector other);
+  public Vector subtract(Vector other);
 
   /**
    * Add this vector other to this vector, result result
    */
-  public IVector3 add(IVector other);
+  public Vector add(Vector other);
 
   /**
    * Add this vector other to this vector, the result overrides self
    */
-  public void addSelf(IVector other);
+  public void addSelf(Vector other);
 
   /**
    * Normalize the vector (vector length = 1)
    */
-  public IVector3 getNormalized();
+  public Vector getNormalized();
 
   /**
    * Return the an array containing the values. Use with caution. Violates the
@@ -102,12 +106,12 @@ public interface IVector3 extends IVector {
   /**
    * Create a homogenious 4-vector from a 3-vector.
    */
-  public IVector4 makeHomogenious();
+  public Vector makeHomogenious();
 
   /**
    * Compute the vector product of the two vectors
    */
-  public IMatrix3 innerProduct(IVector d);
+  public Matrix innerProduct(Vector d);
 
   /**
    * Additional toString method with a given precision.
@@ -117,7 +121,7 @@ public interface IVector3 extends IVector {
   /**
    * Return a homogenious version of the vector.
    */
-  public IVector4 getHomogenious();
+  public Vector getHomogenious();
 
   /**
    * Set all three coordinates.

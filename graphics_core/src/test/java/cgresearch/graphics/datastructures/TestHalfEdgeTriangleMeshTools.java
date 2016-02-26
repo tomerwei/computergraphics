@@ -63,7 +63,7 @@ public class TestHalfEdgeTriangleMeshTools {
   public void testQueryVertexHalfEdge() {
     HalfEdgeTriangleMeshFactory factory = new HalfEdgeTriangleMeshFactory();
     HalfEdgeTriangleMesh ds = factory.createHalfEdgeDatastructure();
-    List<HalfEdge> queryResult = HalfEdgeTriangleMeshTools.getIncidetEdges(ds.getVertex(2));
+    List<HalfEdge> queryResult = HalfEdgeTriangleMeshTools.getIncidentHalfEdges(ds.getVertex(2));
     HalfEdge[] expected = { ds.getHalfEdge(0), ds.getHalfEdge(5), ds.getHalfEdge(4), ds.getHalfEdge(6),
         ds.getHalfEdge(8), ds.getHalfEdge(12), ds.getHalfEdge(1), ds.getHalfEdge(14) };
     assertEquals("Query vertex -> half edge failed.", expected.length, queryResult.size());
@@ -121,11 +121,12 @@ public class TestHalfEdgeTriangleMeshTools {
   public void testEdgeCollapse() {
     HalfEdgeTriangleMeshFactory factory = new HalfEdgeTriangleMeshFactory();
     HalfEdgeTriangleMesh ds = factory.createHalfEdgeDatastructure();
+    HalfEdgeTriangleMeshTools tools = new HalfEdgeTriangleMeshTools();
     HalfEdge halfEdge = ds.getHalfEdge(3);
     int numberOfFacets = ds.getNumberOfTriangles();
     int numberOfHalfEdges = ds.getNumberOfHalfEdges();
     int numberOfVertices = ds.getNumberOfVertices();
-    HalfEdgeTriangleMeshTools.collapse(ds, halfEdge);
+    tools.collapse(ds, halfEdge);
     assertEquals(numberOfFacets, ds.getNumberOfTriangles() + 2);
     assertEquals(numberOfHalfEdges, ds.getNumberOfHalfEdges() + 6);
     assertEquals(numberOfVertices, ds.getNumberOfVertices() + 1);

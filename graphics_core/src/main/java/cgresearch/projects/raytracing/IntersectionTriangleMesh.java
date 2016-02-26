@@ -1,6 +1,6 @@
 package cgresearch.projects.raytracing;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.Ray3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -49,7 +49,7 @@ public class IntersectionTriangleMesh implements Intersect<ITriangleMesh> {
   private IntersectionResult intersect(ITriangleMesh mesh, int triangleIndex, Ray3D ray) {
 
     ITriangle triangle = mesh.getTriangle(triangleIndex);
-    IVector3 vA = mesh.getVertex(triangle.getA()).getPosition();
+    Vector vA = mesh.getVertex(triangle.getA()).getPosition();
 
     // Step 1: compute intersection between ray an plane defined by triangle
     double nr = triangle.getNormal().multiply(ray.getDirection());
@@ -61,15 +61,15 @@ public class IntersectionTriangleMesh implements Intersect<ITriangleMesh> {
       return null;
     }
 
-    IVector3 vB = mesh.getVertex(triangle.getB()).getPosition();
-    IVector3 vC = mesh.getVertex(triangle.getC()).getPosition();
-    IVector3 intersectionPoint = ray.getPoint().add(ray.getDirection().multiply(lambda));
-    IVector3 ab = vB.subtract(vA);
-    IVector3 ac = vC.subtract(vA);
+    Vector vB = mesh.getVertex(triangle.getB()).getPosition();
+    Vector vC = mesh.getVertex(triangle.getC()).getPosition();
+    Vector intersectionPoint = ray.getPoint().add(ray.getDirection().multiply(lambda));
+    Vector ab = vB.subtract(vA);
+    Vector ac = vC.subtract(vA);
     double areaTriangle = ab.cross(ac).getNorm() / 2.0;
-    IVector3 pa = intersectionPoint.subtract(vA);
-    IVector3 pb = intersectionPoint.subtract(vB);
-    IVector3 pc = intersectionPoint.subtract(vC);
+    Vector pa = intersectionPoint.subtract(vA);
+    Vector pb = intersectionPoint.subtract(vB);
+    Vector pc = intersectionPoint.subtract(vC);
     double areaA = pb.cross(pc).getNorm() / 2.0;
     double areaB = pa.cross(pc).getNorm() / 2.0;
     double areaC = pa.cross(pb).getNorm() / 2.0;

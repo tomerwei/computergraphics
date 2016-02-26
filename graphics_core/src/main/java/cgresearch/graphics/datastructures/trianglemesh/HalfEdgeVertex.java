@@ -1,24 +1,24 @@
 package cgresearch.graphics.datastructures.trianglemesh;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 public class HalfEdgeVertex implements IVertex {
 
   /**
    * 3D position of the vertex.
    */
-  private final IVector3 position = VectorMatrixFactory.newIVector3(0, 0, 0);
+  private final Vector position = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * (Normalized) normal direction of the vertex.
    */
-  private IVector3 normal = VectorMatrixFactory.newIVector3(1, 0, 0);
+  private Vector normal = VectorFactory.createVector3(1, 0, 0);
 
   /**
    * Color value at the vertex
    */
-  private IVector3 color = VectorMatrixFactory.newIVector3(0, 0, 0);
+  private Vector color = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Reference to one of the outgoing half edges.
@@ -31,7 +31,7 @@ public class HalfEdgeVertex implements IVertex {
    * @param position
    *          Initial value for position.
    */
-  public HalfEdgeVertex(IVector3 position) {
+  public HalfEdgeVertex(Vector position) {
     this.position.copy(position);
   }
 
@@ -43,7 +43,7 @@ public class HalfEdgeVertex implements IVertex {
    * @param normal
    *          Initial value for normal.
    */
-  public HalfEdgeVertex(IVector3 position, IVector3 normal) {
+  public HalfEdgeVertex(Vector position, Vector normal) {
     this.position.copy(position);
     this.normal.copy(normal);
   }
@@ -56,29 +56,29 @@ public class HalfEdgeVertex implements IVertex {
    * @param normal
    *          Initial value for normal.
    */
-  public HalfEdgeVertex(IVector3 position, IVector3 normal, IVector3 color) {
+  public HalfEdgeVertex(Vector position, Vector normal, Vector color) {
     this.position.copy(position);
     this.normal.copy(normal);
     this.color.copy(color);
   }
 
-  public IVector3 getPosition() {
+  public Vector getPosition() {
     return position;
   }
 
-  public IVector3 getNormal() {
+  public Vector getNormal() {
     return normal;
   }
 
-  public IVector3 getColor() {
+  public Vector getColor() {
     return color;
   }
 
-  public void setNormal(IVector3 normal) {
+  public void setNormal(Vector normal) {
     this.normal.copy(normal);
   }
 
-  public void setColor(IVector3 color) {
+  public void setColor(Vector color) {
     this.color.copy(color);
   }
 

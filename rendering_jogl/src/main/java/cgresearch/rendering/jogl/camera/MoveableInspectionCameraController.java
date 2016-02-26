@@ -7,7 +7,7 @@
 package cgresearch.rendering.jogl.camera;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.camera.CameraController;
 
@@ -64,7 +64,7 @@ public class MoveableInspectionCameraController extends CameraController {
 		Camera.getInstance().setRef(bbox.getCenter());
 
 		final double diameter = bbox.getDiameter();
-		IVector3 eyeRef = Camera.getInstance().getRef()
+		Vector eyeRef = Camera.getInstance().getRef()
 				.subtract(Camera.getInstance().getEye()).getNormalized();
 		eyeRef = eyeRef.multiply(diameter * FIT_FACTOR);
 		Camera.getInstance().setEye(

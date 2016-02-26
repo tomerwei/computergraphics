@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -45,8 +45,8 @@ public class PickingRenderer implements Observer {
 	/**
 	 * Color constants.
 	 */
-	private final IVector3 COLOR_NOT_SELECTED = Material.PALETTE1_COLOR2;
-	private final IVector3 COLOR_SELECTED = Material.PALETTE1_COLOR4;
+	private final Vector COLOR_NOT_SELECTED = Material.PALETTE1_COLOR2;
+	private final Vector COLOR_SELECTED = Material.PALETTE1_COLOR4;
 
 	/**
 	 * Node which shows the coordinate system of the selected node.
@@ -93,26 +93,26 @@ public class PickingRenderer implements Observer {
 				"picking coordinate system");
 
 		// X
-		Arrow arrowX = new Arrow(VectorMatrixFactory.newIVector3(0, 0, 0),
-				VectorMatrixFactory.newIVector3(0.3, 0, 0));
+		Arrow arrowX = new Arrow(VectorFactory.createVector3(0, 0, 0),
+				VectorFactory.createVector3(0.3, 0, 0));
 		arrowX.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newIVector3(1, 0, 0));
+				VectorFactory.createVector3(1, 0, 0));
 		arrowX.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 		coordSystemNode.addChild(new CgNode(arrowX, "x"));
 
 		// Y
-		Arrow arrowY = new Arrow(VectorMatrixFactory.newIVector3(0, 0, 0),
-				VectorMatrixFactory.newIVector3(0, 0.3, 0));
+		Arrow arrowY = new Arrow(VectorFactory.createVector3(0, 0, 0),
+				VectorFactory.createVector3(0, 0.3, 0));
 		arrowY.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newIVector3(0, 1, 0));
+				VectorFactory.createVector3(0, 1, 0));
 		arrowY.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 		coordSystemNode.addChild(new CgNode(arrowY, "y"));
 
 		// Z
-		Arrow arrowZ = new Arrow(VectorMatrixFactory.newIVector3(0, 0, 0),
-				VectorMatrixFactory.newIVector3(0, 0, 0.3));
+		Arrow arrowZ = new Arrow(VectorFactory.createVector3(0, 0, 0),
+				VectorFactory.createVector3(0, 0, 0.3));
 		arrowZ.getMaterial().setReflectionDiffuse(
-				VectorMatrixFactory.newIVector3(0, 0, 1));
+				VectorFactory.createVector3(0, 0, 1));
 		arrowZ.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
 		coordSystemNode.addChild(new CgNode(arrowZ, "z"));
 

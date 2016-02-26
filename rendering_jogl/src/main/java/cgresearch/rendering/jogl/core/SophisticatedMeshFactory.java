@@ -5,7 +5,7 @@
  */
 package cgresearch.rendering.jogl.core;
 
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -61,7 +61,7 @@ public class SophisticatedMeshFactory {
     CgNode cgNode = new CgNode(sophisticatedMesh, "sophisticated mesh");
     RenderContentTriangleMesh renderContent = new RenderContentTriangleMesh(sophisticatedMesh);
     JoglRenderNode renderNode = new JoglRenderNode(cgNode, renderContent);
-    sophisticatedMesh.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.6, 0.6, 0.9));
+    sophisticatedMesh.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.6, 0.6, 0.9));
     sophisticatedMesh.getMaterial().setRenderMode(Material.Normals.PER_FACET);
     sophisticatedMesh.getMaterial().setShowSophisticatesMesh(false);
     return renderNode;

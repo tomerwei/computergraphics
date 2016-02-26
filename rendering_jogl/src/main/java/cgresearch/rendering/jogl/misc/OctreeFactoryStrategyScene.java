@@ -3,7 +3,7 @@ package cgresearch.rendering.jogl.misc;
 import java.util.ArrayList;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.tree.IOctreeFactoryStrategy;
 import cgresearch.graphics.datastructures.tree.OctreeNode;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -38,7 +38,7 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
    */
   @Override
   public BoundingBox getBoundingBox() {
-    IVector3 tmpLl, tmpUr, ll = null, ur = null;
+    Vector tmpLl, tmpUr, ll = null, ur = null;
     for (int i = 0; i < leafNodes.size(); i++) {
       tmpLl = leafNodes.get(i).getBoundingBox().getLowerLeft();
       tmpUr = leafNodes.get(i).getBoundingBox().getUpperRight();
@@ -72,7 +72,7 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   @Override
   public boolean elementFitsInNode(int elementIndex, OctreeNode<Integer> node) {
     BoundingBox cur = leafNodes.get(elementIndex).getBoundingBox();
-    IVector3 nodeUpperRight = node.getBoundingBox().getUpperRight();
+    Vector nodeUpperRight = node.getBoundingBox().getUpperRight();
 
     if (cur.getUpperRight().get(X) < node.getLowerLeft().get(X)) {
       return false;

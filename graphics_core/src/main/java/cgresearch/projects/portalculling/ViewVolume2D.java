@@ -1,6 +1,6 @@
 package cgresearch.projects.portalculling;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Representation of a viewing volume in 2D. The volume is bounded by an origin
@@ -15,23 +15,23 @@ public class ViewVolume2D {
 	/**
 	 * Origin of the viewing volume.
 	 */
-	private IVector3 origin;
+	private Vector origin;
 
 	/**
 	 * Left boundary vector of the volume.
 	 */
-	private IVector3 leftBoundary;
+	private Vector leftBoundary;
 
 	/**
 	 * Right boundary vector of the volume.
 	 */
-	private IVector3 rightBoundary;
+	private Vector rightBoundary;
 
 	/**
 	 * Constructor.
 	 */
-	public ViewVolume2D(IVector3 origin, IVector3 leftBoundary,
-			IVector3 rightBoundary) {
+	public ViewVolume2D(Vector origin, Vector leftBoundary,
+			Vector rightBoundary) {
 		this.origin = origin;
 		this.leftBoundary = leftBoundary;
 		this.rightBoundary = rightBoundary;
@@ -40,21 +40,21 @@ public class ViewVolume2D {
 	/**
 	 * Getter.
 	 */
-	public IVector3 getOrigin() {
+	public Vector getOrigin() {
 		return origin;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public IVector3 getLeftBoundary() {
+	public Vector getLeftBoundary() {
 		return leftBoundary;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public IVector3 getRightBoundary() {
+	public Vector getRightBoundary() {
 		return rightBoundary;
 	}
 

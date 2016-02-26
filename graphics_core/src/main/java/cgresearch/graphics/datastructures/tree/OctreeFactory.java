@@ -2,8 +2,8 @@ package cgresearch.graphics.datastructures.tree;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Create a octree for a dataset (defined by a strategy pattern object).
@@ -33,12 +33,12 @@ public class OctreeFactory<T> {
   public OctreeNode<Integer> create(int maxDepth, int splitSize) {
     // Create root node
     BoundingBox bbox = strategy.getBoundingBox();
-    IVector3 lowerLeft = bbox.getCenter().subtract(VectorMatrixFactory.newIVector3(bbox.getMaxExtend() / 2.0,
+    Vector lowerLeft = bbox.getCenter().subtract(VectorFactory.createVector3(bbox.getMaxExtend() / 2.0,
         bbox.getMaxExtend() / 2.0, bbox.getMaxExtend() / 2.0));
     double length = bbox.getMaxExtend();
     // Scale slightly up
     double offset = length * 0.02;
-    lowerLeft = lowerLeft.subtract(VectorMatrixFactory.newIVector3(offset, offset, offset));
+    lowerLeft = lowerLeft.subtract(VectorFactory.createVector3(offset, offset, offset));
     length += offset * 2;
     OctreeNode<Integer> rootNode = new OctreeNode<Integer>(lowerLeft, length);
 

@@ -8,10 +8,10 @@ package cgresearch.studentprojects.brickbuilder.brickcloud;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 
@@ -28,7 +28,7 @@ public class SpecialBrick implements IChildBrick {
 	/**
 	 * Resolution of the root brick.
 	 */
-	private IVectorInt3 resolution;
+	private VectorInt3 resolution;
 	/**
 	 * Brick model.
 	 */
@@ -40,7 +40,7 @@ public class SpecialBrick implements IChildBrick {
 	/**
 	 * Unit positions.
 	 */
-	private List<IVectorInt3> unitPos;
+	private List<VectorInt3> unitPos;
 	
 	/**
 	 * Constructor.
@@ -48,7 +48,7 @@ public class SpecialBrick implements IChildBrick {
 	 * @param resolution
 	 * @param model
 	 */
-	public SpecialBrick(IBrick rootBrick, List<IVectorInt3> unitPos, ITriangleMesh model, BrickType brickType) {
+	public SpecialBrick(IBrick rootBrick, List<VectorInt3> unitPos, ITriangleMesh model, BrickType brickType) {
 		this.rootBrick = rootBrick;
 		this.model = model;
 		this.brickType = brickType;
@@ -59,8 +59,8 @@ public class SpecialBrick implements IChildBrick {
 				{Integer.MAX_VALUE, Integer.MIN_VALUE},
 				{Integer.MAX_VALUE, Integer.MIN_VALUE}
 		};
-		this.unitPos = new ArrayList<IVectorInt3>(unitPos);
-		for (IVectorInt3 v : unitPos) {
+		this.unitPos = new ArrayList<VectorInt3>(unitPos);
+		for (VectorInt3 v : unitPos) {
 			if (v.getX() < minMaxAxiz[0][0]) minMaxAxiz[0][0] = v.getX();
 			if (v.getY() < minMaxAxiz[1][0]) minMaxAxiz[1][0] = v.getY();
 			if (v.getZ() < minMaxAxiz[2][0]) minMaxAxiz[2][0] = v.getZ();
@@ -74,9 +74,9 @@ public class SpecialBrick implements IChildBrick {
 	}
 	
 	@Override
-	public IVector3 getDimensions() {
-		IVector3 dim = rootBrick.getDimensions();
-		return VectorMatrixFactory.newIVector3(dim.get(0) * resolution.getX(),
+	public Vector getDimensions() {
+		Vector dim = rootBrick.getDimensions();
+		return VectorFactory.createVector3(dim.get(0) * resolution.getX(),
 				dim.get(1) * resolution.getY(),
 				dim.get(2) * resolution.getZ());
 	}
@@ -97,12 +97,12 @@ public class SpecialBrick implements IChildBrick {
 	}
 	
 	@Override
-	public IVectorInt3 getResolution() {
+	public VectorInt3 getResolution() {
 		return resolution;
 	}
 
 	@Override
-	public List<IVectorInt3> getUnitPositions() {
+	public List<VectorInt3> getUnitPositions() {
 		return unitPos;
 	}
 }

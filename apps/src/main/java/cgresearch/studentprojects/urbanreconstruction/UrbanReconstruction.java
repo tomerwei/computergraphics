@@ -91,14 +91,14 @@ public class UrbanReconstruction extends CgApplication {
     appLauncher.setUiSystem(UI.JOGL_SWING);
    
 
-		// IVector3 u = VectorMatrixFactory.newIVector3(1, -2, 6);
-		// IVector3 v = VectorMatrixFactory.newIVector3(-4, 3, 3);
-		// IVector3 p = VectorMatrixFactory.newIVector3(2, 5, -1);
-		// IVector3 n = u.cross(v);
-		// edu.haw.cg.math.IMatrix3 R = VectorMatrixFactory
+		// Vector u = VectorMatrixFactory.newVector(1, -2, 6);
+		// Vector v = VectorMatrixFactory.newVector(-4, 3, 3);
+		// Vector p = VectorMatrixFactory.newVector(2, 5, -1);
+		// Vector n = u.cross(v);
+		// edu.haw.cg.math.Matrix R = VectorMatrixFactory
 		// .createCoordinateFrameZ(n);
 		//
-		// List<IVector3> pointsWorldCoords = new ArrayList<IVector3>();
+		// List<Vector> pointsWorldCoords = new ArrayList<Vector>();
 		// for (int i = 0; i < 5; i++) {
 		// double alpha = new java.util.Random().nextDouble();
 		// double beta = new java.util.Random().nextDouble();
@@ -106,11 +106,11 @@ public class UrbanReconstruction extends CgApplication {
 		// .add(v.multiply(beta)));
 		// }
 		//
-		// edu.haw.cg.math.IMatrix3 R_T = R.getTransposed();
+		// edu.haw.cg.math.Matrix R_T = R.getTransposed();
 		//
-		// List<IVector3> pointsInPlaneCoords = new ArrayList<IVector3>();
+		// List<Vector> pointsInPlaneCoords = new ArrayList<Vector>();
 		// for (int i = 0; i < pointsWorldCoords.size(); i++) {
-		// IVector3 sub = pointsWorldCoords.get(i).subtract(p);
+		// Vector sub = pointsWorldCoords.get(i).subtract(p);
 		// sub = R_T.multiply(sub);
 		// pointsInPlaneCoords.add(sub);
 		//
@@ -119,26 +119,26 @@ public class UrbanReconstruction extends CgApplication {
 		// }
 		//
 		// System.out.println("--- World coords ---");
-		// for (IVector3 x : pointsWorldCoords) {
+		// for (Vector x : pointsWorldCoords) {
 		// System.out.println(x);
 		// }
 		//
 		// System.out.println("--- Plane coords ---");
-		// for (IVector3 x : pointsInPlaneCoords) {
+		// for (Vector x : pointsInPlaneCoords) {
 		// System.out.println(x);
 		// }
 		//
 		// pointsWorldCoords.clear();
 		// for (int i = 0; i < pointsInPlaneCoords.size(); i++) {
 		//
-		// IVector3 res = R.multiply(pointsInPlaneCoords.get(i));
+		// Vector res = R.multiply(pointsInPlaneCoords.get(i));
 		// res = res.add(p);
 		//
 		// pointsWorldCoords.add(res);
 		// }
 		//
 		// System.out.println("--- World coords ---");
-		// for (IVector3 x : pointsWorldCoords) {
+		// for (Vector x : pointsWorldCoords) {
 		// System.out.println(x);
 		// }
 

@@ -9,7 +9,7 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.points.IPointCloud;
 import cgresearch.graphics.fileio.AsciiPointFormat;
@@ -34,19 +34,19 @@ public class PointCloudFrame extends CgApplication {
     IPointCloud pointCloud =
         reader.readFromFile(filename, new AsciiPointFormat().setPosition(0, 1, 2).setNormal(3, 4, 5).setColor(6, 7, 8));
     pointCloud.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-    pointCloud.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
+    pointCloud.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.25, 0.75, 0.25));
     getCgRootNode().addChild(new CgNode(pointCloud, "point cloud"));
 
     // ITriangleMesh cubeMesh = TriangleMeshFactory.createCube();
-    // IMatrix3 R = VectorMatrixFactory.getRotationMatrix(
-    // VectorMatrixFactory.newIVector3(1, 0, 0),
+    // Matrix R = VectorMatrixFactory.getRotationMatrix(
+    // VectorMatrixFactory.newVector(1, 0, 0),
     // 20.0 * Math.PI / 180.0);
     // TriangleMeshTransformation.transform(cubeMesh, R);
     // IPointCloud pointCloud = TriangleMeshSampler.sample(cubeMesh, 500);
     // pointCloud.getMaterial().setShaderId(Material.SHADER_COLOR);
     // for (int i = 0; i < pointCloud.getNumberOfPoints(); i++) {
     // pointCloud.getPoint(i).setColor(
-    // VectorMatrixFactory.newIVector3(Math.random(),
+    // VectorMatrixFactory.newVector(Math.random(),
     // Math.random(), Math.random()));
     // }
 

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
@@ -94,7 +94,7 @@ public class Utilities {
    * @param cellSize
    *          size of the box in the texture
    */
-  public static void addBox(ITriangleMesh mesh, IVector3 dim, IVector3 pos, int colorX, int colorY, int sizeX,
+  public static void addBox(ITriangleMesh mesh, Vector dim, Vector pos, int colorX, int colorY, int sizeX,
       int sizeY, int cellSize) {
     // create cube and alter
     ITriangleMesh cube = Utilities.createCube(colorX, colorY, sizeX, sizeY, cellSize);
@@ -134,26 +134,26 @@ public class Utilities {
     mesh.clear();
 
     int c00 = mesh.addTextureCoordinate(
-        VectorMatrixFactory.newIVector3(colorX * cellSize * 1.0 / sizeX, colorY * cellSize * 1.0 / sizeY, 0)); // up
+        VectorFactory.createVector3(colorX * cellSize * 1.0 / sizeX, colorY * cellSize * 1.0 / sizeY, 0)); // up
                                                                                                                // left
     int c01 = mesh.addTextureCoordinate(
-        VectorMatrixFactory.newIVector3(colorX * cellSize * 1.0 / sizeX, (colorY + 1) * cellSize * 1.0 / sizeY, 0)); // down
+        VectorFactory.createVector3(colorX * cellSize * 1.0 / sizeX, (colorY + 1) * cellSize * 1.0 / sizeY, 0)); // down
                                                                                                                      // left
     int c10 = mesh.addTextureCoordinate(
-        VectorMatrixFactory.newIVector3((colorX + 1) * cellSize * 1.0 / sizeX, colorY * cellSize * 1.0 / sizeY, 0)); // up
+        VectorFactory.createVector3((colorX + 1) * cellSize * 1.0 / sizeX, colorY * cellSize * 1.0 / sizeY, 0)); // up
                                                                                                                      // right
-    int c11 = mesh.addTextureCoordinate(VectorMatrixFactory.newIVector3((colorX + 1) * cellSize * 1.0 / sizeX,
+    int c11 = mesh.addTextureCoordinate(VectorFactory.createVector3((colorX + 1) * cellSize * 1.0 / sizeX,
         (colorY + 1) * cellSize * 1.0 / sizeY, 0)); // down right
 
     double d = 0.5;
-    int v000 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-d, -d, -d)));
-    int v010 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-d, d, -d)));
-    int v110 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(d, d, -d)));
-    int v100 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(d, -d, -d)));
-    int v001 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-d, -d, d)));
-    int v011 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(-d, d, d)));
-    int v111 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(d, d, d)));
-    int v101 = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(d, -d, d)));
+    int v000 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, -d, -d)));
+    int v010 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, d, -d)));
+    int v110 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, d, -d)));
+    int v100 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, -d, -d)));
+    int v001 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, -d, d)));
+    int v011 = mesh.addVertex(new Vertex(VectorFactory.createVector3(-d, d, d)));
+    int v111 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, d, d)));
+    int v101 = mesh.addVertex(new Vertex(VectorFactory.createVector3(d, -d, d)));
 
     // front
     mesh.addTriangle(new Triangle(v000, v100, v110, c01, c11, c10));

@@ -21,16 +21,16 @@ import javax.imageio.ImageIO;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.MathHelpers;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.studentprojects.brickbuilder.math.ColorRGB;
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
@@ -43,7 +43,7 @@ import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 public class VoxelizationParityCount implements IVoxelizationAlgorithm {
 
   @Override
-  public IVoxelCloud transformMesh2Cloud(final ITriangleMesh mesh, int resolutionAxisX, IVector3 voxelScale) {
+  public IVoxelCloud transformMesh2Cloud(final ITriangleMesh mesh, int resolutionAxisX, Vector voxelScale) {
     BufferedImage tex = null;
 
     if (mesh.getMaterial().hasTexture()) {
@@ -70,7 +70,7 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
     }
 
     BoundingBox box = mesh.getBoundingBox();
-    IVector3 location = box.getLowerLeft();
+    Vector location = box.getLowerLeft();
     double width = box.getUpperRight().subtract(box.getLowerLeft()).get(MathHelpers.INDEX_0);
     double height = box.getUpperRight().subtract(box.getLowerLeft()).get(MathHelpers.INDEX_1);
     double depth = box.getUpperRight().subtract(box.getLowerLeft()).get(MathHelpers.INDEX_2);
@@ -90,15 +90,15 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
     double offsetX = ((resolutionAxisAll * xRes) - width) * 0.5;
     double offsetY = ((resolutionAxisAll * yRes) - height) * 0.5;
     double offsetZ = ((resolutionAxisAll * zRes) - depth) * 0.5;
-    location = location.subtract(VectorMatrixFactory.newIVector3(offsetX, offsetY, offsetZ));
-    final IVector3 locationCenter = location.add(VectorMatrixFactory.newIVector3(xRes * 0.5, yRes * 0.5, zRes * 0.5));
+    location = location.subtract(VectorFactory.createVector3(offsetX, offsetY, offsetZ));
+    final Vector locationCenter = location.add(VectorFactory.createVector3(xRes * 0.5, yRes * 0.5, zRes * 0.5));
 
     // create voxel cloud
-    IVoxelCloud cloud = new VoxelCloud(location, VectorMatrixFactory.newIVector3(xRes, yRes, zRes),
+    IVoxelCloud cloud = new VoxelCloud(location, VectorFactory.createVector3(xRes, yRes, zRes),
         new VectorInt3(resolutionAxisAll, resolutionAxisAll, resolutionAxisAll));
 
     final int[] count = new int[resolutionAxisAll * resolutionAxisAll * resolutionAxisAll];
-    final IVector3[][] colorPoints = new IVector3[3][resolutionAxisAll * resolutionAxisAll * resolutionAxisAll];
+    final Vector[][] colorPoints = new Vector[3][resolutionAxisAll * resolutionAxisAll * resolutionAxisAll];
     final int[][] colorTriangles = new int[3][resolutionAxisAll * resolutionAxisAll * resolutionAxisAll];
 
     // calc triangle bounding boxes
@@ -141,8 +141,8 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
           // positive vote?
           int index = (resolutionAxisAll * resolutionAxisAll * z) + (resolutionAxisAll * y) + x;
           if (count[index] > 0) {
-            IVectorInt3 vec = new VectorInt3(x, y, z);
-            IVector3 pos = locationCenter.add(VectorMatrixFactory.newIVector3(x * res[0], y * res[1], z * res[2]));
+            VectorInt3 vec = new VectorInt3(x, y, z);
+            Vector pos = locationCenter.add(VectorFactory.createVector3(x * res[0], y * res[1], z * res[2]));
 
             // color?
             if (tex != null) {
@@ -186,7 +186,7 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
    */
   private void calcBoundingBox(ITriangleMesh mesh, ITriangle t, double[][] ds) {
     for (int i = 0; i < 3; i++) {
-      IVector3 v = mesh.getVertex(t.get(i)).getPosition();
+      Vector v = mesh.getVertex(t.get(i)).getPosition();
       if (v.get(0) < ds[0][0])
         ds[0][0] = v.get(0);
       if (v.get(1) < ds[0][1])
@@ -215,15 +215,15 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
    *          triangle bounding boxes
    * @return
    */
-  private Map<IVector3, Integer> findIntersects(ITriangleMesh mesh, IVector3 rayLoc, IVector3 rayDir,
+  private Map<Vector, Integer> findIntersects(ITriangleMesh mesh, Vector rayLoc, Vector rayDir,
       double[][][] bbs) {
-    Map<IVector3, Integer> intersects = new HashMap<IVector3, Integer>();
+    Map<Vector, Integer> intersects = new HashMap<Vector, Integer>();
     for (int i = 0; i < mesh.getNumberOfTriangles(); i++) {
       // check triangle bounding box
       if (!checkBoundingBox(rayLoc, rayDir, bbs[i]))
         continue;
       // get ray triangle intersect point
-      IVector3 r = rayTriangleIntersect(rayLoc, rayDir, mesh, mesh.getTriangle(i));
+      Vector r = rayTriangleIntersect(rayLoc, rayDir, mesh, mesh.getTriangle(i));
       if (r != null)
         intersects.put(r, i);
     }
@@ -241,7 +241,7 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
    *          bounding box
    * @return
    */
-  private boolean checkBoundingBox(IVector3 rayLoc, IVector3 rayDir, double[][] bb) {
+  private boolean checkBoundingBox(Vector rayLoc, Vector rayDir, double[][] bb) {
     int a = (rayDir.get(0) == 1 ? 1 : 0);
     int b = (rayDir.get(2) == 1 ? 1 : 2);
     if (rayLoc.get(a) < bb[0][a] || rayLoc.get(b) < bb[0][b])
@@ -273,15 +273,15 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
    * @param colorTriangles
    *          triangle to calc the color of
    */
-  private void castRay(ITriangleMesh mesh, final int axiz, int res, double[] step, IVector3 locCenter, int[] count,
-      double[][][] bbs, IVector3[] colorPoints, int[] colorTriangles) {
+  private void castRay(ITriangleMesh mesh, final int axiz, int res, double[] step, Vector locCenter, int[] count,
+      double[][][] bbs, Vector[] colorPoints, int[] colorTriangles) {
     // create ray direction
-    IVector3 dir = VectorMatrixFactory.newIVector3(0, 0, 0);
+    Vector dir = VectorFactory.createVector3(0, 0, 0);
     dir.set(axiz, 1);
     // create intersects comperator
-    Comparator<IVector3> comp = new Comparator<IVector3>() {
+    Comparator<Vector> comp = new Comparator<Vector>() {
       @Override
-      public int compare(IVector3 a, IVector3 b) {
+      public int compare(Vector a, Vector b) {
         return a.get(axiz) > b.get(axiz) ? 1 : a.get(axiz) < b.get(axiz) ? -1 : 0;
       }
 
@@ -294,13 +294,13 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
     for (pos[a] = 0; pos[a] < res; pos[a]++) {
       for (pos[b] = 0; pos[b] < res; pos[b]++) {
         // calc ray start location
-        IVector3 loc = locCenter.add(VectorMatrixFactory.newIVector3((axiz == 0 ? -step[0] : pos[0] * step[0]),
+        Vector loc = locCenter.add(VectorFactory.createVector3((axiz == 0 ? -step[0] : pos[0] * step[0]),
             (axiz == 1 ? -step[1] : pos[1] * step[1]), (axiz == 2 ? -step[2] : pos[2] * step[2])));
-        Map<IVector3, Integer> intersectsMap = findIntersects(mesh, loc, dir, bbs);
+        Map<Vector, Integer> intersectsMap = findIntersects(mesh, loc, dir, bbs);
         // broken ray? no vote
         if (intersectsMap.size() % 2 != 0)
           continue;
-        List<IVector3> intersects = new ArrayList<IVector3>(intersectsMap.keySet());
+        List<Vector> intersects = new ArrayList<Vector>(intersectsMap.keySet());
         Collections.sort(intersects, comp);
 
         // lets vote
@@ -355,13 +355,13 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
    *          triangle
    * @return intersect point or null
    */
-  private IVector3 rayTriangleIntersect(IVector3 rayP, IVector3 rayD, ITriangleMesh mesh, ITriangle t) {
+  private Vector rayTriangleIntersect(Vector rayP, Vector rayD, ITriangleMesh mesh, ITriangle t) {
     // e1 = v1 - v0
-    IVector3 e1 = mesh.getVertex(t.getB()).getPosition().subtract(mesh.getVertex(t.getA()).getPosition());
+    Vector e1 = mesh.getVertex(t.getB()).getPosition().subtract(mesh.getVertex(t.getA()).getPosition());
     // e2 = v2 - v0
-    IVector3 e2 = mesh.getVertex(t.getC()).getPosition().subtract(mesh.getVertex(t.getA()).getPosition());
+    Vector e2 = mesh.getVertex(t.getC()).getPosition().subtract(mesh.getVertex(t.getA()).getPosition());
     // h = crossP(d, e2)
-    IVector3 h = rayD.cross(e2);
+    Vector h = rayD.cross(e2);
     // a = dot(e1, h)
     double a = e1.multiply(h);
     //
@@ -370,14 +370,14 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
     // f = 1/a
     double f = 1 / a;
     // s = p - v0
-    IVector3 s = rayP.subtract(mesh.getVertex(t.getA()).getPosition());
+    Vector s = rayP.subtract(mesh.getVertex(t.getA()).getPosition());
     // u = f * dot(s, h)
     double u = f * s.multiply(h);
     //
     if (u < 0.0 || u > 1.0)
       return null;
     // q = cross(s, e1)
-    IVector3 q = s.cross(e1);
+    Vector q = s.cross(e1);
     // v = f * dot(d, q)
     double v = f * rayD.multiply(q);
     //
@@ -405,25 +405,25 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
    *          triangle index
    * @return
    */
-  private static IColorRGB getColorFromUV(ITriangleMesh mesh, BufferedImage tex, IVector3 point, int index) {
+  private static IColorRGB getColorFromUV(ITriangleMesh mesh, BufferedImage tex, Vector point, int index) {
     // source:
     // http://answers.unity3d.com/questions/383804/calculate-uv-coordinates-of-3d-point-on-plane-of-m.html
     ITriangle triangle = mesh.getTriangle(index);
-    IVector3[] vertices = new IVector3[] { mesh.getVertex(triangle.getA()).getPosition(),
+    Vector[] vertices = new Vector[] { mesh.getVertex(triangle.getA()).getPosition(),
         mesh.getVertex(triangle.getB()).getPosition(), mesh.getVertex(triangle.getC()).getPosition() };
-    IVector3[] texCoords = new IVector3[] { mesh.getTextureCoordinate(triangle.getTextureCoordinate(0)),
+    Vector[] texCoords = new Vector[] { mesh.getTextureCoordinate(triangle.getTextureCoordinate(0)),
         mesh.getTextureCoordinate(triangle.getTextureCoordinate(1)),
         mesh.getTextureCoordinate(triangle.getTextureCoordinate(2)) };
-    IVector3 verticesAPoint = vertices[0].subtract(point);
-    IVector3 verticesBPoint = vertices[1].subtract(point);
-    IVector3 verticesCPoint = vertices[2].subtract(point);
+    Vector verticesAPoint = vertices[0].subtract(point);
+    Vector verticesBPoint = vertices[1].subtract(point);
+    Vector verticesCPoint = vertices[2].subtract(point);
 
     double a = vertices[0].subtract(vertices[1]).cross(vertices[0].subtract(vertices[2])).getNorm();
     double a0 = verticesBPoint.cross(verticesCPoint).getNorm() / a;
     double a1 = verticesCPoint.cross(verticesAPoint).getNorm() / a;
     double a2 = verticesAPoint.cross(verticesBPoint).getNorm() / a;
 
-    IVector3 uv = texCoords[0].multiply(a0).add(texCoords[1].multiply(a1).add(texCoords[2].multiply(a2)));
+    Vector uv = texCoords[0].multiply(a0).add(texCoords[1].multiply(a1).add(texCoords[2].multiply(a2)));
     double u = uv.get(0) > 1.0 ? uv.get(0) - Math.floor(uv.get(0)) : uv.get(0);
     double v = uv.get(1) > 1.0 ? uv.get(1) - Math.floor(uv.get(1)) : uv.get(1);
     int color = tex.getRGB((int) ((tex.getWidth() - 1) * u), tex.getHeight() - 1 - (int) ((tex.getHeight() - 1) * v));
@@ -432,17 +432,17 @@ public class VoxelizationParityCount implements IVoxelizationAlgorithm {
 
   // private void intersectTest() {
   // ITriangleMesh mesh2 = new TriangleMesh();
-  // Vertex v0 = new Vertex(VectorMatrixFactory.newIVector3(2, 0, -1));
-  // Vertex v1 = new Vertex(VectorMatrixFactory.newIVector3(2, 0, 1));
-  // Vertex v2 = new Vertex(VectorMatrixFactory.newIVector3(2, 1, 0));
+  // Vertex v0 = new Vertex(VectorMatrixFactory.newVector(2, 0, -1));
+  // Vertex v1 = new Vertex(VectorMatrixFactory.newVector(2, 0, 1));
+  // Vertex v2 = new Vertex(VectorMatrixFactory.newVector(2, 1, 0));
   // int i0 = mesh2.addVertex(v0);
   // int i1 = mesh2.addVertex(v1);
   // int i2 = mesh2.addVertex(v2);
   // Triangle t = new Triangle(i0, i1, i2);
   // mesh2.addTriangle(t);
   //
-  // IVector3 p = VectorMatrixFactory.newIVector3(0, -0.1, 0);
-  // IVector3 d = VectorMatrixFactory.newIVector3(1, 0, 0);
+  // Vector p = VectorMatrixFactory.newVector(0, -0.1, 0);
+  // Vector d = VectorMatrixFactory.newVector(1, 0, 0);
   //
   // System.out.println(rayTriangleIntersect(p, d, mesh2, t));
   // }

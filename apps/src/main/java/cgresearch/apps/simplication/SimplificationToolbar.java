@@ -16,8 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.QuadricErrorMetricsSimplification2D;
+import cgresearch.graphics.algorithms.QuadricErrorMetricsSimplification3D;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.polygon.Polygon;
 import cgresearch.graphics.datastructures.trianglemesh.HalfEdgeTriangleMesh;
@@ -38,13 +39,10 @@ import cgresearch.ui.IApplicationControllerGui;
 public class SimplificationToolbar extends IApplicationControllerGui implements ActionListener {
   private static final long serialVersionUID = -6897703772468146995L;
 
-  /**
-   * Half edge data structure
-   */
-  private final HalfEdgeTriangleMesh heMesh;
-
   private final QuadricErrorMetricsSimplification2D simplification2D;
+  private final QuadricErrorMetricsSimplification3D simplification3D;
   private final Polygon polygon;
+  private final HalfEdgeTriangleMesh heMesh;
 
   /**
    * Action command for the simplify button.
@@ -54,7 +52,8 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
   public static final String ACTION_COMMMAND_SIMPLIFY_3D = "ACTION_COMMMAND_SIMPLIFY_3D";
   public static final String ACTION_COMMMAND_RESET_3D = "ACTION_COMMMAND_RESET_3D";
 
-  private JTextField textNumberOfSteps;
+  private JTextField textNumberOfSteps2D;
+  private JTextField textNumberOfSteps3D;
 
   /**
    * Constructor
@@ -63,6 +62,7 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     this.heMesh = heMesh;
     this.polygon = polygon;
     simplification2D = new QuadricErrorMetricsSimplification2D(polygon);
+    simplification3D = new QuadricErrorMetricsSimplification3D(heMesh);
 
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -74,9 +74,9 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     buttonReset2D.addActionListener(this);
     add(buttonReset2D);
 
-    textNumberOfSteps = new JTextField("1");
-    textNumberOfSteps.setMaximumSize(new Dimension(200, 30));
-    add(textNumberOfSteps);
+    textNumberOfSteps2D = new JTextField("1");
+    textNumberOfSteps2D.setMaximumSize(new Dimension(200, 30));
+    add(textNumberOfSteps2D);
 
     JButton buttonSimplify2D = new JButton("Simplify");
     buttonSimplify2D.setActionCommand(ACTION_COMMMAND_SIMPLIFY_2D);
@@ -91,7 +91,11 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     buttonReset3D.addActionListener(this);
     add(buttonReset3D);
 
-    JButton buttonSimplify = new JButton("Simplify (3D)");
+    textNumberOfSteps3D = new JTextField("1");
+    textNumberOfSteps3D.setMaximumSize(new Dimension(200, 30));
+    add(textNumberOfSteps3D);
+
+    JButton buttonSimplify = new JButton("Simplify");
     buttonSimplify.setActionCommand(ACTION_COMMMAND_SIMPLIFY_3D);
     buttonSimplify.addActionListener(this);
     add(buttonSimplify);
@@ -102,7 +106,13 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
 
   private void reset3D() {
     // Load cuboid from file to texture mesh
+    //String sphereObjFilename = "meshes/cube.obj";
+    
+    
+    // TODO: Bug bei 221 simplificstions
     String sphereObjFilename = "meshes/sphere.obj";
+    
+    
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile(sphereObjFilename);
     if (meshes.size() == 0) {
@@ -115,6 +125,10 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     heMesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     heMesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
     heMesh.checkConsistency();
+
+    simplification3D.reset();
+    simplification3D.computeEdgeErrorColor();
+
     heMesh.updateRenderStructures();
   }
 
@@ -122,12 +136,12 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     polygon.clear();
 
     // Square
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, -1, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, -0.5, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, 0.5, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(-1, 1, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(1, 1, 0));
-    polygon.addPoint(VectorMatrixFactory.newIVector3(1, -1, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, -1, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, -0.5, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, 0.5, 0));
+    polygon.addPoint(VectorFactory.createVector3(-1, 1, 0));
+    polygon.addPoint(VectorFactory.createVector3(1, 1, 0));
+    polygon.addPoint(VectorFactory.createVector3(1, -1, 0));
 
     PolygonIO reader = new PolygonIO();
     polygon.copy(reader.readPolygon("polygons/hamburg.polygon"));
@@ -181,7 +195,7 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
     // Logger.getInstance().message("Time required: " + timeRequired + " s.");
 
     // Selected number of collapsed
-    int numberOfSteps = Integer.parseInt(textNumberOfSteps.getText());
+    int numberOfSteps = Integer.parseInt(textNumberOfSteps2D.getText());
     for (int i = 0; i < numberOfSteps; i++) {
       simplification2D.simplify();
     }
@@ -197,7 +211,16 @@ public class SimplificationToolbar extends IApplicationControllerGui implements 
    * Apply one simplification step in 3D.
    */
   private void simplify3D() {
-    HalfEdgeTriangleMeshTools.collapse(heMesh, heMesh.getHalfEdge(0));
+    // Selected number of collapsed
+    int numberOfSteps = Integer.parseInt(textNumberOfSteps3D.getText());
+    for (int i = 0; i < numberOfSteps; i++) {
+      simplification3D.simplify();
+    }
+
+    // Update rendering
+    simplification3D.computeEdgeErrorColor();
+    Logger.getInstance().message(heMesh.getNumberOfVertices() + " vertices and " + heMesh.getNumberOfHalfEdges()
+        + " half edges left after simplifiction.");
     heMesh.checkConsistency();
     heMesh.updateRenderStructures();
   }

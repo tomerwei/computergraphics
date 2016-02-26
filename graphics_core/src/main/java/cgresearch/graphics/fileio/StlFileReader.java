@@ -6,8 +6,8 @@ import java.io.InputStream;
 
 import cgresearch.core.assets.CgAssetManager;
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
@@ -65,9 +65,9 @@ public class StlFileReader {
     ITriangleMesh mesh = new TriangleMesh();
     for (int i = 0; i < numberOfTriangles; i++) {
       readVector(dataInputStream); // Normal - discard
-      IVector3 a = readVector(dataInputStream);
-      IVector3 b = readVector(dataInputStream);
-      IVector3 c = readVector(dataInputStream);
+      Vector a = readVector(dataInputStream);
+      Vector b = readVector(dataInputStream);
+      Vector c = readVector(dataInputStream);
       int aIndex = mesh.addVertex(new Vertex(a));
       int bIndex = mesh.addVertex(new Vertex(b));
       int cIndex = mesh.addVertex(new Vertex(c));
@@ -86,12 +86,12 @@ public class StlFileReader {
     }
   }
 
-  private IVector3 readVector(DataInputStream dataInputStream) {
+  private Vector readVector(DataInputStream dataInputStream) {
     try {
       double x = dataInputStream.readFloat();
       double y = dataInputStream.readFloat();
       double z = dataInputStream.readFloat();
-      return VectorMatrixFactory.newIVector3(x, y, z);
+      return VectorFactory.createVector3(x, y, z);
     } catch (IOException e) {
       Logger.getInstance().error("Failed to read vector.");
     }

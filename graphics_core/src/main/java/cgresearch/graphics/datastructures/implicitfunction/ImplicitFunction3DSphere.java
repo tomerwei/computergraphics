@@ -5,7 +5,7 @@
  */
 package cgresearch.graphics.datastructures.implicitfunction;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 /**
  * Implicit function of a 3-dimensional sphere.
@@ -38,7 +38,7 @@ public class ImplicitFunction3DSphere implements IImplicitFunction3D {
      * )
      */
     @Override
-    public double f(IVector3 p) {
+    public double f(Vector p) {
         return p.get(0) * p.get(0) + p.get(1) * p.get(1) + p.get(2) * p.get(2)
                 - radius * radius;
     }

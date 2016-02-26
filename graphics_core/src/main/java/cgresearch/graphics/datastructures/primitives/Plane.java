@@ -6,9 +6,10 @@
 package cgresearch.graphics.datastructures.primitives;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IMatrix3;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Matrix;
+import cgresearch.core.math.MatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Representation of a plane in 3-space.
@@ -21,27 +22,27 @@ public class Plane extends IPrimitive {
   /**
    * A point in the plane;
    */
-  private IVector3 point = VectorMatrixFactory.newIVector3(0, 0, 0);
+  private Vector point = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Normal vector of the plane;
    */
-  private IVector3 normal = VectorMatrixFactory.newIVector3(0, 0, 0);
+  private Vector normal = VectorFactory.createVector3(0, 0, 0);
 
   /**
    * Cached precomputed coordinate frame of the plane: tangent in u-direction
    */
-  private IVector3 tangentU;
+  private Vector tangentU;
 
   /**
    * Cached precomputed coordinate frame of the plane: tangent in v-direction
    */
-  private IVector3 tangentV;
+  private Vector tangentV;
 
   /**
    * Cached precomputed coordinate frame of the plane: coordinate frame
    */
-  private IMatrix3 planeCoordinateSystem;
+  private Matrix planeCoordinateSystem;
 
   private static final double PARALLEL_THRESHOLD = 0.99;
 
@@ -49,13 +50,13 @@ public class Plane extends IPrimitive {
    * Constructor.
    */
   public Plane() {
-    this(VectorMatrixFactory.newIVector3(0, 0, 0), VectorMatrixFactory.newIVector3(0, 1, 0));
+    this(VectorFactory.createVector3(0, 0, 0), VectorFactory.createVector3(0, 1, 0));
   }
 
   /**
    * Constructor with initialization.
    */
-  public Plane(IVector3 point, IVector3 normal) {
+  public Plane(Vector point, Vector normal) {
     this.point.copy(point);
     this.normal.copy(normal);
     precomputeCoordinateFrame();
@@ -65,40 +66,40 @@ public class Plane extends IPrimitive {
    * Precompute the coordinate frame.
    */
   private void precomputeCoordinateFrame() {
-    tangentU = VectorMatrixFactory.newIVector3(1, 0, 0);
+    tangentU = VectorFactory.createVector3(1, 0, 0);
     if (Math.abs(tangentU.multiply(getNormal())) > 0.95) {
-      tangentU = VectorMatrixFactory.newIVector3(0, 1, 0);
+      tangentU = VectorFactory.createVector3(0, 1, 0);
     }
     tangentV = getNormal().cross(tangentU).getNormalized();
     tangentU = tangentV.cross(getNormal()).getNormalized();
-    planeCoordinateSystem = VectorMatrixFactory.newIMatrix3(tangentU, tangentV, getNormal()).getTransposed();
+    planeCoordinateSystem = MatrixFactory.createMatrix3(tangentU, tangentV, getNormal()).getTransposed();
   }
 
   /**
    * Getter.
    */
-  public IVector3 getPoint() {
+  public Vector getPoint() {
     return point;
   }
 
   /**
    * Setter.
    */
-  public void setPoint(IVector3 point) {
+  public void setPoint(Vector point) {
     this.point = point;
   }
 
   /**
    * Getter.
    */
-  public IVector3 getNormal() {
+  public Vector getNormal() {
     return normal;
   }
 
   /**
    * Setter.
    */
-  public void setNormal(IVector3 normal) {
+  public void setNormal(Vector normal) {
     this.normal = normal;
     precomputeCoordinateFrame();
   }
@@ -107,7 +108,7 @@ public class Plane extends IPrimitive {
    * Compute the signed distance between the given point and the plane.
    * Attention: normal must be normalized for correct values!
    */
-  public double computeSignedDistance(IVector3 p) {
+  public double computeSignedDistance(Vector p) {
 
     // DEBBUGGING CODE - REMOVE LATER!
     if (Math.abs(normal.getSqrNorm() - 1.0) > 1e-5) {
@@ -121,15 +122,15 @@ public class Plane extends IPrimitive {
    * Compute the absolute distance between the given point and the plane.
    * Attention: normal must be normalized for correct values!
    */
-  public double computeDistance(IVector3 p) {
+  public double computeDistance(Vector p) {
     return Math.abs(computeSignedDistance(p));
   }
 
   /**
    * Compute a checkerboard color for the plane at the given point.
    */
-  public IVector3 getReflectionDiffuseCheckerBoard(double checkerBoardCellSize, IVector3 point) {
-    IVector3 pointInPlaneCoordinateSytem = planeCoordinateSystem.multiply(point.subtract(getPoint()));
+  public Vector getReflectionDiffuseCheckerBoard(double checkerBoardCellSize, Vector point) {
+    Vector pointInPlaneCoordinateSytem = planeCoordinateSystem.multiply(point.subtract(getPoint()));
     double u = pointInPlaneCoordinateSytem.get(0);
     double v = pointInPlaneCoordinateSytem.get(1);
     if (u < 0) {
@@ -150,7 +151,7 @@ public class Plane extends IPrimitive {
   /**
    * Return true if the point is in the positive halfspace of the plane.
    */
-  public boolean isInPositiveHalfSpace(IVector3 p) {
+  public boolean isInPositiveHalfSpace(Vector p) {
     double distance = getDistance(p);
     return distance >= 0;
   }
@@ -158,22 +159,22 @@ public class Plane extends IPrimitive {
   /**
    * Project the point p onto the plane.
    */
-  public IVector3 project(IVector3 p) {
+  public Vector project(Vector p) {
     return p.subtract(normal.multiply(getDistance(p)));
   }
 
   /**
    * Compute the distance of the point from the plane.
    */
-  public double getDistance(IVector3 p) {
-    IVector3 v = p.subtract(point);
+  public double getDistance(Vector p) {
+    Vector v = p.subtract(point);
     return v.multiply(normal);
   }
 
-  public IVector3 getTangentU() {
-    IVector3 helper = VectorMatrixFactory.newIVector3(1, 0, 0);
+  public Vector getTangentU() {
+    Vector helper = VectorFactory.createVector3(1, 0, 0);
     if (Math.abs(helper.multiply(normal)) > PARALLEL_THRESHOLD) {
-      helper = VectorMatrixFactory.newIVector3(0, 1, 0);
+      helper = VectorFactory.createVector3(0, 1, 0);
     }
     return normal.cross(helper).getNormalized();
   }
@@ -181,7 +182,7 @@ public class Plane extends IPrimitive {
   /**
    * Return a tangent vector which is perpendicular to normal and getTangentU().
    */
-  public IVector3 getTangentV() {
+  public Vector getTangentV() {
     return normal.cross(getTangentU());
   }
 }

@@ -9,8 +9,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.curves.MonomialCurve;
 
 /**
@@ -27,18 +27,18 @@ public class TestMonomialCurve {
     @Test
     public void testDegree1() {
         MonomialCurve poly = new MonomialCurve(1);
-        poly.setControlPoint(0, VectorMatrixFactory.newIVector3(-0.5, -0.5, 0));
-        poly.setControlPoint(1, VectorMatrixFactory.newIVector3(1, 1, 0));
+        poly.setControlPoint(0, VectorFactory.createVector3(-0.5, -0.5, 0));
+        poly.setControlPoint(1, VectorFactory.createVector3(1, 1, 0));
         assertEquals(poly.eval(0),
-                VectorMatrixFactory.newIVector3(-0.5, -0.5, 0));
-        assertEquals(poly.eval(0.5), VectorMatrixFactory.newIVector3(0, 0, 0));
-        assertEquals(poly.eval(1), VectorMatrixFactory.newIVector3(0.5, 0.5, 0));
+                VectorFactory.createVector3(-0.5, -0.5, 0));
+        assertEquals(poly.eval(0.5), VectorFactory.createVector3(0, 0, 0));
+        assertEquals(poly.eval(1), VectorFactory.createVector3(0.5, 0.5, 0));
         assertEquals(poly.derivative(0),
-                VectorMatrixFactory.newIVector3(1, 1, 0));
+                VectorFactory.createVector3(1, 1, 0));
         assertEquals(poly.derivative(0.5),
-                VectorMatrixFactory.newIVector3(1, 1, 0));
+                VectorFactory.createVector3(1, 1, 0));
         assertEquals(poly.derivative(1),
-                VectorMatrixFactory.newIVector3(1, 1, 0));
+                VectorFactory.createVector3(1, 1, 0));
     }
 
     /**
@@ -47,27 +47,27 @@ public class TestMonomialCurve {
     @Test
     public void testDegree2() {
         MonomialCurve poly = new MonomialCurve(2);
-        poly.setControlPoint(0, VectorMatrixFactory.newIVector3(-0.5, -0.5, 0));
-        poly.setControlPoint(1, VectorMatrixFactory.newIVector3(1, 1, 0));
-        poly.setControlPoint(2, VectorMatrixFactory.newIVector3(-1, 1, 0));
+        poly.setControlPoint(0, VectorFactory.createVector3(-0.5, -0.5, 0));
+        poly.setControlPoint(1, VectorFactory.createVector3(1, 1, 0));
+        poly.setControlPoint(2, VectorFactory.createVector3(-1, 1, 0));
         assertEquals(poly.eval(0),
-                VectorMatrixFactory.newIVector3(-0.5, -0.5, 0));
+                VectorFactory.createVector3(-0.5, -0.5, 0));
         assertEquals(poly.eval(0.5),
-                VectorMatrixFactory.newIVector3(-0.25, 0.25, 0));
+                VectorFactory.createVector3(-0.25, 0.25, 0));
         assertEquals(poly.eval(1),
-                VectorMatrixFactory.newIVector3(-0.5, 1.5, 0));
+                VectorFactory.createVector3(-0.5, 1.5, 0));
         assertEquals(poly.derivative(0),
-                VectorMatrixFactory.newIVector3(1, 1, 0));
+                VectorFactory.createVector3(1, 1, 0));
         assertEquals(poly.derivative(0.5),
-                VectorMatrixFactory.newIVector3(0, 2, 0));
+                VectorFactory.createVector3(0, 2, 0));
         assertEquals(poly.derivative(1),
-                VectorMatrixFactory.newIVector3(-1, 3, 0));
+                VectorFactory.createVector3(-1, 3, 0));
     }
 
     @Test
     public void testInterpolate2Points() {
-        IVector3 p0 = VectorMatrixFactory.newIVector3(-0.5, -0.5, -0.5);
-        IVector3 p1 = VectorMatrixFactory.newIVector3(0.5, -0.25, 0.75);
+        Vector p0 = VectorFactory.createVector3(-0.5, -0.5, -0.5);
+        Vector p1 = VectorFactory.createVector3(0.5, -0.25, 0.75);
         MonomialCurve curve = MonomialCurve.interpolate(p0, p1);
         assertEquals(p0, curve.eval(0));
         assertEquals(p1, curve.eval(1));
@@ -75,9 +75,9 @@ public class TestMonomialCurve {
 
     @Test
     public void testInterpolate3Points() {
-        IVector3 p0 = VectorMatrixFactory.newIVector3(-0.5, -0.5, -0.5);
-        IVector3 p1 = VectorMatrixFactory.newIVector3(0.0, -0.25, 0.75);
-        IVector3 p2 = VectorMatrixFactory.newIVector3(0.5, 0.5, 0.5);
+        Vector p0 = VectorFactory.createVector3(-0.5, -0.5, -0.5);
+        Vector p1 = VectorFactory.createVector3(0.0, -0.25, 0.75);
+        Vector p2 = VectorFactory.createVector3(0.5, 0.5, 0.5);
         MonomialCurve curve = MonomialCurve.interpolate(p0, p1, p2);
         assertEquals(p0, curve.eval(0.0));
         assertEquals(p1, curve.eval(0.5));

@@ -5,7 +5,7 @@
  */
 package cgresearch.studentprojects.brickbuilder.voxelcloud;
 
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 
 /**
@@ -29,5 +29,5 @@ public interface IVoxelizationAlgorithm {
 	 * @return a voxel cloud
 	 */
 	public IVoxelCloud transformMesh2Cloud(ITriangleMesh mesh,
-			int resolutionAxisX, IVector3 voxelScale);
+			int resolutionAxisX, Vector voxelScale);
 }

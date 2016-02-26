@@ -6,7 +6,7 @@
 package cgresearch.rendering.jogl.core;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.datastructures.primitives.Cuboid;
@@ -94,7 +94,7 @@ public class JoglRenderObjectFactoryPrimitive implements IRenderObjectsFactory<J
   private JoglRenderNode createSphere(JoglRenderNode parentNode, CgNode cgNode, Sphere sphere) {
     ITriangleMesh mesh = TriangleMeshFactory.createSphere(20);
     TriangleMeshTransformation.scale(mesh,
-        VectorMatrixFactory.newIVector3(sphere.getRadius(), sphere.getRadius(), sphere.getRadius()));
+        VectorFactory.createVector3(sphere.getRadius(), sphere.getRadius(), sphere.getRadius()));
     TriangleMeshTransformation.translate(mesh, sphere.getCenter());
     JoglRenderNode renderNode = new JoglRenderNode(cgNode, new RenderContentTriangleMesh(mesh));
     return renderNode;

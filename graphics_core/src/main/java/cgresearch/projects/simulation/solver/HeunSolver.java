@@ -3,7 +3,7 @@ package cgresearch.projects.simulation.solver;
 import java.util.List;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 
 public class HeunSolver extends Solver {
 
@@ -19,8 +19,8 @@ public class HeunSolver extends Solver {
 	}
 
 	@Override
-	public void solve(List<IVector3> x, List<IVector3> v, List<IVector3> newX,
-			List<IVector3> newV, double tolerance, Accelleration acc) {
+	public void solve(List<Vector> x, List<Vector> v, List<Vector> newX,
+			List<Vector> newV, double tolerance, Accelleration acc) {
 		if (x == null || v == null || newX == null || newV == null) {
 			Logger.getInstance().error(
 					"EulerSolver.solve: Invalid input arrays");
@@ -35,11 +35,11 @@ public class HeunSolver extends Solver {
 		}
 
 		for (int i = 0; i < x.size(); i++) {
-			IVector3 acceleration = acc.eval(i);
-			IVector3 xE = x.get(i).add(v.get(i).multiply(h));
-			IVector3 vE = v.get(i).add(acceleration.multiply(h));
+			Vector acceleration = acc.eval(i);
+			Vector xE = x.get(i).add(v.get(i).multiply(h));
+			Vector vE = v.get(i).add(acceleration.multiply(h));
 
-			IVector3 accelerationE = acc.eval(i, xE);
+			Vector accelerationE = acc.eval(i, xE);
 			newX.set(i, x.get(i).add(v.get(i).add(vE).multiply(h / 2.0)));
 			newV.set(
 					i,

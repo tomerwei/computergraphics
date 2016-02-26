@@ -8,7 +8,7 @@ package cgresearch.core.math;
 import org.junit.Test;
 
 import cgresearch.core.math.PrincipalComponentAnalysis;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 
 /**
  * Test class for the PCA class.
@@ -22,7 +22,7 @@ public class PrincipalComponentAnalysisTest {
     public void testPrincipalComponentAnalysis() {
         PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
         for (int i = 0; i < 10; i++) {
-            pca.add(VectorMatrixFactory.newIVector3(Math.random() * 10.0,
+            pca.add(VectorFactory.createVector3(Math.random() * 10.0,
                     Math.random() * 10.0, Math.random() * 0.5 - 0.25));
         }
         pca.applyPCA();

@@ -17,7 +17,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cgresearch.core.math.IVector;
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.curves.BezierCurve;
 import cgresearch.graphics.material.CgTexture;
@@ -478,8 +478,8 @@ public class GeneratorGUIButNew extends IApplicationControllerGui implements Act
 
 	public void generateFromData() {
 
-		IVector xn = new Vector(carVektor);
-		IVector yn = new Vector(carVektor);
+		Vector xn = new Vector(carVektor);
+		Vector yn = new Vector(carVektor);
 
 		double xek1 = (double) xkoef1s.getValue() / 100;
 		double xek2 = (double) xkoef2s.getValue() / 100;
@@ -527,9 +527,9 @@ public class GeneratorGUIButNew extends IApplicationControllerGui implements Act
 
 		// New Auto
 
-		IVector ax = new Vector(carVektor);
-		IVector ay = new Vector(carVektor);
-		IVector az = new Vector(carVektor);
+		Vector ax = new Vector(carVektor);
+		Vector ay = new Vector(carVektor);
+		Vector az = new Vector(carVektor);
 
 		for (int i = 0; i < carVektor; i++) {
 			double xx = 0;
@@ -601,11 +601,11 @@ public class GeneratorGUIButNew extends IApplicationControllerGui implements Act
 		this.data = null;
 		this.data = d;
 
-		IVector newX = new Vector(carVektor);
-		IVector newY = new Vector(carVektor);
-		IVector newZ = new Vector(carVektor);
+		Vector newX = new Vector(carVektor);
+		Vector newY = new Vector(carVektor);
+		Vector newZ = new Vector(carVektor);
 
-		for (IVector iv : data.getX()) {
+		for (Vector iv : data.getX()) {
 			newX = null;
 			newX = new Vector(carVektor);
 			newX.set(0, iv.get(0));
@@ -644,7 +644,7 @@ public class GeneratorGUIButNew extends IApplicationControllerGui implements Act
 			data32.getX().add(newX);
 		}
 
-		for (IVector iv : data.getY()) {
+		for (Vector iv : data.getY()) {
 			newY = null;
 			newY = new Vector(carVektor);
 			newY.set(0, iv.get(0));
@@ -683,7 +683,7 @@ public class GeneratorGUIButNew extends IApplicationControllerGui implements Act
 			data32.getY().add(newY);
 		}
 
-		for (IVector iv : data.getZ()) {
+		for (Vector iv : data.getZ()) {
 			newZ = null;
 			newZ = new Vector(carVektor);
 			newZ.set(0, iv.get(0));

@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import cgresearch.core.math.IVector;
-import cgresearch.core.math.IVector3;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.primitives.Plane;
 
 /**
@@ -29,16 +29,16 @@ public class TestPCA {
 		double px = Math.random();
 		double py = Math.random();
 		double pz = Math.random();
-		IVector3 p = VectorMatrixFactory.newIVector3(px, py, pz);
-		IVector3 normal = VectorMatrixFactory.newIVector3(Math.random(), Math.random(), Math.random()).getNormalized();
+		Vector p = VectorFactory.createVector3(px, py, pz);
+		Vector normal = VectorFactory.createVector3(Math.random(), Math.random(), Math.random()).getNormalized();
     Plane plane = new Plane(p, normal);
 
 		PCA pca = new PCA();
 		// Create some random points near to the plane
 		for (int i = 0; i < 30; i++) {
-			IVector3 planeSample = plane.getTangentU().multiply(Math.random())
+			Vector planeSample = plane.getTangentU().multiply(Math.random())
 					.add(plane.getTangentV().multiply(Math.random())).add(normal.multiply(Math.random() * 0.02));
-			IVector x = new Vector(3);
+			Vector x = new Vector(3);
 			x.set(0, planeSample.get(0));
 			x.set(1, planeSample.get(1));
 			x.set(2, planeSample.get(2));
@@ -46,7 +46,7 @@ public class TestPCA {
 			System.out.println(x);
 		}
 		pca.applyPCA();
-		IVector n = new Vector(3);
+		Vector n = new Vector(3);
 		n.set(0, normal.get(0));
 		n.set(1, normal.get(1));
 		n.set(2, normal.get(2));

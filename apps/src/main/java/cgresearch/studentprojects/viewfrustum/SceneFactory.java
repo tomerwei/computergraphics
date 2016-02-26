@@ -2,7 +2,7 @@ package cgresearch.studentprojects.viewfrustum;
 
 import java.util.List;
 
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -24,23 +24,23 @@ public class SceneFactory extends CgApplication {
       
       // ############### Transformation ###############
       TriangleMeshTransformation.translate(cow,
-              VectorMatrixFactory.newIVector3(1.0, 0.0, -9.0));
-//            VectorMatrixFactory.newIVector3(0.0, 0.0, -9.0));
+              VectorFactory.createVector3(1.0, 0.0, -9.0));
+//            VectorMatrixFactory.newVector(0.0, 0.0, -9.0));
       TriangleMeshTransformation.translate(bunny,
-              VectorMatrixFactory.newIVector3(0.0, 1.15, -9.0));
+              VectorFactory.createVector3(0.0, 1.15, -9.0));
       TriangleMeshTransformation.scale(bunny, 3.0);
       TriangleMeshTransformation.scale(fenja, 0.1);
       TriangleMeshTransformation.translate(fenja,
-              VectorMatrixFactory.newIVector3(0.5, -1.0, -8.0));
+              VectorFactory.createVector3(0.5, -1.0, -8.0));
       TriangleMeshTransformation.scale(fenjaDown, 0.1);
       TriangleMeshTransformation.translate(fenjaDown,
-              VectorMatrixFactory.newIVector3(2.0, -8.0, -8.0));
+              VectorFactory.createVector3(2.0, -8.0, -8.0));
       TriangleMeshTransformation.scale(fenjaUp, 0.1);
       TriangleMeshTransformation.translate(fenjaUp,
-              VectorMatrixFactory.newIVector3(-1.0, 2.0, -0.5));
+              VectorFactory.createVector3(-1.0, 2.0, -0.5));
       TriangleMeshTransformation.scale(pumpkin, 0.02);
       TriangleMeshTransformation.translate(pumpkin,
-              VectorMatrixFactory.newIVector3(0.0, 0.0, -20.5));
+              VectorFactory.createVector3(0.0, 0.0, -20.5));
    // ############### Transformation ###############
         
       getCgRootNode().setUseBlending(true);

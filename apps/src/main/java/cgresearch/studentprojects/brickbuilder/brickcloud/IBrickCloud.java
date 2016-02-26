@@ -12,10 +12,10 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.ListenableUndirectedGraph;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.studentprojects.brickbuilder.brickcloud.BrickRotation;
 import cgresearch.studentprojects.brickbuilder.math.IColorRGB;
-import cgresearch.studentprojects.brickbuilder.math.IVectorInt3;
+import cgresearch.studentprojects.brickbuilder.math.VectorInt3;
 
 /**
  * Interface for a brick cloud which holds a graphical view of the brick connections.
@@ -33,19 +33,19 @@ public interface IBrickCloud {
 	 * Get the dimensions of the brick cloud.
 	 * @return
 	 */
-	public IVector3 getDimensions();
+	public Vector getDimensions();
 	
 	/**
 	 * Get the location of the lower left corner of the brick cloud.
 	 * @return
 	 */
-	public IVector3 getLocationLowerLeft();
+	public Vector getLocationLowerLeft();
 	
 	/**
 	 * Get the resolution of every axis of the brick cloud.
 	 * @return
 	 */
-	public IVectorInt3 getResolutions();	
+	public VectorInt3 getResolutions();	
 	
 	/**
 	 * Get the brick set associated with this cloud.
@@ -71,7 +71,7 @@ public interface IBrickCloud {
 	 * @param pos
 	 * @return
 	 */
-	public BrickInstance getBrickAt(IVectorInt3 pos);
+	public BrickInstance getBrickAt(VectorInt3 pos);
 	
 	/**
 	 * Adds a brick at the given position.
@@ -79,7 +79,7 @@ public interface IBrickCloud {
 	 * @param pos
 	 * @param rot
 	 */
-	public void addBrick(IBrick brick, IVectorInt3 pos, BrickRotation rot);
+	public void addBrick(IBrick brick, VectorInt3 pos, BrickRotation rot);
 	
 	/**
 	 * Adds a brick at the given position with a color info.
@@ -88,19 +88,19 @@ public interface IBrickCloud {
 	 * @param rot
 	 * @param color
 	 */
-	public void addBrick(IBrick brick, IVectorInt3 pos, BrickRotation rot, IColorRGB color);
+	public void addBrick(IBrick brick, VectorInt3 pos, BrickRotation rot, IColorRGB color);
 	
 	/**
 	 * Removes a brick at the given position.
 	 * @param pos
 	 */
-	public void removeBrick(IVectorInt3 pos);
+	public void removeBrick(VectorInt3 pos);
 	
 	/**
 	 * Removes a brick at the given position and adds the root brick instead.
 	 * @param pos
 	 */
-	public void removeBrickAndFill(IVectorInt3 pos);
+	public void removeBrickAndFill(VectorInt3 pos);
 	
 	/**
 	 * Could the brick be placed at the given position 
@@ -109,8 +109,8 @@ public interface IBrickCloud {
 	 * @param pos
 	 * @param rot
 	 */
-	public boolean canBrickReplaceBricksAt(IBrick brick, IVectorInt3 pos, BrickRotation rot);
-	public boolean canBrickReplaceBricksAt(IBrick brick, IVectorInt3 pos, BrickRotation rot, IColorRGB col);
+	public boolean canBrickReplaceBricksAt(IBrick brick, VectorInt3 pos, BrickRotation rot);
+	public boolean canBrickReplaceBricksAt(IBrick brick, VectorInt3 pos, BrickRotation rot, IColorRGB col);
 	
 	/**
 	 * Get the count of connections made by this brick to other bricks (over/under it)
@@ -119,7 +119,7 @@ public interface IBrickCloud {
 	 * @param rot
 	 * @return
 	 */
-	public int getBrickConnections(IBrick brick, IVectorInt3 pos, BrickRotation rot);
+	public int getBrickConnections(IBrick brick, VectorInt3 pos, BrickRotation rot);
 	
 	/**
 	 * Returns a random brick at the given height.
@@ -152,14 +152,14 @@ public interface IBrickCloud {
 	 * @param brick
 	 * @return
 	 */
-	public IVector3 getBrickPosition(BrickInstance brick);
+	public Vector getBrickPosition(BrickInstance brick);
 	
 	/**
 	 * Get the brick dimensions.
 	 * @param brick
 	 * @return
 	 */
-	public IVector3 getBrickDimensions(BrickInstance brick);
+	public Vector getBrickDimensions(BrickInstance brick);
 	
 	/**
 	 * Get the graph representing the brick connections.

@@ -8,7 +8,7 @@ package cgresearch.graphics.bricks;
 import java.util.Observable;
 import java.util.Observer;
 
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.CgRootNode;
 import cgresearch.graphics.scenegraph.LightSource;
@@ -41,21 +41,21 @@ public abstract class CgApplication implements Observer {
   private void addLight() {
     // Light source 1
     LightSource light1 =
-        new LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(5, 5, 5))
-            // .setColor(VectorMatrixFactory.newIVector3(0.75, 0.25, 0.25));
-            .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+        new LightSource(LightSource.Type.POINT).setPosition(VectorFactory.createVector3(5, 5, 5))
+            // .setColor(VectorMatrixFactory.newVector(0.75, 0.25, 0.25));
+            .setColor(VectorFactory.createVector3(1, 1, 1));
     rootNode.addLight(light1);
     // Light source 2
-    LightSource light2 = new LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(-5, -5, -5))
-        // .setColor(VectorMatrixFactory.newIVector3(0.25, 0.75, 0.25));
-        .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    LightSource light2 = new LightSource(LightSource.Type.POINT).setPosition(VectorFactory.createVector3(-5, -5, -5))
+        // .setColor(VectorMatrixFactory.newVector(0.25, 0.75, 0.25));
+        .setColor(VectorFactory.createVector3(1, 1, 1));
     rootNode.addLight(light2);
     // Light source 3
     // LightSource light3 = new
-    // LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newIVector3(0,
+    // LightSource(LightSource.Type.POINT).setPosition(VectorMatrixFactory.newVector(0,
     // 0, 2))
-    // // .setColor(VectorMatrixFactory.newIVector3(0.25, 0.25, 0.75));
-    // .setColor(VectorMatrixFactory.newIVector3(1, 1, 1));
+    // // .setColor(VectorMatrixFactory.newVector(0.25, 0.25, 0.75));
+    // .setColor(VectorMatrixFactory.newVector(1, 1, 1));
     // rootNode.addLight(light3);
   }
 

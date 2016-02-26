@@ -6,7 +6,7 @@
 package cgresearch.graphics.datastructures.curves;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.material.CurveMaterial;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
@@ -21,7 +21,7 @@ public abstract class ICurve extends ICgNodeContent {
   /**
    * Array of control points
    */
-  protected IVector3[] controlPoints = null;
+  protected Vector[] controlPoints = null;
 
   /**
    * Min value of the parameter.
@@ -50,7 +50,7 @@ public abstract class ICurve extends ICgNodeContent {
    * 
    * @return Point on the curve at the specified parameter.
    */
-  public abstract IVector3 eval(double t);
+  public abstract Vector eval(double t);
 
   /**
    * Evaluate the derivative of the curve at the parameter t.
@@ -60,7 +60,7 @@ public abstract class ICurve extends ICgNodeContent {
    * 
    * @return Derivative (tangent) on the curve at the specified parameter.
    */
-  public IVector3 derivative(double t) {
+  public Vector derivative(double t) {
     double h = 0.001;
     return eval(t + h / 2.0).subtract(eval(t - h / 2.0)).multiply(1.0 / h);
   }
@@ -81,7 +81,7 @@ public abstract class ICurve extends ICgNodeContent {
    *          Index of the accessed control point.
    * @return Control point at index i of the curve.
    */
-  public IVector3 getControlPoint(int index) {
+  public Vector getControlPoint(int index) {
     return controlPoints[index];
   }
 
@@ -93,7 +93,7 @@ public abstract class ICurve extends ICgNodeContent {
    * @param p
    *          Control point.
    */
-  public void setControlPoint(int index, IVector3 p) {
+  public void setControlPoint(int index, Vector p) {
     controlPoints[index] = p;
   }
 

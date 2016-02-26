@@ -65,8 +65,8 @@ public class ScannerApplication extends CgApplication implements ActionListener 
         @Override
         public void run() {
           IPointCloud pointCloud = new PointCloud();
-          // Point zero = new Point(new Vector3(0, 0, 0));
-          // zero.setColor(new Vector3(1f, 0f, 0f));
+          // Point zero = new Point(new Vector(0, 0, 0));
+          // zero.setColor(new Vector(1f, 0f, 0f));
           // pointCloud.addPoint(zero);
           getCgRootNode().addChild(new CgNode(pointCloud, "Scan"));
           scanner.startScan(pointCloud, scannerGui.getPointsPerLine(), scannerGui.getAngle());

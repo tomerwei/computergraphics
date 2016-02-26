@@ -12,6 +12,7 @@ import java.nio.IntBuffer;
 import java.util.*;
 
 import cgresearch.core.math.*;
+import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.tree.Intersection;
 import cgresearch.graphics.datastructures.trianglemesh.*;
 import cgresearch.graphics.scenegraph.LightSource;
@@ -161,7 +162,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
         IVertex vertex = TriangleMeshVertexProvider.getVertex(triangleVertexIndex, triangleMesh, triangle);
 
         // Select normal (per face or per vertex)
-        IVector3 normal = (triangleMesh.getMaterial().getRenderMode() == Material.Normals.PER_FACET)
+        Vector normal = (triangleMesh.getMaterial().getRenderMode() == Material.Normals.PER_FACET)
             ? triangle.getNormal() : vertex.getNormal();
 
         final int triangleBaseIndex = triangleIndex * NUMBER_OF_VERTICES_PER_TRIANGLE * NUMBER_OF_FLOATS_PER_VERTEX;
@@ -181,7 +182,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
         cb[vertexBaseIndex + 1] = (float) (triangleMesh.getMaterial().getReflectionDiffuse().get(1));
         cb[vertexBaseIndex + 2] = (float) (triangleMesh.getMaterial().getReflectionDiffuse().get(2));
         // Set texture coordinate buffer
-        IVector3 texCoord = triangleMesh.getTextureCoordinate(triangle.getTextureCoordinate(triangleVertexIndex));
+        Vector texCoord = triangleMesh.getTextureCoordinate(triangle.getTextureCoordinate(triangleVertexIndex));
         tcb[texCoordBaseIndex] = (float) texCoord.get(0);
         tcb[texCoordBaseIndex + 1] = (float) texCoord.get(1);
 
@@ -305,12 +306,12 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
   }
 
-  IVector3 light;
+  Vector light;
   Transformation t;
-  IVector3[] near;
+  Vector[] near;
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, IVector3[] nearPlaneCorners, boolean cameraPositionChanged) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners, boolean cameraPositionChanged) {
     light = lightSource.getPosition();
     t = transformation;
     near = nearPlaneCorners;
@@ -325,7 +326,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
         System.out.println("Using z-Fail: " + zFailRequired);
       }
 
-      IVector3 lightPosition = lightSource.getPosition();
+      Vector lightPosition = lightSource.getPosition();
       updateBackFacingInformation(lightPosition, transformation);
 
 
@@ -354,7 +355,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
   }
 
-  private boolean  setTestingMethod(IVector3 lightPos, Transformation transformation, IVector3[] nearPlaneCorners) {
+  private boolean  setTestingMethod(Vector lightPos, Transformation transformation, Vector[] nearPlaneCorners) {
     BoundingBox bb = new BoundingBox(triangleMesh.getBoundingBox().getLowerLeft(),
             triangleMesh.getBoundingBox().getUpperRight());
     bb.transform(transformation);
@@ -372,8 +373,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
     return false;
 //    zFailRequired = false;
-//    for (IVector3 v : bbPoints) {
-//      IVector3 transformedCorner = transformation.getTransformedVector3(v);
+//    for (Vector v : bbPoints) {
+//      Vector transformedCorner = transformation.getTransformedVector(v);
 //      int inFront = 0;
 //      for (int j = 0; j < pyramidNormals.length - 1; j++) {
 //        if (transformedCorner.subtract(lightPos).multiply(pyramidNormals[j]) > 0) {
@@ -398,14 +399,14 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
     // Get all corner points of the bounding box
     BoundingBox bb = triangleMesh.getBoundingBox();
-    List<IVector3> corners = bb.computeCornerPoints();
+    List<Vector> corners = bb.computeCornerPoints();
     corners.add(bb.getCenter());
 
     // Check if any of the corner points is in range of the light
-    for (IVector3 corner : corners) {
+    for (Vector corner : corners) {
       // Get the distance of the transformed point
-      IVector3 transformedPoint = transformation.getTransformedVector3(corner);
-      IVector3 distance = transformedPoint.subtract(lightSource.getPosition());
+      Vector transformedPoint = transformation.getTransformedVector(corner);
+      Vector distance = transformedPoint.subtract(lightSource.getPosition());
 
       // Is point in range?
       if (distance.getNorm() <= lightSource.getLightStrength()) {
@@ -418,7 +419,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
   /**
    * Draws the shadow polygons
    */
-  private void drawShadowPolygons(GL2 gl, IVector3 lightPosition, boolean isDirectional,
+  private void drawShadowPolygons(GL2 gl, Vector lightPosition, boolean isDirectional,
                                   Transformation transformation) {
     int lW = isDirectional ? 0 : 1;
 
@@ -438,8 +439,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
           b = triangleMesh.getVertex(e.getB());
         }
 
-        IVector4 vA = transformation.getTransformedVector4(a.getPosition());
-        IVector4 vB = transformation.getTransformedVector4(b.getPosition());
+        Vector vA = transformation.getTransformedVector(a.getPosition());
+        Vector vB = transformation.getTransformedVector(b.getPosition());
         float[] aInf = {(float) (vA.get(0) * lW - lightPosition.get(0)), (float) (vA.get(1) * lW - lightPosition.get(1)),
                 (float) (vA.get(2) * lW - lightPosition.get(2)), 0.0f};
         float[] bInf = {(float) (vB.get(0) * lW - lightPosition.get(0)), (float) (vB.get(1) * lW - lightPosition.get(1)),
@@ -461,7 +462,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
         for (int j = 0; j < 3; j++) {
           int vIndex = t.get(j);
           IVertex v = triangleMesh.getVertex(vIndex);
-          IVector4 vPos = transformation.getTransformedVector4(v.getPosition());
+          Vector vPos = transformation.getTransformedVector(v.getPosition());
           if (backFacing.get(t)) {
             float[] vInf = {(float) (vPos.get(0) * lW - lightPosition.get(0)),
                     (float) (vPos.get(1) * lW - lightPosition.get(1)),
@@ -502,7 +503,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
    * Updates back-facing information in respect to the given light
    * @param lightPosition Current light's position
    */
-  private void updateBackFacingInformation(IVector3 lightPosition, Transformation transformation) {
+  private void updateBackFacingInformation(Vector lightPosition, Transformation transformation) {
     boolean init = false;
     if (backFacing == null) {
       backFacing = new HashMap<>();
@@ -518,22 +519,22 @@ public class RenderContentTriangleMesh implements IRenderContent {
       triangleVertices[2] = triangleMesh.getVertex(t.getC());
 
       // Transform vertices
-      IVector3[] positions = new IVector3[vertexCount];
+      Vector[] positions = new Vector[vertexCount];
       for (int j = 0; j < vertexCount; j++) {
-        positions[j] = transformation.getTransformedVector3(triangleVertices[j].getPosition());
+        positions[j] = transformation.getTransformedVector(triangleVertices[j].getPosition());
       }
 
 //      // Get the middle of the triangle
-//      IVector3 tMiddle = positions[0].add(positions[1]);
+//      Vector tMiddle = positions[0].add(positions[1]);
 //      tMiddle = tMiddle.add(positions[2]);
 //      tMiddle.set(0, tMiddle.get(0) / 3.0);
 //      tMiddle.set(1, tMiddle.get(1) / 3.0);
 //      tMiddle.set(2, tMiddle.get(2) / 3.0);
 
       // Get the direction vector to L
-      IVector3 l = lightPosition.subtract(positions[0]);
+      Vector l = lightPosition.subtract(positions[0]);
       // Get Transformed normal
-      IVector3 n = getNormal(positions[0], positions[1], positions[2]);
+      Vector n = getNormal(positions[0], positions[1], positions[2]);
 
       // Update back-face information
       if (init)
@@ -546,10 +547,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
   /**
    * Computes the face normal for the given points
    */
-  private IVector3 getNormal(IVector3 a, IVector3 b, IVector3 c) {
-    IVector3 v1 = b.subtract(a);
-    IVector3 v2 = c.subtract(a);
-    IVector3 n = v1.cross(v2);
+  private Vector getNormal(Vector a, Vector b, Vector c) {
+    Vector v1 = b.subtract(a);
+    Vector v2 = c.subtract(a);
+    Vector n = v1.cross(v2);
     n.normalize();
     return n;
   }

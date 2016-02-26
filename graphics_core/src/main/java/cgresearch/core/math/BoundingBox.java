@@ -15,12 +15,12 @@ public class BoundingBox {
   /**
    * Lower left corner.
    */
-  private IVector3 ll = VectorMatrixFactory.newIVector3();
+  private Vector ll = VectorFactory.createVector(3);
 
   /**
    * Upper right corner
    */
-  private IVector3 ur = VectorMatrixFactory.newIVector3();
+  private Vector ur = VectorFactory.createVector(3);
 
   /**
    * This flag is false for invalid bounding boxes.
@@ -31,14 +31,14 @@ public class BoundingBox {
    * Constructor.
    */
   public BoundingBox() {
-    this(VectorMatrixFactory.newIVector3(), VectorMatrixFactory.newIVector3());
+    this(VectorFactory.createVector(3), VectorFactory.createVector(3));
     isInitialized = false;
   }
 
   /**
    * Constructor.
    */
-  public BoundingBox(IVector3 ll, IVector3 ur) {
+  public BoundingBox(Vector ll, Vector ur) {
     isInitialized = true;
     this.ll.copy(ll);
     this.ur.copy(ur);
@@ -69,20 +69,20 @@ public class BoundingBox {
     return this;
   }
 
-  public IVector3 getCenter() {
+  public Vector getCenter() {
     return ll.add(ur).multiply(0.5);
   }
 
   public double getDiameter() {
-    IVector3 diagonal = ur.subtract(ll);
+    Vector diagonal = ur.subtract(ll);
     return diagonal.getNorm();
   }
 
-  public IVector3 getLowerLeft() {
+  public Vector getLowerLeft() {
     return ll;
   }
 
-  public IVector3 getUpperRight() {
+  public Vector getUpperRight() {
     return ur;
   }
 
@@ -94,28 +94,28 @@ public class BoundingBox {
     return isInitialized;
   }
 
-  public void setLowerLeft(IVector3 ll) {
+  public void setLowerLeft(Vector ll) {
     isInitialized = true;
     this.ll = ll;
   }
 
-  public void setUpperRight(IVector3 ur) {
+  public void setUpperRight(Vector ur) {
     isInitialized = true;
     this.ur = ur;
   }
 
-  public void add(IVector3 p) {
+  public void add(Vector p) {
 
     if (!isInitialized) {
       ll.copy(p);
       ur.copy(p);
       isInitialized = true;
     } else {
-      ll = VectorMatrixFactory.newIVector3(Math.min(ll.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
+      ll = VectorFactory.createVector3(Math.min(ll.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
           Math.min(ll.get(MathHelpers.INDEX_1), p.get(MathHelpers.INDEX_1)),
           Math.min(ll.get(MathHelpers.INDEX_2), p.get(MathHelpers.INDEX_2)));
 
-      ur = VectorMatrixFactory.newIVector3(Math.max(ur.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
+      ur = VectorFactory.createVector3(Math.max(ur.get(MathHelpers.INDEX_0), p.get(MathHelpers.INDEX_0)),
           Math.max(ur.get(MathHelpers.INDEX_1), p.get(MathHelpers.INDEX_1)),
           Math.max(ur.get(MathHelpers.INDEX_2), p.get(MathHelpers.INDEX_2)));
     }
@@ -125,7 +125,7 @@ public class BoundingBox {
    * Rescale the bounding box.
    */
   public void scale(double d) {
-    IVector3 offset = ll.subtract(ur).multiply(d / 2.0);
+    Vector offset = ll.subtract(ur).multiply(d / 2.0);
     ll = ll.add(offset);
     ur.subtract(offset);
   }
@@ -134,25 +134,25 @@ public class BoundingBox {
    * Return the length of the longest edge of the bounding box.
    */
   public double getMaxExtend() {
-    IVector3 diagonal = getUpperRight().subtract(getLowerLeft());
+    Vector diagonal = getUpperRight().subtract(getLowerLeft());
     return Math.max(diagonal.get(0), Math.max(diagonal.get(1), diagonal.get(2)));
   }
 
   /**
    * Transform the bounding box with R * bbox + t.
    */
-  public void transform(IMatrix3 rotation, IVector3 translation) {
-    IVector3 extend = ur.subtract(ll);
-    List<IVector3> points = new ArrayList<IVector3>();
+  public void transform(Matrix rotation, Vector translation) {
+    Vector extend = ur.subtract(ll);
+    List<Vector> points = new ArrayList<Vector>();
     for (int x = 0; x < 2; x++) {
       for (int y = 0; y < 2; y++) {
         for (int z = 0; z < 2; z++) {
-          points.add(ll.add(VectorMatrixFactory.newIVector3(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
+          points.add(ll.add(VectorFactory.createVector3(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
         }
       }
     }
     for (int i = 0; i < points.size(); i++) {
-      IVector3 p = points.get(i);
+      Vector p = points.get(i);
       if (translation != null) {
         p = p.add(translation);
       }
@@ -162,8 +162,8 @@ public class BoundingBox {
       points.get(i).copy(p);
     }
     isInitialized = false;
-    for (IVector3 p : points) {
-      add(p);
+    for (Vector p : points) {
+      add(VectorFactory.createVector3(p.get(0), p.get(1), p.get(2)));
     }
   }
 
@@ -173,21 +173,22 @@ public class BoundingBox {
       return;
     }
 
-    IVector3 extend = ur.subtract(ll);
-    List<IVector3> points = new ArrayList<IVector3>();
+    Vector extend = ur.subtract(ll);
+    List<Vector> points = new ArrayList<Vector>();
     for (int x = 0; x < 2; x++) {
       for (int y = 0; y < 2; y++) {
         for (int z = 0; z < 2; z++) {
-          points.add(ll.add(VectorMatrixFactory.newIVector3(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
+          points.add(ll.add(VectorFactory.createVector3(x * extend.get(0), y * extend.get(1), z * extend.get(2))));
         }
       }
     }
     for (int i = 0; i < points.size(); i++) {
-      IVector4 p = points.get(i).makeHomogenious();
-      points.get(i).copy(transformation.getTransformation().multiply(p).toVector3());
+      Vector p = VectorFactory.createHomogeniousFor3spaceVector(points.get(i));
+      Vector v = transformation.getTransformation().multiply(p);
+      points.get(i).copy(VectorFactory.createVector3(v.get(0), v.get(1), v.get(2)));
     }
     isInitialized = false;
-    for (IVector3 p : points) {
+    for (Vector p : points) {
       add(p);
     }
 
@@ -203,7 +204,7 @@ public class BoundingBox {
    * 
    * @return
    */
-  public IVector3 getExtent() {
+  public Vector getExtent() {
     return ur.subtract(ll).multiply(0.5);
   }
 
@@ -212,17 +213,17 @@ public class BoundingBox {
    * 
    * @return List of corner points
    */
-  public List<IVector3> computeCornerPoints() {
-    List<IVector3> corners = new ArrayList<IVector3>();
-    IVector3 length = getExtent().multiply(2);
+  public List<Vector> computeCornerPoints() {
+    List<Vector> corners = new ArrayList<Vector>();
+    Vector length = getExtent().multiply(2);
     corners.add(getLowerLeft());
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newIVector3(length.get(0), 0, 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newIVector3(length.get(0), length.get(1), 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newIVector3(0, length.get(1), 0)));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newIVector3(0, 0, length.get(2))));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newIVector3(length.get(0), 0, length.get(2))));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newIVector3(length.get(0), length.get(1), length.get(2))));
-    corners.add(getLowerLeft().add(VectorMatrixFactory.newIVector3(0, length.get(1), length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), 0, 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), length.get(1), 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, length.get(1), 0)));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, 0, length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), 0, length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(length.get(0), length.get(1), length.get(2))));
+    corners.add(getLowerLeft().add(VectorFactory.createVector3(0, length.get(1), length.get(2))));
     return corners;
   }
 }

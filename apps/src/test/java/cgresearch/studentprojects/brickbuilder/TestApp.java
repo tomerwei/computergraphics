@@ -12,7 +12,7 @@ import javax.imageio.spi.IIORegistry;
 import javax.swing.SwingUtilities;
 
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.tree.OctreeFactory;
@@ -52,8 +52,8 @@ public class TestApp extends CgApplication {
 	}
 
 	void voxelizationTest() {
-		// IVector3 voxelScale = VectorMatrixFactory.newIVector3(80, 96, 80);
-		// IBrick brick = new Brick(VectorMatrixFactory.newIVector3(0.08, 0.096,
+		// Vector voxelScale = VectorMatrixFactory.newVector(80, 96, 80);
+		// IBrick brick = new Brick(VectorMatrixFactory.newVector(0.08, 0.096,
 		// 0.08)); // Lego 1x1 Brick (not Plate)
 		// ITriangleMesh mesh = TriangleMeshFactory.createSphere(100);
 
@@ -84,7 +84,7 @@ public class TestApp extends CgApplication {
 		// mesh2 = new VoxelCloudMesher().transformCloud2Mesh(cloud);
 
 		// TriangleMeshTransformation.translate(mesh,
-		// VectorMatrixFactory.newIVector3(0.5, 0.5, 0.5));
+		// VectorMatrixFactory.newVector(0.5, 0.5, 0.5));
 		// rootNode.addChild(new CgNode(mesh, "bunny"));
 		//
 		// System.out.println("Transform to voxel cloud...");
@@ -113,7 +113,7 @@ public class TestApp extends CgApplication {
 		ITriangleMesh mesh1 = VoxelCloudMesher.transformCloud2Mesh(cloud, true);
 		TriangleMeshTransformation.scale(mesh1, 1.3);
 		TriangleMeshTransformation.translate(mesh1,
-				VectorMatrixFactory.newIVector3(-1.2, 0.1, -0.1));
+				VectorFactory.createVector3(-1.2, 0.1, -0.1));
 		rootNode.addChild(new CgNode(mesh1, "bunny 01"));
 
 		CgNode child = list2node(
@@ -125,7 +125,7 @@ public class TestApp extends CgApplication {
 		// true);
 		// mesh2.getMaterial().setLighting(false);
 		// TriangleMeshTransformation.translate(mesh2,
-		// VectorMatrixFactory.newIVector3(-1.0, 0, 0));
+		// VectorMatrixFactory.newVector(-1.0, 0, 0));
 		// rootNode.addChild(new CgNode(mesh2, "bunny 02"));
 
 		System.out.println("done");
@@ -139,7 +139,7 @@ public class TestApp extends CgApplication {
 		return node;
 	}
 
-	// private ITriangleMesh createCube(IVector3 pos, double scale) {
+	// private ITriangleMesh createCube(Vector pos, double scale) {
 	// ITriangleMesh cube = TriangleMeshFactory.createCube();
 	// TriangleMeshTransformation.scale(cube, scale);
 	// TriangleMeshTransformation.translate(cube, pos);
@@ -148,13 +148,13 @@ public class TestApp extends CgApplication {
 	// }
 
 	void voxelCloudTest() {
-		// IBrick brick = new Brick(VectorMatrixFactory.newIVector3(0.2, 0.2,
+		// IBrick brick = new Brick(VectorMatrixFactory.newVector(0.2, 0.2,
 		// 0.2));
 		// IVoxelCloud cloud = new VoxelCloud(brick,
-		// VectorMatrixFactory.newIVector3(0.2, 0, 0.5), new VectorInt3(20, 20,
+		// VectorMatrixFactory.newVector(0.2, 0, 0.5), new VectorInt3(20, 20,
 		// 20));
 		// ITriangleMesh mesh = VoxelCloudMesher.transformCloud2Mesh(cloud);
-		// mesh.getMaterial().setColor(VectorMatrixFactory.newIVector3(Math.random(),
+		// mesh.getMaterial().setColor(VectorMatrixFactory.newVector(Math.random(),
 		// Math.random(), Math.random()));
 		// rootNode.addChild(new CgNode(mesh, "cloud"));
 	}
@@ -171,7 +171,7 @@ public class TestApp extends CgApplication {
 				.get(0);
 		TriangleMeshTransformation.scale(mesh, 4.0);
 		TriangleMeshTransformation.translate(mesh,
-				VectorMatrixFactory.newIVector3(0.4, -0.1, 0.2));
+				VectorFactory.createVector3(0.4, -0.1, 0.2));
 		rootNode.addChild(new CgNode(mesh, "bunny"));
 	}
 
@@ -180,7 +180,7 @@ public class TestApp extends CgApplication {
 		ITriangleMesh mesh = r.readFile("meshes/Armadillo.ply");
 		// TriangleMeshTransformation.scale(mesh, 4.0);
 		// TriangleMeshTransformation.translate(mesh,
-		// VectorMatrixFactory.newIVector3(0.4, -0.1, 0.2));
+		// VectorMatrixFactory.newVector(0.4, -0.1, 0.2));
 		rootNode.addChild(new CgNode(mesh, "laurana"));
 	}
 

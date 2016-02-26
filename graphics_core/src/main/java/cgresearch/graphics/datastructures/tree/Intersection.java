@@ -37,8 +37,8 @@ import static java.lang.Math.min;
 import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.core.math.IVector3;
-import cgresearch.core.math.VectorMatrixFactory;
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.primitives.Plane;
 
 import static java.lang.Math.max;
@@ -55,8 +55,10 @@ public class Intersection {
   private static final int Y = 1;
   private static final int Z = 2;
 
-  private static final void findMinMax(double x0, double x1, double x2, IVector3 minMax) {
-    minMax.set(x0, x0, 0);
+  private static final void findMinMax(double x0, double x1, double x2, Vector minMax) {
+    minMax.set(0, x0);
+    minMax.set(1, x0);
+    minMax.set(2, 0);
     if (x1 < minMax.get(X)) {
       minMax.set(0, x1);
     }
@@ -71,11 +73,11 @@ public class Intersection {
     }
   }
 
-  // private boolean axisTest(float a, float b, float fa, float fb, Vector3f v0,
-  // Vector3f v1, )
+  // private boolean axisTest(float a, float b, float fa, float fb, Vectorf v0,
+  // Vectorf v1, )
   // private boolean axisTestX01(float a, float b, float fa, float fb,
-  // Vector3f center, Vector3f ext,
-  // Vector3f v1, Vector3f v2, Vector3f v3){
+  // Vectorf center, Vectorf ext,
+  // Vectorf v1, Vectorf v2, Vectorf v3){
   // float p0 = a * v0.y - b * v0.z;
   // float p2 = a * v2.y - b * v2.z;
   // if(p0 < p2){
@@ -90,7 +92,7 @@ public class Intersection {
   // return false;
   // }
 
-  public static boolean intersect(BoundingBox bbox, IVector3 v1, IVector3 v2, IVector3 v3) {
+  public static boolean intersect(BoundingBox bbox, Vector v1, Vector v2, Vector v3) {
     // use separating axis theorem to test overlap between triangle and box
     // need to test for overlap in these directions:
     // 1) the {x,y,z}-directions (actually, since we use the AABB of the
@@ -100,22 +102,22 @@ public class Intersection {
     // 3) crossproduct(edge from tri, {x,y,z}-directin)
     // this gives 3x3=9 more tests
 
-    IVector3 center = bbox.getCenter();
-    IVector3 extent = bbox.getExtent();
+    Vector center = bbox.getCenter();
+    Vector extent = bbox.getExtent();
 
     // float min,max,p0,p1,p2,rad,fex,fey,fez;
     // float normal[3]
 
     // This is the fastest branch on Sun
     // move everything so that the boxcenter is in (0,0,0)
-    IVector3 tmp0 = v1.subtract(center);
-    IVector3 tmp1 = v2.subtract(center);
-    IVector3 tmp2 = v3.subtract(center);
+    Vector tmp0 = v1.subtract(center);
+    Vector tmp1 = v2.subtract(center);
+    Vector tmp2 = v3.subtract(center);
 
     // compute triangle edges
-    IVector3 e0 = tmp1.subtract(tmp0); // tri edge 0
-    IVector3 e1 = tmp2.subtract(tmp1); // tri edge 1
-    IVector3 e2 = tmp0.subtract(tmp2); // tri edge 2
+    Vector e0 = tmp1.subtract(tmp0); // tri edge 0
+    Vector e1 = tmp2.subtract(tmp1); // tri edge 1
+    Vector e2 = tmp0.subtract(tmp2); // tri edge 2
 
     // Bullet 3:
     // test the 9 tests first (this was faster)
@@ -229,7 +231,7 @@ public class Intersection {
     // that direction -- this is equivalent to testing a minimal AABB around
     // the triangle against the AABB
 
-    IVector3 minMax = VectorMatrixFactory.newIVector3(0, 0, 0);
+    Vector minMax = VectorFactory.createVector3(0, 0, 0);
 
     // test in X-direction
     findMinMax(tmp0.get(X), tmp1.get(X), tmp2.get(X), minMax);
@@ -253,16 +255,19 @@ public class Intersection {
     // // test if the box intersects the plane of the triangle
     // // compute plane equation of triangle: normal * x + d = 0
 
-    IVector3 a = v2.subtract(v1);
-    IVector3 b = v3.subtract(v1);
-    IVector3 normal = a.cross(b);
-    Plane plane = new Plane(v1, normal);
+    Vector a = v2.subtract(v1);
+    Vector b = v3.subtract(v1);
+    Vector normal = a.cross(b);
 
-    if (!planeBoxIntersect(bbox, plane)) {
-      return false;
+    if (normal.getSqrNorm() > 1e-5) {
+      Plane plane = new Plane(v1, normal);
+
+      if (!planeBoxIntersect(bbox, plane)) {
+        return false;
+      }
     }
 
-    // Vector3f normal = new Vector3f();
+    // Vectorf normal = new Vectorf();
     // e0.cross(e1, normal);
 
     // Plane p = vars.plane;
@@ -286,10 +291,10 @@ public class Intersection {
    * @return True if the plane intersects the bounding box.
    */
   private static boolean planeBoxIntersect(BoundingBox bbox, Plane plane) {
-    List<IVector3> corners = bbox.computeCornerPoints();
+    List<Vector> corners = bbox.computeCornerPoints();
     boolean hasNegativeSide = false;
     boolean hasPositiveSide = false;
-    for (IVector3 point : corners) {
+    for (Vector point : corners) {
       if (plane.isInPositiveHalfSpace(point)) {
         hasPositiveSide = true;
       } else {

@@ -1,11 +1,14 @@
-package cgresearch.core.math;
+package cgresearch.core.math.deprecated;
+
+import cgresearch.core.math.Vector;
+import cgresearch.core.math.Matrix;
 
 /**
  * Interface of a general matrix of arbitrary dimensions.
  * 
  * @author Philipp Jenke
  */
-public interface IMatrix {
+public interface MatrixDeprecated {
 
   public int getNumberOfRows();
 
@@ -22,7 +25,7 @@ public interface IMatrix {
    *          Vector to multiply with (matrix from the left)
    * @return New Vector object containing the multiplication result.
    */
-  public IVector multiply(IVector other);
+  public Vector multiply(Vector other);
 
   /**
    * Multiply with a matrix return new matrix: m x n (this) * n x l (other) = m
@@ -32,12 +35,12 @@ public interface IMatrix {
    *          Matrix to multiply with (matrix from the left)
    * @return New Matrix object containing the multiplication result.
    */
-  public IMatrix multiply(IMatrix other);
+  public Matrix multiply(Matrix other);
 
   /**
    * Add another matrix, return the result.
    */
-  public IMatrix add(IMatrix other);
+  public Matrix add(Matrix other);
 
   /**
    * Compute the determinant of the matrix.
@@ -47,6 +50,11 @@ public interface IMatrix {
   /**
    * Returns the inverse of the matrix, returns null if the computation failed.
    */
-  public IMatrix3 getInverse();
+  public Matrix getInverse();
 
+  public Matrix getTransposed();
+
+  public double[] data();
+
+  public Matrix multiply(double d);
 }
