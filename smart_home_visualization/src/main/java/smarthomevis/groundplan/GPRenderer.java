@@ -9,7 +9,6 @@ import org.kabeja.dxf.helpers.Point;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.linesegments.LineSegments;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
@@ -111,9 +110,9 @@ public class GPRenderer
 	GPConfig gpConfig = this.data.getGPConfig();
 	
 	Vector start = l.getStart();
-	System.out.println("StartPoint: " + start.toString(3));
+	System.out.println("StartPoint: " + start.toString());
 	Vector end = l.getEnd();
-	System.out.println("EndPoint: " + end.toString(3));
+	System.out.println("EndPoint: " + end.toString());
 	
 	Vector wallTopStart = new Vector(start.get(0), start.get(1),
 		start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
