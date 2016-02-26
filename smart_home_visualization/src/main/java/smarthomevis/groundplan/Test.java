@@ -120,15 +120,15 @@ public class Test
 	ResourcesLocator.getInstance().parseIniFile("resources.ini");
 	JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
 	GroundPlan app = new GroundPlan();
-//	appLauncher.create(app);
-//	appLauncher.setRenderSystem(RenderSystem.JOGL);
-//	appLauncher.setUiSystem(UI.JOGL_SWING);
+	appLauncher.create(app);
+	appLauncher.setRenderSystem(RenderSystem.JOGL);
+	appLauncher.setUiSystem(UI.JOGL_SWING);
 	
 	Test test = new Test();
 	// test.runTest();
-	test.runAnalyzer(app);
+	// test.runAnalyzer(app);
 	// test.testRender(app);
-	// test.analyzeAndRender(app);
+	test.analyzeAndRender(app);
 	}
 	
 }

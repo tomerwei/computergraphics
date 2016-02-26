@@ -124,7 +124,7 @@ public class GPAnalyzer
 				}
 				else
 				{
-					System.out.println("\nAdding new Vector-Key: " + normDirVector.toString(5));
+					System.out.println("\nAdding new Vector-Key: " + normDirVector.toString());
 					directionMap.put(normDirVector, new ArrayList<GPLine>());
 					directionMap.get(normDirVector).add(line);
 				}
@@ -132,7 +132,7 @@ public class GPAnalyzer
 		}
 
 		for (Entry<Vector, List<GPLine>> e : directionMap.entrySet())
-		System.out.println("\nMap of " + e.getKey().toString(5) + " contains " + e.getValue().size() + " lines");
+		System.out.println("\nMap of " + e.getKey().toString() + " contains " + e.getValue().size() + " lines");
 
 		return countAllDistances(type, directionMap);
 	}
@@ -140,18 +140,19 @@ public class GPAnalyzer
 	public Vector testVectorFitsAngleOfDirVector(Vector normDirVector, Set<Vector> listDirVectors,
 		double tolerance)
 	{
-		System.out.println("testing Vector " + normDirVector.toString(2));
+		System.out.println("testing Vector " + normDirVector.toString());
 
 		// durch alle bereits gefundenen Richtungsvektoren der directionMap
 		// durchiterieren und den Winkel bestimmen
 		for (Vector vector : listDirVectors)
 		{
 			double angleOfNormDirVector = GPUtility.angleBetweenVectors(normDirVector, vector);
+			// FIXME Sind hier die Bereiche 30-tolerance und 180-tolerance egal? TESTEN!
 			if ((angleOfNormDirVector < tolerance)
 				|| (180.0 <= angleOfNormDirVector && angleOfNormDirVector <= 180.0 + tolerance))
 			{
 				System.out.println(
-					"angle of Normdirvetor (" + angleOfNormDirVector + ") inside tolerance to " + vector.toString(2));
+					"angle of Normdirvetor (" + angleOfNormDirVector + ") inside tolerance to " + vector.toString());
 				return vector;
 			}
 		}
@@ -175,8 +176,8 @@ public class GPAnalyzer
 
 			for (GPLine line : e.getValue())
 			{
-				// zur Vermeidung von Problemen bei nebenl�ufigen Zugriffen
-				// (L�schen der Eintr�ge innerhalb der Iteration) eine Kopie der
+				// zur Vermeidung von Problemen bei nebenlaeufigen Zugriffen
+				// (Loeschen der Eintraege innerhalb der Iteration) eine Kopie der
 				// Liste
 				// verwenden
 				lineListCopy.remove(line);
