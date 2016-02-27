@@ -521,7 +521,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
       // Transform vertices
       Vector[] positions = new Vector[vertexCount];
       for (int j = 0; j < vertexCount; j++) {
-        positions[j] = transformation.getTransformedVector(triangleVertices[j].getPosition());
+        Vector tmp = transformation.getTransformedVector(triangleVertices[j].getPosition());
+        positions[j] = VectorFactory.create3spaceFrom4spaceVector(tmp);
       }
 
 //      // Get the middle of the triangle
