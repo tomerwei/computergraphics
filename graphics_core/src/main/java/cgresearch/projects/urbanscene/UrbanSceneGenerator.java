@@ -135,6 +135,7 @@ public class UrbanSceneGenerator {
     }
     mesh.addTriangle(1, 2, 0);
     mesh.addTriangle(1, 3, 2);
+    mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
     mesh.computeTriangleNormals();
     mesh.computeVertexNormals();
     return mesh;
