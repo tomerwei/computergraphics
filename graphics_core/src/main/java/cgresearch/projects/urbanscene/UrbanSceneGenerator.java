@@ -133,8 +133,8 @@ public class UrbanSceneGenerator {
         mesh.addVertex(new Vertex(corner));
       }
     }
-    mesh.addTriangle(0, 2, 1);
-    mesh.addTriangle(2, 3, 1);
+    mesh.addTriangle(1, 2, 0);
+    mesh.addTriangle(1, 3, 2);
     mesh.computeTriangleNormals();
     mesh.computeVertexNormals();
     return mesh;
