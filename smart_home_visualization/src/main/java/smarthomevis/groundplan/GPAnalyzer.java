@@ -11,8 +11,8 @@ import java.util.Set;
 
 import cgresearch.core.math.Vector;
 import smarthomevis.groundplan.config.GPConfig;
-import smarthomevis.groundplan.config.GPDataType;
-import smarthomevis.groundplan.config.GPLine;
+import smarthomevis.groundplan.data.GPDataType;
+import smarthomevis.groundplan.data.GPLine;
 
 public class GPAnalyzer
 {

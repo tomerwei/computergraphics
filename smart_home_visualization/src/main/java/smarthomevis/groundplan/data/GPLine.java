@@ -1,4 +1,4 @@
-package smarthomevis.groundplan.config;
+package smarthomevis.groundplan.data;
 
 import java.io.Serializable;
 

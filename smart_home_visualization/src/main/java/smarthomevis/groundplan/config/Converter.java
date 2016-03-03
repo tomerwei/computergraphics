@@ -21,7 +21,9 @@ import org.kabeja.parser.ParserBuilder;
 
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.VectorFactory;
-import smarthomevis.groundplan.config.GPLine.LineType;
+import smarthomevis.groundplan.data.GPDataType;
+import smarthomevis.groundplan.data.GPLine;
+import smarthomevis.groundplan.data.GPLine.LineType;
 
 /**
  * Aufgabe dieser Klasse ist es, die xml- und dxf-Informationen auszulesen und

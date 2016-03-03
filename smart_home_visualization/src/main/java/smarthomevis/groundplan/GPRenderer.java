@@ -19,8 +19,8 @@ import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
 import smarthomevis.groundplan.config.GPConfig;
-import smarthomevis.groundplan.config.GPDataType;
-import smarthomevis.groundplan.config.GPLine;
+import smarthomevis.groundplan.data.GPDataType;
+import smarthomevis.groundplan.data.GPLine;
 
 /**
  * Diese Klasse ist fuer das Rendering verschiedener Darstellungen von

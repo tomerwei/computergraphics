@@ -1,4 +1,4 @@
-package smarthomevis.groundplan.config;
+package smarthomevis.groundplan.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import smarthomevis.groundplan.config.GPConfig;
 
 /**
  * Diese Klasse ist ein Transport- und Persistenzobjekt fuer die Elemente eines

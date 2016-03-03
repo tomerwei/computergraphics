@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import smarthomevis.groundplan.config.GPLine.LineType;
+import smarthomevis.groundplan.data.GPLine.LineType;
 
 public class GPConfig implements Serializable
 {

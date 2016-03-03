@@ -1,7 +1,7 @@
 package smarthomevis.groundplan;
 
 import cgresearch.graphics.scenegraph.CgNode;
-import smarthomevis.groundplan.config.GPDataType;
+import smarthomevis.groundplan.data.GPDataType;
 
 public interface IGroundPlan
 {

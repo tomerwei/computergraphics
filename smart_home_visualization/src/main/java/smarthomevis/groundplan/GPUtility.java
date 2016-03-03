@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import cgresearch.core.math.Vector;
+import smarthomevis.groundplan.data.GPLine;
 import cgresearch.core.math.Vector;
-import smarthomevis.groundplan.config.GPLine;
 
 public class GPUtility
 {

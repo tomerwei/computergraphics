@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import cgresearch.core.assets.ResourcesLocator;
-import smarthomevis.groundplan.config.GPLine.LineType;
+import smarthomevis.groundplan.data.GPLine.LineType;
 
 public class GPConfigXMLReader
 {

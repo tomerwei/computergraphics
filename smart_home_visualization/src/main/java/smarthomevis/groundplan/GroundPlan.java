@@ -5,7 +5,7 @@ import cgresearch.graphics.scenegraph.CgNode;
 import smarthomevis.groundplan.config.Converter;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPConfigXMLReader;
-import smarthomevis.groundplan.config.GPDataType;
+import smarthomevis.groundplan.data.GPDataType;
 
 public class GroundPlan extends CgApplication implements IGroundPlan
 {
