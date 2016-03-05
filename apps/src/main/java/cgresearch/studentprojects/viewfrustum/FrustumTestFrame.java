@@ -45,48 +45,46 @@ public class FrustumTestFrame extends CgApplication {
                                                     // Frustum
                                                     // Culling einschalten
 
-    // ITriangleMesh cow = loadMesh("meshes/cow.obj");
-    // ITriangleMesh bunny = loadMesh("meshes/bunny.obj");
-    // ITriangleMesh fenja = loadMesh("meshes/fenja02.obj");
-    // ITriangleMesh bunnyDown = loadMesh("meshes/bunny.obj");
-    // ITriangleMesh bunnyUp = loadMesh("meshes/bunny.obj");
-    // ITriangleMesh pumpkin = loadMesh("meshes/pumpkin.obj");
-    //
-    // // // ############### Transformations ###############
-    //// TriangleMeshTransformation.translate(cow,
-    // VectorFactory.createVector3(1.0, 0.0, 9.0));
-    // TriangleMeshTransformation.translate(cow,
-    // VectorFactory.createVector3(0.0, 0.0, 0.0));
-    // TriangleMeshTransformation.translate(bunny,
-    // VectorFactory.createVector3(0.0, 0.0 /* 1.15 */, 9.0));
-    // TriangleMeshTransformation.scale(bunny, 3.0);
-    // TriangleMeshTransformation.scale(fenja, 0.1);
-    // TriangleMeshTransformation.translate(fenja,
-    // VectorFactory.createVector3(0.5, 0.0, 25.0));
-    // // TriangleMeshTransformation.scale(bunnyDown, 0.1);
-    // TriangleMeshTransformation.scale(bunnyDown, 3.0);
-    // TriangleMeshTransformation.translate(bunnyDown,
-    // VectorFactory.createVector3(0.0, 0.0, -8.0));
-    // TriangleMeshTransformation.scale(bunnyUp, 3.0);
-    // TriangleMeshTransformation.translate(bunnyUp,
-    // VectorFactory.createVector3(0.0, 2.0, 0.5));
-    // TriangleMeshTransformation.scale(pumpkin, 0.02);
-    // TriangleMeshTransformation.translate(pumpkin,
-    // VectorFactory.createVector3(0.0, 0.0, 23.5));
-    // // ############### Transformationen ###############
-    //
-    // getCgRootNode().addChild(new CgNode(cow, "cow"));
-    // getCgRootNode().addChild(new CgNode(bunny, "bunny"));
-    // getCgRootNode().addChild(new CgNode(fenja, "fenja"));
-    // getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
-    // getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
-    // getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
+     ITriangleMesh cow = loadMesh("meshes/cow.obj");
+     ITriangleMesh bunny = loadMesh("meshes/bunny.obj");
+     ITriangleMesh bunnyDown = loadMesh("meshes/bunny.obj");
+     ITriangleMesh bunnyUp = loadMesh("meshes/bunny.obj");
+     ITriangleMesh fenja = loadMesh("meshes/fenja02.obj");
+     ITriangleMesh pumpkin = loadMesh("meshes/pumpkin.obj");
+    
+     // // ############### Transformations ###############
+     TriangleMeshTransformation.scale(bunnyDown, 3.0);
+     TriangleMeshTransformation.translate(bunnyDown,
+     VectorFactory.createVector3(0.0, 0.0, 2.0));
+     TriangleMeshTransformation.translate(cow,
+     VectorFactory.createVector3(0.0, 0.0, -2.0));
+     TriangleMeshTransformation.translate(bunny,
+     VectorFactory.createVector3(0.0, 0.0 /* 1.15 */, 9.0));
+     TriangleMeshTransformation.scale(bunny, 3.0);
+     TriangleMeshTransformation.scale(fenja, 0.1);
+     TriangleMeshTransformation.translate(fenja,
+     VectorFactory.createVector3(0.5, 0.0, 25.0));
+     // TriangleMeshTransformation.scale(bunnyDown, 0.1);
+     TriangleMeshTransformation.scale(bunnyUp, 3.0);
+     TriangleMeshTransformation.translate(bunnyUp,
+     VectorFactory.createVector3(0.0, 2.0, 0.5));
+     TriangleMeshTransformation.scale(pumpkin, 0.02);
+     TriangleMeshTransformation.translate(pumpkin,
+     VectorFactory.createVector3(0.0, 0.0, 23.5));
+     // ############### Transformationen ###############
+    
+//     getCgRootNode().addChild(new CgNode(cow, "cow")); 
+//     getCgRootNode().addChild(new CgNode(bunny, "bunny"));
+//     getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
+//     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
+//     getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
+//     getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
 
     // ######################################################################################################################################
-    // UrbanSceneGenerator usg = new UrbanSceneGenerator();
-    //// CgNode usNode = usg.buildScene(-4, -4);
-    // CgNode usNode = usg.buildScene(8, 8);
-    // getCgRootNode().addChild(usNode);
+//     UrbanSceneGenerator usg = new UrbanSceneGenerator();
+//    // CgNode usNode = usg.buildScene(-4, -4);
+//     CgNode usNode = usg.buildScene(8, 8);
+//     getCgRootNode().addChild(usNode);
 
     // ######################################################################################################################################
     ITriangleMesh bunny1 = loadMesh("meshes/bunny.obj");
@@ -116,7 +114,21 @@ public class FrustumTestFrame extends CgApplication {
     TriangleMeshTransformation.translate(bunny12, VectorFactory.createVector3(2.0, 0.0, 0));
     ITriangleMesh bunny13 = loadMesh("meshes/bunny.obj");
     TriangleMeshTransformation.translate(bunny13, VectorFactory.createVector3(-2.0, 0.0, 0));
+    
+    ITriangleMesh bunny14 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.translate(bunny14, VectorFactory.createVector3(0.0, 0.0, -3));
+    ITriangleMesh bunny15 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.translate(bunny15, VectorFactory.createVector3(0.0, 0.0, 3));
+    ITriangleMesh bunny16 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.translate(bunny16, VectorFactory.createVector3(0.0, 3.0, 0));
+    ITriangleMesh bunny17 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.translate(bunny17, VectorFactory.createVector3(0, -3.0, 0));
+    ITriangleMesh bunny18 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.translate(bunny18, VectorFactory.createVector3(3.0, 0.0, 0));
+    ITriangleMesh bunny19 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.translate(bunny19, VectorFactory.createVector3(-3.0, 0.0, 0));
 
+    
     getCgRootNode().addChild(new CgNode(bunny1, "bunny1"));
     getCgRootNode().addChild(new CgNode(bunny2, "bunny2"));
     getCgRootNode().addChild(new CgNode(bunny3, "bunny3"));
@@ -130,6 +142,12 @@ public class FrustumTestFrame extends CgApplication {
     getCgRootNode().addChild(new CgNode(bunny11, "bunny11"));
     getCgRootNode().addChild(new CgNode(bunny12, "bunny12"));
     getCgRootNode().addChild(new CgNode(bunny13, "bunny13"));
+    getCgRootNode().addChild(new CgNode(bunny14, "bunny8"));
+    getCgRootNode().addChild(new CgNode(bunny15, "bunny9"));
+    getCgRootNode().addChild(new CgNode(bunny16, "bunny10"));
+    getCgRootNode().addChild(new CgNode(bunny17, "bunny11"));
+    getCgRootNode().addChild(new CgNode(bunny18, "bunny12"));
+    getCgRootNode().addChild(new CgNode(bunny19, "bunny13"));
 
     rootNode = getCgRootNode();
   }
