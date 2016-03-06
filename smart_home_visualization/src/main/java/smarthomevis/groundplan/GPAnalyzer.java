@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,11 +14,14 @@ import cgresearch.core.math.Vector;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.data.GPDataType;
 import smarthomevis.groundplan.data.GPLine;
+import smarthomevis.groundplan.data.GPSolid;
 
 public class GPAnalyzer
 {
 
 	private Map<Double, Integer> distanceMap = new HashMap<>();
+
+	private Map<String, Integer> lineInPairsCount = new HashMap<>();
 
 	public GPDataType analyzeAndProcessData(GPDataType data)
 	{
@@ -30,7 +34,143 @@ public class GPAnalyzer
 
 		addFoundPairsToGPData(relevantDistances, pairsToDistanceMap, data);
 
+		List<GPLine> unpairedLines = getUnpairedLines(data);
+
+		for (GPLine l : unpairedLines)
+		System.out.println("> " + l.getName());
+
+		List<GPLine[]> singleLinePairs = getPairsWithLinesOnlyOnce(data);
+
+		buildSolidsFromSingleLinePairs(data, unpairedLines, singleLinePairs);
+
 		return data;
+	}
+
+	private void buildSolidsFromSingleLinePairs(GPDataType data, List<GPLine> unpairedLines,
+		List<GPLine[]> singleLinePairs)
+	{
+		for (GPLine[] lineArray : singleLinePairs)
+		{
+			GPSolid solid = new GPSolid();
+
+			// FIXME: adding objectreferences twice is suboptimal
+			solid.setBasePair(lineArray);
+
+			for (GPLine l : lineArray)
+			{
+				solid.addLine(l);
+			}
+
+			for (GPLine l : unpairedLines)
+			{
+				if (compareLineVectorsToLinePairVectors(l, lineArray))
+				{
+					System.out.println(l.getName() + " added to " + solid.toString());
+					solid.addLine(l);
+				}
+			}
+			data.addSolid(solid);
+		}
+	}
+
+	private boolean compareLineVectorsToLinePairVectors(GPLine line, GPLine[] pair)
+	{
+		boolean result = false;
+		boolean onefound = false;
+
+		Vector start = line.getStart();
+		Vector end = line.getEnd();
+
+		for (GPLine l : pair)
+		{
+			if (l.getStart().equals(start))
+			{
+				if (onefound)
+				result = true;
+				else
+				onefound = true;
+			}
+			if (l.getStart().equals(end))
+			{
+				if (onefound)
+				result = true;
+				else
+				onefound = true;
+			}
+			if (l.getEnd().equals(start))
+			{
+				if (onefound)
+				result = true;
+				else
+				onefound = true;
+			}
+			if (l.getEnd().equals(end))
+			{
+				if (onefound)
+				result = true;
+				else
+				onefound = true;
+			}
+		}
+
+		return result;
+	}
+
+	private List<GPLine> getUnpairedLines(GPDataType data)
+	{
+		List<GPLine> unpairedLines = new ArrayList<>();
+
+		for (Entry<String, GPLine> e : data.getLines().entrySet())
+		{
+			unpairedLines.add(e.getValue());
+		}
+
+		Set<GPLine> pairLines = new HashSet<>();
+
+		for (Entry<String, List<GPLine[]>> e : data.getGPLinePairsPerLayerMap().entrySet())
+		{
+			for (GPLine[] a : e.getValue())
+			{
+				for (GPLine l : a)
+				{
+					pairLines.add(l);
+				}
+			}
+		}
+		unpairedLines.removeAll(pairLines);
+
+		return unpairedLines;
+	}
+
+	private List<GPLine[]> getPairsWithLinesOnlyOnce(GPDataType data)
+	{
+		List<GPLine[]> pairsList = new ArrayList<>();
+
+		// Ebenen abarbeiten
+		for (Entry<String, List<GPLine[]>> e : data.getGPLinePairsPerLayerMap().entrySet())
+		{
+			// jedes Paar jeder Ebene
+			for (GPLine[] array : e.getValue())
+			{
+				Integer countA = lineInPairsCount.get(array[0].getName());
+				Integer countB = lineInPairsCount.get(array[1].getName());
+				String pairString = array[0].getName() + "-" + array[1].getName();
+				if (countA != null && countB != null)
+				{
+					if (countA == 1 && countB == 1)
+					{
+						pairsList.add(array);
+						System.out.println(pairString + " added");
+					}
+				}
+				else
+				{
+					System.err.println("Value missing in lineInPairsCount!");
+				}
+			}
+		}
+
+		return pairsList;
 	}
 
 	private void addFoundPairsToGPData(List<Double> relevantDistances, Map<Double, List<String[]>> pairsToDistanceMap,
@@ -49,13 +189,28 @@ public class GPAnalyzer
 				if (layerName0.equals(layerName1))
 				{
 					data.addPairToLayer(layerName0, sArray);
+
+					// Zaehler fuer die Linien erhoehen:
+					increaseLineInPairCount(line0);
+					increaseLineInPairCount(line1);
 				}
 				else
-				System.err.println("Inconsistency found: Pair of Lines is not from same Layer " + line0 + "[" + layerName0
-					+ "] - " + line1 + "[" + layerName1 + "]");
+				System.err.println("Inconsistency found: Pair of Lines is not from same Layer " + line0 + "["
+					+ layerName0 + "] - " + line1 + "[" + layerName1 + "]");
 
 			}
 		}
+	}
+
+	private void increaseLineInPairCount(String line)
+	{
+		if (!this.lineInPairsCount.containsKey(line))
+		{
+			this.lineInPairsCount.put(line, 0);
+		}
+
+		int count = this.lineInPairsCount.get(line);
+		this.lineInPairsCount.put(line, count + 1);
 	}
 
 	// Ausgabemethode fuers Verstaendnis..
@@ -137,8 +292,7 @@ public class GPAnalyzer
 		return countAllDistances(type, directionMap);
 	}
 
-	public Vector testVectorFitsAngleOfDirVector(Vector normDirVector, Set<Vector> listDirVectors,
-		double tolerance)
+	public Vector testVectorFitsAngleOfDirVector(Vector normDirVector, Set<Vector> listDirVectors, double tolerance)
 	{
 		System.out.println("testing Vector " + normDirVector.toString());
 
@@ -147,7 +301,8 @@ public class GPAnalyzer
 		for (Vector vector : listDirVectors)
 		{
 			double angleOfNormDirVector = GPUtility.angleBetweenVectors(normDirVector, vector);
-			// FIXME Sind hier die Bereiche 30-tolerance und 180-tolerance egal? TESTEN!
+			// FIXME 30-tolerance and 180-tolerance irrelevant?
+			// TESTEN!
 			if ((angleOfNormDirVector < tolerance)
 				|| (180.0 <= angleOfNormDirVector && angleOfNormDirVector <= 180.0 + tolerance))
 			{
@@ -177,7 +332,8 @@ public class GPAnalyzer
 			for (GPLine line : e.getValue())
 			{
 				// zur Vermeidung von Problemen bei nebenlaeufigen Zugriffen
-				// (Loeschen der Eintraege innerhalb der Iteration) eine Kopie der
+				// (Loeschen der Eintraege innerhalb der Iteration) eine Kopie
+				// der
 				// Liste
 				// verwenden
 				lineListCopy.remove(line);

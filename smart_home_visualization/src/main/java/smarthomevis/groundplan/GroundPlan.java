@@ -58,6 +58,16 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 	getCgRootNode().addChild(node);
 	}
 	
+	public void analyzeAndRenderSolids(String planName)
+	{
+		GPDataType data = analyzePlan(planName);
+		
+		GPRenderer renderer = new GPRenderer(data);
+		
+		CgNode node = renderer.render3DMeshViewFromSolids();
+		getCgRootNode().addChild(node);
+	}
+	
 	public GroundPlan()
 	{
 	

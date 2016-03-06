@@ -26,6 +26,8 @@ public class GPDataType implements Serializable
 	private Map<String, List<String>> layers = null;
 	// Ordnet die gefundenen Linienpaaren wieder den entsprechenden Layers zu
 	private Map<String, List<String[]>> linePairsPerLayer = null;
+	// Speicherung der gebildeten Solids
+	private List<GPSolid> solidList = null;
 
 	/**
 	 * 
@@ -37,6 +39,7 @@ public class GPDataType implements Serializable
 		this.lines = new HashMap<>();
 		this.layers = new HashMap<>();
 		this.linePairsPerLayer = new HashMap<>();
+		this.solidList = new ArrayList<>();
 	}
 
 	public GPDataType(GPConfig config)
@@ -45,6 +48,7 @@ public class GPDataType implements Serializable
 		this.lines = new HashMap<>();
 		this.layers = new HashMap<>();
 		this.linePairsPerLayer = new HashMap<>();
+		this.solidList = new ArrayList<>();
 	}
 
 	/*
@@ -58,6 +62,11 @@ public class GPDataType implements Serializable
 	public GPLine getLine(String name)
 	{
 		return this.lines.get(name);
+	}
+
+	public Map<String, GPLine> getLines()
+	{
+		return this.lines;
 	}
 
 	public List<String> getLayer(String id)
@@ -134,6 +143,11 @@ public class GPDataType implements Serializable
 		return pairList;
 	}
 
+	public List<GPSolid> getAllSolids()
+	{
+		return this.solidList;
+	}
+
 	/*
 	 * Setters
 	 */
@@ -158,6 +172,11 @@ public class GPDataType implements Serializable
 		this.linePairsPerLayer.put(layerName, new ArrayList<String[]>());
 
 		this.linePairsPerLayer.get(layerName).add(linePair);
+	}
+
+	public void addSolid(GPSolid solid)
+	{
+		this.solidList.add(solid);
 	}
 
 	/*
