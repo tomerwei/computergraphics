@@ -25,41 +25,9 @@ import java.util.Observable;
  * @author Marcel Kuhn
  *
  */
-public class ShadowVolumeDemo extends CgApplication {
+public abstract class AbstractShadowVolumeDemo extends CgApplication {
 
-  private LightSource lightSource = new LightSource(LightSource.Type.POINT, LightSource.ShadowType.HARD, -1);
-  private double alpha = 0;
-
-  /**
-   * Constructor
-   */
-  public ShadowVolumeDemo() {
-    loadScene();
-  }
-
-  private void loadScene() {
-    // Remove existing light sources
-    getCgRootNode().clearLights();
-
-    // Load room
-    CgNode node = loadRoom();
-    // Add objects
-    if (node != null) {
-      loadTable("Table", VectorFactory.createVector(3), 0, node);
-      loadChair("Chair 1", VectorFactory.createVector3(-5, 0, 0), 90, node);
-      loadChair("Chair 2", VectorFactory.createVector3(5, 0, 0), 270, node);
-    }
-
-    // Set light source
-    lightSource.setPosition(VectorFactory.createVector3(0, 30, 0));
-    lightSource.setColor(VectorFactory.createVector3(1,1,1));
-    getCgRootNode().addLight(lightSource);
-    getCgRootNode().setAllowShadows(true);
-    getCgRootNode().setUseBlending(true);
-    //AnimationTimer.getInstance().startTimer(200);
-  }
-
-  private CgNode loadRoom() {
+  CgNode loadRoom() {
     ITriangleMesh mesh = getObject("meshes/scene_room/room_01.obj");
     if (mesh != null) {
       mesh.getMaterial().setThrowsShadow(false);
@@ -70,12 +38,16 @@ public class ShadowVolumeDemo extends CgApplication {
     return null;
   }
 
-  private boolean loadChair(String name, Vector translate, int rotation, CgNode parent) {
+  boolean loadChair(String name, Vector translate, int rotation, CgNode parent) {
     return loadObject(name, "meshes/scene_room/chair_01.obj", translate, rotation, parent);
   }
 
-  private boolean loadTable(String name, Vector translate, int rotation, CgNode parent) {
+  boolean loadTable(String name, Vector translate, int rotation, CgNode parent) {
     return loadObject(name, "meshes/scene_room/table_01.obj", translate, rotation, parent);
+  }
+
+  boolean loadPumpkin(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_room/pumpkin_01.obj", translate, rotation, parent);
   }
 
   private boolean loadObject(String name, String path, Vector translate, int rotation, CgNode parent) {
@@ -117,26 +89,5 @@ public class ShadowVolumeDemo extends CgApplication {
     mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     mesh.getMaterial().setTransparency(1);
     return mesh;
-  }
-
-  @Override
-  public void update(Observable o, Object arg) {
-    if (o instanceof AnimationTimer) {
-      lightSource
-          .setPosition(VectorFactory.createVector3(2.0 * Math.sin(alpha) + 0.5, 5, 2.0 * Math.cos(alpha) + 5));
-      alpha += 0.05;
-    }
-  }
-
-  /**
-   * Program entry point.
-   */
-  public static void main(String[] args) {
-    ResourcesLocator.getInstance().parseIniFile("resources.ini");
-    CgApplication app = new ShadowVolumeDemo();
-    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-    appLauncher.create(app);
-    appLauncher.setRenderSystem(AppLauncher.RenderSystem.JOGL);
-    appLauncher.setUiSystem(AppLauncher.UI.JOGL_SWING);
   }
 }
