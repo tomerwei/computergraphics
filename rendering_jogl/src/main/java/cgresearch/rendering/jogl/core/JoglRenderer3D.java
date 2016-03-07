@@ -495,7 +495,7 @@ public class JoglRenderer3D implements Observer {
     // renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0,
     // SCREEN_HEIGHT - 20);
     // renderer.endRendering();
-    System.out.println("FPS: " + drawable.getAnimator().getLastFPS());
+    //System.out.println("FPS: " + drawable.getAnimator().getLastFPS());
 
     cameraPositionChanged = false;
     JoglHelper.hasGLError(gl, "GL rendering");
@@ -607,7 +607,11 @@ public class JoglRenderer3D implements Observer {
     gl.glDisable(GL.GL_CULL_FACE);
     gl.glEnable(GL2.GL_STENCIL_TEST_TWO_SIDE_EXT);
 
+    // Draw shadow volumes
     renderScene(gl, true, light);
+
+    gl.glEnable(GL.GL_CULL_FACE);
+    gl.glCullFace(GL.GL_BACK);
 
     // // Increment stencil buffer value for front-facing polygons that fail the
     // // depth test
