@@ -280,6 +280,13 @@ public class JoglRenderer3D implements Observer {
     lightDiffuse[2] = (float) light.getDiffuseColor().get(2);
     lightDiffuse[3] = 0;
 
+    if (lightCount > 1) {
+      for (int i = 0; i < 3; i++) {
+        lightDiffuse[i] /= lightCount;
+        lightSpecular[i] /= lightCount;
+      }
+    }
+
     gl.glEnable(lightIndex);
     gl.glLightfv(lightIndex, GL2.GL_POSITION, lightPosition, 0);
     gl.glLightfv(lightIndex, GL2.GL_AMBIENT, lightAmbient, 0);
