@@ -24,7 +24,7 @@ public class GPDataType implements Serializable
 	private Map<String, GPLine> lines = null;
 	// Ordnet die GPLine-Objekte anhand ihres eindeutigen Namens einem Layer zu
 	private Map<String, List<String>> layers = null;
-	// Ordnet die gefundenen Linienpaaren wieder den entsprechenden Layers zu
+	// Ordnet die gefundenen Linienpaaren den entsprechenden Layers zu
 	private Map<String, List<String[]>> linePairsPerLayer = null;
 	// Speicherung der gebildeten Solids
 	private List<GPSolid> solidList = null;

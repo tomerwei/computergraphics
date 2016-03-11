@@ -3,7 +3,6 @@ package smarthomevis.groundplan.data;
 import java.io.Serializable;
 
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.Vector;
 
 /**
  * Zweidimensionale Definition einer Wand. Eine interne Representation der
@@ -50,14 +49,33 @@ public class GPLine implements Serializable
 	
 	public Vector getStart()
 	{
-	return new Vector(start.get(0), start.get(1),
-		start.get(2));
+	return new Vector(start.get(0), start.get(1), start.get(2));
 	}
 	
 	public Vector getEnd()
 	{
-	return new Vector(end.get(0), end.get(1),
-		end.get(2));
+	return new Vector(end.get(0), end.get(1), end.get(2));
+	}
+	
+	public boolean equals(Object other)
+	{
+	if (!(other instanceof GPLine))
+		return false;
+		
+	GPLine otherLine = (GPLine) other;
+	if (!this.getName().equals(otherLine.getName()))
+		return false;
+		
+	if (!this.getLineType().equals(otherLine.getLineType()))
+		return false;
+		
+	if (!this.getStart().equals(otherLine.getStart()))
+		return false;
+		
+	if (!this.getEnd().equals(otherLine.getEnd()))
+		return false;
+		
+	return true;
 	}
 	
 	public String toString()
