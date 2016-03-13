@@ -55,6 +55,8 @@ public class GPRenderer
 		CgNode rootNode = new CgRootNode();
 
 		List<GPSolid> solidList = data.getAllSolids();
+		
+		printSolids(solidList);
 
 		for (GPSolid s : solidList)
 		{
@@ -64,6 +66,14 @@ public class GPRenderer
 		}
 
 		return rootNode;
+	}
+
+	private void printSolids(List<GPSolid> solidList)
+	{
+		for(GPSolid s : solidList)
+			{
+				System.out.println(s.toString());
+			}
 	}
 
 	private CgNode renderLinesOfSolid(GPSolid solid)

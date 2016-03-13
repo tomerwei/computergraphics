@@ -147,6 +147,7 @@ public class GPAnalyzer
 				// TODO split notwendig, beide haben mehrere parallele... :-/
 				System.out.println(
 					"!!! Linienpaar mit mehreren Ueberschneidungen !!!");
+				System.out.println(array[0].getName()+":"+countA+"; "+array[1].getName()+":"+countB);
 				}
 			else if (countA > 1 || countB > 1)
 				{
