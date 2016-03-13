@@ -40,8 +40,6 @@ public class RoomScene extends AbstractShadowVolumeDemo {
         lightSource.setColor(VectorFactory.createVector3(1,1,1));
         getCgRootNode().addLight(lightSource);
         getCgRootNode().setAllowShadows(true);
-        getCgRootNode().setUseBlending(true);
-        //AnimationTimer.getInstance().startTimer(200);
     }
 
     /**

@@ -28,10 +28,18 @@ import java.util.Observable;
 public abstract class AbstractShadowVolumeDemo extends CgApplication {
 
   CgNode loadRoom() {
-    ITriangleMesh mesh = getObject("meshes/scene_room/room_01.obj");
+    return loadScene("meshes/scene_room/room_01.obj", "Room");
+  }
+
+  CgNode loadHouseEntrance() {
+    return loadScene("meshes/scene_halloween/scene_01.obj", "Entrance");
+  }
+
+  private CgNode loadScene(String path, String name) {
+    ITriangleMesh mesh = getObject(path);
     if (mesh != null) {
       mesh.getMaterial().setThrowsShadow(false);
-      CgNode node = new CgNode(mesh, "Room");
+      CgNode node = new CgNode(mesh, name);
       getCgRootNode().addChild(node);
       return node;
     }
@@ -46,8 +54,32 @@ public abstract class AbstractShadowVolumeDemo extends CgApplication {
     return loadObject(name, "meshes/scene_room/table_01.obj", translate, rotation, parent);
   }
 
-  boolean loadPumpkin(String name, Vector translate, int rotation, CgNode parent) {
-    return loadObject(name, "meshes/scene_room/pumpkin_01.obj", translate, rotation, parent);
+  boolean loadPumpkinHalloween(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_halloween/pumpkin_01.obj", translate, rotation, parent);
+  }
+
+  boolean loadPumpkinOrange(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_halloween/pumpkin_small_01.obj", translate, rotation, parent);
+  }
+
+  boolean loadPumpkinRed(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_halloween/pumpkin_small_02.obj", translate, rotation, parent);
+  }
+
+  boolean loadPumpkinLightGreen(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_halloween/pumpkin_small_03.obj", translate, rotation, parent);
+  }
+
+  boolean loadPumpkinFlatRed(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_halloween/pumpkin_small_04.obj", translate, rotation, parent);
+  }
+
+  boolean loadPumpkinGreen(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_halloween/pumpkin_small_05.obj", translate, rotation, parent);
+  }
+
+  boolean loadPumpkinFlatGreen(String name, Vector translate, int rotation, CgNode parent) {
+    return loadObject(name, "meshes/scene_halloween/pumpkin_small_06.obj", translate, rotation, parent);
   }
 
   private boolean loadObject(String name, String path, Vector translate, int rotation, CgNode parent) {
