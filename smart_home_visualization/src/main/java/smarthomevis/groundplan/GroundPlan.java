@@ -5,7 +5,7 @@ import cgresearch.graphics.scenegraph.CgNode;
 import smarthomevis.groundplan.config.Converter;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPConfigXMLReader;
-import smarthomevis.groundplan.config.GPDataType;
+import smarthomevis.groundplan.data.GPDataType;
 
 public class GroundPlan extends CgApplication implements IGroundPlan
 {
@@ -56,6 +56,16 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 	GPDataType data = analyzePlan(planName);
 	CgNode node = construct3DMeshFromData(data);
 	getCgRootNode().addChild(node);
+	}
+	
+	public void analyzeAndRenderSolids(String planName)
+	{
+		GPDataType data = analyzePlan(planName);
+		
+		GPRenderer renderer = new GPRenderer(data);
+		
+		CgNode node = renderer.render3DMeshViewFromSolids();
+		getCgRootNode().addChild(node);
 	}
 	
 	public GroundPlan()

@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import cgresearch.core.math.Vector;
-import smarthomevis.groundplan.config.GPLine;
+import smarthomevis.groundplan.data.GPLine;
 
 public class GPAnalyzerTest
 {

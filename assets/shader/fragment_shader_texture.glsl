@@ -55,9 +55,9 @@ void main (void)
         // Diffuse
         vec3 diffuse = vec3(0,0,0);
         if ( dot( N, L ) > 0.0 ){
-            diffuse.x = reflectionDiffuse.x * textureColor.x;
-            diffuse.y = reflectionDiffuse.y * textureColor.y;
-            diffuse.z = reflectionDiffuse.z * textureColor.z;
+            diffuse.x = reflectionDiffuse.x * textureColor.x * gl_LightSource[i].diffuse.x;
+            diffuse.y = reflectionDiffuse.y * textureColor.y * gl_LightSource[i].diffuse.y;
+            diffuse.z = reflectionDiffuse.z * textureColor.z * gl_LightSource[i].diffuse.z;
             diffuse = diffuse * dot( N, L );// / float(numberOfLights);
         }
         

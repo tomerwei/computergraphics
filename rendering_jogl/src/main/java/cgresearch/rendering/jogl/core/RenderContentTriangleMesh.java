@@ -339,25 +339,15 @@ public class RenderContentTriangleMesh implements IRenderContent {
       updateBackFacingInformation(lightPosition, transformation);
 
       if (zFailRequired) {
-        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
-        gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR_WRAP, GL.GL_KEEP);
-        gl.glStencilMask(~0);
-        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
-
         gl.glActiveStencilFaceEXT(GL.GL_BACK);
+        gl.glStencilOp(GL.GL_KEEP, GL.GL_INCR_WRAP, GL.GL_KEEP);
+        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
         gl.glStencilOp(GL.GL_KEEP, GL.GL_DECR_WRAP, GL.GL_KEEP);
-        gl.glStencilMask(~0);
-        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
       } else {
         gl.glActiveStencilFaceEXT(GL.GL_BACK);
-        gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR_WRAP);
-        gl.glStencilMask(~0);
-        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
-
-        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
         gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_DECR_WRAP);
-        gl.glStencilMask(~0);
-        gl.glStencilFunc(GL.GL_ALWAYS, 0, ~0);
+        gl.glActiveStencilFaceEXT(GL.GL_FRONT);
+        gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR_WRAP);
       }
       drawShadowPolygons(gl, lightPosition, lightSource.getType() == LightSource.Type.DIRECTIONAL, transformation);
     }
@@ -463,26 +453,41 @@ public class RenderContentTriangleMesh implements IRenderContent {
     gl.glEnd();
 
     if (zFailRequired) {
-      // gl.glDepthFunc(GL.GL_NEVER);
-      gl.glBegin(GL.GL_TRIANGLES);
-      for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
-        ITriangle t = triangleMesh.getTriangle(i);
-        for (int j = 0; j < 3; j++) {
-          int vIndex = t.get(j);
-          IVertex v = triangleMesh.getVertex(vIndex);
-          Vector vPos = transformation.getTransformedVector(v.getPosition());
-          if (backFacing.get(t)) {
-            float[] vInf =
-                { (float) (vPos.get(0) * lW - lightPosition.get(0)), (float) (vPos.get(1) * lW - lightPosition.get(1)),
-                    (float) (vPos.get(2) * lW - lightPosition.get(2)), 0.0f };
-            gl.glVertex4fv(vInf, 0);
-          } else {
-            gl.glVertex4fv(vPos.floatData(), 0);
-          }
+      drawCap(gl, transformation, lW, lightPosition, false);
+      drawCap(gl, transformation, lW, lightPosition, true);
+    }
+  }
+
+  /**
+   * Draws one of the caps either the back side or the front one
+   */
+  private void drawCap(GL2 gl, Transformation transformation, int lW, Vector lightPosition, boolean drawBackSide) {
+    if (!drawBackSide) {
+      // Necessary in order to prevent Z-fighting for front sides
+      gl.glDepthFunc(GL.GL_NEVER);
+    }
+
+    gl.glBegin(GL.GL_TRIANGLES);
+    for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
+      ITriangle t = triangleMesh.getTriangle(i);
+      for (int j = 0; j < 3; j++) {
+        int vIndex = t.get(j);
+        IVertex v = triangleMesh.getVertex(vIndex);
+        Vector vPos = transformation.getTransformedVector(v.getPosition());
+        if (drawBackSide && backFacing.get(t)) {
+          float[] vInf =
+              { (float) (vPos.get(0) * lW - lightPosition.get(0)), (float) (vPos.get(1) * lW - lightPosition.get(1)),
+                  (float) (vPos.get(2) * lW - lightPosition.get(2)), 0.0f };
+          gl.glVertex4fv(vInf, 0);
+        } else if (!drawBackSide && !backFacing.get(t)) {
+          gl.glVertex4fv(vPos.floatData(), 0);
         }
       }
-      gl.glEnd();
-      // gl.glDepthFunc(GL.GL_LESS);
+    }
+    gl.glEnd();
+
+    if (!drawBackSide) {
+      gl.glDepthFunc(GL.GL_LESS);
     }
   }
 

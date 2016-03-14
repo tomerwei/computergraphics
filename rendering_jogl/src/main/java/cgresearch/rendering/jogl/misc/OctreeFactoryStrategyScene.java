@@ -56,7 +56,6 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
       ur.set(1, tmpUr.get(1) > ur.get(1) ? tmpUr.get(1) : ur.get(1));
       ur.set(2, tmpUr.get(2) > ur.get(2) ? tmpUr.get(2) : ur.get(2));
     }
-    // System.out.println("BB =" + new BoundingBox(ll, ur));
     if (ll != null && ur != null) {
       return new BoundingBox(ll, ur);
     } else {

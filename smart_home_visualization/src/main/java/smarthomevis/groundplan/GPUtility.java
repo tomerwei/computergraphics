@@ -13,11 +13,27 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import cgresearch.core.math.Vector;
+import smarthomevis.groundplan.data.GPLine;
 import cgresearch.core.math.Vector;
-import smarthomevis.groundplan.config.GPLine;
 
 public class GPUtility
 {
+	
+	public static Vector multiply(Vector v, double factor)
+	{
+	BigDecimal bdFactor = BigDecimal.valueOf(factor);
+	
+	BigDecimal xOrd = BigDecimal.valueOf(v.get(0));
+	BigDecimal yOrd = BigDecimal.valueOf(v.get(1));
+	BigDecimal zOrd = BigDecimal.valueOf(v.get(2));
+	
+	BigDecimal resultX = xOrd.multiply(bdFactor);
+	BigDecimal resultY = yOrd.multiply(bdFactor);
+	BigDecimal resultZ = zOrd.multiply(bdFactor);
+	
+	return new Vector(resultX.doubleValue(), resultY.doubleValue(),
+		resultZ.doubleValue());
+	}
 	
 	public static Vector kreuzproduktVon(Vector a, Vector b)
 	{
