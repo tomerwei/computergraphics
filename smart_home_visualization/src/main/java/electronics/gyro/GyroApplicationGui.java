@@ -1,11 +1,11 @@
 package electronics.gyro;
 
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JSlider;
@@ -42,7 +42,7 @@ public class GyroApplicationGui extends IApplicationControllerGui
   public GyroApplicationGui(GyroApplicationModel model) {
     this.model = model;
 
-    setLayout(new GridLayout(4, 1));
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     comboBoxPort = new JComboBox<String>();
     for (String port : model.getPorts()) {
@@ -56,12 +56,12 @@ public class GyroApplicationGui extends IApplicationControllerGui
     buttonConnect.setActionCommand(ACTION_COMMAND_CONNECT);
     add(buttonConnect);
 
-    JButton buttonDisconnect = new JButton("Disconnect");
-    buttonDisconnect.addActionListener(this);
-    buttonDisconnect.setActionCommand(ACTION_COMMAND_DISCONNECT);
-    add(buttonDisconnect);
+    // JButton buttonDisconnect = new JButton("Disconnect");
+    // buttonDisconnect.addActionListener(this);
+    // buttonDisconnect.setActionCommand(ACTION_COMMAND_DISCONNECT);
+    // add(buttonDisconnect);
 
-    sliderServo = new JSlider(0, 90, 0);
+    sliderServo = new JSlider(0, 180, 0);
     sliderServo.addChangeListener(this);
     add(sliderServo);
   }
@@ -99,7 +99,6 @@ public class GyroApplicationGui extends IApplicationControllerGui
 
   @Override
   public void keyPressed(KeyEvent e) {
-
   }
 
   @Override
@@ -109,5 +108,6 @@ public class GyroApplicationGui extends IApplicationControllerGui
   @Override
   public void stateChanged(ChangeEvent e) {
     model.setServoAngle(sliderServo.getValue());
+    model.getGyro().requestValues();
   }
 }

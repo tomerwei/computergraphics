@@ -9,7 +9,7 @@ package homeautomation.sensors;
 public interface ISensor {
 
   public enum SensorType {
-    TEMPERATURE, HUMIDITY, DISTANCE
+    TEMPERATURE, HUMIDITY, DISTANCE, ACCELLEROMETER
   }
 
   public enum SensorModel {
@@ -20,8 +20,8 @@ public interface ISensor {
     TinkerforgeHumidity,
     TinkerforgeHumidityDummy,
     DS18B20,
-    HC_SR04
-
+    HC_SR04,
+    MPU6050
   }
 
   /**

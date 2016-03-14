@@ -1,5 +1,6 @@
 package homeautomation.actors;
 
+import cgresearch.core.logging.Logger;
 import homeautomation.platform.ArduinoConnection;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -29,19 +30,20 @@ public class ArduinoServo implements IServo {
   public ArduinoServo(ArduinoConnection connection, int pin) {
     this.connection = connection;
     this.pin = pin;
+    Logger.getInstance().message("Create Servo at pin " + pin);
   }
 
   public void attach() {
-    connection.setCustomCommand("servo attach " + pin);
+    connection.sendCustomCommand("servo attach " + pin);
   }
 
   public void detach() {
-    connection.setCustomCommand("servo dettach " + pin);
+    connection.sendCustomCommand("servo detach " + pin);
   }
 
   @Override
   public void setDegree(int degree) {
-    connection.setCustomCommand("servo angle " + pin + " " + degree);
+    connection.sendCustomCommand("servo degree " + pin + " " + degree);
   }
 
   @Override

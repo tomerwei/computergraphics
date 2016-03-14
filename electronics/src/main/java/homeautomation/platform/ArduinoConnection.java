@@ -1,8 +1,11 @@
 package homeautomation.platform;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.zu.ardulink.Link;
+import org.zu.ardulink.RawDataListener;
 import org.zu.ardulink.protocol.IProtocol;
 import org.zu.ardulink.protocol.ProtocolHandler;
 
@@ -13,8 +16,26 @@ public class ArduinoConnection {
   private boolean isConnected = false;
   private Link link = null;
 
+  /**
+   * Consumers for message callbacks
+   */
+  List<Consumer<String>> messageCallbacks = new ArrayList<Consumer<String>>();
+
   public ArduinoConnection() {
     link = Link.getDefaultInstance();
+    link.addRawDataListener(new RawDataListener() {
+      @Override
+      public void parseInput(String message, int arg1, int[] arg2) {
+        String msg = "";
+        for (int i = 0; i < arg1; i++) {
+          msg += (char) arg2[i];
+        }
+        for (Consumer<String> messageCallback : messageCallbacks) {
+          messageCallback.accept(msg);
+        }
+        //Logger.getInstance().message(msg);
+      }
+    });
   }
 
   public List<String> getPortList() {
@@ -68,7 +89,17 @@ public class ArduinoConnection {
     }
   }
 
-  public void setCustomCommand(String command) {
-    ProtocolHandler.getCurrentProtocolImplementation().sendCustomMessage(link, "A MESSAGE");
+  /**
+   * Set custom command to Arduino, return result message.
+   */
+  public void sendCustomCommand(String command) {
+    if (link.isConnected()) {
+      ProtocolHandler.getCurrentProtocolImplementation().sendCustomMessage(link, command);
+      //Logger.getInstance().message("Sent command: " + command);
+    }
+  }
+
+  public void addMessageCallback(Consumer<String> messageCallback) {
+    messageCallbacks.add(messageCallback);
   }
 }
