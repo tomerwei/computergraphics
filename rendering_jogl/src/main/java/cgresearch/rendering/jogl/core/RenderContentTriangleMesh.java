@@ -34,6 +34,8 @@ import com.jogamp.opengl.GL2GL3;
  */
 public class RenderContentTriangleMesh implements IRenderContent {
 
+  private int VERTEX_ATTRIBUTE_INDEX = 1;
+
   /**
    * Reference to the triangle mesh.
    */
@@ -45,10 +47,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
   private List<Edge> edges = null;
 
   /**
-   * Back facing information for each Triangle in respect to the current light source
+   * Back facing information for each Triangle in respect to the current light
+   * source
    */
   private Map<ITriangle, Boolean> backFacing = null;
-
 
   /**
    * Temporary data structures containing the vertex information.
@@ -255,6 +257,9 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
   @Override
   public void draw3D(GL2 gl) {
+
+    // Logger.getInstance().message("draw");
+
     if (triangleMesh.needsUpdateRenderStructures()) {
       createRenderStructures();
     }
@@ -284,13 +289,12 @@ public class RenderContentTriangleMesh implements IRenderContent {
     gl.glTexCoordPointer(NUMBER_FLOATS_TEXCOORD, GL2.GL_FLOAT, 0, texCoordBuffer);
 
     if (usesWireframe()) {
-      int vertexAttributeIndex = 1;
       int numberOfFloats = 3;
       int type = GL2.GL_FLOAT;
       boolean normalized = false;
       int stride = 0;
-      gl.glEnableVertexAttribArray(vertexAttributeIndex);
-      gl.glVertexAttribPointer(vertexAttributeIndex, numberOfFloats, type, normalized, stride, vertexAttributeBuffer);
+      gl.glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX);
+      gl.glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX, numberOfFloats, type, normalized, stride, vertexAttributeBuffer);
     }
 
     // Draw vertices via indices
@@ -304,6 +308,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
       }
       sophisticatedMeshNode.draw3D(gl);
     }
+
+    if (usesWireframe()) {
+      gl.glDisableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX);
+    }
   }
 
   Vector light;
@@ -311,7 +319,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
   Vector[] near;
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners, boolean cameraPositionChanged) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners,
+      boolean cameraPositionChanged) {
     light = lightSource.getPosition();
     t = transformation;
     near = nearPlaneCorners;
@@ -328,7 +337,6 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
       Vector lightPosition = lightSource.getPosition();
       updateBackFacingInformation(lightPosition, transformation);
-
 
       if (zFailRequired) {
         gl.glActiveStencilFaceEXT(GL.GL_FRONT);
@@ -355,9 +363,9 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
   }
 
-  private boolean  setTestingMethod(Vector lightPos, Transformation transformation, Vector[] nearPlaneCorners) {
-    BoundingBox bb = new BoundingBox(triangleMesh.getBoundingBox().getLowerLeft(),
-            triangleMesh.getBoundingBox().getUpperRight());
+  private boolean setTestingMethod(Vector lightPos, Transformation transformation, Vector[] nearPlaneCorners) {
+    BoundingBox bb =
+        new BoundingBox(triangleMesh.getBoundingBox().getLowerLeft(), triangleMesh.getBoundingBox().getUpperRight());
     bb.transform(transformation);
 
     if (Intersection.intersect(bb, lightPos, nearPlaneCorners[1], nearPlaneCorners[0]))
@@ -372,20 +380,21 @@ public class RenderContentTriangleMesh implements IRenderContent {
       return true;
 
     return false;
-//    zFailRequired = false;
-//    for (Vector v : bbPoints) {
-//      Vector transformedCorner = transformation.getTransformedVector(v);
-//      int inFront = 0;
-//      for (int j = 0; j < pyramidNormals.length - 1; j++) {
-//        if (transformedCorner.subtract(lightPos).multiply(pyramidNormals[j]) > 0) {
-//          inFront++;
-//        }
-//      }
-//      if (inFront == pyramidNormals.length - 1) {
-//        zFailRequired = true;
-//        return;
-//      }
-//    }
+    // zFailRequired = false;
+    // for (Vector v : bbPoints) {
+    // Vector transformedCorner = transformation.getTransformedVector(v);
+    // int inFront = 0;
+    // for (int j = 0; j < pyramidNormals.length - 1; j++) {
+    // if (transformedCorner.subtract(lightPos).multiply(pyramidNormals[j]) > 0)
+    // {
+    // inFront++;
+    // }
+    // }
+    // if (inFront == pyramidNormals.length - 1) {
+    // zFailRequired = true;
+    // return;
+    // }
+    // }
   }
 
   /**
@@ -419,8 +428,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
   /**
    * Draws the shadow polygons
    */
-  private void drawShadowPolygons(GL2 gl, Vector lightPosition, boolean isDirectional,
-                                  Transformation transformation) {
+  private void drawShadowPolygons(GL2 gl, Vector lightPosition, boolean isDirectional, Transformation transformation) {
     int lW = isDirectional ? 0 : 1;
 
     gl.glBegin(GL2GL3.GL_QUADS);
@@ -441,10 +449,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
         Vector vA = transformation.getTransformedVector(a.getPosition());
         Vector vB = transformation.getTransformedVector(b.getPosition());
-        float[] aInf = {(float) (vA.get(0) * lW - lightPosition.get(0)), (float) (vA.get(1) * lW - lightPosition.get(1)),
-                (float) (vA.get(2) * lW - lightPosition.get(2)), 0.0f};
-        float[] bInf = {(float) (vB.get(0) * lW - lightPosition.get(0)), (float) (vB.get(1) * lW - lightPosition.get(1)),
-                (float) (vB.get(2) * lW - lightPosition.get(2)), 0.0f};
+        float[] aInf = { (float) (vA.get(0) * lW - lightPosition.get(0)),
+            (float) (vA.get(1) * lW - lightPosition.get(1)), (float) (vA.get(2) * lW - lightPosition.get(2)), 0.0f };
+        float[] bInf = { (float) (vB.get(0) * lW - lightPosition.get(0)),
+            (float) (vB.get(1) * lW - lightPosition.get(1)), (float) (vB.get(2) * lW - lightPosition.get(2)), 0.0f };
 
         gl.glVertex4fv(vB.floatData(), 0);
         gl.glVertex4fv(vA.floatData(), 0);
@@ -455,7 +463,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
     gl.glEnd();
 
     if (zFailRequired) {
-      //gl.glDepthFunc(GL.GL_NEVER);
+      // gl.glDepthFunc(GL.GL_NEVER);
       gl.glBegin(GL.GL_TRIANGLES);
       for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
         ITriangle t = triangleMesh.getTriangle(i);
@@ -464,9 +472,9 @@ public class RenderContentTriangleMesh implements IRenderContent {
           IVertex v = triangleMesh.getVertex(vIndex);
           Vector vPos = transformation.getTransformedVector(v.getPosition());
           if (backFacing.get(t)) {
-            float[] vInf = {(float) (vPos.get(0) * lW - lightPosition.get(0)),
-                    (float) (vPos.get(1) * lW - lightPosition.get(1)),
-                    (float) (vPos.get(2) * lW - lightPosition.get(2)), 0.0f};
+            float[] vInf =
+                { (float) (vPos.get(0) * lW - lightPosition.get(0)), (float) (vPos.get(1) * lW - lightPosition.get(1)),
+                    (float) (vPos.get(2) * lW - lightPosition.get(2)), 0.0f };
             gl.glVertex4fv(vInf, 0);
           } else {
             gl.glVertex4fv(vPos.floatData(), 0);
@@ -474,7 +482,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
         }
       }
       gl.glEnd();
-      //gl.glDepthFunc(GL.GL_LESS);
+      // gl.glDepthFunc(GL.GL_LESS);
     }
   }
 
@@ -501,7 +509,9 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
   /**
    * Updates back-facing information in respect to the given light
-   * @param lightPosition Current light's position
+   * 
+   * @param lightPosition
+   *          Current light's position
    */
   private void updateBackFacingInformation(Vector lightPosition, Transformation transformation) {
     boolean init = false;
@@ -525,12 +535,12 @@ public class RenderContentTriangleMesh implements IRenderContent {
         positions[j] = VectorFactory.create3spaceFrom4spaceVector(tmp);
       }
 
-//      // Get the middle of the triangle
-//      Vector tMiddle = positions[0].add(positions[1]);
-//      tMiddle = tMiddle.add(positions[2]);
-//      tMiddle.set(0, tMiddle.get(0) / 3.0);
-//      tMiddle.set(1, tMiddle.get(1) / 3.0);
-//      tMiddle.set(2, tMiddle.get(2) / 3.0);
+      // // Get the middle of the triangle
+      // Vector tMiddle = positions[0].add(positions[1]);
+      // tMiddle = tMiddle.add(positions[2]);
+      // tMiddle.set(0, tMiddle.get(0) / 3.0);
+      // tMiddle.set(1, tMiddle.get(1) / 3.0);
+      // tMiddle.set(2, tMiddle.get(2) / 3.0);
 
       // Get the direction vector to L
       Vector l = lightPosition.subtract(positions[0]);

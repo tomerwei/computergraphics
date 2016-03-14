@@ -78,6 +78,16 @@ public class Matrix {
    */
   public Matrix(Matrix other) {
     this(other.getNumberOfRows(), other.getNumberOfColumns());
+    copy(other);
+  }
+
+  /**
+   * Copy matrix content (dimensions must match!).
+   */
+  public void copy(Matrix other) {
+    if (getNumberOfRows() != other.getNumberOfRows() || getNumberOfColumns() != other.getNumberOfColumns()) {
+      throw new IllegalArgumentException();
+    }
     for (int rowIndex = 0; rowIndex < getNumberOfRows(); rowIndex++) {
       for (int columnIndex = 0; columnIndex < getNumberOfColumns(); columnIndex++) {
         set(rowIndex, columnIndex, other.get(rowIndex, columnIndex));

@@ -111,4 +111,9 @@ public class Transformation extends ICgNodeContent {
   public Vector getTransformedVector(Vector other) {
     return transformation.multiply(VectorFactory.createHomogeniousFor3spaceVector(other));
   }
+
+  public void setTransformation(Matrix transformation) {
+    this.transformation.copy(transformation);
+    updateTransposedTransformation();
+  }
 }

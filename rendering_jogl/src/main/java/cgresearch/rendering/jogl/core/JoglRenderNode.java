@@ -100,6 +100,7 @@ public class JoglRenderNode implements Observer {
           } else {
             renderContent.draw3D(gl);
           }
+          gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
         }
       } else {
         // No shader specified - fixed function pipeline

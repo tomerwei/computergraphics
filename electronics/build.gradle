@@ -16,5 +16,24 @@ dependencies {
     compile group: 'com.jcraft', name: 'jsch', version: '0.1.51'
     compile group: 'org.restlet.jse', name: 'org.restlet', version: '2.2-RC4'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    
+    compile files('../libs/ardulink/activation-1.1.jar')
+	compile files('../libs/ardulink/bluecove-2.1.1-SNAPSHOT.jar')
+	compile files('../libs/ardulink/ardulink-console-0.6.1.jar')		
+	compile files('../libs/ardulink/javax.mail-1.5.4.jar')
+	compile files('../libs/ardulink/ardulink-core-0.6.1.jar')			
+	compile files('../libs/ardulink/mqtt-client-0.4.0.jar')
+	compile files('../libs/ardulink/ardulink-mail-0.6.1.jar')			
+	compile files('../libs/ardulink/pi4j-core-1.0.jar')
+	compile files('../libs/ardulink/ardulink-mqtt-0.6.1.jar')			
+	compile files('../libs/ardulink/rxtx-2.1.7.jar')
+	compile files('../libs/ardulink/ardulink-networkproxyserver-0.6.1.jar')	
+	compile files('../libs/ardulink/slf4j-api-1.7.12.jar')
+	compile files('../libs/ardulink/ardulink-pi-0.6.1.jar')		
+	compile files('../libs/ardulink/slf4j-jdk14-1.7.12.jar')
+	compile files('../libs/ardulink/ardulink-swing-0.6.1.jar')		
+	compile files('../libs/ardulink/usb-0.5.9.jar')
+	compile files('../libs/ardulink/args4j-2.32.jar')
+    
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
