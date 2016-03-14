@@ -4,7 +4,7 @@ import homeautomation.actors.ElecticalOutletSwitch;
 import homeautomation.actors.IActor.Commands;
 import homeautomation.actors.RfLinkTransmitter;
 import homeautomation.actors.RfLinkTransmitter.Mode;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 
 public class ElectricalSwitchTest implements IHomeautomationApp {
 

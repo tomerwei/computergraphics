@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 
 import homeautomation.apps.RasPiServer;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.webservice.WebServiceConstants.MeasurementInterval;
 import homeautomation.webservice.dataaccess.DatabaseAccessSingleton;
 import homeautomation.webservice.dataaccess.DatabaseInformationProvider;

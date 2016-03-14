@@ -1,6 +1,6 @@
 package homeautomation.actors;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.JsonConstants;
 import homeautomation.modules.TinkerforgeModule;
 import homeautomation.platform.TinkerforgeIpConnection;

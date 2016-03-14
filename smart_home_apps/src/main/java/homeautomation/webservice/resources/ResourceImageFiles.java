@@ -1,6 +1,6 @@
 package homeautomation.webservice.resources;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.webservice.dataaccess.RaspiServerAccessSingleton;
 
 import java.io.File;

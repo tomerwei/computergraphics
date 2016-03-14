@@ -3,7 +3,7 @@ package homeautomation.platform;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.modules.RaspberryPi;
 
 /**

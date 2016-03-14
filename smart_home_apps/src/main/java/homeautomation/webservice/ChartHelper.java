@@ -2,7 +2,7 @@ package homeautomation.webservice;
 
 import homeautomation.database.DatabaseAccess;
 import homeautomation.database.Measurement;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 
 import java.awt.image.BufferedImage;
 import java.sql.Timestamp;

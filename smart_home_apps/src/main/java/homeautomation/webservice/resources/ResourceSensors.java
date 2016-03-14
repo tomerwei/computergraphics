@@ -1,7 +1,7 @@
 package homeautomation.webservice.resources;
 
 import homeautomation.apps.RasPiServer;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.sensors.SensorInformation;
 import homeautomation.webservice.WebServiceConstants;
 import homeautomation.webservice.dataaccess.ISensorListProvider;

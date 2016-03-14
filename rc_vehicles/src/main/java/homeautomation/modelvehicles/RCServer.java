@@ -1,7 +1,6 @@
 package homeautomation.modelvehicles;
 
-import homeautomation.foundation.ConsoleLogger;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;

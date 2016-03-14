@@ -3,7 +3,7 @@ package homeautomation.actors;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.JsonConstants;
 
 /**

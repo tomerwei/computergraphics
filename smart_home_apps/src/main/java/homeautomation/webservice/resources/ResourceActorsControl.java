@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import homeautomation.actors.IActor;
 import homeautomation.apps.RasPiServer;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.webservice.WebServiceConstants;
 import homeautomation.webservice.dataaccess.RaspiServerAccessSingleton;
 

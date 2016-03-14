@@ -6,7 +6,7 @@ import javax.json.JsonObjectBuilder;
 import com.tinkerforge.NotConnectedException;
 import com.tinkerforge.TimeoutException;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.JsonConstants;
 
 /**

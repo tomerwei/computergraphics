@@ -1,7 +1,7 @@
 package homeautomation.webservice;
 
-import homeautomation.foundation.ConsoleLogger;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.ConsoleLogger;
+import cgresearch.core.logging.Logger;
 import homeautomation.webservice.dataaccess.RaspiServerAccessSingleton;
 import homeautomation.webservice.resources.ResourceActorsControl;
 import homeautomation.webservice.resources.ResourceHtmlPage;

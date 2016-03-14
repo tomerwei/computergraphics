@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.modules.HomeAutomationModule;
 import homeautomation.modules.RaspberryPi;
 

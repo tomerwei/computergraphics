@@ -6,9 +6,9 @@ import java.util.List;
 
 import homeautomation.database.DatabaseAccess;
 import homeautomation.database.Measurement;
-import homeautomation.foundation.ConsoleLogger;
-import homeautomation.foundation.Logger;
-import homeautomation.foundation.Logger.VerboseMode;
+import cgresearch.core.logging.ConsoleLogger;
+import cgresearch.core.logging.Logger;
+import cgresearch.core.logging.Logger.VerboseMode;
 import homeautomation.jsonparser.JsonParserDatabase;
 import homeautomation.sensors.SensorInformation;
 

@@ -8,7 +8,7 @@ import java.util.List;
 import homeautomation.apps.RasPiServer;
 import homeautomation.database.DatabaseAccess;
 import homeautomation.database.Measurement;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.sensors.ISensor;
 import homeautomation.sensors.SensorInformation;
 

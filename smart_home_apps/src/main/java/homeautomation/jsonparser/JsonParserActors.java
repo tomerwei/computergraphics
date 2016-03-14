@@ -12,7 +12,7 @@ import homeautomation.actors.ElecticalOutletSwitch;
 import homeautomation.actors.RfLinkTransmitter.Mode;
 import homeautomation.actors.IActor;
 import homeautomation.actors.IActor.ActorType;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

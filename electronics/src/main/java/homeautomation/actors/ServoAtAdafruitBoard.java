@@ -1,7 +1,7 @@
 package homeautomation.actors;
 
 import homeautomation.foundation.AdafruitPCA9685;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 
 /**
  * Steuerung eines Servos über das Adafruit board.

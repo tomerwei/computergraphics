@@ -1,6 +1,6 @@
 package homeautomation.sensors;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;

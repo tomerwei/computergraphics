@@ -1,6 +1,6 @@
 package homeautomation.platform;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 
 import java.io.IOException;
 

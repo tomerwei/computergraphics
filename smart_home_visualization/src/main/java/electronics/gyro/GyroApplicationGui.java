@@ -8,10 +8,14 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import cgresearch.ui.IApplicationControllerGui;
 
-public class GyroApplicationGui extends IApplicationControllerGui implements ActionListener, KeyListener {
+public class GyroApplicationGui extends IApplicationControllerGui
+    implements ActionListener, KeyListener, ChangeListener {
 
   /**
    * 
@@ -30,6 +34,7 @@ public class GyroApplicationGui extends IApplicationControllerGui implements Act
   private final GyroApplicationModel model;
 
   private JComboBox<String> comboBoxPort;
+  private JSlider sliderServo;
 
   /**
    * Constructor.
@@ -37,7 +42,7 @@ public class GyroApplicationGui extends IApplicationControllerGui implements Act
   public GyroApplicationGui(GyroApplicationModel model) {
     this.model = model;
 
-    setLayout(new GridLayout(3, 1));
+    setLayout(new GridLayout(4, 1));
 
     comboBoxPort = new JComboBox<String>();
     for (String port : model.getPorts()) {
@@ -55,6 +60,10 @@ public class GyroApplicationGui extends IApplicationControllerGui implements Act
     buttonDisconnect.addActionListener(this);
     buttonDisconnect.setActionCommand(ACTION_COMMAND_DISCONNECT);
     add(buttonDisconnect);
+
+    sliderServo = new JSlider(0, 90, 0);
+    sliderServo.addChangeListener(this);
+    add(sliderServo);
   }
 
   /**
@@ -95,5 +104,10 @@ public class GyroApplicationGui extends IApplicationControllerGui implements Act
 
   @Override
   public void keyReleased(KeyEvent e) {
+  }
+
+  @Override
+  public void stateChanged(ChangeEvent e) {
+    model.setServoAngle(sliderServo.getValue());
   }
 }

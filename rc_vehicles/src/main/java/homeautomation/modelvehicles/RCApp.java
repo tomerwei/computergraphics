@@ -1,7 +1,7 @@
 package homeautomation.modelvehicles;
 
 import homeautomation.apps.IHomeautomationApp;
-import homeautomation.foundation.ConsoleLogger;
+import cgresearch.core.logging.*;
 
 /**
  * Central app for the RC boat.

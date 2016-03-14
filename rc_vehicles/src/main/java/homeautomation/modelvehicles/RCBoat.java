@@ -4,8 +4,7 @@ import homeautomation.actors.IServo;
 import homeautomation.actors.TinkerforgeServo;
 import homeautomation.actors.TinkerforgeServoBrick;
 import homeautomation.apps.IHomeautomationApp;
-import homeautomation.foundation.ConsoleLogger;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.platform.TinkerforgeIpConnection;
 
 public class RCBoat implements IHomeautomationApp {

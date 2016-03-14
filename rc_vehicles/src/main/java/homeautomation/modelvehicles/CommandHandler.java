@@ -1,6 +1,6 @@
 package homeautomation.modelvehicles;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 
 /**
  * Handle string commands an pass them (if possible) to the boat.

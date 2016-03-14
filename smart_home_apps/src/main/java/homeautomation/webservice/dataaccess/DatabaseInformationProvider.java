@@ -1,7 +1,7 @@
 package homeautomation.webservice.dataaccess;
 
 import homeautomation.database.DatabaseAccess;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.webservice.ChartHelper;
 import homeautomation.webservice.WebServiceConstants.MeasurementInterval;
 

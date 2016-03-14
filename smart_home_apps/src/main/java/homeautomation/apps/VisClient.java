@@ -12,7 +12,7 @@ import java.util.List;
 
 import homeautomation.database.DatabaseAccess;
 import homeautomation.database.Measurement;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.sensors.SensorInformation;
 
 import javax.swing.BoxLayout;

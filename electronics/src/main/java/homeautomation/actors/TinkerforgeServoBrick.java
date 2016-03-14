@@ -7,7 +7,7 @@ import com.tinkerforge.BrickServo;
 import com.tinkerforge.NotConnectedException;
 import com.tinkerforge.TimeoutException;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.JsonConstants;
 import homeautomation.modules.TinkerforgeModule;
 import homeautomation.platform.TinkerforgeIpConnection;

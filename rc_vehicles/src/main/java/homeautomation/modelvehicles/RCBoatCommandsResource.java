@@ -2,7 +2,7 @@ package homeautomation.modelvehicles;
 
 import java.util.Dictionary;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.webservice.resources.RestResource;
 
 import org.restlet.representation.Representation;

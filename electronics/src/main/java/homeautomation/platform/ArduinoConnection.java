@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.zu.ardulink.Link;
 import org.zu.ardulink.protocol.IProtocol;
+import org.zu.ardulink.protocol.ProtocolHandler;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 
 public class ArduinoConnection {
 
@@ -65,5 +66,9 @@ public class ArduinoConnection {
       } catch (InterruptedException e) {
       }
     }
+  }
+
+  public void setCustomCommand(String command) {
+    ProtocolHandler.getCurrentProtocolImplementation().sendCustomMessage(link, "A MESSAGE");
   }
 }

@@ -2,7 +2,7 @@ package homeautomation.apps;
 
 import homeautomation.actors.IActor;
 import homeautomation.database.DatabaseAccess;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.sensors.ISensor;
 
 import java.util.ArrayList;

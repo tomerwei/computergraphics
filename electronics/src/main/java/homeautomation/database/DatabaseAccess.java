@@ -1,6 +1,6 @@
 package homeautomation.database;
 
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.*;
 import homeautomation.sensors.ISensor;
 import homeautomation.sensors.SensorInformation;
 import homeautomation.sensors.ISensor.SensorType;

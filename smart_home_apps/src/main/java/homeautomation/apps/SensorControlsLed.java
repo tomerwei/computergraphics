@@ -3,7 +3,7 @@ package homeautomation.apps;
 import homeautomation.actors.RaspPiLed;
 import homeautomation.sensors.IMotionDetectorCallback;
 import homeautomation.sensors.RaspPiMotionDetectionSensor;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 
 /**
  * Light the LED for some time, if the sensor detects movement.

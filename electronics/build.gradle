@@ -6,6 +6,7 @@ repositories {
 }
 
 dependencies {
+	compile project(':graphics_core')
     compile group: 'javax.json', name: 'javax.json-api', version: '1.0'
     compile group: 'com.tinkerforge', name: 'tinkerforge', version: '2.1.4'
     compile("com.pi4j:pi4j-core:0.0.5"){

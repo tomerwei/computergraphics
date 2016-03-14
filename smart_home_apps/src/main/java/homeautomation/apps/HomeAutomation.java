@@ -1,7 +1,7 @@
 package homeautomation.apps;
 
 import homeautomation.factories.HomeAutomationAppFactory;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 
 import java.util.Scanner;
 

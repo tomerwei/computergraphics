@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 
 import homeautomation.JsonConstants;
 import homeautomation.database.DatabaseAccess;
-import homeautomation.foundation.Logger;
+import cgresearch.core.logging.Logger;
 import homeautomation.webservice.WebService;
 
 import javax.json.Json;
