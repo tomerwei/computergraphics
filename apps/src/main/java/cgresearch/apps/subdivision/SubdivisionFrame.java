@@ -18,6 +18,7 @@ import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.CoordinateSystem.Dimension;
 import cgresearch.graphics.scenegraph.LightSource.Type;
 
 /**
@@ -37,7 +38,7 @@ public class SubdivisionFrame extends CgApplication {
   public SubdivisionFrame() {
     getCgRootNode().addChild(new CgNode(polygon, "Polygon"));
     getCgRootNode().addChild(new CgNode(mesh, "Mesh"));
-    getCgRootNode().addChild(new CoordinateSystem(0.01));
+    getCgRootNode().addChild(new CoordinateSystem(Dimension.DIMENSION_3D, 0.01));
 
     LightSource light = new LightSource(Type.POINT);
     light.setPosition(VectorFactory.createVector3(-5, -5, -5));

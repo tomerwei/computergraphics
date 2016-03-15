@@ -40,6 +40,7 @@ public class RenderContentLineSegments implements IRenderContent {
 
     gl.glBegin(GL2.GL_LINES);
     for (int lineIndex = 0; lineIndex < lineSegments.getNumberOfLines(); lineIndex++) {
+      gl.glColor3dv(lineSegments.getLineColor(lineIndex).data(), 0);
       gl.glVertex3fv(lineSegments.getLineStartPoint(lineIndex).floatData(), 0);
       gl.glVertex3fv(lineSegments.getLineEndPoint(lineIndex).floatData(), 0);
     }
@@ -47,7 +48,8 @@ public class RenderContentLineSegments implements IRenderContent {
   }
 
   @Override
-  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners, boolean cameraPositionChanged) {
+  public void draw3D(GL2 gl, LightSource lightSource, Transformation transformation, Vector[] nearPlaneCorners,
+      boolean cameraPositionChanged) {
 
   }
 

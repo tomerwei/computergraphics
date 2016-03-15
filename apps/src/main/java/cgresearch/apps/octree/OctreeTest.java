@@ -25,6 +25,7 @@ import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
+import cgresearch.graphics.scenegraph.CoordinateSystem.Dimension;
 
 /**
  * This application allows to test the octree creation by computing its
@@ -100,7 +101,7 @@ public class OctreeTest extends CgApplication {
     getCgRootNode().addChild(visibleElementsNode);
 
     // Coordinate system
-    CgNode coordinateSystem = new CoordinateSystem(0.1);
+    CgNode coordinateSystem = new CoordinateSystem(Dimension.DIMENSION_3D, 0.1);
     coordinateSystem.setVisible(true);
     getCgRootNode().addChild(coordinateSystem);
   }

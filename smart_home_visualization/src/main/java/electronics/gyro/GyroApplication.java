@@ -19,6 +19,7 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
+import cgresearch.graphics.scenegraph.CoordinateSystem.Dimension;
 import cgresearch.graphics.scenegraph.Transformation;
 
 /**
@@ -48,7 +49,7 @@ public class GyroApplication extends CgApplication {
   public GyroApplication() {
     model = new GyroApplicationModel();
     loadMesh(MeshType.SPACESHIP);
-    getCgRootNode().addChild(new CoordinateSystem());
+    getCgRootNode().addChild(new CoordinateSystem(Dimension.DIMENSION_2D, 1));
     AnimationTimer.getInstance().startTimer(100);
   }
 

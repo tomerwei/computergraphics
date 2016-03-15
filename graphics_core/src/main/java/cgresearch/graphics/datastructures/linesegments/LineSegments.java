@@ -5,6 +5,7 @@ import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
 /**
@@ -26,6 +27,8 @@ public class LineSegments extends ICgNodeContent {
    */
   private List<LinePointIndices> lines = new ArrayList<LinePointIndices>();
 
+  private List<Vector> lineColors = new ArrayList<Vector>();
+
   public LineSegments() {
   }
 
@@ -36,6 +39,7 @@ public class LineSegments extends ICgNodeContent {
 
   public void addLine(int startIndex, int endIndex) {
     lines.add(new LinePointIndices(startIndex, endIndex));
+    lineColors.add(VectorFactory.createVector3(0.7, 0.7, 0.7));
   }
 
   public int getNumberOfPoints() {
@@ -75,4 +79,11 @@ public class LineSegments extends ICgNodeContent {
     return bbox;
   }
 
+  public Vector getLineColor(int lineIndex) {
+    return lineColors.get(lineIndex);
+  }
+
+  public void setLineColor(int lineIndex, Vector color) {
+    lineColors.get(lineIndex).copy(color);
+  }
 }

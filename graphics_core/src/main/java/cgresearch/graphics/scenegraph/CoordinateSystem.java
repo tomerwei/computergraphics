@@ -6,6 +6,7 @@
 package cgresearch.graphics.scenegraph;
 
 import cgresearch.core.math.VectorFactory;
+import cgresearch.graphics.datastructures.linesegments.LineSegments;
 import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
@@ -18,17 +19,55 @@ import cgresearch.graphics.material.Material.Normals;
  */
 public class CoordinateSystem extends CgNode {
 
-  /**
-   * @param content
-   * @param name
-   */
-  public CoordinateSystem() {
-    this(1);
+  public enum Dimension {
+    DIMENSION_2D, DIMENSION_3D
   }
 
-  public CoordinateSystem(double scale) {
+  public CoordinateSystem() {
     super(null, "Coordinate system");
+    createCoordinateSystem3D(1);
+  }
 
+  public CoordinateSystem(Dimension dimension, double scale) {
+    super(null, "Coordinate system");
+    if (dimension == Dimension.DIMENSION_2D) {
+      createCoordinateSystem2D(scale);
+    } else {
+      createCoordinateSystem3D(scale);
+    }
+  }
+
+  /**
+   * Create coordinate system with lines.
+   */
+  private void createCoordinateSystem2D(double scale) {
+
+    LineSegments[] lineSegments = new LineSegments[3];
+
+    lineSegments[0] = new LineSegments();
+    lineSegments[0].addPoint(VectorFactory.createVector3(0, 0, 0));
+    lineSegments[0].addPoint(VectorFactory.createVector3(1, 0, 0));
+    lineSegments[0].addLine(0, 1);
+    lineSegments[0].setLineColor(0, VectorFactory.createVector3(1, 0, 0));
+    addChild(new CgNode(lineSegments[0], "x"));
+    lineSegments[1] = new LineSegments();
+    lineSegments[1].addPoint(VectorFactory.createVector3(0, 0, 0));
+    lineSegments[1].addPoint(VectorFactory.createVector3(0, 1, 0));
+    lineSegments[1].addLine(0, 1);
+    lineSegments[1].setLineColor(0, VectorFactory.createVector3(0, 1, 0));
+    addChild(new CgNode(lineSegments[1], "y"));
+    lineSegments[2] = new LineSegments();
+    lineSegments[2].addPoint(VectorFactory.createVector3(0, 0, 0));
+    lineSegments[2].addPoint(VectorFactory.createVector3(0, 0, 1));
+    lineSegments[2].addLine(0, 1);
+    lineSegments[2].setLineColor(0, VectorFactory.createVector3(0, 0, 1));
+    addChild(new CgNode(lineSegments[2], "z"));
+    for (LineSegments lineSegment : lineSegments) {
+      lineSegment.getMaterial().setShaderId(Material.SHADER_COLOR);
+    }
+  }
+
+  private void createCoordinateSystem3D(double scale) {
     // x-direction
     Arrow arrowX = new Arrow(VectorFactory.createVector3(0, 0, 0), VectorFactory.createVector3(scale, 0, 0));
     arrowX.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(0.75, 0.25, 0.25));
