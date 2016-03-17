@@ -3,7 +3,7 @@
 <Story>
 	<Panel>
 		<Content3D>
-			<Building type="building1" width="10" height="20" length="30" positionX="0" positionY="0"/>
+			<Building type="lform" width="10" height="5" length="10" positionX="0" positionY="0"/>
 		</Content3D>
 	</Panel>	
 </Story>
