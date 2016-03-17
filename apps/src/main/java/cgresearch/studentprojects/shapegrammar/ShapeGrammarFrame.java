@@ -7,7 +7,6 @@ import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.studentprojects.shapegrammar.gui.application.GrammarTreeView;
 import cgresearch.studentprojects.shapegrammar.gui.menu.BuilderMenu;
-import cgresearch.studentprojects.shapegrammar.visualize.BuildingVisualizer;
 import cgresearch.studentprojects.shapegrammar.visualize.CityVisualizer;
 
 /**
@@ -15,26 +14,24 @@ import cgresearch.studentprojects.shapegrammar.visualize.CityVisualizer;
  *
  */
 public class ShapeGrammarFrame extends CgApplication {
-  /**
-   * Constructor
-   */
-  public ShapeGrammarFrame() {
-  }
+	/**
+	 * Constructor
+	 */
+	public ShapeGrammarFrame() {
+	}
 
-  public static void main(String[] args) {
-    ResourcesLocator.getInstance().parseIniFile("resources.ini");
-    ShapeGrammarFrame app = new ShapeGrammarFrame();
-    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-    appLauncher.create(app);
-    appLauncher.setRenderSystem(RenderSystem.JOGL);
-    appLauncher.setUiSystem(UI.JOGL_SWING);
-    GrammarTreeView grammarTreeView = new GrammarTreeView();
-    BuildingVisualizer buildingVisualizer = new BuildingVisualizer();
-    buildingVisualizer.setCgRoot(app.getCgRootNode());
-    CityVisualizer cityVisualizer = new CityVisualizer();
-    cityVisualizer.start();
-    appLauncher.addCustomMenu(new BuilderMenu());
-    appLauncher.addCustomUi(grammarTreeView);
-  }
+	public static void main(String[] args) {
+		ResourcesLocator.getInstance().parseIniFile("resources.ini");
+		ShapeGrammarFrame app = new ShapeGrammarFrame();
+		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+		appLauncher.create(app);
+		appLauncher.setRenderSystem(RenderSystem.JOGL);
+		appLauncher.setUiSystem(UI.JOGL_SWING);
+		GrammarTreeView grammarTreeView = new GrammarTreeView();
+		CityVisualizer cityVisualizer = new CityVisualizer();
+		cityVisualizer.start();
+		appLauncher.addCustomMenu(new BuilderMenu(app.getCgRootNode()));
+		appLauncher.addCustomUi(grammarTreeView);
+	}
 
 }

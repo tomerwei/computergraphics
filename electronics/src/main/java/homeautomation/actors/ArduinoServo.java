@@ -1,8 +1,8 @@
 package homeautomation.actors;
 
+import cgresearch.core.NotImplementedException;
 import cgresearch.core.logging.Logger;
 import homeautomation.platform.ArduinoConnection;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Representation of a Servo attached to an Arduino board which is connected via

@@ -3,41 +3,46 @@ package cgresearch.studentprojects.shapegrammar.settings;
 import cgresearch.studentprojects.shapegrammar.datastructures.tree.RuleTree;
 import cgresearch.studentprojects.shapegrammar.datastructures.tree.VirtualFormTree;
 
-
 /**
  * The Class BuildingSettings contains the settings of a building.
+ * 
  * @author Thorben Watzl
  */
-public class BuildingSettings{
-	
+public class BuildingSettings {
+
 	/** The rule tree. */
 	private RuleTree ruleTree;
-	
+
 	/** The form tree. */
 	private VirtualFormTree formTree;
-	
+
 	/** The width. */
 	private double width;
-	
+
 	/** The height. */
 	private double height;
-	
+
 	/** The length. */
 	private double length;
-	
+
 	/** The x. */
 	private double x;
-	
+
 	/** The z. */
 	private double z;
-	
+
 	/** The building dir. */
 	private String buildingDir;
-	
+
+	/**
+	 * Parent directory of the buildings.
+	 */
+	private String baseDirectory = "studentprojects/shapegrammar/buildings/";
+
 	/**
 	 * Instantiates a new building settings.
 	 */
-	public BuildingSettings(){
+	public BuildingSettings() {
 		ruleTree = new RuleTree();
 		formTree = new VirtualFormTree();
 		width = 0;
@@ -47,7 +52,7 @@ public class BuildingSettings{
 		z = 0;
 		buildingDir = "";
 	}
-	
+
 	/**
 	 * Gets the width.
 	 *
@@ -60,7 +65,8 @@ public class BuildingSettings{
 	/**
 	 * Sets the width.
 	 *
-	 * @param width the new width
+	 * @param width
+	 *            the new width
 	 */
 	public void setWidth(double width) {
 		this.width = width;
@@ -78,7 +84,8 @@ public class BuildingSettings{
 	/**
 	 * Sets the height.
 	 *
-	 * @param height the new height
+	 * @param height
+	 *            the new height
 	 */
 	public void setHeight(double height) {
 		this.height = height;
@@ -96,7 +103,8 @@ public class BuildingSettings{
 	/**
 	 * Sets the building dir.
 	 *
-	 * @param buildingDir the new building dir
+	 * @param buildingDir
+	 *            the new building dir
 	 */
 	public void setBuildingDir(String buildingDir) {
 		this.buildingDir = buildingDir;
@@ -114,7 +122,8 @@ public class BuildingSettings{
 	/**
 	 * Sets the length.
 	 *
-	 * @param length the new length
+	 * @param length
+	 *            the new length
 	 */
 	public void setLength(double length) {
 		this.length = length;
@@ -132,7 +141,8 @@ public class BuildingSettings{
 	/**
 	 * Sets the rule tree.
 	 *
-	 * @param ruleTree the new rule tree
+	 * @param ruleTree
+	 *            the new rule tree
 	 */
 	public void setRuleTree(RuleTree ruleTree) {
 		this.ruleTree = ruleTree;
@@ -150,7 +160,8 @@ public class BuildingSettings{
 	/**
 	 * Sets the form tree.
 	 *
-	 * @param formTree the new form tree
+	 * @param formTree
+	 *            the new form tree
 	 */
 	public void setFormTree(VirtualFormTree formTree) {
 		this.formTree = formTree;
@@ -168,7 +179,8 @@ public class BuildingSettings{
 	/**
 	 * Sets the x.
 	 *
-	 * @param x the new x
+	 * @param x
+	 *            the new x
 	 */
 	public void setX(double x) {
 		this.x = x;
@@ -186,10 +198,15 @@ public class BuildingSettings{
 	/**
 	 * Sets the z.
 	 *
-	 * @param z the new z
+	 * @param z
+	 *            the new z
 	 */
 	public void setZ(double z) {
 		this.z = z;
 	}
-	
+
+	public String getBaseDirectory() {
+		return baseDirectory;
+	}
+
 }

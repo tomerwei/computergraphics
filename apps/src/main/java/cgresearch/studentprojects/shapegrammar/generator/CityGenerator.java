@@ -3,13 +3,14 @@ package cgresearch.studentprojects.shapegrammar.generator;
 import java.util.List;
 import java.util.Random;
 
-import cgresearch.studentprojects.shapegrammar.settings.BuildingSettingManager;
+import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.studentprojects.shapegrammar.settings.CitySettingManager;
 import cgresearch.studentprojects.shapegrammar.settings.CitySettings;
 
 public class CityGenerator {
 
-	public void generateCity() {
+	public CgNode generateCity() {
+		CgNode node = new CgNode(null, "City");
 		BuildingGenerator buildingGenerator = new BuildingGenerator();
 		CitySettings citySettings = CitySettingManager.getInstance().getActualSettings();
 		Random random = new Random();
@@ -23,18 +24,21 @@ public class CityGenerator {
 		double maxHeight = citySettings.getMaxHeight();
 		double minLendth = citySettings.getMinLength();
 		double maxLendth = citySettings.getMaxLength();
-		for(int xCounter = 0;xCounter < citySettings.getNumberBuildingsXInput();xCounter++){
-			for(int zCount = 0; zCount < citySettings.getNumberBuildingsZInput();zCount++){
+		for (int xCounter = 0; xCounter < citySettings.getNumberBuildingsXInput(); xCounter++) {
+			for (int zCount = 0; zCount < citySettings.getNumberBuildingsZInput(); zCount++) {
 				int randNumberForRule = random.nextInt(rules.size());
 				double randNumberWidth = minWidth + (maxWidth - minWidth) * random.nextDouble();
 				double randNumberHeight = minHeight + (maxHeight - minHeight) * random.nextDouble();
 				double randNumberLendth = minLendth + (maxLendth - minLendth) * random.nextDouble();
 				String rule = rules.get(randNumberForRule);
-				buildingGenerator.generateBuilding(rule, randNumberWidth, randNumberHeight, randNumberLendth, xPos, zPos);
-				zPos += step + BuildingSettingManager.getInstance().getActualSettings().getLength();
+				CgNode buildingNode = buildingGenerator.generateBuildingCgNode(rule, randNumberWidth, randNumberHeight,
+						randNumberLendth, xPos, zPos);
+				zPos += step + randNumberLendth;
+				node.addChild(buildingNode);
 			}
 			zPos = 0;
-			xPos += step + BuildingSettingManager.getInstance().getActualSettings().getWidth();
+			xPos += step + maxWidth;
 		}
+		return node;
 	}
 }

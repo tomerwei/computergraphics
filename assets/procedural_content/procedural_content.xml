@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE story SYSTEM "procedural_content.dtd">
+<Story>
+	<Panel>
+		<Content3D>
+			<Building type="building1" width="10" height="20" length="30" positionX="0" positionY="0"/>
+		</Content3D>
+	</Panel>	
+</Story>
