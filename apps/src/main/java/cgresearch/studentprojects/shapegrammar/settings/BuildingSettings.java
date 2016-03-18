@@ -10,203 +10,210 @@ import cgresearch.studentprojects.shapegrammar.datastructures.tree.VirtualFormTr
  */
 public class BuildingSettings {
 
-	/** The rule tree. */
-	private RuleTree ruleTree;
+  /** The rule tree. */
+  private RuleTree ruleTree;
 
-	/** The form tree. */
-	private VirtualFormTree formTree;
+  /** The form tree. */
+  private VirtualFormTree formTree;
 
-	/** The width. */
-	private double width;
+  /** The width. */
+  private double width;
 
-	/** The height. */
-	private double height;
+  /** The height. */
+  private double height;
 
-	/** The length. */
-	private double length;
+  /** The length. */
+  private double length;
 
-	/** The x. */
-	private double x;
+  /** The x. */
+  private double x;
 
-	/** The z. */
-	private double z;
+  /** The z. */
+  private double z;
 
-	/** The building dir. */
-	private String buildingDir;
+  /** The building dir. */
+  private String buildingDir;
 
-	/**
-	 * Parent directory of the buildings.
-	 */
-	private String baseDirectory = "studentprojects/shapegrammar/buildings/";
+  /**
+   * Parent directory of the buildings.
+   */
+  private String baseDirectory = "studentprojects/shapegrammar/buildings/";
 
-	/**
-	 * Instantiates a new building settings.
-	 */
-	public BuildingSettings() {
-		ruleTree = new RuleTree();
-		formTree = new VirtualFormTree();
-		width = 0;
-		height = 0;
-		length = 0;
-		x = 0;
-		z = 0;
-		buildingDir = "";
-	}
+  /**
+   * Instantiates a new building settings.
+   */
+  public BuildingSettings() {
+    ruleTree = new RuleTree();
+    formTree = new VirtualFormTree();
+    width = 0;
+    height = 0;
+    length = 0;
+    x = 0;
+    z = 0;
+    buildingDir = "";
+  }
 
-	/**
-	 * Gets the width.
-	 *
-	 * @return the width
-	 */
-	public double getWidth() {
-		return width;
-	}
+  /**
+   * Gets the width.
+   *
+   * @return the width
+   */
+  public double getWidth() {
+    return width;
+  }
 
-	/**
-	 * Sets the width.
-	 *
-	 * @param width
-	 *            the new width
-	 */
-	public void setWidth(double width) {
-		this.width = width;
-	}
+  /**
+   * Sets the width.
+   *
+   * @param width
+   *          the new width
+   */
+  public void setWidth(double width) {
+    this.width = width;
+  }
 
-	/**
-	 * Gets the height.
-	 *
-	 * @return the height
-	 */
-	public double getHeight() {
-		return height;
-	}
+  /**
+   * Gets the height.
+   *
+   * @return the height
+   */
+  public double getHeight() {
+    return height;
+  }
 
-	/**
-	 * Sets the height.
-	 *
-	 * @param height
-	 *            the new height
-	 */
-	public void setHeight(double height) {
-		this.height = height;
-	}
+  /**
+   * Sets the height.
+   *
+   * @param height
+   *          the new height
+   */
+  public void setHeight(double height) {
+    this.height = height;
+  }
 
-	/**
-	 * Gets the building dir.
-	 *
-	 * @return the building dir
-	 */
-	public String getBuildingDir() {
-		return buildingDir;
-	}
+  /**
+   * Gets the building dir.
+   *
+   * @return the building dir
+   */
+  public String getBuildingDir() {
+    return buildingDir;
+  }
 
-	/**
-	 * Sets the building dir.
-	 *
-	 * @param buildingDir
-	 *            the new building dir
-	 */
-	public void setBuildingDir(String buildingDir) {
-		this.buildingDir = buildingDir;
-	}
+  /**
+   * Sets the building dir.
+   *
+   * @param buildingDir
+   *          the new building dir
+   */
+  public void setBuildingDir(String buildingDir) {
+    this.buildingDir = buildingDir;
+  }
 
-	/**
-	 * Gets the length.
-	 *
-	 * @return the length
-	 */
-	public double getLength() {
-		return length;
-	}
+  /**
+   * Gets the length.
+   *
+   * @return the length
+   */
+  public double getLength() {
+    return length;
+  }
 
-	/**
-	 * Sets the length.
-	 *
-	 * @param length
-	 *            the new length
-	 */
-	public void setLength(double length) {
-		this.length = length;
-	}
+  /**
+   * Sets the length.
+   *
+   * @param length
+   *          the new length
+   */
+  public void setLength(double length) {
+    this.length = length;
+  }
 
-	/**
-	 * Gets the rule tree.
-	 *
-	 * @return the rule tree
-	 */
-	public RuleTree getRuleTree() {
-		return ruleTree;
-	}
+  /**
+   * Gets the rule tree.
+   *
+   * @return the rule tree
+   */
+  public RuleTree getRuleTree() {
+    return ruleTree;
+  }
 
-	/**
-	 * Sets the rule tree.
-	 *
-	 * @param ruleTree
-	 *            the new rule tree
-	 */
-	public void setRuleTree(RuleTree ruleTree) {
-		this.ruleTree = ruleTree;
-	}
+  /**
+   * Sets the rule tree.
+   *
+   * @param ruleTree
+   *          the new rule tree
+   */
+  public void setRuleTree(RuleTree ruleTree) {
+    this.ruleTree = ruleTree;
+  }
 
-	/**
-	 * Gets the form tree.
-	 *
-	 * @return the form tree
-	 */
-	public VirtualFormTree getFormTree() {
-		return formTree;
-	}
+  /**
+   * Gets the form tree.
+   *
+   * @return the form tree
+   */
+  public VirtualFormTree getFormTree() {
+    return formTree;
+  }
 
-	/**
-	 * Sets the form tree.
-	 *
-	 * @param formTree
-	 *            the new form tree
-	 */
-	public void setFormTree(VirtualFormTree formTree) {
-		this.formTree = formTree;
-	}
+  /**
+   * Sets the form tree.
+   *
+   * @param formTree
+   *          the new form tree
+   */
+  public void setFormTree(VirtualFormTree formTree) {
+    this.formTree = formTree;
+  }
 
-	/**
-	 * Gets the x.
-	 *
-	 * @return the x
-	 */
-	public double getX() {
-		return x;
-	}
+  /**
+   * Gets the x.
+   *
+   * @return the x
+   */
+  public double getX() {
+    return x;
+  }
 
-	/**
-	 * Sets the x.
-	 *
-	 * @param x
-	 *            the new x
-	 */
-	public void setX(double x) {
-		this.x = x;
-	}
+  /**
+   * Sets the x.
+   *
+   * @param x
+   *          the new x
+   */
+  public void setX(double x) {
+    this.x = x;
+  }
 
-	/**
-	 * Gets the z.
-	 *
-	 * @return the z
-	 */
-	public double getZ() {
-		return z;
-	}
+  /**
+   * Gets the z.
+   *
+   * @return the z
+   */
+  public double getZ() {
+    return z;
+  }
 
-	/**
-	 * Sets the z.
-	 *
-	 * @param z
-	 *            the new z
-	 */
-	public void setZ(double z) {
-		this.z = z;
-	}
+  /**
+   * Sets the z.
+   *
+   * @param z
+   *          the new z
+   */
+  public void setZ(double z) {
+    this.z = z;
+  }
 
-	public String getBaseDirectory() {
-		return baseDirectory;
-	}
+  public String getBaseDirectory() {
+    return baseDirectory;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("*** Building Settings ***\n  Size: %.2f", width) + " x " + String.format("%.2f", height)
+        + " x " + String.format("%.2f", length) + String.format(", Position: (%.2f", x) + String.format(", %.2f)", z)
+        + "\n  type: " + buildingDir;
+  }
 
 }

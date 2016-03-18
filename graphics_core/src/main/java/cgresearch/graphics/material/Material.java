@@ -142,6 +142,7 @@ public class Material extends Observable {
     showSophisticatesMesh = false;
     textureId = null;
     specularShininess = 20;
+    shaderIds.add(Material.SHADER_PHONG_SHADING);
   }
 
   /**

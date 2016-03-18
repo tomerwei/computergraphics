@@ -51,7 +51,7 @@ public class BuildingVisualizer {
 			mesh.getMaterial().setTextureId(shape.getTexture());
 			mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
 			mesh.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0, 0, 0));
-			mesh.getMaterial().setReflectionAmbient(VectorFactory.createVector3(1, 1, 1));
+			mesh.getMaterial().setReflectionAmbient(VectorFactory.createVector3(0.2, 0.2, 0.2));
 			mesh.getMaterial().setSpecularShininess(50);
 			Vector v1;
 			Vector v2;

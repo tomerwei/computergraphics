@@ -1,6 +1,8 @@
 <!ELEMENT Story (Panel*)*>
 <!ELEMENT Panel (Content2D|Content3D)*>
 <!ELEMENT Content2D (#PCDATA)>
-<!ELEMENT Content3D (#PCDATA)>
+<!ELEMENT Content3D (Building|Mesh)*>
 <!ELEMENT Building (#PCDATA)>
 <!ATTLIST Building type CDATA #REQUIRED width CDATA #REQUIRED height CDATA #REQUIRED length CDATA #REQUIRED positionX CDATA #REQUIRED positionY CDATA #REQUIRED>
+<!ELEMENT Mesh (#PCDATA)>
+<!ATTLIST Mesh filename CDATA #REQUIRED>
