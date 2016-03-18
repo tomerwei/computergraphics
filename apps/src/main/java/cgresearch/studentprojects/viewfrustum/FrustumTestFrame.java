@@ -41,9 +41,8 @@ public class FrustumTestFrame extends CgApplication {
   public FrustumTestFrame() {
 
     getCgRootNode().setUseBlending(true);
-    getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View
-                                                    // Frustum
-                                                    // Culling einschalten
+    getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum Culling einschalten
+
 
      ITriangleMesh cow = loadMesh("meshes/cow.obj");
      ITriangleMesh bunny = loadMesh("meshes/bunny.obj");
@@ -57,7 +56,7 @@ public class FrustumTestFrame extends CgApplication {
      TriangleMeshTransformation.translate(bunnyDown,
      VectorFactory.createVector3(0.0, 0.0, 2.0));
      TriangleMeshTransformation.translate(cow,
-     VectorFactory.createVector3(0.0, 0.0, -2.0));
+     VectorFactory.createVector3(3.0, 0.0, -2.0));
      TriangleMeshTransformation.translate(bunny,
      VectorFactory.createVector3(0.0, 0.0 /* 1.15 */, 9.0));
      TriangleMeshTransformation.scale(bunny, 3.0);
@@ -73,17 +72,17 @@ public class FrustumTestFrame extends CgApplication {
      VectorFactory.createVector3(0.0, 0.0, 23.5));
      // ############### Transformationen ###############
     
-//     getCgRootNode().addChild(new CgNode(cow, "cow")); 
-//     getCgRootNode().addChild(new CgNode(bunny, "bunny"));
-//     getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
-//     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
-//     getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
-//     getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
+     getCgRootNode().addChild(new CgNode(cow, "cow")); 
+     getCgRootNode().addChild(new CgNode(bunny, "bunny"));
+     getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
+     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
+     getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
+     getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
 
     // ######################################################################################################################################
 //     UrbanSceneGenerator usg = new UrbanSceneGenerator();
 //    // CgNode usNode = usg.buildScene(-4, -4);
-//     CgNode usNode = usg.buildScene(8, 8);
+//     CgNode usNode = usg.buildScene(2, 2);
 //     getCgRootNode().addChild(usNode);
 
     // ######################################################################################################################################
@@ -191,9 +190,7 @@ public class FrustumTestFrame extends CgApplication {
 
     CgApplication app = new FrustumTestFrame();
     if (!rootNode.useViewFrustumCulling()) {
-      ViewFrustumCulling vfc = new ViewFrustumCulling(Camera.getInstance(), Camera.getInstance().getNearClippingPlane(),
-          Camera.getInstance().getFarClippingPlane(), rootNode);
-      // 0.0, 230, rootNode);
+      ViewFrustumCulling vfc = new ViewFrustumCulling(rootNode);
       vfc.computeVisibleScenePart(app.getCgRootNode());
     }
     JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();

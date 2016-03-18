@@ -141,7 +141,7 @@ public class JoglRenderer3D implements Observer {
   public JoglRenderer3D(JoglRenderObjectManager renderObjectManager, CgRootNode rootNode) {
     this.renderObjectMananger = renderObjectManager;
     this.rootNode = rootNode;
-    viewFrustum = new ViewFrustumCulling(Camera.getInstance(), rootNode);
+    viewFrustum = new ViewFrustumCulling(rootNode);
     new PickingRenderer(rootNode);
     rootNode.addObserver(this);
     Camera.getInstance().addObserver(this);
