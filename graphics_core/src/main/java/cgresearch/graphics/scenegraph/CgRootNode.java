@@ -33,6 +33,11 @@ public class CgRootNode extends CgNode {
   private boolean useViewFrustumCulling = false;
 
   /**
+   * Show frames per second
+   */
+  private boolean showFps = false;
+
+  /**
    * Constructor.
    */
   public CgRootNode() {
@@ -105,5 +110,13 @@ public class CgRootNode extends CgNode {
 
   public void setUseViewFrustumCulling(boolean value) {
     useViewFrustumCulling = value;
+  }
+
+  public boolean isShowFps() {
+    return showFps;
+  }
+
+  public void setShowFps(boolean showFps) {
+    this.showFps = showFps;
   }
 }

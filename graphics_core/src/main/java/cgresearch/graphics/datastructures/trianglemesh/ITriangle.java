@@ -63,4 +63,14 @@ public interface ITriangle {
    */
   public boolean contains(int vertexIndex);
 
+  /**
+   * Return true if the triangle is visible, false otherwise.
+   */
+  public boolean isVisible();
+
+  /**
+   * Set visibility.
+   */
+  public void setVisible(boolean visible);
+
 }

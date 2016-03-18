@@ -20,22 +20,24 @@ import cgresearch.graphics.scenegraph.CgNode;
  */
 public class ProceduralContentFrame extends CgApplication {
 
-	private StoryGenerator storyGenerator;
+  private StoryGenerator storyGenerator;
 
-	public ProceduralContentFrame() {
-		storyGenerator = new StoryGenerator();
-		CgNode node = storyGenerator.generate("procedural_content/procedural_content.xml");
-		if (node != null) {
-			getCgRootNode().addChild(node);
-		}
-	}
+  public ProceduralContentFrame() {
+    storyGenerator = new StoryGenerator();
+    CgNode node = storyGenerator.generate("procedural_content/procedural_content.xml");
+    if (node != null) {
+      getCgRootNode().addChild(node);
+    }
 
-	public static void main(String[] args) {
-		ResourcesLocator.getInstance().parseIniFile("resources.ini");
-		ProceduralContentFrame app = new ProceduralContentFrame();
-		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-		appLauncher.create(app);
-		appLauncher.setRenderSystem(RenderSystem.JOGL);
-		appLauncher.setUiSystem(UI.JOGL_SWING);
-	}
+    getCgRootNode().setShowFps(true);
+  }
+
+  public static void main(String[] args) {
+    ResourcesLocator.getInstance().parseIniFile("resources.ini");
+    ProceduralContentFrame app = new ProceduralContentFrame();
+    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+    appLauncher.create(app);
+    appLauncher.setRenderSystem(RenderSystem.JOGL);
+    appLauncher.setUiSystem(UI.JOGL_SWING);
+  }
 }

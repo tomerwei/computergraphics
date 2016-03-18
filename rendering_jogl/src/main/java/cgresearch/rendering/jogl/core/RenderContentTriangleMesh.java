@@ -87,6 +87,11 @@ public class RenderContentTriangleMesh implements IRenderContent {
    */
   private boolean zFailRequired = false;
 
+  /**
+   * Number of visible triangles in the mesh (must be <= number of triangles).
+   */
+  int numberOfVisibleTriangles = -1;
+
   private static final int NUMBER_OF_FLOATS_PER_VERTEX = 3;
   private static final int NUMBER_OF_TEX_COORDS_PER_VERTEX = 2;
   private static final int NUMBER_OF_VERTICES_PER_TRIANGLE = 3;
@@ -152,7 +157,7 @@ public class RenderContentTriangleMesh implements IRenderContent {
 
     createBufferArrays(numberOfTriangles, vb, nb, cb, tcb, vab);
     createBuffers(numberOfTriangles, vb, nb, cb, tcb, vab);
-    createIndexBuffer(numberOfTriangles);
+    createIndexBuffer();
   }
 
   private void createBufferArrays(int numberOfTriangles, float vb[], float nb[], float[] cb, float tcb[], float vab[]) {
@@ -240,26 +245,42 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
   }
 
-  private void createIndexBuffer(int numberOfTriangles) {
-    int ib[] = new int[numberOfTriangles * NUMBER_INDICES_IN_TRIANGLE];
-    for (int i = 0; i < numberOfTriangles; i++) {
-      ib[i * NUMBER_INDICES_IN_TRIANGLE] = i * NUMBER_INDICES_IN_TRIANGLE;
-      ib[i * NUMBER_INDICES_IN_TRIANGLE + 1] = i * NUMBER_INDICES_IN_TRIANGLE + 1;
-      ib[i * NUMBER_INDICES_IN_TRIANGLE + 2] = i * NUMBER_INDICES_IN_TRIANGLE + 2;
+  private void createIndexBuffer() {
+    numberOfVisibleTriangles = getNumberOfVisibleTriangles();
+    int numberOfTriangles = triangleMesh.getNumberOfTriangles();
+    int ib[] = new int[numberOfVisibleTriangles * NUMBER_INDICES_IN_TRIANGLE];
+    int bufferIndex = 0;
+    for (int triangleIndex = 0; triangleIndex < numberOfTriangles; triangleIndex++) {
+      if (triangleMesh.getTriangle(triangleIndex).isVisible()) {
+        ib[bufferIndex * NUMBER_INDICES_IN_TRIANGLE] = triangleIndex * NUMBER_INDICES_IN_TRIANGLE;
+        ib[bufferIndex * NUMBER_INDICES_IN_TRIANGLE + 1] = triangleIndex * NUMBER_INDICES_IN_TRIANGLE + 1;
+        ib[bufferIndex * NUMBER_INDICES_IN_TRIANGLE + 2] = triangleIndex * NUMBER_INDICES_IN_TRIANGLE + 2;
+        bufferIndex++;
+      }
     }
     final int spacePerTriangle = SIZE_INT * NUMBER_INDICES_IN_TRIANGLE;
-    ByteBuffer ibb = ByteBuffer.allocateDirect(triangleMesh.getNumberOfTriangles() * spacePerTriangle);
+    ByteBuffer ibb = ByteBuffer.allocateDirect(numberOfVisibleTriangles * spacePerTriangle);
     ibb.order(ByteOrder.nativeOrder());
     indexBuffer = ibb.asIntBuffer();
     indexBuffer.put(ib);
     indexBuffer.position(0);
   }
 
+  /**
+   * Count the number of visible triangles in the mesh.
+   */
+  private int getNumberOfVisibleTriangles() {
+    int numberOfVisibleTriangles = 0;
+    for (int i = 0; i < triangleMesh.getNumberOfTriangles(); i++) {
+      if (triangleMesh.getTriangle(i).isVisible()) {
+        numberOfVisibleTriangles++;
+      }
+    }
+    return numberOfVisibleTriangles;
+  }
+
   @Override
   public void draw3D(GL2 gl) {
-
-    // Logger.getInstance().message("draw");
-
     if (triangleMesh.needsUpdateRenderStructures()) {
       createRenderStructures();
     }
@@ -298,8 +319,8 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
 
     // Draw vertices via indices
-    gl.glDrawElements(GL2.GL_TRIANGLES, triangleMesh.getNumberOfTriangles() * NUMBER_INDICES_IN_TRIANGLE,
-        GL2.GL_UNSIGNED_INT, indexBuffer);
+    gl.glDrawElements(GL2.GL_TRIANGLES, numberOfVisibleTriangles * NUMBER_INDICES_IN_TRIANGLE, GL2.GL_UNSIGNED_INT,
+        indexBuffer);
 
     // Show the sophisticated mesh
     if (triangleMesh.getMaterial().isShowSophisticatesMesh()) {

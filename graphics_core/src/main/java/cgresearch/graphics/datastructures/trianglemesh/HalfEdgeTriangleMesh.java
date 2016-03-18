@@ -357,7 +357,7 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
 
   @Override
   public void removeTriangle(int triangleIndex) {
-    throw new UnsupportedOperationException("Method removeTriangle() bnot implemente yet fir HalfEdgeTriangleMesh.");
+    throw new UnsupportedOperationException("Method removeTriangle() not implemented yet for HalfEdgeTriangleMesh.");
   }
 
   @Override
@@ -369,5 +369,10 @@ public class HalfEdgeTriangleMesh extends ITriangleMesh {
     mesh.split();
     copyFrom(mesh);
     getMaterial().copyFrom(oldMaterial);
+  }
+
+  @Override
+  public void setTriangleVisible(int triangleIndex, boolean visible) {
+    throw new UnsupportedOperationException("Method setTriangleVisible() not implemente yet for HalfEdgeTriangleMesh.");
   }
 }

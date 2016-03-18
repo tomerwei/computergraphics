@@ -6,6 +6,7 @@
 package cgresearch.apps.trianglemeshes;
 
 import java.util.List;
+import java.util.Observable;
 
 import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
@@ -27,7 +28,6 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.LightSource.Type;
 
@@ -45,9 +45,9 @@ public class ObjTriangleMesh extends CgApplication {
   public ObjTriangleMesh() {
     // 3D Object
     // loadFenja();
-    // loadLotrCubeWithTextureAtlas();
+    loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    loadPlaneWithBunny();
+    // loadPlaneWithBunny();
     // loadMedivalHouse();
     // loadHulk();
     // loadNofretete();
@@ -117,7 +117,7 @@ public class ObjTriangleMesh extends CgApplication {
   }
 
   public void loadPlaneWithBunny() {
-    //getCgRootNode().setUseBlending(true);
+    // getCgRootNode().setUseBlending(true);
     Plane plane = new Plane(VectorFactory.createVector3(0, 0, 0), VectorFactory.createVector3(0, 1, 0));
     plane.getMaterial().setReflectionAmbient(Material.PALETTE2_COLOR1);
     // plane.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR1);
@@ -144,7 +144,7 @@ public class ObjTriangleMesh extends CgApplication {
       // 0, 0));
       bunny.getMaterial().setReflectionDiffuse(Material.PALETTE1_COLOR2);
       bunny.getMaterial().setReflectionSpecular(VectorFactory.createVector3(1, 1, 1));
-      //bunny.getMaterial().setTransparency(0.5);
+      // bunny.getMaterial().setTransparency(0.5);
       CgNode bunnyNode = new CgNode(bunny, "bunny");
       getCgRootNode().addChild(bunnyNode);
     }
@@ -186,6 +186,9 @@ public class ObjTriangleMesh extends CgApplication {
     ResourceManager.getTextureManagerInstance().addResource(LOTR_TEXTURE_ATLAS,
         new CgTexture("textures/lotr_texture_atlas.png"));
     mesh.getMaterial().setTextureId(LOTR_TEXTURE_ATLAS);
+
+    mesh.setTriangleVisible(0, false);
+
     getCgRootNode().addChild(new CgNode(mesh, "mesh"));
   }
 
@@ -224,5 +227,16 @@ public class ObjTriangleMesh extends CgApplication {
     appLauncher.create(app);
     appLauncher.setRenderSystem(RenderSystem.JOGL);
     appLauncher.setUiSystem(UI.JOGL_SWING);
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+    try {
+      ITriangleMesh mesh = (ITriangleMesh) getCgRootNode().getChildNode(0).getContent();
+      mesh.setTriangleVisible((int) (Math.random() * mesh.getNumberOfTriangles()),
+          (Math.random() < 0.5) ? true : false);
+      mesh.updateRenderStructures();
+    } catch (Exception e) {
+    }
   }
 }

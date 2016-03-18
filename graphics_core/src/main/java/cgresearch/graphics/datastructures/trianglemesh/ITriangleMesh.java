@@ -156,4 +156,15 @@ public abstract class ITriangleMesh extends ICgNodeContent {
    * @param mesh
    */
   public abstract void copyFrom(ITriangleMesh mesh);
+
+  /**
+   * Show hide an individual triangle. Attention: not checked if this helps the
+   * performance.
+   * 
+   * @param triangleIndex
+   *          Index of the triangle.
+   * @param visible
+   *          Visibility flag.
+   */
+  public abstract void setTriangleVisible(int triangleIndex, boolean visible);
 }

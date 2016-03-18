@@ -22,6 +22,11 @@ public class HalfEdgeTriangle implements ITriangle {
    */
   private Vector normal;
 
+  /**
+   * Triangle is visible?
+   */
+  private boolean isVisible = true;
+
   public HalfEdge getHalfEdge() {
     return halfEdge;
   }
@@ -112,5 +117,15 @@ public class HalfEdgeTriangle implements ITriangle {
   @Override
   public boolean contains(int vertexIndex) {
     throw new UnsupportedOperationException("Not implemented for half edge triangle mesh");
+  }
+
+  @Override
+  public boolean isVisible() {
+    return isVisible;
+  }
+
+  @Override
+  public void setVisible(boolean visible) {
+    this.isVisible = visible;
   }
 }

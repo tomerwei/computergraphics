@@ -34,6 +34,11 @@ public class Triangle implements ITriangle {
   private Vector normal = VectorFactory.createVector3(1, 0, 0);
 
   /**
+   * Triangle is visible?
+   */
+  private boolean isVisible = true;
+
+  /**
    * Default constructor
    * 
    * @param a
@@ -208,5 +213,15 @@ public class Triangle implements ITriangle {
       }
     }
     return false;
+  }
+
+  @Override
+  public boolean isVisible() {
+    return isVisible;
+  }
+
+  @Override
+  public void setVisible(boolean visible) {
+    this.isVisible = visible;
   }
 }

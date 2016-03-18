@@ -133,7 +133,7 @@ public class JoglRenderer3D implements Observer {
   /**
    * Handles the view frustum culling.
    */
-  private final ViewFrustumCulling viewFrustum; 
+  private final ViewFrustumCulling viewFrustum;
 
   /**
    * Constructor.
@@ -200,7 +200,7 @@ public class JoglRenderer3D implements Observer {
     Logger.getInstance().debug("Initially create JOGL render nodes for scene graph.");
     renderObjectMananger.update(rootNode, CgNodeStateChange.makeAddChild(null, rootNode));
 
-    // Define frame rate
+    // Frame rate
     drawable.getAnimator().setUpdateFPSFrames(3, null);
   }
 
@@ -382,7 +382,9 @@ public class JoglRenderer3D implements Observer {
     JoglHelper.hasGLError(gl, "GL rendering");
 
     // Show framerate
-    // System.out.println(drawable.getAnimator().getLastFPS());
+    if (rootNode.isShowFps()) {
+      Logger.getInstance().message("FPS: " + drawable.getAnimator().getLastFPS());
+    }
   }
 
   /**
@@ -485,17 +487,18 @@ public class JoglRenderer3D implements Observer {
     checkTakeScreenshot(drawable);
 
     // Show framerate
-    // CgGlslShader shaderTexture =
-    // ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_TEXTURE);
-    // JoglShader.use(shaderTexture, gl);
-    //
-    // renderer.setUseVertexArrays(false);
-    // renderer.beginRendering(SCREEN_WIDTH, SCREEN_HEIGHT);
-    // renderer.setColor(0f, 0f, 0f, 0.8f);
-    // renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0,
-    // SCREEN_HEIGHT - 20);
-    // renderer.endRendering();
-    //System.out.println("FPS: " + drawable.getAnimator().getLastFPS());
+    if (rootNode.isShowFps()) {
+      // CgGlslShader shaderTexture =
+      // ResourceManager.getShaderManagerInstance().getResource(Material.SHADER_TEXTURE);
+      // JoglShader.use(shaderTexture, gl);
+      // renderer.setUseVertexArrays(false);
+      // renderer.beginRendering(SCREEN_WIDTH, SCREEN_HEIGHT);
+      // renderer.setColor(0f, 0f, 0f, 0.8f);
+      // renderer.draw("FPS: " + drawable.getAnimator().getLastFPS(), 0,
+      // SCREEN_HEIGHT - 20);
+      // renderer.endRendering();
+      Logger.getInstance().message("FPS: " + drawable.getAnimator().getLastFPS());
+    }
 
     cameraPositionChanged = false;
     JoglHelper.hasGLError(gl, "GL rendering");
@@ -666,7 +669,7 @@ public class JoglRenderer3D implements Observer {
    * Creates a projection matrix which has no far plane
    */
   private Matrix getProjectionInfinity() {
-    Matrix pInf = MatrixFactory.createMatrix(4,4);
+    Matrix pInf = MatrixFactory.createMatrix(4, 4);
     // Field of view in radians
     double rads = Math.toRadians(Camera.getInstance().getOpeningAngle());
     // Cotangent of the field of view

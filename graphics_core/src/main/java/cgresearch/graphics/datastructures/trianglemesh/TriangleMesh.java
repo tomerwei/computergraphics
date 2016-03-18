@@ -387,4 +387,9 @@ public class TriangleMesh extends ITriangleMesh {
     newMesh.getMaterial().copyFrom(oldMaterial);
     copyFrom((TriangleMesh) newMesh);
   }
+
+  @Override
+  public void setTriangleVisible(int triangleIndex, boolean visible) {
+    getTriangle(triangleIndex).setVisible(visible);
+  }
 }
