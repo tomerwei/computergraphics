@@ -42,7 +42,7 @@ public class FrustumTestFrame extends CgApplication {
 
     getCgRootNode().setUseBlending(true);
     getCgRootNode().setUseViewFrustumCulling(true); // TODO HIER View Frustum Culling einschalten
-
+    getCgRootNode().setShowFps(false);
 
      ITriangleMesh cow = loadMesh("meshes/cow.obj");
      ITriangleMesh bunny = loadMesh("meshes/bunny.obj");
@@ -55,8 +55,9 @@ public class FrustumTestFrame extends CgApplication {
      TriangleMeshTransformation.scale(bunnyDown, 3.0);
      TriangleMeshTransformation.translate(bunnyDown,
      VectorFactory.createVector3(0.0, 0.0, 2.0));
+     TriangleMeshTransformation.scale(cow, 5.0);
      TriangleMeshTransformation.translate(cow,
-     VectorFactory.createVector3(3.0, 0.0, -2.0));
+     VectorFactory.createVector3(3.0, 0.0, -5.0));
      TriangleMeshTransformation.translate(bunny,
      VectorFactory.createVector3(0.0, 0.0 /* 1.15 */, 9.0));
      TriangleMeshTransformation.scale(bunny, 3.0);
@@ -141,32 +142,14 @@ public class FrustumTestFrame extends CgApplication {
     getCgRootNode().addChild(new CgNode(bunny11, "bunny11"));
     getCgRootNode().addChild(new CgNode(bunny12, "bunny12"));
     getCgRootNode().addChild(new CgNode(bunny13, "bunny13"));
-    getCgRootNode().addChild(new CgNode(bunny14, "bunny8"));
-    getCgRootNode().addChild(new CgNode(bunny15, "bunny9"));
-    getCgRootNode().addChild(new CgNode(bunny16, "bunny10"));
-    getCgRootNode().addChild(new CgNode(bunny17, "bunny11"));
-    getCgRootNode().addChild(new CgNode(bunny18, "bunny12"));
-    getCgRootNode().addChild(new CgNode(bunny19, "bunny13"));
+    getCgRootNode().addChild(new CgNode(bunny14, "bunny14"));
+    getCgRootNode().addChild(new CgNode(bunny15, "bunny15"));
+    getCgRootNode().addChild(new CgNode(bunny16, "bunny16"));
+    getCgRootNode().addChild(new CgNode(bunny17, "bunny17"));
+    getCgRootNode().addChild(new CgNode(bunny18, "bunny18"));
+    getCgRootNode().addChild(new CgNode(bunny19, "bunny19"));
 
     rootNode = getCgRootNode();
-  }
-
-  /**
-   * erzeugt einen Octree fuer eine PointCloud
-   */
-  public OctreeNode<Integer> createPointCloudOctree(IPointCloud pCloud) { // TODO
-    OctreeFactoryStrategyPointCloud octreeFactoryStrategyPCloud = new OctreeFactoryStrategyPointCloud(pCloud);
-    OctreeFactory<Integer> octreeFactoryPointCloud = new OctreeFactory<Integer>(octreeFactoryStrategyPCloud);
-    OctreeNode<Integer> octreePointCloudRoot = octreeFactoryPointCloud.create(7, 20);
-    return octreePointCloudRoot;
-  }
-
-  /**
-   * laedt eine Punktwolke
-   */
-  public IPointCloud loadPointCloud() {
-    IPointCloud pointCloud = PointCloudFactory.createDummyPointCloud();
-    return pointCloud;
   }
 
   /**

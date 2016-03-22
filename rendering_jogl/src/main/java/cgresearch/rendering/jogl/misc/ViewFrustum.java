@@ -320,22 +320,51 @@ public class ViewFrustum  {
    * @return 0 : INSIDE, 1 : OUTSIDE, 2 : INTERSECTED
    */
   public int isObjectInFrustum(OctreeNode<Integer> octreeNode, boolean isSceneOctreeNode) {
+
     final BoundingBox bb = getOctreeNodeBox(octreeNode);
     final Vector[] corner_points = calcCornerPointsOfBoundingBox(bb);
-    int count = 0;
+    int inside = 0;
+    int outside = 0;
+    
+//  octreeNodes of the sceneOctree may be bigger than the frustum,
+//  so the test for intersection must be different
+    if(isSceneOctreeNode){
     for (int i = 0; i < PLANES; i++) {
+      outside = 0;
       for (int j = 0; j < CORNERS; j++) {
         if (frustum[i].computeSignedDistance(corner_points[j]) >= -0.0) {
-          ++count;
+          ++inside;
+        }
+          else{
+          ++outside;
+        }
+        if(outside == 8){
+          return OUTSIDE;
         }
       }
     }
-    if (count == 48) { 
+    if (inside == 48) { 
       return INSIDE;
     }
-    // octreeNodes of the sceneOctree may be bigger than the frustum,
-    // so the condition for intersection must be softened
-    return (isSceneOctreeNode && count > 0) ? INTERSECTED : OUTSIDE;
+    
+
+    return INTERSECTED;
+    }
+    else{
+    for (int i = 0; i < PLANES; i++) {
+      if (frustum[i].computeSignedDistance(bb.getUpperRight()) < 0.0) {
+        return OUTSIDE;
+      }
+      else{
+        if(frustum[i].computeSignedDistance(bb.getLowerLeft()) >= 0.0)
+        ++inside;
+      }
+    }
+    if(inside == PLANES){
+      return INSIDE;
+    }
+    return INTERSECTED;
+    }
   }
   
   /**

@@ -22,13 +22,6 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   private final static int Y = 1;
   private final static int Z = 2;
 
-  /**
-   * Positionen der Objekte
-   */
-  public static final int INSIDE = 0;
-  public static final int OUTSIDE = 1;
-  public static final int INTERSECT = 2;
-
   public OctreeFactoryStrategyScene(ArrayList<CgNode> objects) {
     this.leafNodes = objects;
   }
@@ -39,7 +32,7 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   @Override
   public BoundingBox getBoundingBox() {
     Vector tmpLl, tmpUr, ll = null, ur = null;
-    for (int i = 0; i < leafNodes.size(); i++) {
+    for (int i = 0; i < leafNodes.size(); ++i) {
       tmpLl = leafNodes.get(i).getBoundingBox().getLowerLeft();
       tmpUr = leafNodes.get(i).getBoundingBox().getUpperRight();
       if (ll == null) {
@@ -48,18 +41,18 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
       if (ur == null) {
         ur = tmpUr;
       }
-      ll.set(0, tmpLl.get(0) < ll.get(0) ? tmpLl.get(0) : ll.get(0));
-      ll.set(1, tmpLl.get(1) < ll.get(1) ? tmpLl.get(1) : ll.get(1));
-      ll.set(2, tmpLl.get(2) < ll.get(2) ? tmpLl.get(2) : ll.get(2));
+      ll.set(X, tmpLl.get(X) < ll.get(X) ? tmpLl.get(X) : ll.get(X));
+      ll.set(Y, tmpLl.get(Y) < ll.get(Y) ? tmpLl.get(Y) : ll.get(Y));
+      ll.set(Z, tmpLl.get(Z) < ll.get(Z) ? tmpLl.get(Z) : ll.get(Z));
 
-      ur.set(0, tmpUr.get(0) > ur.get(0) ? tmpUr.get(0) : ur.get(0));
-      ur.set(1, tmpUr.get(1) > ur.get(1) ? tmpUr.get(1) : ur.get(1));
-      ur.set(2, tmpUr.get(2) > ur.get(2) ? tmpUr.get(2) : ur.get(2));
+      ur.set(X, tmpUr.get(X) > ur.get(X) ? tmpUr.get(X) : ur.get(X));
+      ur.set(Y, tmpUr.get(Y) > ur.get(Y) ? tmpUr.get(Y) : ur.get(Y));
+      ur.set(Z, tmpUr.get(Z) > ur.get(Z) ? tmpUr.get(Z) : ur.get(Z));
     }
     if (ll != null && ur != null) {
       return new BoundingBox(ll, ur);
     } else {
-      return new BoundingBox();
+      return null;
     }
   }
 

@@ -66,6 +66,11 @@ public class ViewFrustumCulling implements Observer {
         rootNode.addChild(new CgNode(frustum, "frustum"));
       }
     }
+//    for(int i = 0; i < objects.size(); i++){
+//      for(int j = 0; j < ((TriangleMesh)objects.get(i).getContent()).getNumberOfTriangles();j++){
+//        ((TriangleMesh)objects.get(i).getContent()).getTriangle(j).setVisible(true);
+//      }
+//    }
     for (int j = 0; j < objects.size(); ++j) {
       for (int k = 0; k < visibleNodes.size(); ++k) {
         addVisibleElementsToScene(octrees.get(j), objects.get(j), visibleNodes.get(k));
@@ -85,7 +90,7 @@ public class ViewFrustumCulling implements Observer {
    *         now
    */
   public ArrayList<OctreeNode<Integer>> checkOctree(OctreeNode<Integer> octreeNode,
-      ArrayList<OctreeNode<Integer>> toDraw, CgNode node) {
+      ArrayList<OctreeNode<Integer>> toDraw, CgNode node, ArrayList<OctreeNode<Integer>> leafNodes) {
     node.setVisible(false);
     final int result = viewFrustum.isObjectInFrustum(octreeNode, false);
     if (result == ViewFrustum.INSIDE) {
@@ -93,9 +98,10 @@ public class ViewFrustumCulling implements Observer {
       node.setVisible(true);
     }
     if (result == ViewFrustum.INTERSECTED) {
-      // node.setVisible(false); // TODO
-      // toDraw = traversalOctreeNodeIntersected(octreeNode, toDraw);
-      // return toDraw;
+//      node.setVisible(false);
+//      testedObjects.add(node);
+//      traversalOctreeNodeIntersected(octreeNode, toDraw,leafNodes);
+//      return leafNodes;
     }
     return null;
   }
@@ -104,51 +110,49 @@ public class ViewFrustumCulling implements Observer {
    * if visible scene nodes intersect an objectOctree, the objects visibility is
    * tested , builds a new triangle mesh for objects which are only partially
    * visible,
-   * 
-   * 
-   * @param nodesInFrustum
-   *          octreeNodes of objects which are in the frustum
-   * @param node
-   *          node which contains the object which should be drawn partially
-   * @return new mesh only with visible triangles
-   */
-  public ICgNodeContent extractNodeContent(OctreeNode<Integer> objectOctree, CgNode node,
+   * @param objectOctree 
+   *      the octree of the node
+   * @param node 
+   *      the node
+   *@param sceneOctree
+   *      the octree of the scene
+   **/
+  
+  public void extractNodeContent(OctreeNode<Integer> objectOctree, CgNode node,
       OctreeNode<Integer> sceneOctree) {
     // if the node is already tested and set visible, it must not be tested
     // anymore, because it may be set invisible then
+//    node.setVisible(true);
     if ((!testedObjects.contains(node))) {
       if (boxesIntersect(sceneOctree.getBoundingBox(), objectOctree.getBoundingBox())) {
         ArrayList<OctreeNode<Integer>> toDraw = new ArrayList<OctreeNode<Integer>>();
-        ICgNodeContent contentToDraw = null;
-        checkOctree(objectOctree, toDraw, node);
-        if (toDraw.size() > 0) {
-          if (node.getContent().getClass() == TriangleMesh.class) {
-            contentToDraw = new TriangleMesh();
-            for (int m = 0; m < ((TriangleMesh) node.getContent()).getNumberOfVertices(); m++) {
-              ((ITriangleMesh) contentToDraw).addVertex(((TriangleMesh) node.getContent()).getVertex(m));
-            }
-            for (int i = 0; i < toDraw.size(); i++) {
-              for (int j = 0; j < toDraw.get(i).getNumberOfElements(); j++) {
-                ITriangle t = ((TriangleMesh) node.getContent()).getTriangle(toDraw.get(i).getElement(j));
-                ((ITriangleMesh) contentToDraw).addTriangle(t);
-              }
-            }
-            ((ITriangleMesh) contentToDraw).computeVertexNormals();
-            ((ITriangleMesh) contentToDraw).computeTriangleNormals();
-            contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-            TriangleMeshTools.cleanup((ITriangleMesh) contentToDraw);
-          }
-          contentToDraw.getMaterial().setTransparency(ViewFrustum.OBJECTSTRANSPARENCY);
-          contentToDraw.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-          return contentToDraw;
-        }
+        ArrayList<OctreeNode<Integer>> leafNodes = new ArrayList<OctreeNode<Integer>>();
+        checkOctree(objectOctree, toDraw, node, leafNodes);
+//        if (toDraw.size() != 0) {
+//          if (node.getContent().getClass() == TriangleMesh.class) {
+//            System.out.println("leafNodes.size() = " + leafNodes.size() + ", toDraw.size() = " + toDraw.size());
+//            for (int i = 0; i < leafNodes.size(); i++) {
+//              if(!toDraw.contains(leafNodes.get(i))){
+//                for (int j = 0; j < leafNodes.get(i).getNumberOfElements(); j++) {
+//                    ((TriangleMesh) node.getContent()).setTriangleVisible(leafNodes.get(i).getElement(j), false);
+//                }
+//              }
+//            }
+////            for(int j = 0; j < 2500 ; ++j){
+////              ((TriangleMesh) node.getContent()).setTriangleVisible(j, false);
+////            }
+//            ((TriangleMesh)node.getContent()).updateRenderStructures();
+//          }
+//        }
+//        toDraw.clear();
+//        leafNodes.clear();
       } else {
         // boxes of sceneOctree and objectOctree do not intersect, so
         // the object can not be visible
         node.setVisible(false);
       }
+      
     }
-    return null;
   }
 
   /**
@@ -285,7 +289,7 @@ public class ViewFrustumCulling implements Observer {
    * generates an octree for the scene
    */
   public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
-    return new OctreeFactory<Integer>(new OctreeFactoryStrategyScene(objects)).create(7, 2);
+    return new OctreeFactory<Integer>(new OctreeFactoryStrategyScene(objects)).create(7, 5);
   }
   
   /**
@@ -294,4 +298,22 @@ public class ViewFrustumCulling implements Observer {
   public OctreeNode<Integer> createMeshOctree(ITriangleMesh mesh) {
     return new OctreeFactory<Integer>(new OctreeFactoryStrategyTriangleMesh(mesh)).create(7, 20);
   }
+  
+  private ArrayList<OctreeNode<Integer>> traversalOctreeNodeIntersected(OctreeNode<Integer> octree, ArrayList<OctreeNode<Integer>> toDraw,
+      ArrayList<OctreeNode<Integer>> leafNodes){
+    if(octree.getNumberOfChildren() > 0 ){
+      for(int i = 0; i < octree.getNumberOfChildren(); ++i){
+       traversalOctreeNodeIntersected(octree.getChild(i),toDraw, leafNodes);
+      }
+    }
+    if(octree.getNumberOfChildren() == 0){
+      leafNodes.add(octree);
+       if(viewFrustum.isObjectInFrustum(octree,false) == ViewFrustum.INSIDE){// || viewFrustum.isObjectInFrustum(octree,false) == ViewFrustum.INTERSECTED){
+         toDraw.add(octree);
+       }
+    }
+   
+    return leafNodes;
+  }
+  
 }
