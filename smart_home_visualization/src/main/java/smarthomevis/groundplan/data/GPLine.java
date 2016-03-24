@@ -1,6 +1,7 @@
 package smarthomevis.groundplan.data;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 import cgresearch.core.math.Vector;
 
@@ -80,8 +81,15 @@ public class GPLine implements Serializable
 	
 	public String toString()
 	{
-	return this.name + " | Start<" + this.start.toString(2) + "> End<"
-		+ this.end.toString(2) + ">";
+	return this.name + " | Start<" + getShortVectorString(this.start) + "> End<"
+		+ getShortVectorString(this.end) + ">";
+	}
+	
+	private String getShortVectorString(Vector v)
+	{
+	DecimalFormat format = new DecimalFormat("#.##");
+	return format.format(v.get(0)) + ":" + format.format(v.get(1)) + ":"
+		+ format.format(v.get(2));
 	}
 	
 	public enum LineType

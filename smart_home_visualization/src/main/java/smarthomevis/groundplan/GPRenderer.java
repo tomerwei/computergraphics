@@ -236,9 +236,9 @@ public class GPRenderer
 		GPConfig gpConfig = this.data.getGPConfig();
 
 		Vector start = l.getStart();
-		System.out.println("StartPoint: " + start.toString());
+//		System.out.println("StartPoint: " + start.toString());
 		Vector end = l.getEnd();
-		System.out.println("EndPoint: " + end.toString());
+//		System.out.println("EndPoint: " + end.toString());
 
 		Vector wallTopStart = new Vector(start.get(0), start.get(1),
 			start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));

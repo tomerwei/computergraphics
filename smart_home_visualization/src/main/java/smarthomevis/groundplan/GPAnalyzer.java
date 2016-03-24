@@ -3,6 +3,7 @@ package smarthomevis.groundplan;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +58,12 @@ public class GPAnalyzer
 	{
 	for (List<GPLine> list : multipleLinePairs)
 		{
+		System.out.println("#PAIR:");
+		for (GPLine l : list)
+			{
+			System.out.println(l.toString());
+			}
+			
 		GPLine multiLine = list.get(0);
 		
 		for (int i = 1; i < list.size(); i++)
@@ -138,6 +145,13 @@ public class GPAnalyzer
 		// jedes Paar jeder Ebene
 		for (GPLine[] array : e.getValue())
 			{
+			
+			System.out.println("#ARRAY:");
+			for (GPLine l : array)
+				{
+				System.out.println(l.toString());
+				}
+				
 			int countA = lineInPairsCount.get(array[0].getName());
 			int countB = lineInPairsCount.get(array[1].getName());
 			List<GPLine> multiplePairsLines = new ArrayList<>();
@@ -147,7 +161,8 @@ public class GPAnalyzer
 				// TODO split notwendig, beide haben mehrere parallele... :-/
 				System.out.println(
 					"!!! Linienpaar mit mehreren Ueberschneidungen !!!");
-				System.out.println(array[0].getName()+":"+countA+"; "+array[1].getName()+":"+countB);
+				System.out.println(array[0].getName() + ":" + countA + "; "
+					+ array[1].getName() + ":" + countB);
 				}
 			else if (countA > 1 || countB > 1)
 				{
@@ -158,9 +173,13 @@ public class GPAnalyzer
 				// pruefen, ob dieser Kandidat nicht schon abgearbeitet ist
 				boolean alreadyFound = false;
 				for (List<GPLine> list : pairsList)
+					{
 					// die mehrfach ueberschneidende Linie immer an index 0
 					if (multiLine.equals(list.get(0)))
-					alreadyFound = true;
+						{
+						alreadyFound = true;
+						}
+					}
 					
 				if (!alreadyFound)
 					{
@@ -190,32 +209,19 @@ public class GPAnalyzer
 		List<GPLine> multiplePairsLines, GPDataType data)
 	{
 	GPLine multiLine = multiplePairsLines.get(0);
+	GPLine singleLine = multiplePairsLines.get(1);
 	for (GPLine[] array : data.getGPLinePairsOfLayer(layer))
 		{
-		for (GPLine l : array)
+		List<GPLine> pairList = Arrays.asList(array);
+		
+		if (pairList.contains(multiLine) && !pairList.contains(singleLine))
 			{
-			if (l.equals(multiLine))
+			for (GPLine line : pairList)
 				{
-				for (int i = 1; i < multiplePairsLines.size(); i++)
-					{
-					GPLine singleLine = multiplePairsLines.get(i);
-					boolean alreadyFound = false;
-					for (GPLine x : array)
-						{
-						if (x.equals(singleLine))
-							alreadyFound = true;
-						}
-						
-					if (!alreadyFound)
-						{
-						for (GPLine y : array)
-							{
-							if (!y.equals(multiLine))
-								multiplePairsLines.add(y);
-							}
-						}
-					}
+				if (!line.equals(multiLine))
+					multiplePairsLines.add(line);
 				}
+				
 			}
 		}
 	}
@@ -531,8 +537,12 @@ public class GPAnalyzer
 			
 			for (GPLine other : lineListCopy)
 				{
-				double parallelOverlap = calculateParallelOverlapOf(line,
-					other);
+				double parallelOverlap = 0.0;
+				
+				// parallele Linien von verschiedenen Ebenen sollen nicht
+				// beruecksichtigt werden
+				if (line.getLineType() == other.getLineType())
+					parallelOverlap = calculateParallelOverlapOf(line, other);
 					
 				double dist = 0.0;
 				if (parallelOverlap > 0.0)
@@ -545,8 +555,7 @@ public class GPAnalyzer
 					double distanceKey = calculateDistanceKey(dist,
 						distanceInterval);
 					// ist die Distanz ausserhalb des bisherigen Maximums,
-					// Map
-					// erweitern
+					// Map erweitern
 					if (!distanceMap.containsKey(distanceKey))
 						{
 						expandDistanceMapToDistanceKey(distanceKey,
@@ -561,15 +570,12 @@ public class GPAnalyzer
 					increaseDistanceCounter(distanceKey);
 					
 					// die Namensreferenz des gefundenen Linienpaares unter
-					// der
-					// Distanzreferenz ablegen
+					// der Distanzreferenz ablegen
 					saveLinePairWithDistance(distanceAndLinesReferenceMap,
 						line.getName(), other.getName(), distanceKey);
 					}
 				}
-				
 			}
-			
 		}
 		
 	// GPUtility.printDistanceMap(distanceMap);
