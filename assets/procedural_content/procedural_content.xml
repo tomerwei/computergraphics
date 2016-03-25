@@ -3,15 +3,15 @@
 <Story>
 	<Panel>
 		<Content3D>
-			<!-- <Building type="lform" width="10" height="5" length="10"
+			<Building type="lform" width="10" height="5" length="10"
 				positionX="0" positionY="0" />
 			<Building type="building1" width="10" height="5" length="10"
 				positionX="15" positionY="0" />
 			<Building type="building2" width="10" height="10" length="10"
 				positionX="0" positionY="15" />
 			<Building type="ubuilding" width="10" height="5" length="10"
-				positionX="15" positionY="15" /> -->
-			<Mesh filename="meshes/bunny.obj"/>	
+				positionX="15" positionY="15" /> 
+			<!--<Mesh filename="meshes/bunny.obj"/>	-->
 		</Content3D>
 	</Panel>
 </Story>

@@ -2,21 +2,18 @@ package cgresearch.apps.procedural_content;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.logging.Logger;
-import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.studentprojects.shapegrammar.generator.BuildingGenerator;
 
 /**
  * Generates a story from a DSL description (as XML)
@@ -25,23 +22,24 @@ import cgresearch.studentprojects.shapegrammar.generator.BuildingGenerator;
  *
  */
 public class StoryGenerator {
-
-  private static final String STORY = "Story";
-  private static final String PANEL = "Panel";
-  private static final String CONTENT2D = "Content2D";
-  private static final String CONTENT3D = "Content3D";
-  private static final String BUILDING = "Building";
-  private static final String MESH = "Mesh";
-  private static final String ATTR_TYPE = "type";
-  private static final String ATTR_WIDTH = "width";
-  private static final String ATTR_HEIGHT = "height";
-  private static final String ATTR_LENGTH = "length";
-  private static final String ATTR_POSITIONX = "positionX";
-  private static final String ATTR_POSITIONY = "positionY";
-  private static final String ATTR_FILENAME = "filename";
+  /**
+   * Mapping between elements and generators
+   */
+  private Map<String, ProceduralContentGenerator> contentGenerators = new HashMap<String, ProceduralContentGenerator>();
 
   public StoryGenerator() {
-
+    ProceduralContentGeneratorBuilding buldingGenerator = new ProceduralContentGeneratorBuilding();
+    contentGenerators.put(buldingGenerator.getElementTag(), buldingGenerator);
+    ProceduralContentGeneratorMesh meshGenerator = new ProceduralContentGeneratorMesh();
+    contentGenerators.put(meshGenerator.getElementTag(), meshGenerator);
+    ProceduralContentGeneratorContent2D content2DGenerator = new ProceduralContentGeneratorContent2D();
+    contentGenerators.put(content2DGenerator.getElementTag(), content2DGenerator);
+    ProceduralContentGeneratorContent3D content3DGenerator = new ProceduralContentGeneratorContent3D();
+    contentGenerators.put(content3DGenerator.getElementTag(), content3DGenerator);
+    ProceduralContentGeneratorPanel panelGenerator = new ProceduralContentGeneratorPanel();
+    contentGenerators.put(panelGenerator.getElementTag(), panelGenerator);
+    ProceduralContentGeneratorStory storyGenerator = new ProceduralContentGeneratorStory();
+    contentGenerators.put(storyGenerator.getElementTag(), storyGenerator);
   }
 
   /**
@@ -53,7 +51,7 @@ public class StoryGenerator {
     try {
       builder = factory.newDocumentBuilder();
       Document document = builder.parse(new File(ResourcesLocator.getInstance().getPathToResource(xmlFilename)));
-      CgNode node = parseStory(document.getDocumentElement());
+      CgNode node = parseElement(document.getDocumentElement());
       return node;
     } catch (ParserConfigurationException | SAXException | IOException e) {
       Logger.getInstance().exception("Failed to parse XML " + xmlFilename, e);
@@ -62,200 +60,30 @@ public class StoryGenerator {
   }
 
   /**
-   * Parse DOM for Story element.
+   * Recursive parsing of an element, create CgNode for each element if
+   * possible.
    */
-  private CgNode parseStory(Element element) {
-    CgNode node = new CgNode(null, "Story");
-    if (element != null && element.getNodeName().equals(STORY)) {
-      // A story consists of a List of panels
-      for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-        Node childNode = element.getChildNodes().item(i);
-        if (childNode instanceof Element) {
-          Element childElement = (Element) childNode;
-          switch (childElement.getNodeName()) {
-            case PANEL:
-              CgNode panelNode = parsePanel(childElement);
-              if (panelNode != null) {
-                node.addChild(panelNode);
-              }
-              break;
-            default:
-              Logger.getInstance().message("Invalid stroy child: " + childElement.getNodeName());
-          }
+  private CgNode parseElement(Element element) {
+    ProceduralContentGenerator generator = contentGenerators.get(element.getNodeName());
+    CgNode node = null;
+    if (generator != null) {
+      node = generator.parseElement(element);
+      if (node == null) {
+        return null;
+      }
+    }
+
+    // Child-elements
+    for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+      Node childNode = element.getChildNodes().item(i);
+      if (childNode instanceof Element) {
+        Element childElement = (Element) childNode;
+        CgNode cgChildNode = parseElement(childElement);
+        if (cgChildNode != null) {
+          node.addChild(cgChildNode);
         }
       }
-    } else {
-      Logger.getInstance().error("Error parsing story.");
     }
     return node;
   }
-
-  /**
-   * Parse DOM for Panel element.
-   */
-  private CgNode parsePanel(Element element) {
-    CgNode node = new CgNode(null, "Panel");
-    if (element != null && element.getNodeName().equals(PANEL)) {
-      // A story consists of a List of panels
-      for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-        Node childNode = element.getChildNodes().item(i);
-        if (childNode instanceof Element) {
-          Element childElement = (Element) childNode;
-          switch (childElement.getNodeName()) {
-            case CONTENT2D:
-              CgNode content2DNode = parseContent2D(childElement);
-              if (content2DNode != null) {
-                node.addChild(content2DNode);
-              }
-              break;
-            case CONTENT3D:
-              CgNode content3DNode = parseContent3D(childElement);
-              if (content3DNode != null) {
-                node.addChild(content3DNode);
-              }
-              break;
-            default:
-              Logger.getInstance().message("Invalid stroy child: " + childElement.getNodeName());
-          }
-        }
-      }
-    } else {
-      Logger.getInstance().error("Error parsing panel.");
-    }
-    return node;
-  }
-
-  /**
-   * Parse DOM for Content2D element.
-   */
-  private CgNode parseContent2D(Element element) {
-    CgNode node = new CgNode(null, "Content2D");
-    if (element != null && element.getNodeName().equals(CONTENT2D)) {
-      // A story consists of a List of panels
-      for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-        Node childNode = element.getChildNodes().item(i);
-        if (childNode instanceof Element) {
-          Element childElement = (Element) childNode;
-          switch (childElement.getNodeName()) {
-            default:
-              Logger.getInstance().message("Invalid Content2D child: " + childElement.getNodeName());
-          }
-        }
-      }
-    } else {
-      Logger.getInstance().error("Error parsing story.");
-    }
-    return node;
-  }
-
-  /**
-   * Parse DOM for Content3D element.
-   */
-  private CgNode parseContent3D(Element element) {
-    CgNode node = new CgNode(null, "Content3D");
-    if (element != null && element.getNodeName().equals(CONTENT3D)) {
-      // A story consists of a List of panels
-      for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-        Node childNode = element.getChildNodes().item(i);
-        if (childNode instanceof Element) {
-          Element childElement = (Element) childNode;
-          switch (childElement.getNodeName()) {
-            case BUILDING:
-              CgNode buildingNode = parseBuilding(childElement);
-              if (buildingNode != null) {
-                node.addChild(buildingNode);
-              }
-              break;
-            case MESH:
-              CgNode meshNode = parseMesh(childElement);
-              if (meshNode != null) {
-                node.addChild(meshNode);
-              }
-              break;
-            default:
-              Logger.getInstance().message("Invalid Building child: " + childElement.getNodeName());
-          }
-        }
-      }
-    } else {
-      Logger.getInstance().error("Error parsing story.");
-    }
-    return node;
-  }
-
-  /**
-   * Parse DOM for Building element.
-   */
-  private CgNode parseMesh(Element element) {
-    CgNode node = new CgNode(null, "Mesh");
-    if (element != null && element.getNodeName().equals(MESH)) {
-      try {
-        NamedNodeMap attributeMap = element.getAttributes();
-        Node filenameNode = attributeMap.getNamedItem(ATTR_FILENAME);
-        String filename = filenameNode.getNodeValue();
-        if (filename.toUpperCase().endsWith("OBJ")) {
-          ObjFileReader reader = new ObjFileReader();
-          List<ITriangleMesh> meshes = reader.readFile(filename);
-          if (meshes.size() == 1) {
-            node.setContent(meshes.get(0));
-          } else if (meshes.size() > 0) {
-            for (ITriangleMesh mesh : meshes) {
-              node.addChild(new CgNode(mesh, "Meshpart"));
-            }
-          }
-        } else {
-          Logger.getInstance().error("Unsupported mesh type: " + filename);
-        }
-
-      } catch (Exception e) {
-        Logger.getInstance().error("Failed to generate building.");
-      }
-    } else {
-      Logger.getInstance().error("Error parsing story.");
-    }
-    return node;
-  }
-
-  /**
-   * Parse DOM for Building element.
-   */
-  private CgNode parseBuilding(Element element) {
-    if (element != null && element.getNodeName().equals(BUILDING)) {
-      try {
-        NamedNodeMap attributeMap = element.getAttributes();
-        Node typeNode = attributeMap.getNamedItem(ATTR_TYPE);
-        Node widthNode = attributeMap.getNamedItem(ATTR_WIDTH);
-        Node heightNode = attributeMap.getNamedItem(ATTR_HEIGHT);
-        Node lengthNode = attributeMap.getNamedItem(ATTR_LENGTH);
-        Node positionXNode = attributeMap.getNamedItem(ATTR_POSITIONX);
-        Node positionYNode = attributeMap.getNamedItem(ATTR_POSITIONY);
-
-        String widthString = widthNode.getNodeValue();
-        String heightString = heightNode.getNodeValue();
-        String lengthString = lengthNode.getNodeValue();
-        String positionXString = positionXNode.getNodeValue();
-        String positionYString = positionYNode.getNodeValue();
-        double width = Double.parseDouble(widthString);
-        double height = Double.parseDouble(heightString);
-        double length = Double.parseDouble(lengthString);
-        double positionX = Double.parseDouble(positionXString);
-        double positionY = Double.parseDouble(positionYString);
-        String type = typeNode.getNodeValue();
-
-        Logger.getInstance().message("Generating building " + width + " x " + height);
-
-        BuildingGenerator buildingGenerator = new BuildingGenerator();
-        CgNode buildingNode =
-            buildingGenerator.generateBuildingCgNode(type, width, height, length, positionX, positionY);
-        return buildingNode;
-      } catch (Exception e) {
-        Logger.getInstance().error("Failed to generate building.");
-      }
-    } else {
-      Logger.getInstance().error("Error parsing story.");
-    }
-    return null;
-
-  }
-
 }

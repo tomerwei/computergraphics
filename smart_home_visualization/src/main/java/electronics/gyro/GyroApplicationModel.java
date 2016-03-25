@@ -31,11 +31,6 @@ public class GyroApplicationModel {
 
   private ArduinoMpu6050 gyro;
 
-  /**
-   * Angle to test the object to show current orientation
-   */
-  private double dummyAngle = 0;
-
   public GyroApplicationModel() {
     System.load("/Users/abo781/abo781/code/computergraphics/libs/native/osx/librxtxSerial.jnilib");
     arduinoConnection = new ArduinoConnection();
@@ -65,10 +60,11 @@ public class GyroApplicationModel {
       }
     });
 
-    dummyAngle += 0.1;
-    Matrix sixDof = MatrixFactory.createHomogeniousFor3spaceMatrix(
-        MatrixFactory.createRotationMatrix(VectorFactory.createVector3(1, 1, 1).getNormalized(), dummyAngle));
-    return sixDof;
+    Matrix rotX = MatrixFactory.createHomogeniousFor3spaceMatrix(
+        MatrixFactory.createRotationMatrix(VectorFactory.createVector3(1, 0, 0).getNormalized(), gyro.getAlphaX()));
+    Matrix rotY = MatrixFactory.createHomogeniousFor3spaceMatrix(
+        MatrixFactory.createRotationMatrix(VectorFactory.createVector3(0, 0, 1).getNormalized(), -gyro.getAlphaY()));
+    return rotX.multiply(rotY);
 
     // return MatrixFactory.createIdentityMatrix4();
   }

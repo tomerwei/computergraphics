@@ -10,6 +10,8 @@ public class ArduinoMpu6050 implements ISensor {
   private Vector accelleration = VectorFactory.createVector3(0, 0, 0);
   private Vector position = VectorFactory.createVector3(0, 0, 0);
   private final ArduinoConnection connection;
+  private double alphaX = 0;
+  private double alphaY = 0;
 
   public ArduinoMpu6050(ArduinoConnection connection) {
     this.connection = connection;
@@ -58,10 +60,19 @@ public class ArduinoMpu6050 implements ISensor {
       accelleration.set(i, Double.parseDouble(tokens[i + 1]));
       position.set(i, Double.parseDouble(tokens[i + 4]));
     }
-    // Logger.getInstance().message("Accelleration: " + accelleration);
+    alphaX = accelleration.get(0) / 32000 * Math.PI;
+    alphaY = accelleration.get(1) / 32000 * Math.PI + 0.4;
   }
 
   public void requestValues() {
     connection.sendCustomCommand("gyro");
+  }
+
+  public double getAlphaX() {
+    return alphaX;
+  }
+
+  public double getAlphaY() {
+    return alphaY;
   }
 }

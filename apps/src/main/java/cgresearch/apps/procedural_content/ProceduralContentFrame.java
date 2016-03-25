@@ -29,7 +29,7 @@ public class ProceduralContentFrame extends CgApplication {
       getCgRootNode().addChild(node);
     }
 
-    getCgRootNode().setShowFps(true);
+    //getCgRootNode().setShowFps(true);
   }
 
   public static void main(String[] args) {

@@ -45,9 +45,9 @@ public class ObjTriangleMesh extends CgApplication {
   public ObjTriangleMesh() {
     // 3D Object
     // loadFenja();
-    loadLotrCubeWithTextureAtlas();
+    // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    // loadPlaneWithBunny();
+    loadPlaneWithBunny();
     // loadMedivalHouse();
     // loadHulk();
     // loadNofretete();
@@ -139,6 +139,7 @@ public class ObjTriangleMesh extends CgApplication {
       bunny.computeTriangleNormals();
       bunny.computeVertexNormals();
       bunny.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+      bunny.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
       bunny.getMaterial().setReflectionAmbient(Material.PALETTE1_COLOR2);
       // bunny.getMaterial().setReflectionDiffuse(VectorMatrixFactory.newVector(0,
       // 0, 0));

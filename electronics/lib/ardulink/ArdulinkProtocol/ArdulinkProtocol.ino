@@ -127,7 +127,7 @@ String* tokenize(String input, int& numberOfTokens ) {
 void loop() {
 
   // Read gyro
-  //accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+  accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
   String gyroString = "gyro " +  String(ax) + " " + String(ay) + " " + String(az) + " " + String(gx) + " " + String(gy) + " " + String(gz);
 
   // when a newline arrives:
@@ -178,9 +178,9 @@ void loop() {
           }
         }
         // Servo message
-        //        Serial.print(servoMessage);
-        //        Serial.write(255);
-        //        Serial.flush();
+//        Serial.print(servoMessage);
+//        Serial.write(255);
+//        Serial.flush();
 
       } else if (inputString.substring(6, 10) == "kprs") { // KeyPressed
         // here you can write your own code. For instance the commented code change pin intensity if you press 'a' or 's'
