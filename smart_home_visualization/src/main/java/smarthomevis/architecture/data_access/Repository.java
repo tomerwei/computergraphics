@@ -2,6 +2,8 @@ package smarthomevis.architecture.data_access;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
+import smarthomevis.architecture.SmartHome;
+import smarthomevis.architecture.entities.BaseEntity;
 
 import java.util.List;
 
@@ -10,8 +12,8 @@ public class Repository<E extends BaseEntity> {
     private final Class<E> type;
     private Datastore datastore;
 
-    public Repository(Datastore datastore, Class<E> type) {
-        this.datastore = datastore;
+    public Repository(Class<E> type) {
+        datastore = SmartHome.connectToDatabase();
         this.type = type;
     }
 
@@ -31,6 +33,10 @@ public class Repository<E extends BaseEntity> {
     public void delete(final ObjectId id) {
         E entity = datastore.find(type).field("id").equal(id).get();
         datastore.delete(entity);
+    }
+
+    public void deleteAll() {
+        datastore.delete(datastore.createQuery(type));
     }
 
     public boolean has(final ObjectId id) {

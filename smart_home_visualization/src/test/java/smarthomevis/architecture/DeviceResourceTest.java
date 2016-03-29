@@ -1,79 +1,96 @@
 package smarthomevis.architecture;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.bson.types.ObjectId;
-import org.junit.*;
-import org.mongodb.morphia.Datastore;
-import org.restlet.data.MediaType;
-import org.restlet.representation.Representation;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.restlet.resource.ClientResource;
-import smarthomevis.architecture.data_access.Device;
-import smarthomevis.architecture.data_access.ObjectIdDeserializer;
-import smarthomevis.architecture.data_access.ObjectIdSerializer;
+import smarthomevis.architecture.data_access.JsonConverter;
 import smarthomevis.architecture.data_access.Repository;
-import smarthomevis.architecture.core.SmartHome;
+import smarthomevis.architecture.entities.Device;
+import smarthomevis.architecture.rest.DeviceResource;
 
 import java.io.IOException;
 
-// This test needs MongoDB running on localhost:27017 to pass
-@Ignore
+import static org.junit.Assert.*;
+
+// This test needs MongoDB running to pass
+//@Ignore
 public class DeviceResourceTest {
 
-    private static Datastore datastore;
+    private static DeviceResource resource;
     private static Repository<Device> deviceRepository;
-    private static GsonBuilder gson;
-
-    private Device device;
-
     private static ClientResource client;
     private static String testUrl = "http://localhost:8183/smarthome/devices/";
 
-    @BeforeClass
-    public static void initialize() throws Exception {
-        datastore = new SmartHome().initializeForTesting();
-        deviceRepository = new Repository<>(datastore, Device.class);
-        initializeGson();
-    }
+    private Device device;
 
-    @Before
-    public void setUp() {
-        device = new Device();
-        device.setName("Thermometer_1");
-        device.getDatedMeasurements().put("some Date", "23 °C");
+    @BeforeClass
+    public static void initialize() {
+        resource = new DeviceResource();
+        deviceRepository = new Repository<>(Device.class);
     }
 
     @AfterClass
     public static void clear() {
-        deleteDevices();
+        deviceRepository.deleteAll();
+    }
+
+    @Before
+    public void setUp() {
+        deviceRepository.deleteAll();
+
+        device = new Device();
+        device.setName("Sensor_09");
+        device.addEntry("Movement");
     }
 
     @Test
-    public void testGetIsSuccessful() {
+    public void testGET() throws IOException {
+        ObjectId id = deviceRepository.save(device);
+        client = new ClientResource(testUrl + id.toString());
+
+        String deviceJson = JsonConverter.convertToJson(deviceRepository.get(id));
+        String responseJson = client.get().getText();
+
+        assertEquals(deviceJson, responseJson);
     }
 
     @Test
-    public void testPutIsSuccesful() {
+    public void testPUT() throws IOException {
+        ObjectId id = deviceRepository.save(device);
+        client = new ClientResource(testUrl + id.toString());
+
+        String deviceJson = String.format(
+                "{\"entries\":{\"29/16/2016 6:16:25 PM\":\"21 °C\"}," +
+                        "\"id\":\"%s\"," +
+                        "\"name\":\"Thermometer1\"}", id);
+        client.put(deviceJson);
+        Device updatedDevice = deviceRepository.get(id);
+
+        assertEquals("Thermometer1", updatedDevice.getName());
+        assertTrue(updatedDevice.getEntries().containsKey("29/16/2016 6:16:25 PM"));
+        assertTrue(updatedDevice.getEntries().containsValue("21 °C"));
     }
 
     @Test
-    public void testPostIsSuccesful() {
+    public void testPOST() throws IOException {
+        client = new ClientResource(testUrl);
 
+        String deviceJson = "{\"name\":\"Thermometer1\"}";
+        String responseId = client.post(deviceJson).getText();
+
+        assertTrue(deviceRepository.has(new ObjectId(responseId)));
+        assertEquals("Thermometer1", deviceRepository.get(new ObjectId(responseId)).getName());
     }
 
     @Test
-    public void testDeleteIsSuccesful() {
+    public void testDELETE() {
+        ObjectId id = deviceRepository.save(device);
+        client = new ClientResource(testUrl + id.toString());
+        client.delete();
 
-    }
-
-    private static void initializeGson() {
-        gson = new GsonBuilder();
-        gson.registerTypeAdapter(ObjectId.class, new ObjectIdSerializer());
-        gson.registerTypeAdapter(ObjectId.class, new ObjectIdDeserializer());
-        gson.create();
-    }
-
-    private static void deleteDevices() {
-        datastore.delete(datastore.createQuery(Object.class));
+        assertFalse(deviceRepository.has(id));
     }
 }
