@@ -20,7 +20,7 @@ public class OpenFile {
     	
     	String file = "";
     	
-    	FileFilter filter = new FileNameExtensionFilter("Pointcloud", "points");
+    	FileFilter filter = new FileNameExtensionFilter("Pointcloud", "obj");
     	String path = ResourcesLocator.getInstance().getPathToResource("meshes");
     	JFileChooser chooser = new JFileChooser(path);
     	  	 
