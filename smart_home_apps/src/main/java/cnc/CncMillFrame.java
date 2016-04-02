@@ -5,6 +5,8 @@
  */
 package cnc;
 
+import cgresearch.core.logging.ConsoleLogger;
+import cgresearch.core.logging.Logger.VerboseMode;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,8 +26,13 @@ public class CncMillFrame extends Application {
 
   private CncMill cncMill = new CncMill();
 
+  private int DEBUG_MOVE_DISTANCE = 100;
+
   @Override
   public void start(Stage primaryStage) {
+
+    new ConsoleLogger(VerboseMode.NORMAL);
+
     primaryStage.setTitle("CNC Mill!");
 
     VBox root = new VBox();
@@ -47,14 +54,14 @@ public class CncMillFrame extends Application {
     control.setLeft(xLeft);
     BorderPane.setAlignment(xLeft, Pos.CENTER);
     xLeft.setOnAction(event -> {
-      cncMill.moveX(100);
+      cncMill.moveX(DEBUG_MOVE_DISTANCE);
     });
 
     ToggleButton xRight = new ToggleButton("->");
     control.setRight(xRight);
     BorderPane.setAlignment(xRight, Pos.CENTER);
     xRight.setOnAction(event -> {
-      cncMill.moveX(-100);
+      cncMill.moveX(-DEBUG_MOVE_DISTANCE);
     });
 
     ToggleButton stop = new ToggleButton("Stop!");
@@ -68,14 +75,14 @@ public class CncMillFrame extends Application {
     control.setTop(yUp);
     BorderPane.setAlignment(yUp, Pos.CENTER);
     yUp.setOnAction(event -> {
-      cncMill.moveY(-100);
+      cncMill.moveY(-DEBUG_MOVE_DISTANCE);
     });
 
     ToggleButton yDown = new ToggleButton("v");
     control.setBottom(yDown);
     BorderPane.setAlignment(yDown, Pos.CENTER);
     yDown.setOnAction(event -> {
-      cncMill.moveY(100);
+      cncMill.moveY(DEBUG_MOVE_DISTANCE);
     });
 
     primaryStage.setScene(new Scene(root, 200, 200));

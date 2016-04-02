@@ -7,6 +7,12 @@ import com.tinkerforge.TimeoutException;
 
 import cgresearch.core.logging.Logger;
 
+/**
+ * Access to a Tinkerforge brick with a stepper motor.
+ * 
+ * @author Philipp Jenke
+ *
+ */
 public class TinkerforgeStepperMotor {
 
   /**
@@ -15,16 +21,7 @@ public class TinkerforgeStepperMotor {
   private final BrickStepper stepperBrick;
 
   public TinkerforgeStepperMotor(String uid, IPConnection ipConnection) {
-    stepperBrick = new BrickStepper(uid, ipConnection);
-    try {
-      stepperBrick.setMinimumVoltage(2500);
-      stepperBrick.setMotorCurrent(2291);
-      stepperBrick.setMaxVelocity(30000);
-      stepperBrick.setSpeedRamping(30000, 30000);
-      stepperBrick.setStepMode((short) 1);
-    } catch (TimeoutException | NotConnectedException e) {
-      Logger.getInstance().error("Error initializing stepper");
-    }
+    this(uid, ipConnection, 2500, 2291, 30000, 30000, 30000);
   }
 
   public TinkerforgeStepperMotor(String uid, IPConnection ipConnection, int voltage, int current, int maxVelocity,
@@ -69,7 +66,6 @@ public class TinkerforgeStepperMotor {
   public void enable() {
     try {
       stepperBrick.enable();
-      Logger.getInstance().message("Successfully enabled stepper motor.");
     } catch (TimeoutException | NotConnectedException e) {
       Logger.getInstance().error("Error enabling stepper");
     }
@@ -83,6 +79,22 @@ public class TinkerforgeStepperMotor {
       stepperBrick.disable();
     } catch (TimeoutException | NotConnectedException e) {
       Logger.getInstance().error("Error disabling stepper");
+    }
+  }
+
+  public enum Axis {
+    FORWARDS, BACKWARDS
+  };
+
+  public void move(Axis axis) {
+    try {
+      if (axis == Axis.FORWARDS) {
+        stepperBrick.driveForward();
+      } else {
+        stepperBrick.driveBackward();
+      }
+    } catch (TimeoutException | NotConnectedException e) {
+      Logger.getInstance().message("Failed to move stepper motor.");
     }
   }
 }
