@@ -87,10 +87,10 @@ public class RegistrationFrame extends CgApplication {
 	  Vector translation = VectorFactory.createVector3(1, 1, 1);
 
     // Load cube from file
-    ObjFileReader reader = new ObjFileReader();
-    ITriangleMesh cubeMesh = reader.readFile("meshes/cube.obj").get(0);
+	  ObjFileReader reader = new ObjFileReader();
+		 ITriangleMesh cubeMesh = reader.readFile("meshes/skull.obj").get(0);
     // Created point cloud from cube
-    basePointCloud = TriangleMeshSampler.sample(cubeMesh, 1000);
+    basePointCloud = TriangleMeshSampler.sample(cubeMesh, 3000);
     basePointCloud.getMaterial().setShaderId(Material.SHADER_COLOR);
     // Set point color
     for (int i = 0; i < basePointCloud.getNumberOfPoints(); i++) {
@@ -118,6 +118,8 @@ public class RegistrationFrame extends CgApplication {
     	if(middleBase < basePointCloud.getPoint(i).getPosition().get(y))
     		Base.addPoint(basePointCloud.getPoint(i));
     }
+    
+//    this.greateSurface(basePointCloud);
     
     System.out.println("maxY: "+maxYOld+" minY: \n"+minYOld);
         
@@ -160,11 +162,17 @@ public class RegistrationFrame extends CgApplication {
     
     System.out.println("middle: "+middleRegister);
     
-    CgNode basePointCloudNode = new CgNode(Base, "pointCloud");
-    getCgRootNode().addChild(basePointCloudNode);
-    CgNode registerPointCloudNode = new CgNode(Register, "pointCloud2");
-    getCgRootNode().addChild(registerPointCloudNode);
+//    CgNode basePointCloudNode = new CgNode(Base, "pointCloud");
+//    getCgRootNode().addChild(basePointCloudNode);
+//    CgNode registerPointCloudNode = new CgNode(Register, "pointCloud2");
+//    getCgRootNode().addChild(registerPointCloudNode);
 
+  }
+  
+  public void greateSurface(IPointCloud test){
+	  CgNode basePointCloudNode = new CgNode(test, "pointCloud");
+		 getCgRootNode().addChild(basePointCloudNode);
+//		 test.updateRenderStructures();
   }
 
 
@@ -176,12 +184,12 @@ public class RegistrationFrame extends CgApplication {
     ResourcesLocator.getInstance().parseIniFile("resources.ini");
     RegistrationFrame app = new RegistrationFrame();
     JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-    RegistrationButton button = new RegistrationButton();
+//    RegistrationButton button = new RegistrationButton();
     appLauncher.create(app);
     appLauncher.setRenderSystem(RenderSystem.JOGL);
     appLauncher.setUiSystem(UI.JOGL_SWING);
     // appLauncher.addCustomMenu(new RegistrationMenu());
-    appLauncher.addCustomUi(button);
+    appLauncher.addCustomUi(new RegistrationButton(app.getCgRootNode()));
 
     // CgNode pointCloudNode = new CgNode(pointCloud, "point cloud");
     // getCgRootNode().addChild(pointCloudNode);

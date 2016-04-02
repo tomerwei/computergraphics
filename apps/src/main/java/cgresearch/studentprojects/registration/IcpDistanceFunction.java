@@ -174,9 +174,9 @@ public class IcpDistanceFunction {
    * @return
    */
 
-  private cgresearch.core.math.Matrix getQ(Matrix covariance) {
+  private Matrix getQ(Matrix covariance) {
 
-    cgresearch.core.math.Matrix q = new cgresearch.core.math.Matrix(4, 4);
+    Matrix q = new cgresearch.core.math.Matrix(4, 4);
     q.set(0, 0, getTrace(covariance));
 
     // Coveriance Matrix - Covariance Matrix transponiert, ergibt den Vector
@@ -225,7 +225,7 @@ public class IcpDistanceFunction {
    * @return
    */
 
-  private Vector getMaxEigenVector(cgresearch.core.math.Matrix q) {
+  private Vector getMaxEigenVector(Matrix q) {
 
     double[][] temp = new double[4][4];
     for (int i = 0; i < 4; i++) {
@@ -240,7 +240,7 @@ public class IcpDistanceFunction {
     double[] eigenValues = evd.getRealEigenvalues();
     double max = Double.NEGATIVE_INFINITY;
     int index = 0;
-    Vector eigenVector = new Vector(3);
+    Vector eigenVector = new Vector(4);
 
     for (int i = 0; i < eigenValues.length; i++) {
 
@@ -250,13 +250,13 @@ public class IcpDistanceFunction {
       }
     }
 
-    double[] test = evd.getV().transpose().getArray()[index];
+    double[] test = evd.getV().transpose().getArray()[index]; //Länge von 4
 
     for (int i = 0; i < test.length; i++) {
-      eigenVector.set(i, test[i]);
+      eigenVector.set(i, test[i]); //passen nur 3 rein
+      System.out.println("count i for eigenVector: "+eigenVector.get(i));
     }
-    System.out.println("Eigenvector: \n" + eigenVector.toString());
-
+   
     return eigenVector;
 
   }
