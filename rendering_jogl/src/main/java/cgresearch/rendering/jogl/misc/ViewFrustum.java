@@ -54,6 +54,12 @@ public class ViewFrustum  {
   // corners of frustum
   private Vector[] cornerPoints;
   
+  // variables for plane calculation
+  private Vector nearCenter, farCenter; // distances
+  private double nearHeight, farHeight, nearWidth, farWidth; // sizes
+  private Vector farBottomRight, farBottomLeft, farTopRight, farTopLeft; // corners
+  private Vector nearBottomRight, nearBottomLeft, nearTopRight, nearTopleft; // corners
+  private Vector tempNormal;  //temporal normal for the planes, must be calculated new for each plane
   /**
    * constructor
    * 
@@ -81,43 +87,43 @@ public class ViewFrustum  {
 
   }
 
-  /**
-   * test frustum with the form of a cube
-   */
-  public ViewFrustum getTestFrustum() {
-    ViewFrustum vf = new ViewFrustum();
-    Vector fbr, fbl, ftr, ftl, nbr, nbl, ntr, ntl;
-    nbr = VectorFactory.createVector3(1.0, -1.0, -1.0);
-    nbl = VectorFactory.createVector3(-1.0, -1.0, -1.0);
-    ntr = VectorFactory.createVector3(1.0, 1.0, -1.0);
-    ntl = VectorFactory.createVector3(-1.0, 1.0, -1.0);
-    fbr = VectorFactory.createVector3(1.0, -1.0, 1.0);
-    fbl = VectorFactory.createVector3(-1.0, -1.0, 1.0);
-    ftr = VectorFactory.createVector3(1.0, 1.0, 1.0);
-    ftl = VectorFactory.createVector3(-1.0, 1.0, 1.0);
-    Vector[] corner_points = { fbr, fbl, ftr, ftl, nbr, nbl, ntr, ntl };
-    vf.setCornerPoints(corner_points);
-
-    Plane[] planes = new Plane[6];
-    planes[0] = vf.calcPlane(VectorFactory.createVector3(-1.0, 1.0, 1.0), VectorFactory.createVector3(-1.0, -1.0, 1.0),
-        (VectorFactory.createVector3(1.0, -1.0, 1.0))); // near
-    planes[1] = vf.calcPlane(VectorFactory.createVector3(-1.0, 1.0, -1.0),
-        VectorFactory.createVector3(-1.0, -1.0, -1.0), (VectorFactory.createVector3(1.0, -1.0, -1.0))); // far
-    planes[1].setNormal(planes[1].getNormal().multiply(-1.0));
-    planes[2] = vf.calcPlane(VectorFactory.createVector3(-1.0, 1.0, 1.0), VectorFactory.createVector3(-1.0, -1.0, 1.0),
-        (VectorFactory.createVector3(-1.0, -1.0, -1.0))); // left
-    planes[2].setNormal(planes[2].getNormal().multiply(-1.0));
-    planes[3] = vf.calcPlane(VectorFactory.createVector3(1.0, 1.0, 1.0), VectorFactory.createVector3(1.0, -1.0, 1.0),
-        (VectorFactory.createVector3(1.0, -1.0, -1.0))); // right
-    planes[4] = vf.calcPlane(VectorFactory.createVector3(-1.0, 1.0, 1.0), VectorFactory.createVector3(1.0, 1.0, 1.0),
-        (VectorFactory.createVector3(1.0, 1.0, -1.0))); // top
-    planes[5] = vf.calcPlane(VectorFactory.createVector3(-1.0, -1.0, 1.0), VectorFactory.createVector3(1.0, -1.0, 1.0),
-        (VectorFactory.createVector3(1.0, -1.0, -1.0))); // bottom
-    planes[5].setNormal(planes[5].getNormal().multiply(-1.0));
-    vf.setFrustum(planes);
-
-    return vf;
-  }
+//  /**
+//   * test frustum with the form of a cube
+//   */
+//  public ViewFrustum getTestFrustum() {
+//    ViewFrustum vf = new ViewFrustum();
+//    Vector fbr, fbl, ftr, ftl, nbr, nbl, ntr, ntl;
+//    nbr = VectorFactory.createVector3(1.0, -1.0, -1.0);
+//    nbl = VectorFactory.createVector3(-1.0, -1.0, -1.0);
+//    ntr = VectorFactory.createVector3(1.0, 1.0, -1.0);
+//    ntl = VectorFactory.createVector3(-1.0, 1.0, -1.0);
+//    fbr = VectorFactory.createVector3(1.0, -1.0, 1.0);
+//    fbl = VectorFactory.createVector3(-1.0, -1.0, 1.0);
+//    ftr = VectorFactory.createVector3(1.0, 1.0, 1.0);
+//    ftl = VectorFactory.createVector3(-1.0, 1.0, 1.0);
+//    Vector[] corner_points = { fbr, fbl, ftr, ftl, nbr, nbl, ntr, ntl };
+//    vf.setCornerPoints(corner_points);
+//
+//    Plane[] planes = new Plane[6];
+//    planes[0] = vf.generatePlaneObject(VectorFactory.createVector3(-1.0, 1.0, 1.0), VectorFactory.createVector3(-1.0, -1.0, 1.0),
+//        (VectorFactory.createVector3(1.0, -1.0, 1.0))); // near
+//    planes[1] = vf.generatePlaneObject(VectorFactory.createVector3(-1.0, 1.0, -1.0),
+//        VectorFactory.createVector3(-1.0, -1.0, -1.0), (VectorFactory.createVector3(1.0, -1.0, -1.0))); // far
+//    planes[1].setNormal(planes[1].getNormal().multiply(-1.0));
+//    planes[2] = vf.generatePlaneObject(VectorFactory.createVector3(-1.0, 1.0, 1.0), VectorFactory.createVector3(-1.0, -1.0, 1.0),
+//        (VectorFactory.createVector3(-1.0, -1.0, -1.0))); // left
+//    planes[2].setNormal(planes[2].getNormal().multiply(-1.0));
+//    planes[3] = vf.generatePlaneObject(VectorFactory.createVector3(1.0, 1.0, 1.0), VectorFactory.createVector3(1.0, -1.0, 1.0),
+//        (VectorFactory.createVector3(1.0, -1.0, -1.0))); // right
+//    planes[4] = vf.generatePlaneObject(VectorFactory.createVector3(-1.0, 1.0, 1.0), VectorFactory.createVector3(1.0, 1.0, 1.0),
+//        (VectorFactory.createVector3(1.0, 1.0, -1.0))); // top
+//    planes[5] = vf.generatePlaneObject(VectorFactory.createVector3(-1.0, -1.0, 1.0), VectorFactory.createVector3(1.0, -1.0, 1.0),
+//        (VectorFactory.createVector3(1.0, -1.0, -1.0))); // bottom
+//    planes[5].setNormal(planes[5].getNormal().multiply(-1.0));
+//    vf.setFrustum(planes);
+//
+//    return vf;
+//  }
 
   /**
    * Getter
@@ -193,11 +199,11 @@ public class ViewFrustum  {
    *          ratio of height and width of near- and far plane
    */
   public void calcPlanesOfFrustum(double nearDistance, double farDistance, double viewRatio) {
-    Vector nearCenter, farCenter; // distances
-    double nearHeight, farHeight, nearWidth, farWidth; // sizes
-    Vector farBottomRight, farBottomLeft, farTopRight, farTopLeft; // corners
-    Vector nearBottomRight, nearBottomLeft, nearTopRight, nearTopleft; // corners
-    Plane nearPlane, farPlane, bottomPlane, topPlane, leftPlane, rightPlane; // planes
+//    Vector nearCenter, farCenter; // distances
+//    double nearHeight, farHeight, nearWidth, farWidth; // sizes
+//    Vector farBottomRight, farBottomLeft, farTopRight, farTopLeft; // corners
+//    Vector nearBottomRight, nearBottomLeft, nearTopRight, nearTopleft; // corners
+//    Plane nearPlane, farPlane, bottomPlane, topPlane, leftPlane, rightPlane; // planes
 
     // calculate near and far center 
     nearCenter = this.eye.add((this.refPoint.subtract(this.eye)).getNormalized().multiply(Math.abs(nearDistance)));
@@ -235,39 +241,37 @@ public class ViewFrustum  {
     nearTopleft = (nearCenter.add(this.up.multiply(nearHeight * 0.5)).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[NTL] = nearTopleft;
 
+    Vector b,c;
     // build planes
     // normals must be oriented inside the frustum, so some have to be inverted
     // near
-    nearPlane = calcPlane(cornerPoints[NTR], cornerPoints[NBR], cornerPoints[NTL]);
-    Vector d  = this.refPoint.subtract(this.eye);
-    nearPlane.setNormal(d);
-    nearPlane.getNormal().normalize();
-    this.frustum[NEAR] = nearPlane;
+    tempNormal  = (this.refPoint.subtract(this.eye)).getNormalized();
+    this.frustum[NEAR]= new Plane(cornerPoints[NTR], tempNormal);
+//    this.frustum[NEAR]= new Plane(cornerPoints[NBL], tempNormal);
+    
     // far
-    farPlane = calcPlane(cornerPoints[FTR], cornerPoints[FBR], cornerPoints[FTL]);
-    farPlane.setNormal(new Vector(d.get(X) * -1 ,d.get(Y) * -1 , d.get(Z) * -1));
-    farPlane.getNormal().normalize();
-    this.frustum[FAR] = farPlane;
+    tempNormal.set(tempNormal.get(X) * -1 ,tempNormal.get(Y) * -1 , tempNormal.get(Z) * -1);
+    this.frustum[FAR] = new Plane(cornerPoints[FTR], tempNormal);
+    
     // left
-    leftPlane = calcPlane(cornerPoints[FTL], cornerPoints[FBL], cornerPoints[NTL]);
-    leftPlane.setNormal(new Vector(cameraRight.get(X), cameraRight.get(Y), cameraRight.get(Z)));
-    leftPlane.getNormal().normalize();
-    this.frustum[LEFT] = leftPlane;
+    tempNormal.set(cameraRight.get(X), cameraRight.get(Y), cameraRight.get(Z));
+    tempNormal.normalize();
+    this.frustum[LEFT] = new Plane(cornerPoints[FTL], tempNormal);
+    
     // right
-    rightPlane = calcPlane(cornerPoints[FTR], cornerPoints[FBR], cornerPoints[NTR]);
-    rightPlane.getNormal().set(cameraRight.get(X) * -1, cameraRight.get(Y) * -1, cameraRight.get(Z) * -1);
-    rightPlane.getNormal().normalize();
-    this.frustum[RIGHT] = rightPlane;
+    tempNormal.set(cameraRight.get(X) * -1, cameraRight.get(Y) * -1, cameraRight.get(Z) * -1);
+    tempNormal.normalize();
+    this.frustum[RIGHT] = new Plane(cornerPoints[FTR], tempNormal);
+    
     // top
-    topPlane = calcPlane(cornerPoints[FTR], cornerPoints[NTR], cornerPoints[FTL]);
-    topPlane.getNormal().set(up.get(X) * -1, up.get(Y) * -1, up.get(Z) * -1);
-    topPlane.getNormal().normalize();
-    this.frustum[TOP] = topPlane;
+    tempNormal.set(up.get(X) * -1, up.get(Y) * -1, up.get(Z) * -1);
+    tempNormal.normalize();
+    this.frustum[TOP] = new Plane(cornerPoints[FTR], tempNormal);
+    
     // bottom
-    bottomPlane = calcPlane(cornerPoints[FBR], cornerPoints[NBR], cornerPoints[FBL]);
-    bottomPlane.setNormal(up);
-    bottomPlane.getNormal().normalize();
-    this.frustum[BOTTOM] = bottomPlane;
+    tempNormal.set(up.get(X), up.get(Y), up.get(Z));
+    tempNormal.normalize();
+    this.frustum[BOTTOM] = new Plane(cornerPoints[FBR], tempNormal);
   }
   
   /**
@@ -321,52 +325,27 @@ public class ViewFrustum  {
    */
   public int isObjectInFrustum(OctreeNode<Integer> octreeNode, boolean isSceneOctreeNode) {
 
-    final BoundingBox bb = getOctreeNodeBox(octreeNode);
-    final Vector[] corner_points = calcCornerPointsOfBoundingBox(bb);
-    int inside = 0;
-    int outside = 0;
+    final BoundingBox octreeNodeBb = getOctreeNodeBox(octreeNode);
+    final Vector[] corner_points = calcCornerPointsOfBoundingBox(octreeNodeBb);
+    int inside = 0, outside = 0;
+    boolean maybeIntersected = false;
     
-//  octreeNodes of the sceneOctree may be bigger than the frustum,
-//  so the test for intersection must be different
-    if(isSceneOctreeNode){
-    for (int i = 0; i < PLANES; i++) {
-      outside = 0;
-      for (int j = 0; j < CORNERS; j++) {
-        if (frustum[i].computeSignedDistance(corner_points[j]) >= -0.0) {
-          ++inside;
-        }
-          else{
-          ++outside;
-        }
-        if(outside == 8){
-          return OUTSIDE;
+    // because it is not perfomant enough to make meshes partly visible and toggle single triangles,
+    // there is only differentation between inside and outside
+      for(int k = 0; k < PLANES; ++k){
+        outside = 0;
+        for(int j = 0; j < CORNERS; ++j){
+          if(frustum[k].computeSignedDistance(corner_points[j]) < 0){
+            outside++;
+          }
+          if(outside == CORNERS){
+            return OUTSIDE;
+          }
         }
       }
-    }
-    if (inside == 48) { 
       return INSIDE;
-    }
-    
-
-    return INTERSECTED;
-    }
-    else{
-    for (int i = 0; i < PLANES; i++) {
-      if (frustum[i].computeSignedDistance(bb.getUpperRight()) < 0.0) {
-        return OUTSIDE;
-      }
-      else{
-        if(frustum[i].computeSignedDistance(bb.getLowerLeft()) >= 0.0)
-        ++inside;
-      }
-    }
-    if(inside == PLANES){
-      return INSIDE;
-    }
-    return INTERSECTED;
-    }
   }
-  
+    
   /**
    * adds all (sceneOctree) nodes to a list which are visible or intersected by
    * the frustum
@@ -378,30 +357,12 @@ public class ViewFrustum  {
    */
   public void addVisibleNode(final OctreeNode<Integer> node,
                               final ArrayList<OctreeNode<Integer>> nodesInFrustum) {
-    if (   isObjectInFrustum(node, true) == INSIDE 
-        || isObjectInFrustum(node, true) == INTERSECTED) {
+    final int POSITION = isObjectInFrustum(node, true);
+    if (POSITION == INSIDE) {
       nodesInFrustum.add(node);
     }
   }
   
-  /**
-   * generates a plane of three given corner points
-   * 
-   * @param pointOne
-   *          first corner of plane
-   * @param pointTwo
-   *          second corner of plane
-   * @param pointThree
-   *          third corner of plane
-   * @return plane object formed by corner points
-   */
-  private Plane calcPlane(Vector pointOne, Vector pointTwo, Vector pointThree) {
-    Vector spanU = pointTwo.subtract(pointOne);
-    Vector spanV = pointThree.subtract(pointOne);
-    Vector normal = spanV.cross(spanU).getNormalized();
-    return new Plane(pointOne, normal);
-  }
-
   /**
    * calculates a bounding box for an octreeNode
    * 
@@ -424,7 +385,7 @@ public class ViewFrustum  {
    *          Bounding box whose corner points should be calculated
    * @return array with corner points
    */
-  private Vector[] calcCornerPointsOfBoundingBox(BoundingBox bBox) {
+  private Vector[] calcCornerPointsOfBoundingBox(BoundingBox bBox) { 
 
     Vector[] cornerPoints = new Vector[8];
     for (int i = 0; i < cornerPoints.length; ++i) {
@@ -474,7 +435,5 @@ public class ViewFrustum  {
     cornerPoints[7] = ufl;
 
     return cornerPoints;
-
   }
-
 }
