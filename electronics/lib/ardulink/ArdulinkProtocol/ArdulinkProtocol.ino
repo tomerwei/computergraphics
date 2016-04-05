@@ -46,6 +46,8 @@ String* tokens;
 MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
+int distanceTriggerPin = -1;
+int distanceEchoPin = -1;
 
 void setup() {
   // initialize serial: (this is general code you can reuse)
@@ -124,18 +126,40 @@ String* tokenize(String input, int& numberOfTokens ) {
   return tokens;
 }
 
+void initDistance(int triggerPin, int echoPin){
+  distanceTriggerPin = triggerPin;
+  distanceEchoPin = echoPin;
+  pinMode(distanceTriggerPin, OUTPUT);
+  pinMode(distanceEchoPin, INPUT);
+}
+
+double measureDistance(){
+  digitalWrite(distanceTriggerPin, LOW); 
+  delayMicroseconds(2); 
+  
+  digitalWrite(distanceTriggerPin, HIGH);
+  delayMicroseconds(10); 
+  
+  digitalWrite(distanceTriggerPin, LOW);
+  double duration = pulseIn(distanceEchoPin, HIGH);
+ 
+  //Calculate the distance (in cm) based on the speed of sound.
+  double distance = duration/58.2;
+  return distance;
+}
+
 void loop() {
 
-  // Read gyro
-  accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-  String gyroString = "gyro " +  String(ax) + " " + String(ay) + " " + String(az) + " " + String(gx) + " " + String(gy) + " " + String(gz);
+//  Serial.print("Hello");
+//      Serial.write(255);
+//      Serial.flush();
 
   // when a newline arrives:
   if (stringComplete) {
     if (inputString.startsWith("alp://")) { // OK is a message I know (this is general code you can reuse)
       boolean msgRecognized = true;
 
-      // Debugging
+//      // Debugging
 //      Serial.print(inputString);
 //      Serial.write(255);
 //      Serial.flush();
@@ -143,7 +167,28 @@ void loop() {
 //      stringComplete = false;
 //      return;
 
-      if ( inputString.indexOf("gyro") != -1) {
+      if ( inputString.indexOf("distance") != -1) {
+        int numberOfTokens = 0;
+        String* tokens = tokenize(inputString, numberOfTokens);
+        int triggerPin = tokens[1].toInt();
+        int echoPin = tokens[2].toInt();
+        if (distanceEchoPin != triggerPin || distanceEchoPin != echoPin ){
+           initDistance(triggerPin, echoPin);
+        }
+        String distanceString = "distance " + String(measureDistance());
+
+        
+        Serial.print(distanceString);
+        Serial.write(255);
+        Serial.flush();
+
+        Serial.print("debug " + String(distanceTriggerPin) + " "  + String(distanceEchoPin));
+        Serial.write(255);
+        Serial.flush();
+      } else if ( inputString.indexOf("gyro") != -1) {
+        // Read gyro
+        accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+        String gyroString = "gyro " +  String(ax) + " " + String(ay) + " " + String(az) + " " + String(gx) + " " + String(gy) + " " + String(gz);
         Serial.print(gyroString);
         Serial.write(255);
         Serial.flush();

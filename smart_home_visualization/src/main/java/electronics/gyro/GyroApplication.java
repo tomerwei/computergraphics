@@ -36,7 +36,7 @@ import cgresearch.graphics.scenegraph.Transformation;
 public class GyroApplication extends CgApplication {
 
   private enum MeshType {
-    SPACESHIP, CUBOID
+    SPACESHIP, CUBOID, BUNNY
   }
 
   /**
@@ -48,7 +48,7 @@ public class GyroApplication extends CgApplication {
 
   public GyroApplication() {
     model = new GyroApplicationModel();
-    loadMesh(MeshType.SPACESHIP);
+    loadMesh(MeshType.BUNNY);
     getCgRootNode().addChild(new CoordinateSystem(Dimension.DIMENSION_2D, 1));
     AnimationTimer.getInstance().startTimer(100);
   }
@@ -58,17 +58,28 @@ public class GyroApplication extends CgApplication {
    */
   public void loadMesh(MeshType type) {
     ITriangleMesh mesh = null;
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = null;
     switch (type) {
       case SPACESHIP:
         mesh = new TriangleMesh();
-        ObjFileReader reader = new ObjFileReader();
-        List<ITriangleMesh> meshes = reader.readFile("meshes/modul1.obj");
+        meshes = reader.readFile("meshes/modul1.obj");
         for (ITriangleMesh subMesh : meshes) {
           mesh.unite(subMesh);
         }
         mesh.fitToUnitBox();
         TriangleMeshTransformation.multiply(mesh,
             MatrixFactory.createRotationMatrix(VectorFactory.createVector3(0, 1, 0), 21.0 * Math.PI / 180.0));
+        break;
+      case BUNNY:
+        mesh = new TriangleMesh();
+        meshes = reader.readFile("meshes/bunny.obj");
+        for (ITriangleMesh subMesh : meshes) {
+          mesh.unite(subMesh);
+        }
+        mesh.fitToUnitBox();
+        TriangleMeshTransformation.multiply(mesh,
+            MatrixFactory.createRotationMatrix(VectorFactory.createVector3(0, 1, 0), -Math.PI / 2.0));
         break;
       case CUBOID:
         mesh = TriangleMeshFactory.createCube();

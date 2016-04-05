@@ -71,7 +71,7 @@ public class GyroApplicationGui extends IApplicationControllerGui
    */
   private void selectPreferredPort() {
     for (int i = 0; i < comboBoxPort.getItemCount(); i++) {
-      if (comboBoxPort.getItemAt(i).contains("usbmodem1421")) {
+      if (comboBoxPort.getItemAt(i).contains("usbmodem1421") || comboBoxPort.getItemAt(i).contains("usb")) {
         comboBoxPort.setSelectedIndex(i);
         break;
       }

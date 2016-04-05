@@ -61,7 +61,7 @@ public class ArduinoMpu6050 implements ISensor {
       position.set(i, Double.parseDouble(tokens[i + 4]));
     }
     alphaX = accelleration.get(0) / 32000 * Math.PI;
-    alphaY = accelleration.get(1) / 32000 * Math.PI + 0.4;
+    alphaY = accelleration.get(1) / 32000 * Math.PI - 0.4;
   }
 
   public void requestValues() {

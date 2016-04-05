@@ -33,7 +33,7 @@ public class ArduinoConnection {
         for (Consumer<String> messageCallback : messageCallbacks) {
           messageCallback.accept(msg);
         }
-        //Logger.getInstance().message(msg);
+        //Logger.getInstance().message("Message received: " + msg);
       }
     });
   }
@@ -95,11 +95,27 @@ public class ArduinoConnection {
   public void sendCustomCommand(String command) {
     if (link.isConnected()) {
       ProtocolHandler.getCurrentProtocolImplementation().sendCustomMessage(link, command);
-      //Logger.getInstance().message("Sent command: " + command);
+      // Logger.getInstance().message("Sent command: " + command);
     }
   }
 
   public void addMessageCallback(Consumer<String> messageCallback) {
     messageCallbacks.add(messageCallback);
+  }
+
+  /**
+   * Returns the port which most likely is the correct port from the port list.
+   */
+  public String getMostLikelyPort() {
+    List<String> portList = getPortList();
+    for (String port : portList) {
+      if (port.contains("usb")) {
+        return port;
+      }
+    }
+    if (!portList.isEmpty()) {
+      return portList.get(0);
+    }
+    return null;
   }
 }
