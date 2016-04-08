@@ -1,6 +1,7 @@
 package cgresearch.rendering.jogl.misc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
@@ -21,6 +22,9 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   private final static int X = 0;
   private final static int Y = 1;
   private final static int Z = 2;
+  
+  // indices for corner points
+  public static final int FBR = 5, FBL = 4, FTR = 6, FTL = 7, NBR = 1, NBL = 0, NTR = 2, NTL = 3;
 
   public OctreeFactoryStrategyScene(ArrayList<CgNode> objects) {
     this.leafNodes = objects;
@@ -51,9 +55,8 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
     }
     if (ll != null && ur != null) {
       return new BoundingBox(ll, ur);
-    } else {
-      return null;
-    }
+    } 
+    return null;
   }
 
   @Override
@@ -66,26 +69,15 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
     BoundingBox cur = leafNodes.get(elementIndex).getBoundingBox();
     Vector nodeUpperRight = node.getBoundingBox().getUpperRight();
 
-    if (cur.getUpperRight().get(X) < node.getLowerLeft().get(X)) {
-      return false;
+    if(cur.getLowerLeft().get(X) < node.getLowerLeft().get(X) ||
+       cur.getLowerLeft().get(Y) < node.getLowerLeft().get(Y) ||
+       cur.getLowerLeft().get(Z) < node.getLowerLeft().get(Z) ||
+       
+       cur.getUpperRight().get(X) > nodeUpperRight.get(X) ||
+       cur.getUpperRight().get(Y) > nodeUpperRight.get(Y) ||
+       cur.getUpperRight().get(Z) > nodeUpperRight.get(Z) ){
+         return false;
     }
-    if (cur.getLowerLeft().get(X) > nodeUpperRight.get(X)) {
-      return false;
-    }
-    if (cur.getUpperRight().get(Y) < node.getLowerLeft().get(Y)) {
-      return false;
-    }
-    if (cur.getLowerLeft().get(Y) > nodeUpperRight.get(Y)) {
-      return false;
-    }
-    if (cur.getUpperRight().get(Z) < node.getLowerLeft().get(Z)) {
-      return false;
-    }
-    if (cur.getLowerLeft().get(Z) > nodeUpperRight.get(Z)) {
-      return false;
-    }
-
     return true;
-
-  }
+  } 
 }

@@ -23,9 +23,9 @@ public class ViewFrustum  {
   // number of corners of frustum and bounding boxes
   public static final int CORNERS = 8;
   
+
   // indices for corner points
   public static final int FBR = 0, FBL = 1, FTR = 2, FTL = 3, NBR = 4, NBL = 5, NTR = 6, NTL = 7;
-
   // indices for planes
   public static final int NEAR = 0, FAR = 1, LEFT = 2, RIGHT = 3, TOP = 4, BOTTOM = 5;
   
@@ -37,7 +37,6 @@ public class ViewFrustum  {
   // possible positions of objects
   public static final int INSIDE = 0;
   public static final int OUTSIDE = 1;
-  public static final int INTERSECTED = 2;
   
   // transparencies
   public static final double FRUSTUMTRANSPARENCY = 0.5;
@@ -199,11 +198,6 @@ public class ViewFrustum  {
    *          ratio of height and width of near- and far plane
    */
   public void calcPlanesOfFrustum(double nearDistance, double farDistance, double viewRatio) {
-//    Vector nearCenter, farCenter; // distances
-//    double nearHeight, farHeight, nearWidth, farWidth; // sizes
-//    Vector farBottomRight, farBottomLeft, farTopRight, farTopLeft; // corners
-//    Vector nearBottomRight, nearBottomLeft, nearTopRight, nearTopleft; // corners
-//    Plane nearPlane, farPlane, bottomPlane, topPlane, leftPlane, rightPlane; // planes
 
     // calculate near and far center 
     nearCenter = this.eye.add((this.refPoint.subtract(this.eye)).getNormalized().multiply(Math.abs(nearDistance)));
@@ -241,13 +235,12 @@ public class ViewFrustum  {
     nearTopleft = (nearCenter.add(this.up.multiply(nearHeight * 0.5)).subtract(this.cameraRight.multiply(nearWidth * 0.5)));
     cornerPoints[NTL] = nearTopleft;
 
-    Vector b,c;
     // build planes
     // normals must be oriented inside the frustum, so some have to be inverted
+    
     // near
     tempNormal  = (this.refPoint.subtract(this.eye)).getNormalized();
     this.frustum[NEAR]= new Plane(cornerPoints[NTR], tempNormal);
-//    this.frustum[NEAR]= new Plane(cornerPoints[NBL], tempNormal);
     
     // far
     tempNormal.set(tempNormal.get(X) * -1 ,tempNormal.get(Y) * -1 , tempNormal.get(Z) * -1);
@@ -321,21 +314,20 @@ public class ViewFrustum  {
    *          octreeNode whose position should be checked
    * @param isSceneOctreeNode
    *          says if it is an octreeNode of the octree for the scene
-   * @return 0 : INSIDE, 1 : OUTSIDE, 2 : INTERSECTED
+   * @return 0 : INSIDE, 1 : OUTSIDE
    */
-  public int isObjectInFrustum(OctreeNode<Integer> octreeNode, boolean isSceneOctreeNode) {
+  public int isObjectInFrustum(OctreeNode<Integer> node) {
 
-    final BoundingBox octreeNodeBb = getOctreeNodeBox(octreeNode);
-    final Vector[] corner_points = calcCornerPointsOfBoundingBox(octreeNodeBb);
-    int inside = 0, outside = 0;
-    boolean maybeIntersected = false;
+    final BoundingBox octreeNodeBb = getOctreeNodeBox(node);
+    final Vector[] cornerPoints = calcCornerPointsOfBoundingBox(octreeNodeBb);
+    int outside = 0;
     
     // because it is not perfomant enough to make meshes partly visible and toggle single triangles,
     // there is only differentation between inside and outside
       for(int k = 0; k < PLANES; ++k){
         outside = 0;
         for(int j = 0; j < CORNERS; ++j){
-          if(frustum[k].computeSignedDistance(corner_points[j]) < 0){
+          if(frustum[k].computeSignedDistance(cornerPoints[j]) < 0){
             outside++;
           }
           if(outside == CORNERS){
@@ -357,7 +349,7 @@ public class ViewFrustum  {
    */
   public void addVisibleNode(final OctreeNode<Integer> node,
                               final ArrayList<OctreeNode<Integer>> nodesInFrustum) {
-    final int POSITION = isObjectInFrustum(node, true);
+    final int POSITION = isObjectInFrustum(node);
     if (POSITION == INSIDE) {
       nodesInFrustum.add(node);
     }

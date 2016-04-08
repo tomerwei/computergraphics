@@ -46,7 +46,7 @@ public class FrustumTestFrame extends CgApplication {
 
     getCgRootNode().setUseBlending(true);
     getCgRootNode().setUseViewFrustumCulling(true);
-    getCgRootNode().setShowFps(true);
+    getCgRootNode().setShowFps(false);
 
     PlyFileReader reader = new PlyFileReader();
     ITriangleMesh dragon = reader.readFile("meshes/dragon_vrip_res3.ply");
@@ -61,36 +61,46 @@ public class FrustumTestFrame extends CgApplication {
      
     
      // // ############### Transformations ###############
+//     System.out.println("BB BUNNDYDOWN VORHER = " + bunnyDown.getBoundingBox());
      TriangleMeshTransformation.scale(bunnyDown, 3.0);
      TriangleMeshTransformation.translate(bunnyDown,
      VectorFactory.createVector3(0.0, 0.0, 2.0));
-     TriangleMeshTransformation.scale(cow, 6.0);
+//     System.out.println("BB BUNNDYDOWN NACHHER = " + bunnyDown.getBoundingBox());
+//     System.out.println("BB COW VORHER = " + cow.getBoundingBox());
      TriangleMeshTransformation.transform(cow, new Matrix(Math.cos(100), -Math.sin(100),0 ,Math.sin(100), Math.cos(100), 0, 0, 0, 1));
      TriangleMeshTransformation.translate(cow,
-     VectorFactory.createVector3(5.5, 5.0, -5.0));
-     TriangleMeshTransformation.translate(bunny,
-     VectorFactory.createVector3(0.0, 0.0 /* 1.15 */, 9.0));
+     VectorFactory.createVector3(5.5, 5.5, -5.0));
+//     System.out.println("BB COW NACHHER = " + cow.getBoundingBox());
+//     System.out.println("BB BUNNY VORHER = " + bunny.getBoundingBox());
      TriangleMeshTransformation.scale(bunny, 3.0);
-     TriangleMeshTransformation.scale(fenja, 0.1);
+     TriangleMeshTransformation.translate(bunny,
+     VectorFactory.createVector3(0.0, 4.0 /* 1.15 */, 9.0));
+//     System.out.println("BB BUNNY NACHHER = " + bunny.getBoundingBox());
+//     System.out.println("BB FENJA VORHER = " + fenja.getBoundingBox());
+     TriangleMeshTransformation.scale(fenja, 1.0/*1*/);
      TriangleMeshTransformation.translate(fenja,
      VectorFactory.createVector3(0.5, 0.0, 25.0));
-     // TriangleMeshTransformation.scale(bunnyDown, 0.1);
+//     System.out.println("BB FENJA NACHHER = " + fenja.getBoundingBox());
+//     System.out.println("BB BUNNYUP VORHER = " + bunnyUp.getBoundingBox());
      TriangleMeshTransformation.scale(bunnyUp, 3.0);
      TriangleMeshTransformation.translate(bunnyUp,
      VectorFactory.createVector3(0.0, 2.0, 0.5));
-     TriangleMeshTransformation.scale(pumpkin, 0.02);
+//     System.out.println("BB BUNNYUP NACHHER = " + bunnyUp.getBoundingBox());
+//     System.out.println("BB PUMPKIN VORHER = " + pumpkin.getBoundingBox());
+     TriangleMeshTransformation.scale(pumpkin,0.02);
      TriangleMeshTransformation.translate(pumpkin,
      VectorFactory.createVector3(0.0, 0.0, 23.5));
+//     System.out.println("BB PUMPKIN NACHHER = " + pumpkin.getBoundingBox());
      // ############### Transformationen ###############
     
      getCgRootNode().addChild(new CgNode(bunny, "bunny"));
-     getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
-     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
      getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
-     getCgRootNode().addChild(new CgNode(bunnyUp1, "bunnyUp1"));
      getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
+     getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
+     getCgRootNode().addChild(new CgNode(bunnyUp1, "bunnyUp1"));
      getCgRootNode().addChild(new CgNode(cow, "cow")); 
      getCgRootNode().addChild(new CgNode(dragon, "dragon"));
+     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
      
 
     // ######################################################################################################################################
@@ -101,44 +111,63 @@ public class FrustumTestFrame extends CgApplication {
 
     // ######################################################################################################################################
     ITriangleMesh bunny1 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny1, 3.0);
     TriangleMeshTransformation.translate(bunny1, VectorFactory.createVector3(0.0, 0.0, 0.0));
     ITriangleMesh bunny2 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny2, 3.0);
     TriangleMeshTransformation.translate(bunny2, VectorFactory.createVector3(0.0, 0.0, -1.0));
     ITriangleMesh bunny3 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny3, 3.0);
     TriangleMeshTransformation.translate(bunny3, VectorFactory.createVector3(0.0, 0.0, 1.0));
     ITriangleMesh bunny4 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny4, 3.0);
     TriangleMeshTransformation.translate(bunny4, VectorFactory.createVector3(-1.0, 0.0, 0));
     ITriangleMesh bunny5 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny5, 3.0);
     TriangleMeshTransformation.translate(bunny5, VectorFactory.createVector3(1.0, 0.0, 0));
     ITriangleMesh bunny6 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny6, 3.0);
     TriangleMeshTransformation.translate(bunny6, VectorFactory.createVector3(0.0, -1.0, 0));
     ITriangleMesh bunny7 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny7, 3.0);
     TriangleMeshTransformation.translate(bunny7, VectorFactory.createVector3(0.0, 1.0, 0));
 
     ITriangleMesh bunny8 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny8, 3.0);
     TriangleMeshTransformation.translate(bunny8, VectorFactory.createVector3(0.0, 0.0, -2));
     ITriangleMesh bunny9 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny9, 3.0);
     TriangleMeshTransformation.translate(bunny9, VectorFactory.createVector3(0.0, 0.0, 2));
     ITriangleMesh bunny10 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny10, 3.0);
     TriangleMeshTransformation.translate(bunny10, VectorFactory.createVector3(0.0, 2.0, 0));
     ITriangleMesh bunny11 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny11, 3.0);
     TriangleMeshTransformation.translate(bunny11, VectorFactory.createVector3(0, -2.0, 0));
     ITriangleMesh bunny12 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny12, 3.0);
     TriangleMeshTransformation.translate(bunny12, VectorFactory.createVector3(2.0, 0.0, 0));
     ITriangleMesh bunny13 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny13, 3.0);
     TriangleMeshTransformation.translate(bunny13, VectorFactory.createVector3(-2.0, 0.0, 0));
     
     ITriangleMesh bunny14 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny14, 14.0);
     TriangleMeshTransformation.translate(bunny14, VectorFactory.createVector3(0.0, 0.0, -3));
     ITriangleMesh bunny15 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny15, 3.0);
     TriangleMeshTransformation.translate(bunny15, VectorFactory.createVector3(0.0, 0.0, 3));
     ITriangleMesh bunny16 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny16, 3.0);
     TriangleMeshTransformation.translate(bunny16, VectorFactory.createVector3(0.0, 3.0, 0));
     ITriangleMesh bunny17 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny17, 3.0);
     TriangleMeshTransformation.translate(bunny17, VectorFactory.createVector3(0, -3.0, 0));
     ITriangleMesh bunny18 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny18, 3.0);
     TriangleMeshTransformation.translate(bunny18, VectorFactory.createVector3(3.0, 0.0, 0));
     ITriangleMesh bunny19 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny19, 3.0);
     TriangleMeshTransformation.translate(bunny19, VectorFactory.createVector3(-3.0, 0.0, 0));
 
     ITriangleMesh bunny20 = loadMesh("meshes/bunny.obj");
