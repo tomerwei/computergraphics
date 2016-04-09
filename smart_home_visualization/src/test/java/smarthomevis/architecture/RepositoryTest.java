@@ -1,17 +1,13 @@
 package smarthomevis.architecture;
 
-import org.bson.types.ObjectId;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import smarthomevis.architecture.data_access.Repository;
-import smarthomevis.architecture.entities.Device;
+import smarthomevis.architecture.logic.Device;
 
 import static org.junit.Assert.*;
 
 // This test needs MongoDB running on localhost:27017 to pass
-//@Ignore
+@Ignore
 public class RepositoryTest {
 
     private static Repository<Device> deviceRepository;
@@ -55,10 +51,13 @@ public class RepositoryTest {
 
     @Test
     public void testDeleteWithHas() {
-        ObjectId id = deviceRepository.save(device);
-        assertTrue(deviceRepository.has(id));
-        deviceRepository.delete(id);
-        assertFalse(deviceRepository.has(id));
+        String deviceId = deviceRepository.save(device);
+
+        assertTrue(deviceRepository.has(deviceId));
+
+        deviceRepository.delete(deviceId);
+
+        assertFalse(deviceRepository.has(deviceId));
     }
 
     @Test
@@ -79,6 +78,7 @@ public class RepositoryTest {
         for (int i = 0; i < 5; i++) {
             deviceRepository.save(device);
         }
+
         assertEquals(1, deviceRepository.count());
     }
 

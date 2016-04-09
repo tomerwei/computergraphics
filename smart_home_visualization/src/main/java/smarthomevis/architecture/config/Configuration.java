@@ -1,19 +1,24 @@
 package smarthomevis.architecture.config;
 
+import cgresearch.graphics.scenegraph.CgNode;
+
+import java.text.SimpleDateFormat;
+
 public class Configuration {
 
-    private static String resourcesLocation = "smart_home_visualization/resources.ini";
-    private static String packageLocation = "cg.smart_home_visualization.src.main.java.smarthomevis.architecture";
+    private static final String resourcesLocation = "smart_home_visualization/resources.ini";
+    private static final String packageLocation = "cg.smart_home_visualization.src.main.java.smarthomevis.architecture";
 
-    private static String databaseName = "smarthome";
-    private static String testDatabaseName = "smarthome_test";
-    private static String databaseServerIP = "localhost";
-    private static int databasePort = 27017;
+    private static final String databaseName = "smarthome";
+    private static final String testDatabaseName = "smarthome_test";
+    private static final String databaseServerIP = "localhost";
+    private static final int databasePort = 27017;
 
-    private static String RESTroot = "/smarthome";
-    private static int RESTport = 8183;
+    private static final String RESTroot = "/smarthome";
+    private static final int RESTport = 8183;
 
-    private static String dateFormat = "dd/mm/yyyy h:mm:ss a";
+    private static final String dateFormat = "dd-MM-yyyy HH:mm:ss:S";
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
 
     public static String getResourcesLocation() {
         return resourcesLocation;
@@ -49,5 +54,9 @@ public class Configuration {
 
     public static String getDateFormat() {
         return dateFormat;
+    }
+
+    public static SimpleDateFormat getSimpleDateFormat() {
+        return simpleDateFormat;
     }
 }

@@ -1,9 +1,9 @@
-package smarthomevis.architecture.data_access;
+package smarthomevis.architecture.json;
 
 import com.google.gson.GsonBuilder;
 import org.bson.types.ObjectId;
-import smarthomevis.architecture.entities.Device;
-import smarthomevis.architecture.entities.DeviceLayer;
+import smarthomevis.architecture.logic.Device;
+import smarthomevis.architecture.logic.DeviceLayer;
 
 public class JsonConverter {
 

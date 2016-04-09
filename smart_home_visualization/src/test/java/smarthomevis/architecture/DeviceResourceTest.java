@@ -1,34 +1,27 @@
 package smarthomevis.architecture;
 
-import org.bson.types.ObjectId;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.restlet.resource.ClientResource;
-import smarthomevis.architecture.data_access.JsonConverter;
+import smarthomevis.architecture.json.JsonConverter;
 import smarthomevis.architecture.data_access.Repository;
-import smarthomevis.architecture.entities.Device;
-import smarthomevis.architecture.rest.DeviceResource;
+import smarthomevis.architecture.logic.Device;
 
 import java.io.IOException;
 
 import static org.junit.Assert.*;
 
 // This test needs MongoDB running to pass
-//@Ignore
+@Ignore
 public class DeviceResourceTest {
 
-    private static DeviceResource resource;
     private static Repository<Device> deviceRepository;
     private static ClientResource client;
     private static String testUrl = "http://localhost:8183/smarthome/devices/";
 
-    private Device device;
+    private String deviceId;
 
     @BeforeClass
     public static void initialize() {
-        resource = new DeviceResource();
         deviceRepository = new Repository<>(Device.class);
     }
 
@@ -41,33 +34,32 @@ public class DeviceResourceTest {
     public void setUp() {
         deviceRepository.deleteAll();
 
-        device = new Device();
+        Device device = new Device();
         device.setName("Sensor_09");
         device.addEntry("Movement");
+        deviceId = deviceRepository.save(device);
     }
 
     @Test
-    public void testGET() throws IOException {
-        ObjectId id = deviceRepository.save(device);
-        client = new ClientResource(testUrl + id.toString());
+    public void testGetWithIdReturnsDevice() throws IOException {
+        client = new ClientResource(testUrl + deviceId);
 
-        String deviceJson = JsonConverter.convertToJson(deviceRepository.get(id));
+        String deviceJson = JsonConverter.convertToJson(deviceRepository.get(deviceId));
         String responseJson = client.get().getText();
 
         assertEquals(deviceJson, responseJson);
     }
 
     @Test
-    public void testPUT() throws IOException {
-        ObjectId id = deviceRepository.save(device);
-        client = new ClientResource(testUrl + id.toString());
+    public void testPutWithIdUpdatesDevice() throws IOException {
+        client = new ClientResource(testUrl + deviceId);
 
         String deviceJson = String.format(
                 "{\"entries\":{\"29/16/2016 6:16:25 PM\":\"21 °C\"}," +
                         "\"id\":\"%s\"," +
-                        "\"name\":\"Thermometer1\"}", id);
+                        "\"name\":\"Thermometer1\"}", deviceId);
         client.put(deviceJson);
-        Device updatedDevice = deviceRepository.get(id);
+        Device updatedDevice = deviceRepository.get(deviceId);
 
         assertEquals("Thermometer1", updatedDevice.getName());
         assertTrue(updatedDevice.getEntries().containsKey("29/16/2016 6:16:25 PM"));
@@ -75,22 +67,12 @@ public class DeviceResourceTest {
     }
 
     @Test
-    public void testPOST() throws IOException {
-        client = new ClientResource(testUrl);
+    public void testDeleteWithIdDeletesDevice() {
+        assertTrue(deviceRepository.has(deviceId));
 
-        String deviceJson = "{\"name\":\"Thermometer1\"}";
-        String responseId = client.post(deviceJson).getText();
-
-        assertTrue(deviceRepository.has(new ObjectId(responseId)));
-        assertEquals("Thermometer1", deviceRepository.get(new ObjectId(responseId)).getName());
-    }
-
-    @Test
-    public void testDELETE() {
-        ObjectId id = deviceRepository.save(device);
-        client = new ClientResource(testUrl + id.toString());
+        client = new ClientResource(testUrl + deviceId);
         client.delete();
 
-        assertFalse(deviceRepository.has(id));
+        assertFalse(deviceRepository.has(deviceId));
     }
 }

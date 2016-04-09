@@ -3,19 +3,16 @@ package smarthomevis.architecture;
 import org.junit.*;
 import org.restlet.resource.ClientResource;
 import smarthomevis.architecture.data_access.Repository;
-import smarthomevis.architecture.json.JsonConverter;
 import smarthomevis.architecture.logic.Device;
 import smarthomevis.architecture.logic.DeviceLayer;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 // This test needs MongoDB running to pass
 @Ignore
-public class DeviceLayerResourceTest {
+public class DeviceLayerResourcesTest {
 
     private static Repository<DeviceLayer> deviceLayerRepository;
     private static Repository<Device> deviceRepository;
@@ -36,7 +33,6 @@ public class DeviceLayerResourceTest {
         deviceLayerRepository.deleteAll();
         deviceRepository.deleteAll();
     }
-
     @Before
     public void setUp() {
         deviceLayerRepository.deleteAll();
@@ -54,37 +50,46 @@ public class DeviceLayerResourceTest {
     }
 
     @Test
-    public void testGetWithIdReturnsLayer() throws IOException {
-        client = new ClientResource(testUrl + deviceLayerId);
+    public void testGetReturnsAllDevices() throws IOException {
+        DeviceLayer additionalLayer = new DeviceLayer();
+        additionalLayer.setName("Living Room");
+        String additionalLayerId = deviceLayerRepository.save(additionalLayer);
 
-        String deviceLayerJson = JsonConverter.
-                convertToJson(deviceLayerRepository.get(deviceLayerId));
+        client = new ClientResource(testUrl);
         String responseJson = client.get().getText();
 
-        assertEquals(deviceLayerJson, responseJson);
+        assertTrue(responseJson.contains(deviceLayerId));
+        assertTrue(responseJson.contains(additionalLayerId));
+        assertTrue(responseJson.contains(deviceId));
+        assertTrue(responseJson.contains("Kitchen"));
+        assertTrue(responseJson.contains("Living Room"));
     }
 
     @Test
-    public void testPutWithIdUpdatesDeviceLayer() throws IOException {
-        client = new ClientResource(testUrl + deviceLayerId);
+    public void testPostCreatesDeviceLayerReturnsId() throws IOException {
+        client = new ClientResource(testUrl);
 
-        String deviceLayerJson = String.format("{\"devices\":[\"%s\", \"12345\"]," +
-                "\"name\":\"Living Room\"}", deviceId);
-        client.put(deviceLayerJson);
-        DeviceLayer updatedDeviceLayer = deviceLayerRepository.get(deviceLayerId);
+        String deviceLayerJson = "{\"devices\":[\"5708d53400c3b31cac7d312d\", \"5708d53400c3b31cac7d312e\"],\"name\":\"Living Room\"}";
+        String responseId = client.post(deviceLayerJson).getText();
+        System.out.println(responseId);
 
-        assertEquals(updatedDeviceLayer.getName(), "Living Room");
-        assertTrue(updatedDeviceLayer.hasDevice(deviceId));
-        assertTrue(updatedDeviceLayer.hasDevice("12345"));
+        assertTrue(deviceLayerRepository.has(responseId));
+
+        DeviceLayer layer = deviceLayerRepository.get(responseId);
+
+        assertEquals(layer.getName(), "Living Room");
+        assertTrue(layer.hasDevice("5708d53400c3b31cac7d312d"));
+        assertTrue(layer.hasDevice("5708d53400c3b31cac7d312e"));
     }
 
     @Test
-    public void testDeleteWithIdDeletesDeviceLayer() {
+    public void testDeleteAllDeviceLayers() {
         assertTrue(deviceLayerRepository.has(deviceLayerId));
 
-        client = new ClientResource(testUrl + deviceLayerId);
+        client = new ClientResource(testUrl);
         client.delete();
 
         assertFalse(deviceLayerRepository.has(deviceLayerId));
     }
+
 }
