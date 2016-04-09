@@ -2,8 +2,7 @@ package smarthomevis.architecture;
 
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
-import cgresearch.graphics.scenegraph.CgNode;
-import smarthomevis.architecture.core.SmartHome;
+import smarthomevis.architecture.logic.SmartHome;
 import smarthomevis.groundplan.GroundPlan;
 import smarthomevis.groundplan.IGroundPlan;
 

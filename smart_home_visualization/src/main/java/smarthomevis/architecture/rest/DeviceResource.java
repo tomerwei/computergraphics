@@ -1,43 +1,57 @@
 package smarthomevis.architecture.rest;
 
-import org.mongodb.morphia.Datastore;
-import org.restlet.resource.*;
-import smarthomevis.architecture.core.DeviceController;
+import org.restlet.resource.Delete;
+import org.restlet.resource.Get;
+import org.restlet.resource.Put;
+import org.restlet.resource.ServerResource;
+import smarthomevis.architecture.data_access.Repository;
+import smarthomevis.architecture.json.JsonConverter;
+import smarthomevis.architecture.logic.Device;
 
 public class DeviceResource extends ServerResource {
 
-    private DeviceController deviceController;
-    private Datastore datastore;
+    private Repository<Device> deviceRepository;
 
     public DeviceResource() {
-        deviceController = new DeviceController(datastore);
+        deviceRepository = new Repository<>(Device.class);
     }
 
     @Get
     public String getDevice() {
-        String id = getRequestAttributes().get("id").toString();
-        return deviceController.getDeviceAsJson(id);
+        String id = extractId();
+        if (isValid(id)) {
+            Device device = deviceRepository.get(id);
+            return JsonConverter.convertToJson(device);
+        }
+        // TODO Fehlercode zurueck, weil ID nicht existiert
+        return "Error: A device with this ID could not be found.";
     }
 
-    @Post("device:json")
-    public String connectDevice(String device) {
-        return deviceController.createDevice(device);
-    }
-
-    @Put
-    public String updateDevice() {
-        // TODO
-        return "put";
+    @Put("device:txt")
+    public void updateDevice(String deviceJson) {
+        String id = extractId();
+        if (isValid(id)) {
+            Device device = JsonConverter.buildDevice(deviceJson);
+            device.setId(id);
+            deviceRepository.save(device);
+        }
+        // TODO Fehlercode zurueck, weil ID nicht existiert
     }
 
     @Delete
     public void deleteDevice() {
-        String id = getRequestAttributes().get("id").toString();
-        deviceController.deleteDevice(id);
+        String id = extractId();
+        if (isValid(extractId())) {
+            deviceRepository.delete(id);
+        }
+        // TODO Fehlercode zurueck, weil ID nicht existiert
     }
 
-    @Override
-    protected void doInit() throws ResourceException {
-        this.datastore = (Datastore) getContext().getAttributes().get("datastore");
+    private String extractId() {
+        return getRequestAttributes().get("id").toString();
+    }
+
+    private boolean isValid(String id) {
+        return id != null && deviceRepository.has(id);
     }
 }
