@@ -1,7 +1,5 @@
 package smarthomevis.architecture.config;
 
-import cgresearch.graphics.scenegraph.CgNode;
-
 import java.text.SimpleDateFormat;
 
 public class Configuration {

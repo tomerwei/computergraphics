@@ -22,9 +22,9 @@ public class DeviceResource extends ServerResource {
         if (isValid(id)) {
             Device device = deviceRepository.get(id);
             return JsonConverter.convertToJson(device);
+        } else {
+            return notFoundError();
         }
-        // TODO Fehlercode zurueck, weil ID nicht existiert
-        return "Error: A device with this ID could not be found.";
     }
 
     @Put("device:txt")
@@ -34,17 +34,19 @@ public class DeviceResource extends ServerResource {
             Device device = JsonConverter.buildDevice(deviceJson);
             device.setId(id);
             deviceRepository.save(device);
+        } else {
+            notFoundError();
         }
-        // TODO Fehlercode zurueck, weil ID nicht existiert
     }
 
     @Delete
     public void deleteDevice() {
         String id = extractId();
-        if (isValid(extractId())) {
+        if (isValid(id)) {
             deviceRepository.delete(id);
+        } else {
+            notFoundError();
         }
-        // TODO Fehlercode zurueck, weil ID nicht existiert
     }
 
     private String extractId() {
@@ -53,5 +55,10 @@ public class DeviceResource extends ServerResource {
 
     private boolean isValid(String id) {
         return id != null && deviceRepository.has(id);
+    }
+
+    private String notFoundError() {
+        // TODO
+        return "404";
     }
 }

@@ -5,7 +5,6 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import smarthomevis.architecture.config.Configuration;
-import smarthomevis.architecture.logic.SmartHome;
 
 import java.util.List;
 

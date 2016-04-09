@@ -22,9 +22,9 @@ public class DeviceLayerResource extends ServerResource {
         if (isValid(id)) {
             DeviceLayer deviceLayer = deviceLayerRepository.get(id);
             return JsonConverter.convertToJson(deviceLayer);
+        } else {
+            return notFoundError();
         }
-        // TODO Fehlercode zurueck, weil ID nicht existiert
-        return "Error: A DeviceLayer with this ID could not be found.";
     }
 
     @Put("deviceLayer:txt")
@@ -34,8 +34,9 @@ public class DeviceLayerResource extends ServerResource {
             DeviceLayer deviceLayer = JsonConverter.buildDeviceLayer(deviceLayerJson);
             deviceLayer.setId(id);
             deviceLayerRepository.save(deviceLayer);
+        } else {
+            notFoundError();
         }
-        // TODO Fehlercode zurueck, weil ID nicht existiert
     }
 
     @Delete
@@ -43,8 +44,9 @@ public class DeviceLayerResource extends ServerResource {
         String id = extractId();
         if (isValid(id)) {
             deviceLayerRepository.delete(id);
+        } else {
+            notFoundError();
         }
-        // TODO Fehlercode zurueck, weil ID nicht existiert
     }
 
     private String extractId() {
@@ -53,5 +55,10 @@ public class DeviceLayerResource extends ServerResource {
 
     private boolean isValid(String id) {
         return id != null && deviceLayerRepository.has(id);
+    }
+
+    private String notFoundError() {
+        // TODO
+        return "404";
     }
 }

@@ -1,7 +1,6 @@
 package smarthomevis.architecture.logic;
 
 import cgresearch.graphics.scenegraph.CgNode;
-import smarthomevis.architecture.data_access.BaseEntity;
 
 public class CgNodeLayer implements ILayer {
 
