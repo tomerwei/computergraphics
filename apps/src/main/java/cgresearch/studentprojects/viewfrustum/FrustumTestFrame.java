@@ -14,13 +14,6 @@ import cgresearch.core.math.Matrix;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.graphics.camera.Camera;
-import cgresearch.graphics.datastructures.points.IPointCloud;
-import cgresearch.graphics.datastructures.points.PointCloudFactory;
-import cgresearch.graphics.datastructures.primitives.Arrow;
-import cgresearch.graphics.datastructures.tree.OctreeFactory;
-import cgresearch.graphics.datastructures.tree.OctreeFactoryStrategyPointCloud;
-import cgresearch.graphics.datastructures.tree.OctreeNode;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.fileio.PlyFileReader;
@@ -28,8 +21,6 @@ import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
-import cgresearch.graphics.scenegraph.Transformation;
-import cgresearch.projects.urbanscene.UrbanSceneGenerator;
 import cgresearch.rendering.jogl.misc.OctreeFactoryStrategyScene;
 import cgresearch.rendering.jogl.misc.ViewFrustumCulling;
 
@@ -45,8 +36,8 @@ public class FrustumTestFrame extends CgApplication {
     
 
     getCgRootNode().setUseBlending(true);
-    getCgRootNode().setUseViewFrustumCulling(true);
-    getCgRootNode().setShowFps(false);
+    getCgRootNode().setUseViewFrustumCulling(false);
+    getCgRootNode().setShowFps(true);
 
     PlyFileReader reader = new PlyFileReader();
     ITriangleMesh dragon = reader.readFile("meshes/dragon_vrip_res3.ply");
@@ -152,7 +143,7 @@ public class FrustumTestFrame extends CgApplication {
     TriangleMeshTransformation.translate(bunny13, VectorFactory.createVector3(-2.0, 0.0, 0));
     
     ITriangleMesh bunny14 = loadMesh("meshes/bunny.obj");
-    TriangleMeshTransformation.scale(bunny14, 14.0);
+    TriangleMeshTransformation.scale(bunny14, 3.0);
     TriangleMeshTransformation.translate(bunny14, VectorFactory.createVector3(0.0, 0.0, -3));
     ITriangleMesh bunny15 = loadMesh("meshes/bunny.obj");
     TriangleMeshTransformation.scale(bunny15, 3.0);
@@ -171,25 +162,35 @@ public class FrustumTestFrame extends CgApplication {
     TriangleMeshTransformation.translate(bunny19, VectorFactory.createVector3(-3.0, 0.0, 0));
 
     ITriangleMesh bunny20 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny20, 3.0);
     TriangleMeshTransformation.translate(bunny20, VectorFactory.createVector3(0.0, 0.0, -4));
     ITriangleMesh bunny21 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny21, 3.0);
     TriangleMeshTransformation.translate(bunny21, VectorFactory.createVector3(0.0, 0.0, 4));
     ITriangleMesh bunny22 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny22, 3.0);
     TriangleMeshTransformation.translate(bunny22, VectorFactory.createVector3(0.0, 4.0, 0));
     ITriangleMesh bunny23 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny23, 3.0);
     TriangleMeshTransformation.translate(bunny23, VectorFactory.createVector3(0, -4.0, 0));
     ITriangleMesh bunny24 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny24, 3.0);
     TriangleMeshTransformation.translate(bunny24, VectorFactory.createVector3(4.0, 0.0, 0));
     ITriangleMesh bunny25 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny25, 3.0);
     TriangleMeshTransformation.translate(bunny25, VectorFactory.createVector3(-4.0, 0.0, 0));
     
     ITriangleMesh bunny26 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny26, 3.0);
     TriangleMeshTransformation.translate(bunny26, VectorFactory.createVector3(0.0, 5.0, 0));
     ITriangleMesh bunny27 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny27, 3.0);
     TriangleMeshTransformation.translate(bunny27, VectorFactory.createVector3(0.0, 6.0, 0));
     ITriangleMesh bunny28 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny28, 3.0);
     TriangleMeshTransformation.translate(bunny28, VectorFactory.createVector3(0.0, 7.0, 0));
     ITriangleMesh bunny29 = loadMesh("meshes/bunny.obj");
+    TriangleMeshTransformation.scale(bunny29, 3.0);
     TriangleMeshTransformation.translate(bunny29, VectorFactory.createVector3(0.0, 10.0, 0));
     
     getCgRootNode().addChild(new CgNode(bunny1, "bunny1"));

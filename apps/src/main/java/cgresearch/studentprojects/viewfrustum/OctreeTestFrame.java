@@ -7,23 +7,28 @@ import cgresearch.JoglAppLauncher;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
+import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.tree.OctreeFactory;
+import cgresearch.graphics.datastructures.tree.OctreeFactoryStrategyTriangleMesh;
 import cgresearch.graphics.datastructures.tree.OctreeNode;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
+import cgresearch.graphics.scenegraph.Transformation;
 import cgresearch.rendering.jogl.misc.OctreeFactoryStrategyScene;
 
 public class OctreeTestFrame extends CgApplication {
   
   public static CgRootNode rootNode;
+  public static ArrayList<OctreeNode<Integer>> octrees = new ArrayList<OctreeNode<Integer>>();
   
   public OctreeTestFrame(){
     
@@ -53,7 +58,7 @@ public class OctreeTestFrame extends CgApplication {
     TriangleMeshTransformation.scale(bunny, 3.0);
     TriangleMeshTransformation.translate(bunny,
     VectorFactory.createVector3(0.0, 4.0 /* 1.15 */, 9.0));
-    System.out.println("BB BUNNY NACHHER = " + bunny.getBoundingBox());
+//    System.out.println("BB BUNNY NACHHER = " + bunny.getBoundingBox());
 //    System.out.println("BB FENJA VORHER = " + fenja.getBoundingBox());
     TriangleMeshTransformation.translate(fenja,
     VectorFactory.createVector3(0.5, 0.0, 25.0));
@@ -63,23 +68,29 @@ public class OctreeTestFrame extends CgApplication {
 //    System.out.println("BB BUNNYUP VORHER = " + bunnyUp.getBoundingBox());
     TriangleMeshTransformation.scale(bunnyUp, 3.0);
     TriangleMeshTransformation.translate(bunnyUp,
-    VectorFactory.createVector3(0.0, 2.0, 0.5));
+    VectorFactory.createVector3(0.0, 5.0, 0.5));
 //    System.out.println("BB BUNNYUP NACHHER = " + bunnyUp.getBoundingBox());
 //    System.out.println("BB PUMPKIN VORHER = " + pumpkin.getBoundingBox());
     TriangleMeshTransformation.scale(pumpkin,0.02);
     TriangleMeshTransformation.translate(pumpkin,
-    VectorFactory.createVector3(0.0, 0.0, 23.5));
+    VectorFactory.createVector3(10.0, 0.0, 23.5));
 //    System.out.println("BB PUMPKIN NACHHER = " + pumpkin.getBoundingBox());
     // ############### Transformationen ###############
-   
-    getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
+    getCgRootNode().addChild(new CgNode(new Transformation(), "trans"));
     getCgRootNode().addChild(new CgNode(bunny, "bunny"));
+    getCgRootNode().addChild(new CgNode(bunnyUp, "bunnyUp"));
     getCgRootNode().addChild(new CgNode(pumpkin, "pumpkin"));
     getCgRootNode().addChild(new CgNode(bunnyDown, "bunnyDown"));
     getCgRootNode().addChild(new CgNode(bunnyUp1, "bunnyUp1"));
     getCgRootNode().addChild(new CgNode(cow, "cow")); 
     getCgRootNode().addChild(new CgNode(fenja, "fenja"));
     rootNode = getCgRootNode();
+    
+    /*for(int i = 0; i < 3; ++i){
+      OctreeNode<Integer> tmp = new OctreeNode<Integer>(null, 0);
+      tmp = createMeshOctree((TriangleMesh)getCgRootNode().getChildNode(i).getContent());
+      octrees.add(tmp);
+    }*/
   }
   
   public ITriangleMesh loadMesh(String path) {
@@ -96,7 +107,20 @@ public class OctreeTestFrame extends CgApplication {
   }
   
   public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
-    return new OctreeFactory<Integer>(new OctreeFactoryStrategyScene(objects)).create(7, 2);
+    return new OctreeFactory<Integer>(new OctreeFactoryStrategyScene(objects)).create(7, 3);
+  }
+  
+  public void printOctreeNodesWithContent(OctreeNode<Integer> octreeScene){
+    int elements = octreeScene.getNumberOfElements();
+    if(elements > 0){
+      rootNode.addChild(new CgNode(octreeScene, "os"));
+    }
+    int children = octreeScene.getNumberOfChildren();
+    if(children > 0){
+      for(int i = 0; i < children; ++i){
+        printOctreeNodesWithContent(octreeScene.getChild(i));
+      }
+    }
   }
   
   public static void main(String[] args){
@@ -107,8 +131,19 @@ public class OctreeTestFrame extends CgApplication {
     for(int i = 0; i < rootNode.getNumChildren(); ++i){
       meshes.add(rootNode.getChildNode(i));
     }
+    
+//    for(int i = 0; i < rootNode.getNumChildren(); ++i){
+//      System.out.print("CHILD: " + rootNode.getChildNode(i).getName() + ", BB = " +rootNode.getChildNode(i).getBoundingBox());
+//    }
+    //BoundingBox tmp = rootNode.getChildNode(0).getBoundingBox();
+    //rootNode.getChildNode(0).getBoundingBox().setLowerLeft(tmp.getLowerLeft());
+    //rootNode.getChildNode(0).getBoundingBox().setUpperRight(tmp.getUpperRight());
     OctreeNode<Integer> octreeScene = ((OctreeTestFrame)app).createSceneOctree(meshes);
-    rootNode.addChild(new CgNode(octreeScene, "octreeScene"));
+    ((OctreeTestFrame)app).printOctreeNodesWithContent(octreeScene);
+//    rootNode.addChild(new CgNode(octreeScene, "octreeScene"));
+//    for(int i = 0; i < rootNode.getNumChildren(); ++i){
+//      System.out.print("CHILD: " + rootNode.getChildNode(i).getName() + ", BB = " +rootNode.getChildNode(i).getBoundingBox());
+//    }
     
     JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
     appLauncher.create(app);

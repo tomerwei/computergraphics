@@ -254,7 +254,8 @@ public class ViewFrustumCulling implements Observer {
       
       rootNode.addChild(new CgNode(cube, "cube")); // rootNode.addChild(new
       CgNode(octreeScene, "os"));
-     */
+      */
+     
   }
 
   /**
