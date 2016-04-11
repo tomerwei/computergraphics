@@ -85,4 +85,6 @@ void main (void)
     
     gl_FragColor = clamp( gl_FragColor, 0.0, 1.0 );
     gl_FragColor.a = transparency;
+    
+    //gl_FragColor = textureColor;
 }

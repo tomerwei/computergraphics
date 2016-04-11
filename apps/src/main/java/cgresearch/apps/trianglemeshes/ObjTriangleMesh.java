@@ -45,9 +45,9 @@ public class ObjTriangleMesh extends CgApplication {
   public ObjTriangleMesh() {
     // 3D Object
     // loadFenja();
-    // loadLotrCubeWithTextureAtlas();
+    loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
-    loadPlaneWithBunny();
+    //loadPlaneWithBunny();
     // loadMedivalHouse();
     // loadHulk();
     // loadNofretete();
@@ -185,7 +185,7 @@ public class ObjTriangleMesh extends CgApplication {
     mesh.getMaterial().setShaderId(Material.SHADER_TEXTURE);
     String LOTR_TEXTURE_ATLAS = "LOTR_TEXTURE_ATLAS";
     ResourceManager.getTextureManagerInstance().addResource(LOTR_TEXTURE_ATLAS,
-        new CgTexture("textures/lotr_texture_atlas.png"));
+        new CgTexture("textures/checker.png"));
     mesh.getMaterial().setTextureId(LOTR_TEXTURE_ATLAS);
 
     mesh.setTriangleVisible(0, false);

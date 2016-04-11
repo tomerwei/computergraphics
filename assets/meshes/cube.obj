@@ -1,5 +1,5 @@
 # Material file
-mtllib haw_cube.mtl
+mtllib cube.mtl
 # Vertices
 v -0.5 -0.5 -0.5
 v 0.5 -0.5 -0.5
@@ -10,38 +10,37 @@ v 0.5 -0.5 0.5
 v 0.5 0.5 0.5
 v -0.5 0.5 0.5
 # Texture coordinates
-vt 0 0.8
+vt 0 0
 vt 0 1
-vt 0.2 1
-vt 0.2 0.8
+vt 1 1
+vt 1 0
 
-vt 0 0.5
-vt 0 0.7
-vt 0.2 0.7
-vt 0.2 0.5
+vt 0 0
+vt 0 1
+vt 1 1
+vt 1 0
 
-vt 0 0.2
-vt 0 0.4
-vt 0.2 0.4
-vt 0.2 0.2
+vt 0 0
+vt 0 1
+vt 1 1
+vt 1 0
 
-vt 0.3 0.8
-vt 0.3 1
-vt 0.5 1
-vt 0.5 0.8
+vt 0 0
+vt 0 1
+vt 1 1
+vt 1 0
 
-vt 0.3 0.5
-vt 0.3 0.7
-vt 0.5 0.7
-vt 0.5 0.5
+vt 0 0
+vt 0 1
+vt 1 1
+vt 1 0
 
-vt 0.3 0.2
-vt 0.3 0.4
-vt 0.5 0.4
-vt 0.5 0.2
+vt 0 0
+vt 0 1
+vt 1 1
+vt 1 0
 
 # Faces (Triangles)
-usemtl logo_haw
 f 1/1 3/3 2/2
 f 1/1 4/4 3/3
 

@@ -53,11 +53,12 @@ public class OctreeTestFrame extends CgApplication {
     TriangleMeshTransformation.scale(bunny, 3.0);
     TriangleMeshTransformation.translate(bunny,
     VectorFactory.createVector3(0.0, 4.0 /* 1.15 */, 9.0));
-//    System.out.println("BB BUNNY NACHHER = " + bunny.getBoundingBox());
+    System.out.println("BB BUNNY NACHHER = " + bunny.getBoundingBox());
 //    System.out.println("BB FENJA VORHER = " + fenja.getBoundingBox());
     TriangleMeshTransformation.translate(fenja,
     VectorFactory.createVector3(0.5, 0.0, 25.0));
     TriangleMeshTransformation.scale(fenja, 1.0/*1*/);
+    fenja.setUpdateBoundingBox();
 //    System.out.println("BB FENJA NACHHER = " + fenja.getBoundingBox());
 //    System.out.println("BB BUNNYUP VORHER = " + bunnyUp.getBoundingBox());
     TriangleMeshTransformation.scale(bunnyUp, 3.0);
