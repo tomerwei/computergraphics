@@ -1,7 +1,6 @@
 package cgresearch.rendering.jogl.misc;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;

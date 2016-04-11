@@ -59,6 +59,7 @@ public class ViewFrustum  {
   private Vector farBottomRight, farBottomLeft, farTopRight, farTopLeft; // corners
   private Vector nearBottomRight, nearBottomLeft, nearTopRight, nearTopleft; // corners
   private Vector tempNormal;  //temporal normal for the planes, must be calculated new for each plane
+  
   /**
    * constructor
    * 
@@ -247,24 +248,16 @@ public class ViewFrustum  {
     this.frustum[FAR] = new Plane(cornerPoints[FTR], tempNormal);
     
     // left
-    tempNormal.set(cameraRight.get(X), cameraRight.get(Y), cameraRight.get(Z));
-    tempNormal.normalize();
-    this.frustum[LEFT] = new Plane(cornerPoints[FTL], tempNormal);
+    this.frustum[LEFT] = generatePlane(FTL, FBL, false);
     
     // right
-    tempNormal.set(cameraRight.get(X) * -1, cameraRight.get(Y) * -1, cameraRight.get(Z) * -1);
-    tempNormal.normalize();
-    this.frustum[RIGHT] = new Plane(cornerPoints[FTR], tempNormal);
+    this.frustum[RIGHT] = generatePlane(FTR, FBR, true);
     
     // top
-    tempNormal.set(up.get(X) * -1, up.get(Y) * -1, up.get(Z) * -1);
-    tempNormal.normalize();
-    this.frustum[TOP] = new Plane(cornerPoints[FTR], tempNormal);
+    this.frustum[TOP] = generatePlane(FTR, FTL, false);
     
     // bottom
-    tempNormal.set(up.get(X), up.get(Y), up.get(Z));
-    tempNormal.normalize();
-    this.frustum[BOTTOM] = new Plane(cornerPoints[FBR], tempNormal);
+    this.frustum[BOTTOM] = generatePlane(FBR, FBL, true);
   }
   
   /**
@@ -427,5 +420,20 @@ public class ViewFrustum  {
     cornerPoints[7] = ufl;
 
     return cornerPoints;
+  }
+  
+  private Plane generatePlane(int firstIndex, int secondIndex, boolean aCrossB){
+    Vector a, b, c;
+    Vector tempNormal = new Vector(3);
+    a = cornerPoints[firstIndex].subtract(this.eye);
+    b = cornerPoints[secondIndex].subtract(this.eye);
+    if(!aCrossB){
+      c = b.cross(a); 
+    }else{
+      c = a.cross(b);
+    }
+    tempNormal.set(c.get(X), c.get(Y), c.get(Z));
+    tempNormal.normalize();
+    return new Plane(cornerPoints[firstIndex], tempNormal);
   }
 }
