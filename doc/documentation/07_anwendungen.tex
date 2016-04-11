@@ -1,0 +1,37 @@
+\section{Anwendungen}
+
+In diesem Kapitel werden spezialisierte Dokumentationen zu einzelnen Anwendungen gesammelt.
+
+\subsection{Serielles Arduino Protokoll}
+
+Alle Befehle haben die folgende Form:\\
+return-string $\leftarrow$ command-string\\
+
+Im Folgenden werden die Kommandos in einer Grammatik-ähnlichen Darstellung beschrieben. Befehle in Anführungszeichen sind Strings, Befehle ohne Anführungszeichen sind Platzhalter.
+
+command-string = gyro-command $|$ servo-command $|$ distance-command\\
+gyro-command = 'gyro'\\
+servo-command = 'servo' servo-subcommand\\
+servo-subcommand = servo-attach $|$ servo-detach $|$ servo-degree\\
+servo-attach = 'attach' pin (= Servo mit dem angegebenen Pin verbinden)\\
+servo-detach = 'detach' pin (= Servo an dem angegebenen Pin trennen)\\
+servo-degree = 'degree' pin degree (= Servo an dem angegebenen Pin )\\
+pin (Pin-Index am Arduino, Ganzzahl)\\
+degree (Drehwinkel des Servos, Ganzzahl)\\
+distance-command = 'distance' trigger-pin echo-pin\\
+echo-pin (Pin-Index am Arduino, Ganzzahl)\\
+trigger-pin (Pin-Index am Arduino, Ganzzahl)\\
+
+\subsubsection{Gyro}
+
+Beispiel: 'gyro'\\ (Fragt die Werte aus dem Gyro ab)\\
+Liefert einen String aus 6 Fliesskommazahlen, die durch Leerzeichen voneinander getrennt sind. Die ersten drei Zahlen repräsentieren die drei Koordinaten der Beschleunigung und die weiteren drei Zahlen sind die drei Koordinaten des Gyros.
+
+\subsubsection{Servo}
+
+Beispiel: 'servo degree 2 45'\\ (Setzt den Servo auf Pin 2 auf 45 Grad)\\
+Liefert keine Rückgabe
+
+\subsubsection{Distance (HC-SR04}
+Beispiel: 'distance 5 4'\\ (Fragt aktuellen Entfernungswert ab, verwendet Pin 5 für den Trigger und Pin 4 für das Echo)\\
+Gemessene Entfernung in cm.
