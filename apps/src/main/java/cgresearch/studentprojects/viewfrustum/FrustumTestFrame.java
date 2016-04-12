@@ -36,7 +36,7 @@ public class FrustumTestFrame extends CgApplication {
     
 
     getCgRootNode().setUseBlending(true);
-    getCgRootNode().setUseViewFrustumCulling(false);
+    getCgRootNode().setUseViewFrustumCulling(true);
     getCgRootNode().setShowFps(true);
 
     PlyFileReader reader = new PlyFileReader();

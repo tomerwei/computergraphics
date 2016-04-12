@@ -32,7 +32,7 @@ public class RenderContentOctree implements IRenderContent {
    */
   public RenderContentOctree(OctreeNode<?> rootNode) {
     this.rootNode = rootNode;
-    showOnlyNodesWithContent = false;
+    showOnlyNodesWithContent = true;
   }
 
   /**

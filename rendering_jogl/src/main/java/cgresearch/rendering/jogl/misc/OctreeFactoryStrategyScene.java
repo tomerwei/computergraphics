@@ -7,7 +7,6 @@ import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.tree.IOctreeFactoryStrategy;
 import cgresearch.graphics.datastructures.tree.OctreeNode;
 import cgresearch.graphics.scenegraph.CgNode;
-import cgresearch.graphics.scenegraph.ICgNodeContent;
 
 public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Integer> {
 
@@ -37,8 +36,8 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   public BoundingBox getBoundingBox() {
     Vector tmpLl, tmpUr, ll = null, ur = null;
     for (int i = 0; i < elements.size(); ++i) {
-      tmpLl = elements.get(i).getBoundingBox().getLowerLeft();
-      tmpUr = elements.get(i).getBoundingBox().getUpperRight();
+      tmpLl = new Vector(elements.get(i).getBoundingBox().getLowerLeft());
+      tmpUr = new Vector( elements.get(i).getBoundingBox().getUpperRight());
       if (ll == null) {
         ll = tmpLl;
       }
@@ -66,11 +65,8 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
 
   @Override
   public boolean elementFitsInNode(int elementIndex, OctreeNode<Integer> node) {
-    elements.get(elementIndex).getContent().updateRenderStructures();
     BoundingBox cur = elements.get(elementIndex).getBoundingBox();
-    Vector nodeUpperRight = node.getBoundingBox().getUpperRight();
-//    System.out.println("element = " + elements.get(elementIndex).getName());
-//    System.out.print("curBB = " + cur + "nodeBB = " + node.getBoundingBox());
+    Vector nodeUpperRight = new Vector(node.getLowerLeft().get(X) + node.getLength(), node.getLowerLeft().get(Y) + node.getLength(), node.getLowerLeft().get(Z) + node.getLength());
 
     if (cur.getUpperRight().get(X) < node.getLowerLeft().get(X)) {
       return false;
@@ -90,7 +86,6 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
     if (cur.getLowerLeft().get(Z) > nodeUpperRight.get(Z)) {
       return false;
     }
-    
     return true;
   }
 }
