@@ -10,10 +10,8 @@ import cgresearch.AppLauncher.UI;
 import cgresearch.JoglAppLauncher;
 import cgresearch.core.assets.ResourcesLocator;
 
-public class Test
-{
-	private void testRender(GroundPlan app)
-	{
+public class Test {
+	private void testRender(GroundPlan app) {
 		// app.renderAndDisplayPlan("4H-HORA Projekt1");
 		// app.renderAndDisplayPlan("4H-HORA MessTest");
 		// app.renderAndDisplayPlan("Grundriss_Haus_02");
@@ -22,32 +20,30 @@ public class Test
 
 	}
 
-	private void runAnalyzer(GroundPlan app)
-	{
+	private void runAnalyzer(GroundPlan app) {
 		app.analyzePlan("4H-HORA Projekt1");
 		// app.analyzePlan("TestRaum");
 		// app.analyzePlan("Grundriss_Haus_02");
 		// app.analyzePlan("distanzVerteilungTest1");
 		// app.analyzePlan("distanzVerteilungTest2");
+		// app.analyzePlan("lueckenTest");
 	}
 
-	private void analyzeAndRender(GroundPlan app)
-	{
+	private void analyzeAndRender(GroundPlan app) {
 		// app.analyzeAndRenderPlan("4H-HORA Projekt1");
 		app.analyzeAndRenderPlan("TestRaum");
 		// app.analyzeAndRenderPlan("Grundriss_Haus_02");
 	}
 
-	private void testSolidRendering(GroundPlan app)
-	{
-		app.analyzeAndRenderSolids("4H-HORA Projekt1");
+	private void testSolidRendering(GroundPlan app) {
+		// app.analyzeAndRenderSolids("4H-HORA Projekt1");
 		// app.analyzeAndRenderSolids("Grundriss_Haus_02");
 		// app.analyzeAndRenderSolids("TestRaum");
 		// app.analyzeAndRenderSolids("TestRaum2");
+		app.analyzeAndRenderSolids("lueckenTest");
 	}
 
-	private void runTest()
-	{
+	private void runTest() {
 
 		// System.out.println("Math.pow(3, 2) = " + Math.pow(3.0, 2.0));
 		// System.out.println("Math.pow(4, 2) = " + Math.pow(4.0, 2.0));
@@ -124,13 +120,11 @@ public class Test
 	 * ==============================================================
 	 */
 
-	public Test()
-	{
+	public Test() {
 
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		ResourcesLocator.getInstance().parseIniFile("resources.ini");
 		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
 		GroundPlan app = new GroundPlan();
