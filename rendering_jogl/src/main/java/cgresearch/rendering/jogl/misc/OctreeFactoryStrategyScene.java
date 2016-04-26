@@ -13,7 +13,7 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   /**
    * Elemente des Nodes
    */
-  private ArrayList<CgNode> leafNodes = new ArrayList<CgNode>();
+  private ArrayList<CgNode> elements = new ArrayList<CgNode>();
 
   /**
    * Constant fields.
@@ -26,18 +26,18 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   public static final int FBR = 5, FBL = 4, FTR = 6, FTL = 7, NBR = 1, NBL = 0, NTR = 2, NTL = 3;
 
   public OctreeFactoryStrategyScene(ArrayList<CgNode> objects) {
-    this.leafNodes = objects;
+    this.elements = objects;
   }
-
+  
   /**
    * gibt die BoundingBox der kompletten Szene zurueck
    */
   @Override
   public BoundingBox getBoundingBox() {
     Vector tmpLl, tmpUr, ll = null, ur = null;
-    for (int i = 0; i < leafNodes.size(); ++i) {
-      tmpLl = leafNodes.get(i).getBoundingBox().getLowerLeft();
-      tmpUr = leafNodes.get(i).getBoundingBox().getUpperRight();
+    for (int i = 0; i < elements.size(); ++i) {
+      tmpLl = new Vector(elements.get(i).getBoundingBox().getLowerLeft());
+      tmpUr = new Vector( elements.get(i).getBoundingBox().getUpperRight());
       if (ll == null) {
         ll = tmpLl;
       }
@@ -60,23 +60,32 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
 
   @Override
   public int getNumberOfElements() {
-    return leafNodes.size();
+    return elements.size();
   }
 
   @Override
   public boolean elementFitsInNode(int elementIndex, OctreeNode<Integer> node) {
-    BoundingBox cur = leafNodes.get(elementIndex).getBoundingBox();
-    Vector nodeUpperRight = node.getBoundingBox().getUpperRight();
+    BoundingBox cur = elements.get(elementIndex).getBoundingBox();
+    Vector nodeUpperRight = new Vector(node.getLowerLeft().get(X) + node.getLength(), node.getLowerLeft().get(Y) + node.getLength(), node.getLowerLeft().get(Z) + node.getLength());
 
-    if(cur.getLowerLeft().get(X) < node.getLowerLeft().get(X) ||
-       cur.getLowerLeft().get(Y) < node.getLowerLeft().get(Y) ||
-       cur.getLowerLeft().get(Z) < node.getLowerLeft().get(Z) ||
-       
-       cur.getUpperRight().get(X) > nodeUpperRight.get(X) ||
-       cur.getUpperRight().get(Y) > nodeUpperRight.get(Y) ||
-       cur.getUpperRight().get(Z) > nodeUpperRight.get(Z) ){
-         return false;
+    if (cur.getUpperRight().get(X) < node.getLowerLeft().get(X)) {
+      return false;
+    }
+    if (cur.getLowerLeft().get(X) > nodeUpperRight.get(X)) {
+      return false;
+    }
+    if (cur.getUpperRight().get(Y) < node.getLowerLeft().get(Y)) {
+      return false;
+    }
+    if (cur.getLowerLeft().get(Y) > nodeUpperRight.get(Y)) {
+      return false;
+    }
+    if (cur.getUpperRight().get(Z) < node.getLowerLeft().get(Z)) {
+      return false;
+    }
+    if (cur.getLowerLeft().get(Z) > nodeUpperRight.get(Z)) {
+      return false;
     }
     return true;
-  } 
+  }
 }

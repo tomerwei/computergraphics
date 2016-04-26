@@ -243,6 +243,7 @@ public class ViewFrustumCulling implements Observer {
       TriangleMeshTools.cleanup(obj);
     }
     octreeScene = createSceneOctree(objects);
+//    rootNode.addChild(new CgNode(octreeScene, "octreeScene")); // rootNode.addChild(new
     
      /* Debug
        Cuboid cube = new Cuboid(new
@@ -252,16 +253,16 @@ public class ViewFrustumCulling implements Observer {
       octreeScene.getLength(), octreeScene.getLength(),
       octreeScene.getLength()); // cube.getMaterial().setTransparency(0.3); //
       
-      rootNode.addChild(new CgNode(cube, "cube")); // rootNode.addChild(new
       CgNode(octreeScene, "os"));
-     */
+      */
+     
   }
 
   /**
    * generates an octree for the scene
    */
   public OctreeNode<Integer> createSceneOctree(ArrayList<CgNode> objects) {
-    return new OctreeFactory<Integer>(new OctreeFactoryStrategyScene(objects)).create(7, 3);
+    return new OctreeFactory<Integer>(new OctreeFactoryStrategyScene(objects)).create(7, 5);
   }
 
   /**
