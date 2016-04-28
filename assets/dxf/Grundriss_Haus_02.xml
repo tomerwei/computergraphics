@@ -2,19 +2,19 @@
  <groundplan name="Grundriss_Haus_02">
 	<config>
 		<wall_top_height>
-			30.0
+			240.0
 		</wall_top_height>
 		<window_bottom_height>
-			10.0
+			80.0
 		</window_bottom_height>
 		<window_top_height>
-			26.0
+			200.0
 		</window_top_height>
 		<door_top_height>
-			28.0
+			190.0
 		</door_top_height>
 		<groundplan_scaling_scalar>
-			0.01
+			2.675
 		</groundplan_scaling_scalar>
 		<angle_tolerance>
 			0.001
@@ -23,13 +23,13 @@
 			0.5
 		</distance_interval>
 		<lower_wallthickness_limit>
-			0.1
+			10.0
 		</lower_wallthickness_limit>
 		<upper_wallthickness_limit>
-			0.5
+			50.0
 		</upper_wallthickness_limit>
 		<wall_count_threshold>
-			4
+			6
 		</wall_count_threshold>
 	</config>
 	<layer name="Schnittkanten" type="WALL">

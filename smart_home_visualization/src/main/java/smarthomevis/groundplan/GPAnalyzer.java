@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import cgresearch.core.math.Vector;
 import smarthomevis.groundplan.config.GPConfig;
@@ -62,6 +64,11 @@ public class GPAnalyzer {
 			// die auf die multiLine projezierten Punkte behalten, um Luecken
 			// fuellen zu koennen
 			List<Vector> projectedPoints = new ArrayList<>();
+
+			// die einzelnen Solids dieser Multiline einsammeln, um die Luecken
+			// zu finden
+			List<GPSolid> multiLineSolids = new ArrayList<>();
+
 			// Abstandsvektor der parallelen Linien
 			Vector distanceVector = null;
 
@@ -111,28 +118,30 @@ public class GPAnalyzer {
 				}
 
 				data.addSolid(solid);
+				multiLineSolids.add(solid);
 			}
 
 			/*
 			 * Punkte auf der MultiLine analysieren und eventuelle Luecken
 			 * ergaenzen
 			 */
-			analyseProjectedPointsAndMultiLineForGaps(data, multiLine, projectedPoints, distanceVector);
+			analyseProjectedPointsAndMultiLineForGaps(data, multiLine, projectedPoints, distanceVector,
+					multiLineSolids);
 		}
 	}
 
 	private void analyseProjectedPointsAndMultiLineForGaps(GPDataType data, GPLine multiLine,
-			List<Vector> projectedPoints, Vector distanceVector) {
+			List<Vector> projectedPoints, Vector distanceVector, List<GPSolid> multiLineSolids) {
 		System.out.println("MULTILINE: " + multiLine.toString());
 
 		// TODO export value to xml config
 		double TOLERANCE = 0.05;
 
-		Map<Double, Vector> sortedProjectedPoints = sortProjectedPointsOnMultiline(projectedPoints, multiLine);
-
 		System.out.println("PROJECTED POINTS: " + projectedPoints.size());
 		for (Vector v : projectedPoints)
 			System.out.println(v.toString(2));
+
+		SortedMap<Double, Vector> sortedProjectedPoints = sortProjectedPointsOnMultiline(projectedPoints, multiLine);
 
 		// Start- und Endpunkte von MultiLine entfernen
 		Vector multiLineStart = multiLine.getStart();
@@ -184,6 +193,7 @@ public class GPAnalyzer {
 			GPLine gapProjection = new GPLine(gapLine.getName() + "_projection", startPoint.add(distanceVector),
 					endPoint.add(distanceVector));
 
+			
 			GPSolid solid = new GPSolid();
 			solid.addLine(gapLine);
 			solid.addLine(gapProjection);
@@ -192,63 +202,148 @@ public class GPAnalyzer {
 
 			data.addSolid(solid);
 		} else {
+
 			// TODO bei mehreren Luecken muss sortiert werden
+			List<Vector> sortedVectors = new ArrayList<>();
+			for (Entry<Double, Vector> e : sortedProjectedPoints.entrySet()) {
+				if (relevantVectors.contains(e.getValue()))
+					sortedVectors.add(e.getValue());
+			}
+
+			Map<Vector, Integer> indexedProjectedPoints = buildIndexedMapOfProjectedPoints(sortedProjectedPoints);
 			System.out.println("TODO - More than one gap!");
-			System.out.println("relevantVectors: " + relevantVectors.size());
+			System.out.println("==========\nrelevantVectors: " + relevantVectors.size());
+			for (int i = 0; i < sortedVectors.size(); i++) {
+
+				if (i <= sortedVectors.size() - 2) {
+
+					Vector v = sortedVectors.get(i);
+					int vIndex = indexedProjectedPoints.get(v);
+					String vectorString = v.toString(2);
+					System.out.println("CURRENT (INDEX=" + vIndex + ") => "
+							+ vectorString.substring(2, vectorString.length() - 2));
+
+					Vector w = sortedVectors.get(i + 1);
+					int wIndex = indexedProjectedPoints.get(w);
+					String wectorString = w.toString(2);
+					System.out.println(
+							"NEXT (INDEX=" + wIndex + ") => " + wectorString.substring(2, wectorString.length() - 2));
+
+					if (wIndex - vIndex == 1) {
+						System.out.println("## Neighbours found! ##");
+						boolean solidExists = false;
+						for (GPSolid s : multiLineSolids) {
+							GPLine l = null;
+
+							// TODO unchecked access... (NullPointerException)
+							if (s.getBasePair()[0].getName().substring(0, 4).equals("proj_"))
+								l = s.getBasePair()[0];
+							else if (s.getBasePair()[1].getName().substring(0, 4).equals("proj_"))
+								l = s.getBasePair()[1];
+
+							if (l != null) {
+								if ((v.equals(l.getStart()) || v.equals(l.getEnd()))
+										&& (w.equals(l.getStart()) || w.equals(l.getEnd()))) {
+									solidExists = true;
+
+									// Solid gefunden, keine weiteren Vergleiche
+									// notwendig
+									break;
+								}
+							}
+						}
+
+						if (!solidExists) {
+							// Luecke gefunden!
+
+							System.out.println("$$$ Filling GAP between " + v.toString(2) + " and " + w.toString(2));
+
+							GPLine gapLine = new GPLine(multiLine.getName() + "_gapLine", v, w);
+
+							GPLine gapProjection = new GPLine(gapLine.getName() + "_projection", v.add(distanceVector),
+									w.add(distanceVector));
+
+							GPSolid solid = new GPSolid();
+							solid.addLine(gapLine);
+							solid.addLine(gapProjection);
+
+							solid.setBasePair(new GPLine[] { gapLine, gapProjection });
+
+							data.addSolid(solid);
+						}
+
+					}
+				}
+			}
+
 		}
 	}
 
-	private Map<Double, Vector> sortProjectedPointsOnMultiline(List<Vector> projectedPoints, GPLine multiLine) {
-		Map<Double, Vector> pointsWithSkalar = new HashMap<>();
+	private SortedMap<Double, Vector> sortProjectedPointsOnMultiline(List<Vector> projectedPoints, GPLine multiLine) {
+
+		SortedMap<Double, Vector> pointsWithSkalar = new TreeMap<>();
 
 		Vector dirVecMultiLine = GPUtility.substractOtherVector(multiLine.getEnd(), multiLine.getStart());
-		
-		
 
 		for (Vector point : projectedPoints) {
 			Double lambda_x = null;
 			Double lambda_y = null;
-			
-			// alternativ ginge hier auch dirVecMultiLine.get(0) != 0 (Richtungsvektor ist p.D. 0 an der relevanten Ordinate)
-			if(multiLine.getStart().get(0) != multiLine.getEnd().get(0))
-			{
+
+			// alternativ ginge hier auch dirVecMultiLine.get(0) != 0
+			// (Richtungsvektor ist p.D. 0 an der relevanten Ordinate)
+			if (multiLine.getStart().get(0) != multiLine.getEnd().get(0)) {
 				lambda_x = calculateLambda(point.get(0), multiLine.getStart().get(0), dirVecMultiLine.get(0));
 			}
-			if(multiLine.getStart().get(1) != multiLine.getEnd().get(1))
-			{
-				lambda_y= calculateLambda(point.get(1), multiLine.getStart().get(1), dirVecMultiLine.get(1));
+			if (multiLine.getStart().get(1) != multiLine.getEnd().get(1)) {
+				lambda_y = calculateLambda(point.get(1), multiLine.getStart().get(1), dirVecMultiLine.get(1));
 			}
-			
-			if(lambda_x != null)
-			System.out.println("Lambda X: " + lambda_x);
-			if(lambda_y != null)
-			System.out.println("Lambda Y: "+lambda_y);
-			
-			if(lambda_x != null && lambda_y == null)
+
+			if (lambda_x != null)
+				System.out.println("Lambda X: " + lambda_x);
+			if (lambda_y != null)
+				System.out.println("Lambda Y: " + lambda_y);
+
+			if (lambda_x != null && lambda_y == null)
 				pointsWithSkalar.put(lambda_x, point);
 			else if (lambda_x == null && lambda_y != null)
 				pointsWithSkalar.put(lambda_y, point);
-			else if (lambda_x != null && lambda_y !=null)
-			{
-				if(lambda_x == lambda_y)
+			else if (lambda_x != null && lambda_y != null) {
+				if (lambda_x == lambda_y)
 					pointsWithSkalar.put(lambda_x, point);
-				else
-					{
+				else {
 					System.out.println("Skalare Ergebnisse sind nicht eindeutig; Vector liegt nicht auf Multiline");
-					}
+				}
 			}
+		}
+
+		System.out.println("SKALARS: ");
+		for (Entry<Double, Vector> e : pointsWithSkalar.entrySet()) {
+			String vectorString = e.getValue().toString(2);
+			System.out.println(vectorString.substring(2, vectorString.length() - 2) + ": " + e.getKey());
 		}
 
 		return pointsWithSkalar;
 	}
 
+	private Map<Vector, Integer> buildIndexedMapOfProjectedPoints(SortedMap<Double, Vector> pointsWithSkalar) {
+		Map<Vector, Integer> indexedProjectedPoints = new HashMap<>();
+
+		int i = 0;
+		for (Entry<Double, Vector> e : pointsWithSkalar.entrySet()) {
+			indexedProjectedPoints.put(e.getValue(), i);
+			i++;
+		}
+
+		return indexedProjectedPoints;
+	}
+
 	private double calculateLambda(double p, double s, double r) {
 		System.out.println("(" + p + " - " + s + ") / " + r + ")");
-		
-		BigDecimal bd_P = BigDecimal.valueOf(p); 
-		BigDecimal bd_S = BigDecimal.valueOf(s); 
+
+		BigDecimal bd_P = BigDecimal.valueOf(p);
+		BigDecimal bd_S = BigDecimal.valueOf(s);
 		BigDecimal bd_R = BigDecimal.valueOf(r);
-		
+
 		BigDecimal bd_PminusS = bd_P.subtract(bd_S);
 		return bd_PminusS.divide(bd_R, 5, RoundingMode.HALF_DOWN).doubleValue();
 	}

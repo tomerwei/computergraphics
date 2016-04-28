@@ -39,8 +39,8 @@ public class Test {
 		// app.analyzeAndRenderSolids("4H-HORA Projekt1");
 		// app.analyzeAndRenderSolids("Grundriss_Haus_02");
 		// app.analyzeAndRenderSolids("TestRaum");
-		// app.analyzeAndRenderSolids("TestRaum2");
-		app.analyzeAndRenderSolids("lueckenTest");
+		app.analyzeAndRenderSolids("TestRaum2");
+		// app.analyzeAndRenderSolids("lueckenTest");
 	}
 
 	private void runTest() {

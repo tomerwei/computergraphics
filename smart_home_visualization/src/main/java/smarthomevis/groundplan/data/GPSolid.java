@@ -58,7 +58,7 @@ public class GPSolid implements Serializable
 	{
 		return this.linesOfSolid;
 	}
-
+	
 	public String toString()
 	{
 		StringBuffer buffy = new StringBuffer();
