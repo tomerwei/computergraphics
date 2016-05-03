@@ -47,7 +47,7 @@ public class TensorProductSurfaceFrame extends CgApplication {
       }
     }
 
-    new ControlPointInteraction(surface);
+    new TensorProductSurfaceControlPointInteraction(surface);
 
     createMesh4Surface();
     mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);

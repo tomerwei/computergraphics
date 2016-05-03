@@ -94,7 +94,7 @@ public abstract class ICurve extends ICgNodeContent {
    *          Control point.
    */
   public void setControlPoint(int index, Vector p) {
-    controlPoints[index] = p;
+    controlPoints[index].copy(p);
   }
 
   @Override
@@ -102,7 +102,8 @@ public abstract class ICurve extends ICgNodeContent {
     BoundingBox bbox = new BoundingBox();
     int RESOLUTION = 20;
     for (int i = 0; i <= RESOLUTION; i++) {
-      double t = (double) i / (double) RESOLUTION * (paramMax - paramMin) + paramMin;
+      double t =
+          (double) i / (double) RESOLUTION * (paramMax - paramMin) + paramMin;
       bbox.add(eval(t));
     }
     return bbox;
@@ -144,5 +145,12 @@ public abstract class ICurve extends ICgNodeContent {
   @Override
   public CurveMaterial getMaterial() {
     return (CurveMaterial) (super.getMaterial());
+  }
+
+  @Override
+  public void updateRenderStructures() {
+    super.updateRenderStructures();
+    setChanged();
+    notifyObservers();
   }
 }

@@ -16,28 +16,31 @@ import cgresearch.core.math.VectorFactory;
  */
 public class BezierCurve extends ICurve {
 
-	private final IBasisFunction basisFunction;
+  private final IBasisFunction basisFunction;
 
-	/**
-	 * Constructor.
-	 */
-	public BezierCurve(int degree) {
-		controlPoints = new Vector[degree + 1];
-		basisFunction = new BasisFunctionBezier(degree);
-	}
+  /**
+   * Constructor.
+   */
+  public BezierCurve(int degree) {
+    controlPoints = new Vector[degree + 1];
+    for (int i = 0; i < controlPoints.length; i++) {
+      controlPoints[i] = VectorFactory.createVector3(0, 0, 0);
+    }
+    basisFunction = new BasisFunctionBezier(degree);
+  }
 
-	/*
-	 * (nicht-Javadoc)
-	 * 
-	 * @see edu.haw.cg.datastructures.curves.ICurve#eval(double)
-	 */
-	@Override
-	public Vector eval(double t) {
-		Vector p = VectorFactory.createVector3(0, 0, 0);
-		for (int i = 0; i <= getDegree(); i++) {
-			p = p.add(controlPoints[i].multiply(basisFunction.eval(i, t)));
-		}
-		return p;
-	}
+  /*
+   * (nicht-Javadoc)
+   * 
+   * @see edu.haw.cg.datastructures.curves.ICurve#eval(double)
+   */
+  @Override
+  public Vector eval(double t) {
+    Vector p = VectorFactory.createVector3(0, 0, 0);
+    for (int i = 0; i <= getDegree(); i++) {
+      p = p.add(controlPoints[i].multiply(basisFunction.eval(i, t)));
+    }
+    return p;
+  }
 
 }

@@ -28,6 +28,10 @@ import cgresearch.ui.IApplicationControllerGui;
  */
 public class CurveFrame extends CgApplication {
 
+  public static enum CurveType {
+    MONOM, HERMITE, LAGRANGE, BEZIER
+  };
+
   private final CurveFrameGui gui;
 
   /**
@@ -35,76 +39,68 @@ public class CurveFrame extends CgApplication {
    */
   public CurveFrame() {
     gui = new CurveFrameGui();
-    gui.registerCurve(addPolynomialCurve(), "Monom-Curve");
-    gui.registerCurve(addHermiteCurve(), "Hermite-Curve");
-    gui.registerCurve(addLagrangeCurve(), "Lagrange-Curve");
-    gui.registerCurve(addBezierCurve(), "Bezier-Curve");
+
+    // Generate curve
+    ICurve curve = generateCurve(CurveType.BEZIER);
+
+    // UI
+    gui.registerCurve(curve, "Curve");
+
+    // Move control points
+    new CurveControlPointInteraction(curve);
+
+    // Scene graph node
+    curve.getMaterial().setShowCurrentPoint(true);
+    curve.getMaterial().setShowControlPolyon(true);
+    CgNode curveNode = new CgNode(curve, "Curve");
+    curveNode.setVisible(true);
+    getCgRootNode().addChild(curveNode);
+
     getCgRootNode().addChild(new CoordinateSystem());
   }
 
   /**
      * 
      */
-  private ICurve addBezierCurve() {
-    BezierCurve curve = new BezierCurve(3);
-    curve.setControlPoint(0, VectorFactory.createVector3(-0.5, -0.5, 0.5));
-    curve.setControlPoint(1, VectorFactory.createVector3(-0.25, 0.5, -0.5));
-    curve.setControlPoint(2, VectorFactory.createVector3(0.25, -0.5, 0.5));
-    curve.setControlPoint(3, VectorFactory.createVector3(0.5, 0.5, 0.5));
-    curve.getMaterial().setShowCurrentPoint(true);
-    curve.getMaterial().setShowControlPolyon(true);
-    CgNode curveNode = new CgNode(curve, "Bezier Curve");
-    curveNode.setVisible(true);
-    getCgRootNode().addChild(curveNode);
-    return curve;
-  }
+  private ICurve generateCurve(CurveType type) {
+    switch (type) {
+      case BEZIER:
+        BezierCurve bezier = new BezierCurve(3);
+        bezier.setControlPoint(0, VectorFactory.createVector3(-0.5, -0.5, 0.5));
+        bezier.setControlPoint(1,
+            VectorFactory.createVector3(-0.25, 0.5, -0.5));
+        bezier.setControlPoint(2, VectorFactory.createVector3(0.25, -0.5, 0.5));
+        bezier.setControlPoint(3, VectorFactory.createVector3(0.5, 0.5, 0.5));
+        return bezier;
+      case LAGRANGE:
+        LagrangeCurve lagrange = new LagrangeCurve(3);
+        lagrange.setControlPoint(0,
+            VectorFactory.createVector3(-0.5, -0.5, 0.5));
+        lagrange.setControlPoint(1,
+            VectorFactory.createVector3(-0.25, 0.5, -0.5));
+        lagrange.setControlPoint(2,
+            VectorFactory.createVector3(0.25, -0.5, 0.5));
+        lagrange.setControlPoint(3, VectorFactory.createVector3(0.5, 0.5, 0.5));
+        return lagrange;
+      case HERMITE:
+        ICurve curveHermite =
+            new HermiteCurve(VectorFactory.createVector3(-0.5, -0.5, 0),
+                VectorFactory.createVector3(-0.5, 0.5, 0),
+                VectorFactory.createVector3(0.5, -0.5, 0),
+                VectorFactory.createVector3(0.5, 0.5, 0));
 
-  /**
-   * Add Lagrange curve to the application
-   */
-  private ICurve addLagrangeCurve() {
-    LagrangeCurve curve = new LagrangeCurve(3);
-    curve.setControlPoint(0, VectorFactory.createVector3(-0.5, -0.5, 0.5));
-    curve.setControlPoint(1, VectorFactory.createVector3(-0.25, 0.5, -0.5));
-    curve.setControlPoint(2, VectorFactory.createVector3(0.25, -0.5, 0.5));
-    curve.setControlPoint(3, VectorFactory.createVector3(0.5, 0.5, 0.5));
-    curve.getMaterial().setShowCurrentPoint(true);
-    curve.getMaterial().setShowControlPolyon(true);
-    CgNode curveNode = new CgNode(curve, "Lagrange Curve");
-    curveNode.setVisible(false);
-    getCgRootNode().addChild(curveNode);
-    return curve;
-  }
-
-  /**
-   * Add hermite curve to the application
-   */
-  private ICurve addHermiteCurve() {
-    ICurve curveHermite =
-        new HermiteCurve(VectorFactory.createVector3(-0.5, -0.5, 0), VectorFactory.createVector3(-0.5, 0.5, 0),
-            VectorFactory.createVector3(0.5, -0.5, 0), VectorFactory.createVector3(0.5, 0.5, 0));
-    curveHermite.getMaterial().setShowCurrentPoint(true);
-    curveHermite.getMaterial().setShowControlPolyon(true);
-    CgNode curveNode = new CgNode(curveHermite, "Hermite Curve");
-    curveNode.setVisible(false);
-    getCgRootNode().addChild(curveNode);
-    return curveHermite;
-  }
-
-  /**
-   * Add polynomial curve to the application.
-   */
-  private ICurve addPolynomialCurve() {
-    MonomialCurve curvePolynomial = new MonomialCurve(2);
-    curvePolynomial.setControlPoint(0, VectorFactory.createVector3(-0.5, -0.5, 0.5));
-    curvePolynomial.setControlPoint(1, VectorFactory.createVector3(0, 0.5, 0));
-    curvePolynomial.setControlPoint(2, VectorFactory.createVector3(0.5, -0.5, 0.5));
-    curvePolynomial.getMaterial().setShowCurrentPoint(true);
-    curvePolynomial.getMaterial().setShowControlPolyon(true);
-    CgNode curveNode = new CgNode(curvePolynomial, "Polynomial (Monom) Curve");
-    curveNode.setVisible(false);
-    getCgRootNode().addChild(curveNode);
-    return curvePolynomial;
+        return curveHermite;
+      case MONOM:
+        MonomialCurve monomial = new MonomialCurve(2);
+        monomial.setControlPoint(0,
+            VectorFactory.createVector3(-0.5, -0.5, 0.5));
+        monomial.setControlPoint(1, VectorFactory.createVector3(0, 0.5, 0));
+        monomial.setControlPoint(2,
+            VectorFactory.createVector3(0.5, -0.5, 0.5));
+        return monomial;
+      default:
+        return null;
+    }
   }
 
   /**
