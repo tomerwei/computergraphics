@@ -37,7 +37,7 @@ Informationen zu den existierenden Importern für Punktwolken finden sich im Absc
 
 \subsection{Kurven}
 
-Es sind verschiedene Kurven implementiert, die als gemeinsames Interface \verb+ICurve+ verwenden. Für jede Kurve können dabei Kontrollpunkte definiert und ausgelesen werden und der Funktionswert und die Ableitung für beliebige Parameterwerte ausgewertet werden. Aktuell sind folgende Kurventypen implementiert:
+Es sind verschiedene Kurven implementiert, alle verwenden die gemeinsame Klasse \verb+Curve+. Die Basisfunktionen werden als Implementierungen des Interfaces \verb+IBasisFunctions+ injiziert. Für jede Kurve können dabei Kontrollpunkte definiert und ausgelesen werden und der Funktionswert und die Ableitung für beliebige Parameterwerte ausgewertet werden. Aktuell sind folgende Kurventypen implementiert:
 \begin{itemize}
 	\item Monom
 	\item Lagrange
