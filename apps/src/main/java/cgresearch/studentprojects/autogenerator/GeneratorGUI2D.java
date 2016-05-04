@@ -33,7 +33,8 @@ import cgresearch.core.math.Matrix;
 import cgresearch.core.math.PrincipalComponentAnalysis;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
-import cgresearch.graphics.datastructures.curves.BezierCurve;
+import cgresearch.graphics.datastructures.curves.BasisFunctionBezier;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
@@ -653,7 +654,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		//
 		// i = 1;
 
-		for (BezierCurve curve : auto.getFront().getCurves()) {
+		for (Curve curve : auto.getFront().getCurves()) {
 			CgNode node = new CgNode(curve, "front" + i);
 
 			father.addChild(node);
@@ -662,7 +663,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		i = 1;
 
-		for (BezierCurve curve : auto.getGast().getCurves()) {
+		for (Curve curve : auto.getGast().getCurves()) {
 			CgNode node = new CgNode(curve, "gast" + i);
 
 			father.addChild(node);
@@ -671,7 +672,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		i = 1;
 
-		for (BezierCurve curve : auto.getHeck().getCurves()) {
+		for (Curve curve : auto.getHeck().getCurves()) {
 			CgNode node = new CgNode(curve, "heck" + i);
 
 			father.addChild(node);
@@ -680,7 +681,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 		i = 1;
 
-		for (BezierCurve curve : auto.getChassis().getCurves()) {
+		for (Curve curve : auto.getChassis().getCurves()) {
 			CgNode node = new CgNode(curve, "chassis" + i);
 
 			father.addChild(node);
@@ -1111,7 +1112,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		CgNode father = new CgNode(null, "auto1");
 
 		int i = 1;
-		for (BezierCurve c : car.getCurves()) {
+		for (Curve c : car.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve " + i);
 			father.addChild(node);
 			i++;
@@ -1122,7 +1123,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		CgNode father2 = new CgNode(null, "auto2");
 
 		int i2 = 1;
-		for (BezierCurve c : carnew.getCurves()) {
+		for (Curve c : carnew.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve2 " + i2);
 
 			father2.addChild(node);
@@ -1246,7 +1247,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 		CgNode father2 = new CgNode(null, "auto2");
 
 		int i2 = 1;
-		for (BezierCurve c : newcar.getCurves()) {
+		for (Curve c : newcar.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve2 " + i2);
 
 			father2.addChild(node);

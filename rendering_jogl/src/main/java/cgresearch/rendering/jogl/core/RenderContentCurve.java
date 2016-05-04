@@ -16,7 +16,7 @@ import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
-import cgresearch.graphics.datastructures.curves.ICurve;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -60,9 +60,9 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
     CgNode curveNode = new CgNode(curveMesh, "curve");
     cgNode.addChild(curveNode);
 
-    ICurve curve = null;
-    if (cgNode.getContent() instanceof ICurve) {
-      curve = (ICurve) cgNode.getContent();
+    Curve curve = null;
+    if (cgNode.getContent() instanceof Curve) {
+      curve = (Curve) cgNode.getContent();
     } else {
       return;
     }
@@ -99,8 +99,8 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
     return transformationNode;
   }
 
-  private ICurve getCurve() {
-    return (ICurve) cgNode.getContent();
+  private Curve getCurve() {
+    return (Curve) cgNode.getContent();
   }
 
   /**

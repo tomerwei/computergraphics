@@ -25,7 +25,8 @@ import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
-import cgresearch.graphics.datastructures.curves.BezierCurve;
+import cgresearch.graphics.datastructures.curves.BasisFunctionBezier;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -819,7 +820,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		CgNode father = new CgNode(null, "butterfly1");
 
 		int i = 1;
-		for (BezierCurve c : car.getCurves()) {
+		for (Curve c : car.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve " + i);
 			father.addChild(node);
 			i++;
@@ -830,7 +831,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		CgNode father2 = new CgNode(null, "butterfly2");
 
 		int i2 = 1;
-		for (BezierCurve c : carnew.getCurves()) {
+		for (Curve c : carnew.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve2 " + i2);
 
 			father2.addChild(node);
@@ -915,7 +916,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		// i++;
 		// }
 
-		for (BezierCurve bc : butterfly.getBody().getCurves()) {
+		for (Curve bc : butterfly.getBody().getCurves()) {
 			CgNode node = new CgNode(bc, "body" + i);
 			father.addChild(node);
 			i++;
@@ -929,7 +930,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		// i++;
 		// }
 
-		for (BezierCurve bc : butterfly.getLeftTopWing().getCurves()) {
+		for (Curve bc : butterfly.getLeftTopWing().getCurves()) {
 			CgNode node = new CgNode(bc, "leftTop" + i);
 			father.addChild(node);
 			i++;
@@ -943,7 +944,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		// i++;
 		// }
 
-		for (BezierCurve bc : butterfly.getLeftBottomWing().getCurves()) {
+		for (Curve bc : butterfly.getLeftBottomWing().getCurves()) {
 			CgNode node = new CgNode(bc, "leftBottom" + i);
 			father.addChild(node);
 			i++;
@@ -957,7 +958,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		// i++;
 		// }
 
-		for (BezierCurve bc : butterfly.getRightTopWing().getCurves()) {
+		for (Curve bc : butterfly.getRightTopWing().getCurves()) {
 			CgNode node = new CgNode(bc, "rightTop" + i);
 			father.addChild(node);
 			i++;
@@ -971,7 +972,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		// i++;
 		// }
 
-		for (BezierCurve bc : butterfly.getRightBottomWing().getCurves()) {
+		for (Curve bc : butterfly.getRightBottomWing().getCurves()) {
 			CgNode node = new CgNode(bc, "rightBottom" + i);
 			father.addChild(node);
 			i++;

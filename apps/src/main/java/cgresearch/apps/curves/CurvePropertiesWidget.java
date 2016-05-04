@@ -15,7 +15,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cgresearch.graphics.datastructures.curves.ICurve;
+import cgresearch.graphics.datastructures.curves.Curve;
 
 /**
  * Widget with properties for the user interface.
@@ -49,12 +49,12 @@ public class CurvePropertiesWidget extends JPanel implements ChangeListener,
 	/**
 	 * Reference to the curve
 	 */
-	private final ICurve curve;
+	private final Curve curve;
 
 	/**
 	 * Constructor.
 	 */
-	public CurvePropertiesWidget(ICurve curve, String caption) {
+	public CurvePropertiesWidget(Curve curve, String caption) {
 		this.curve = curve;
 		curve.addObserver(this);
 

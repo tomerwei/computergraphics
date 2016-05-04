@@ -5,7 +5,7 @@
  */
 package cgresearch.graphics.scenegraph.icons;
 
-import cgresearch.graphics.datastructures.curves.ICurve;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.IconLoader;
 
@@ -33,7 +33,7 @@ public class IconTypeCurve extends IIconTypeStrategy {
      */
     @Override
     public boolean fits(CgNode node) {
-        return node.getContent() instanceof ICurve;
+        return node.getContent() instanceof Curve;
     }
 
 }

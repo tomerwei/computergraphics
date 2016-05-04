@@ -5,7 +5,7 @@
  */
 package cgresearch.rendering.jogl.core;
 
-import cgresearch.graphics.datastructures.curves.ICurve;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.rendering.core.IRenderObjectsFactory;
 
@@ -39,6 +39,6 @@ public class JoglRenderObjectFactoryCurve implements
 	 */
 	@Override
 	public Class<?> getType() {
-		return ICurve.class;
+		return Curve.class;
 	}
 }

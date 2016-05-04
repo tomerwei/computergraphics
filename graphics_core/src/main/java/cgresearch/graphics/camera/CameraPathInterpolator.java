@@ -2,7 +2,8 @@ package cgresearch.graphics.camera;
 
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
-import cgresearch.graphics.datastructures.curves.HermiteCurve;
+import cgresearch.graphics.datastructures.curves.BasisFunctionHermite;
+import cgresearch.graphics.datastructures.curves.Curve;
 
 /**
  * The CameraPathController allows to define a interpolated patn thru the scene.
@@ -40,7 +41,8 @@ public class CameraPathInterpolator {
     }
     int i = getKeyPointLowerIndex(t);
     float tLocal = getLocalParameter(t, i);
-    HermiteCurve hermite = new HermiteCurve(cameraPath.getKeyPoint(i).getPos(), getPosGradient(i),
+    Curve hermite = new Curve(new BasisFunctionHermite(),
+        cameraPath.getKeyPoint(i).getPos(), getPosGradient(i),
         getPosGradient(i + 1), cameraPath.getKeyPoint(i + 1).getPos());
     return hermite.eval(tLocal);
   }
@@ -51,12 +53,15 @@ public class CameraPathInterpolator {
   private Vector getPosGradient(int i) {
     Vector gradient = null;
     if (i > 0 && (i + 1 < cameraPath.getNumberOfKeyPoints())) {
-      gradient = cameraPath.getKeyPoint(i + 1).getPos().subtract(cameraPath.getKeyPoint(i - 1).getPos());
+      gradient = cameraPath.getKeyPoint(i + 1).getPos()
+          .subtract(cameraPath.getKeyPoint(i - 1).getPos());
     } else if (i == 0) {
-      gradient = cameraPath.getKeyPoint(1).getPos().subtract(cameraPath.getKeyPoint(0).getPos());
+      gradient = cameraPath.getKeyPoint(1).getPos()
+          .subtract(cameraPath.getKeyPoint(0).getPos());
     } else {
-      gradient = cameraPath.getKeyPoint(cameraPath.getNumberOfKeyPoints() - 1).getPos()
-          .subtract(cameraPath.getKeyPoint(cameraPath.getNumberOfKeyPoints() - 2).getPos());
+      gradient = cameraPath.getKeyPoint(cameraPath.getNumberOfKeyPoints() - 1)
+          .getPos().subtract(cameraPath
+              .getKeyPoint(cameraPath.getNumberOfKeyPoints() - 2).getPos());
     }
     return gradient;
   }
@@ -67,12 +72,15 @@ public class CameraPathInterpolator {
   private Vector getRefGradient(int i) {
     Vector gradient = null;
     if (i > 0 && (i + 1 < cameraPath.getNumberOfKeyPoints())) {
-      gradient = cameraPath.getKeyPoint(i + 1).getRef().subtract(cameraPath.getKeyPoint(i - 1).getRef());
+      gradient = cameraPath.getKeyPoint(i + 1).getRef()
+          .subtract(cameraPath.getKeyPoint(i - 1).getRef());
     } else if (i == 0) {
-      gradient = cameraPath.getKeyPoint(1).getRef().subtract(cameraPath.getKeyPoint(0).getRef());
+      gradient = cameraPath.getKeyPoint(1).getRef()
+          .subtract(cameraPath.getKeyPoint(0).getRef());
     } else {
-      gradient = cameraPath.getKeyPoint(cameraPath.getNumberOfKeyPoints() - 1).getRef()
-          .subtract(cameraPath.getKeyPoint(cameraPath.getNumberOfKeyPoints() - 2).getRef());
+      gradient = cameraPath.getKeyPoint(cameraPath.getNumberOfKeyPoints() - 1)
+          .getRef().subtract(cameraPath
+              .getKeyPoint(cameraPath.getNumberOfKeyPoints() - 2).getRef());
     }
     double length = gradient.getNorm();
     if (length > 1e-5) {
@@ -122,7 +130,8 @@ public class CameraPathInterpolator {
     }
     int i = getKeyPointLowerIndex(t);
     float tLocal = getLocalParameter(t, i);
-    HermiteCurve hermite = new HermiteCurve(cameraPath.getKeyPoint(i).getRef(), getRefGradient(i),
+    Curve hermite = new Curve(new BasisFunctionHermite(),
+        cameraPath.getKeyPoint(i).getRef(), getRefGradient(i),
         getRefGradient(i + 1), cameraPath.getKeyPoint(i + 1).getRef());
     return hermite.eval(tLocal);
   }

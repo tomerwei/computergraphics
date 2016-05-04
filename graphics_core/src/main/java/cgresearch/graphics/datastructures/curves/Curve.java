@@ -7,6 +7,7 @@ package cgresearch.graphics.datastructures.curves;
 
 import cgresearch.core.math.BoundingBox;
 import cgresearch.core.math.Vector;
+import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.material.CurveMaterial;
 import cgresearch.graphics.scenegraph.ICgNodeContent;
 
@@ -16,7 +17,7 @@ import cgresearch.graphics.scenegraph.ICgNodeContent;
  * @author Philipp Jenke
  * 
  */
-public abstract class ICurve extends ICgNodeContent {
+public class Curve extends ICgNodeContent {
 
   /**
    * Array of control points
@@ -38,8 +39,21 @@ public abstract class ICurve extends ICgNodeContent {
    */
   private double parameter = 0;
 
-  public ICurve() {
+  private IBasisFunction basisFunctions;
+
+  public Curve(IBasisFunction basisFunctions, Vector... controlPoints) {
     material = new CurveMaterial();
+    this.basisFunctions = basisFunctions;
+    this.controlPoints = controlPoints;
+  }
+
+  public Curve(BasisFunctionBezier basisFunctions, int degree) {
+    material = new CurveMaterial();
+    this.basisFunctions = basisFunctions;
+    controlPoints = new Vector[degree];
+    for (int i = 0; i <= degree; i++) {
+      controlPoints[i] = VectorFactory.createVector3(0, 0, 0);
+    }
   }
 
   /**
@@ -50,7 +64,14 @@ public abstract class ICurve extends ICgNodeContent {
    * 
    * @return Point on the curve at the specified parameter.
    */
-  public abstract Vector eval(double t);
+  public Vector eval(double t) {
+    Vector p = VectorFactory.createVector3(0, 0, 0);
+    for (int i = 0; i <= getDegree(); i++) {
+      p = p.add(
+          controlPoints[i].multiply(basisFunctions.eval(i, t, getDegree())));
+    }
+    return p;
+  }
 
   /**
    * Evaluate the derivative of the curve at the parameter t.
@@ -152,5 +173,10 @@ public abstract class ICurve extends ICgNodeContent {
     super.updateRenderStructures();
     setChanged();
     notifyObservers();
+  }
+
+  public void setBasisFunctions(IBasisFunction basisFunctions) {
+    this.basisFunctions = basisFunctions;
+    updateRenderStructures();
   }
 }

@@ -19,7 +19,8 @@ import javax.swing.event.ChangeListener;
 
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.Vector;
-import cgresearch.graphics.datastructures.curves.BezierCurve;
+import cgresearch.graphics.datastructures.curves.BasisFunctionBezier;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
@@ -446,7 +447,7 @@ public class GeneratorGUI2DNew extends IApplicationControllerGui implements Acti
 		CgNode father2 = new CgNode(null, "auto");
 
 		int i2 = 1;
-		for (BezierCurve c : carnew.getCurves()) {
+		for (Curve c : carnew.getCurves()) {
 			CgNode node = new CgNode(c, "BezierCurve " + i2);
 
 			father2.addChild(node);

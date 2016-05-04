@@ -15,7 +15,8 @@ import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
-import cgresearch.graphics.datastructures.curves.MonomialCurve;
+import cgresearch.graphics.datastructures.curves.BasisFunctionMonomial;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;
@@ -39,16 +40,15 @@ public class MonomInterpolation extends CgApplication {
     interpolationPoints.add(VectorFactory.createVector3(1, 1, -0.5));
     interpolationPoints.add(VectorFactory.createVector3(0.5, 1, 1));
     interpolationPoints.add(VectorFactory.createVector3(-0.5, -0.5, 0.5));
-    MonomialCurve curve = computeInterpolatedCurve(interpolationPoints);
-    getCgRootNode().addChild(new CgNode(curve, "Interpolated monom curve"));
+    CurveModel curveModel =
+        new CurveModel(computeInterpolatedCurve(interpolationPoints));
+    getCgRootNode().addChild(new CgNode(curveModel.getCurve(), "Interpolated monom curve"));
 
-    gui = new CurveFrameGui();
-    gui.registerCurve(curve, "Monom-Curve");
+    gui = new CurveFrameGui(curveModel);
 
     for (int i = 0; i < interpolationPoints.size(); i++) {
-      ITriangleMesh sphere =
-          TriangleMeshFactory
-              .createSphere(interpolationPoints.get(i), 0.05, 20);
+      ITriangleMesh sphere = TriangleMeshFactory
+          .createSphere(interpolationPoints.get(i), 0.05, 20);
       sphere.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
       sphere.getMaterial().setReflectionDiffuse(Material.PALETTE0_COLOR3);
       CgNode node = new CgNode(sphere, "Interpolation point " + i);
@@ -58,17 +58,16 @@ public class MonomInterpolation extends CgApplication {
     getCgRootNode().addChild(new CoordinateSystem());
   }
 
-  private MonomialCurve computeInterpolatedCurve(
-      List<Vector> interpolationPoints) {
-    MonomialCurve monomialCurve = new MonomialCurve(2);
+  private Curve computeInterpolatedCurve(List<Vector> interpolationPoints) {
+    Curve monomialCurve = new Curve(new BasisFunctionMonomial(),
+        VectorFactory.createVector3(0, 0, 0),
+        VectorFactory.createVector3(0, 0, 0));
     Vector c0 = interpolationPoints.get(0);
-    Vector c1 =
-        interpolationPoints.get(0).multiply(-3)
-            .add(interpolationPoints.get(1).multiply(4))
-            .subtract(interpolationPoints.get(2));
-    Vector c2 =
-        interpolationPoints.get(2).subtract(interpolationPoints.get(0))
-            .subtract(c1);
+    Vector c1 = interpolationPoints.get(0).multiply(-3)
+        .add(interpolationPoints.get(1).multiply(4))
+        .subtract(interpolationPoints.get(2));
+    Vector c2 = interpolationPoints.get(2).subtract(interpolationPoints.get(0))
+        .subtract(c1);
     monomialCurve.setControlPoint(0, c0);
     monomialCurve.setControlPoint(1, c1);
     monomialCurve.setControlPoint(2, c2);

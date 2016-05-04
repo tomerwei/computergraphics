@@ -5,306 +5,290 @@ import java.util.List;
 
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
-import cgresearch.graphics.datastructures.curves.BezierCurve;
+import cgresearch.graphics.datastructures.curves.BasisFunctionBezier;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 
 public class Front2D {
 
-	private final int carVektor = 28;
-	
-	private Vector center;
+  private final int carVektor = 28;
 
-	private Vector A;
-	private Vector B;
-	private Vector C;
-	private Vector D;
+  private Vector center;
 
-	private Line3D AB;
-	private Line3D BC;
-	private Line3D CD;
-	private Line3D DA;
+  private Vector A;
+  private Vector B;
+  private Vector C;
+  private Vector D;
 
-	private BezierCurve left;
-	private BezierCurve top;
-	private BezierCurve right;
-	private BezierCurve bottom;
+  private Line3D AB;
+  private Line3D BC;
+  private Line3D CD;
+  private Line3D DA;
 
-	private double hoehe;
-	private double laenge;
+  private Curve left;
+  private Curve top;
+  private Curve right;
+  private Curve bottom;
 
-	private int degree;
+  private double hoehe;
+  private double laenge;
 
-	private Line3D[] lines = new Line3D[4];
-	private List<BezierCurve> curves = new ArrayList<BezierCurve>();
+  private int degree;
 
-	public Front2D(Vector center, double hoehe, double laenge, int degree,
-			int fronth, int frontv) {
-		setCenter(center);
-		setA(center, hoehe, laenge);
-		setB(center, hoehe, laenge);
-		setC(center, hoehe, laenge);
-		setD(center, hoehe, laenge);
-		setAB();
-		setBC();
-		setCD();
-		setDA();
-		setHoehe(hoehe);
-		setLaenge(laenge);
-		setLines();
-		setDegree(degree);
-		setLeft(fronth, frontv, A, B);
-		setTop(fronth, frontv, B, C);
+  private Line3D[] lines = new Line3D[4];
+  private List<Curve> curves = new ArrayList<Curve>();
 
-		// setRight(C, D);
-		// setBottom(D, A);
-		setCurves(left, top);
-	}
+  public Front2D(Vector center, double hoehe, double laenge, int degree,
+      int fronth, int frontv) {
+    setCenter(center);
+    setA(center, hoehe, laenge);
+    setB(center, hoehe, laenge);
+    setC(center, hoehe, laenge);
+    setD(center, hoehe, laenge);
+    setAB();
+    setBC();
+    setCD();
+    setDA();
+    setHoehe(hoehe);
+    setLaenge(laenge);
+    setLines();
+    setDegree(degree);
+    setLeft(fronth, frontv, A, B);
+    setTop(fronth, frontv, B, C);
 
-	public Vector getCenter() {
-		return center;
-	}
+    // setRight(C, D);
+    // setBottom(D, A);
+    setCurves(left, top);
+  }
 
-	public void setCenter(Vector center) {
-		this.center = center;
-	}
+  public Vector getCenter() {
+    return center;
+  }
 
-	public Vector getA() {
-		return A;
-	}
+  public void setCenter(Vector center) {
+    this.center = center;
+  }
 
-	public void setA(Vector center, double hoehe, double laenge) {
-		double x = center.get(0) - laenge / 2;
-		double y = center.get(1) - hoehe / 2;
-		A = VectorFactory.createVector3(x, y, 0);
-	}
+  public Vector getA() {
+    return A;
+  }
 
-	public Vector getB() {
-		return B;
-	}
+  public void setA(Vector center, double hoehe, double laenge) {
+    double x = center.get(0) - laenge / 2;
+    double y = center.get(1) - hoehe / 2;
+    A = VectorFactory.createVector3(x, y, 0);
+  }
 
-	public void setB(Vector center, double hoehe, double laenge) {
-		double x = center.get(0) - laenge / 2;
-		double y = center.get(1) + hoehe / 2;
-		B = VectorFactory.createVector3(x, y, 0);
-	}
+  public Vector getB() {
+    return B;
+  }
 
-	public Vector getC() {
-		return C;
-	}
+  public void setB(Vector center, double hoehe, double laenge) {
+    double x = center.get(0) - laenge / 2;
+    double y = center.get(1) + hoehe / 2;
+    B = VectorFactory.createVector3(x, y, 0);
+  }
 
-	public void setC(Vector center, double hoehe, double laenge) {
-		double x = center.get(0) + laenge / 2;
-		double y = center.get(1) + hoehe / 2;
-		C = VectorFactory.createVector3(x, y, 0);
-	}
+  public Vector getC() {
+    return C;
+  }
 
-	public Vector getD() {
-		return D;
-	}
+  public void setC(Vector center, double hoehe, double laenge) {
+    double x = center.get(0) + laenge / 2;
+    double y = center.get(1) + hoehe / 2;
+    C = VectorFactory.createVector3(x, y, 0);
+  }
 
-	public void setD(Vector center, double hoehe, double laenge) {
-		double x = center.get(0) + laenge / 2;
-		double y = center.get(1) - hoehe / 2;
-		D = VectorFactory.createVector3(x, y, 0);
-	}
+  public Vector getD() {
+    return D;
+  }
 
-	public Line3D getAB() {
-		return AB;
-	}
+  public void setD(Vector center, double hoehe, double laenge) {
+    double x = center.get(0) + laenge / 2;
+    double y = center.get(1) - hoehe / 2;
+    D = VectorFactory.createVector3(x, y, 0);
+  }
 
-	public void setAB() {
-		AB = new Line3D(this.A, this.B);
-	}
+  public Line3D getAB() {
+    return AB;
+  }
 
-	public Line3D getBC() {
-		return BC;
-	}
+  public void setAB() {
+    AB = new Line3D(this.A, this.B);
+  }
 
-	public void setBC() {
-		BC = new Line3D(this.B, this.C);
-		;
-	}
+  public Line3D getBC() {
+    return BC;
+  }
 
-	public Line3D getCD() {
-		return CD;
-	}
+  public void setBC() {
+    BC = new Line3D(this.B, this.C);
+    ;
+  }
 
-	public void setCD() {
-		CD = new Line3D(this.C, this.D);
-		;
-	}
+  public Line3D getCD() {
+    return CD;
+  }
 
-	public Line3D getDA() {
-		return DA;
-	}
+  public void setCD() {
+    CD = new Line3D(this.C, this.D);
+    ;
+  }
 
-	public void setDA() {
-		DA = new Line3D(this.D, this.A);
-	}
+  public Line3D getDA() {
+    return DA;
+  }
 
-	public BezierCurve getLeft() {
-		return left;
-	}
+  public void setDA() {
+    DA = new Line3D(this.D, this.A);
+  }
 
-	public void setLeft(int fronth, int frontv, Vector... points) {
+  public Curve getLeft() {
+    return left;
+  }
 
-		double x = this.laenge * fronth / 100;
-		double y = this.hoehe * frontv / 100;
+  public void setLeft(int fronth, int frontv, Vector... points) {
 
-		BezierCurve curve = new BezierCurve(degree);
+    double x = this.laenge * fronth / 100;
+    double y = this.hoehe * frontv / 100;
 
-		curve.setControlPoint(
-				0,
-				VectorFactory.createVector3(points[0].get(0),
-						points[0].get(1), 0));
+    Curve curve = new Curve(new BasisFunctionBezier(), degree);
 
-		// for (int i = 1; i < degree; i++) {
-		// curve.setControlPoint(i, VectorMatrixFactory.newVector(x + i * xx,
-		// y + i*yy, 0));
-		// }
+    curve.setControlPoint(0,
+        VectorFactory.createVector3(points[0].get(0), points[0].get(1), 0));
 
-		// curve.setControlPoint(1, VectorMatrixFactory.newVector(
-		// points[1].get(0) - 0.2, points[1].get(1) - 0.4, 0));
-		//
-		// curve.setControlPoint(
-		// 2,
-		// VectorMatrixFactory.newVector(points[1].get(0),
-		// points[1].get(1) - 0.2, 0));
+    // for (int i = 1; i < degree; i++) {
+    // curve.setControlPoint(i, VectorMatrixFactory.newVector(x + i * xx,
+    // y + i*yy, 0));
+    // }
 
-		curve.setControlPoint(
-				1,
-				VectorFactory.createVector3(points[1].get(0)
-//						+ x
-						,
-						points[1].get(1) - y, 0));
+    // curve.setControlPoint(1, VectorMatrixFactory.newVector(
+    // points[1].get(0) - 0.2, points[1].get(1) - 0.4, 0));
+    //
+    // curve.setControlPoint(
+    // 2,
+    // VectorMatrixFactory.newVector(points[1].get(0),
+    // points[1].get(1) - 0.2, 0));
 
-		curve.setControlPoint(
-				2,
-				VectorFactory.createVector3(points[1].get(0) + x,
-						points[1].get(1) - y, 0));
+    curve.setControlPoint(1, VectorFactory.createVector3(points[1].get(0)
+    // + x
+        , points[1].get(1) - y, 0));
 
-		this.left = curve;
-	}
+    curve.setControlPoint(2, VectorFactory.createVector3(points[1].get(0) + x,
+        points[1].get(1) - y, 0));
 
-	public BezierCurve getTop() {
-		return top;
-	}
+    this.left = curve;
+  }
 
-	public void setTop(int fronth, int frontv, Vector... points) {
+  public Curve getTop() {
+    return top;
+  }
 
-		double x = this.laenge * fronth / 100;
-		double y = this.hoehe * frontv / 100;
+  public void setTop(int fronth, int frontv, Vector... points) {
 
-		BezierCurve curve = new BezierCurve(degree);
+    double x = this.laenge * fronth / 100;
+    double y = this.hoehe * frontv / 100;
 
-		curve.setControlPoint(
-				0,
-				VectorFactory.createVector3(points[0].get(0) + x,
-						points[0].get(1) - y, 0));
+    Curve curve = new Curve(new BasisFunctionBezier(), degree);
 
-		// for (int i = 1; i < degree; i++) {
-		// curve.setControlPoint(i, VectorMatrixFactory.newVector(x - i * xx,
-		// y - i*yy, 0));
-		// }
+    curve.setControlPoint(0, VectorFactory.createVector3(points[0].get(0) + x,
+        points[0].get(1) - y, 0));
 
-		// curve.setControlPoint(1, VectorMatrixFactory.newVector(
-		// points[0].get(0) + 0.2, points[0].get(1) - 0.2, 0));
-		//
-		// curve.setControlPoint(2, VectorMatrixFactory.newVector(
-		// points[1].get(0) + 0.4, points[1].get(1), 0));
+    // for (int i = 1; i < degree; i++) {
+    // curve.setControlPoint(i, VectorMatrixFactory.newVector(x - i * xx,
+    // y - i*yy, 0));
+    // }
 
-		curve.setControlPoint(
-				1,
-				VectorFactory.createVector3(points[0].get(0) + 2*x,
-						points[0].get(1) - y, 0));
-		
-		curve.setControlPoint(
-				2,
-				VectorFactory.createVector3(points[1].get(0),
-						points[1].get(1), 0));
+    // curve.setControlPoint(1, VectorMatrixFactory.newVector(
+    // points[0].get(0) + 0.2, points[0].get(1) - 0.2, 0));
+    //
+    // curve.setControlPoint(2, VectorMatrixFactory.newVector(
+    // points[1].get(0) + 0.4, points[1].get(1), 0));
 
-		this.top = curve;
-	}
+    curve.setControlPoint(1, VectorFactory
+        .createVector3(points[0].get(0) + 2 * x, points[0].get(1) - y, 0));
 
-	public BezierCurve getRight() {
-		return right;
-	}
+    curve.setControlPoint(2,
+        VectorFactory.createVector3(points[1].get(0), points[1].get(1), 0));
 
-	public void setRight(Vector... points) {
-		int degree = points.length - 1;
-		int i = 0;
-		BezierCurve curve = new BezierCurve(degree);
-		for (Vector p : points) {
-			curve.setControlPoint(
-					i,
-					VectorFactory.createVector3(p.get(0), p.get(1),
-							p.get(2)));
-			i++;
-		}
-		this.right = curve;
-	}
+    this.top = curve;
+  }
 
-	public BezierCurve getBottom() {
-		return bottom;
-	}
+  public Curve getRight() {
+    return right;
+  }
 
-	public void setBottom(Vector... points) {
-		int degree = points.length - 1;
-		int i = 0;
-		BezierCurve curve = new BezierCurve(degree);
-		for (Vector p : points) {
-			curve.setControlPoint(
-					i,
-					VectorFactory.createVector3(p.get(0), p.get(1),
-							p.get(2)));
-			i++;
-		}
-		this.bottom = curve;
-	}
+  public void setRight(Vector... points) {
+    int degree = points.length - 1;
+    int i = 0;
+    Curve curve = new Curve(new BasisFunctionBezier(), degree);
+    for (Vector p : points) {
+      curve.setControlPoint(i,
+          VectorFactory.createVector3(p.get(0), p.get(1), p.get(2)));
+      i++;
+    }
+    this.right = curve;
+  }
 
-	public double getHoehe() {
-		return hoehe;
-	}
+  public Curve getBottom() {
+    return bottom;
+  }
 
-	public void setHoehe(double hoehe) {
-		this.hoehe = hoehe;
-	}
+  public void setBottom(Vector... points) {
+    int degree = points.length - 1;
+    int i = 0;
+    Curve curve = new Curve(new BasisFunctionBezier(), degree);
+    for (Vector p : points) {
+      curve.setControlPoint(i,
+          VectorFactory.createVector3(p.get(0), p.get(1), p.get(2)));
+      i++;
+    }
+    this.bottom = curve;
+  }
 
-	public double getLaenge() {
-		return laenge;
-	}
+  public double getHoehe() {
+    return hoehe;
+  }
 
-	public void setLaenge(double laenge) {
-		this.laenge = laenge;
-	}
+  public void setHoehe(double hoehe) {
+    this.hoehe = hoehe;
+  }
 
-	public int getDegree() {
-		return degree;
-	}
+  public double getLaenge() {
+    return laenge;
+  }
 
-	public void setDegree(int degree) {
-		this.degree = degree;
-	}
+  public void setLaenge(double laenge) {
+    this.laenge = laenge;
+  }
 
-	public Line3D[] getLines() {
-		return lines;
-	}
+  public int getDegree() {
+    return degree;
+  }
 
-	public void setLines() {
-		this.lines[0] = AB;
-		this.lines[1] = BC;
-		this.lines[2] = CD;
-		this.lines[3] = DA;
-	}
+  public void setDegree(int degree) {
+    this.degree = degree;
+  }
 
-	public List<BezierCurve> getCurves() {
-		return curves;
-	}
+  public Line3D[] getLines() {
+    return lines;
+  }
 
-	public void setCurves(BezierCurve... curves) {
-		for (BezierCurve c : curves) {
-			this.curves.add(c);
-		}
-	}
+  public void setLines() {
+    this.lines[0] = AB;
+    this.lines[1] = BC;
+    this.lines[2] = CD;
+    this.lines[3] = DA;
+  }
+
+  public List<Curve> getCurves() {
+    return curves;
+  }
+
+  public void setCurves(Curve... curves) {
+    for (Curve c : curves) {
+      this.curves.add(c);
+    }
+  }
 
 }

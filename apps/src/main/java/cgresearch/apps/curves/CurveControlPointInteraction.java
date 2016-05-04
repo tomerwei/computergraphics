@@ -3,7 +3,7 @@ package cgresearch.apps.curves;
 import java.util.HashMap;
 import java.util.Map;
 
-import cgresearch.graphics.datastructures.curves.ICurve;
+import cgresearch.graphics.datastructures.curves.Curve;
 import cgresearch.graphics.picking.CgApplicationPickable;
 import cgresearch.graphics.picking.PickingItem;
 
@@ -12,7 +12,7 @@ public class CurveControlPointInteraction extends CgApplicationPickable {
   /**
    * Reference to the surface.
    */
-  private final ICurve curve;
+  private final Curve curve;
 
   /**
    * Mapping between a picking ID and a control point index (in 1D)
@@ -22,7 +22,7 @@ public class CurveControlPointInteraction extends CgApplicationPickable {
   /**
    * Constructor
    */
-  public CurveControlPointInteraction(ICurve curve) {
+  public CurveControlPointInteraction(Curve curve) {
     this.curve = curve;
     for (int i = 0; i <= curve.getDegree(); i++) {
       PickingItem item = new PickingItem(curve.getControlPoint(i));
