@@ -19,6 +19,8 @@ import cgresearch.graphics.scenegraph.ICgNodeContent;
  */
 public class Curve extends ICgNodeContent {
 
+  private static final double FINITE_DIFFERENCES_STEP_WIDTH = 0.001;
+
   /**
    * Array of control points
    */
@@ -35,7 +37,8 @@ public class Curve extends ICgNodeContent {
   protected double paramMax = 1;
 
   /**
-   * Parameter of the curve, must be between paramMin and paramMax.
+   * Parameter of the curve, must be between paramMin and paramMax (only used
+   * for debugging).
    */
   private double parameter = 0;
 
@@ -82,8 +85,9 @@ public class Curve extends ICgNodeContent {
    * @return Derivative (tangent) on the curve at the specified parameter.
    */
   public Vector derivative(double t) {
-    double h = 0.001;
-    return eval(t + h / 2.0).subtract(eval(t - h / 2.0)).multiply(1.0 / h);
+    return eval(t + FINITE_DIFFERENCES_STEP_WIDTH / 2.0)
+        .subtract(eval(t - FINITE_DIFFERENCES_STEP_WIDTH / 2.0))
+        .multiply(1.0 / FINITE_DIFFERENCES_STEP_WIDTH);
   }
 
   /**
@@ -178,5 +182,9 @@ public class Curve extends ICgNodeContent {
   public void setBasisFunctions(IBasisFunction basisFunctions) {
     this.basisFunctions = basisFunctions;
     updateRenderStructures();
+  }
+
+  public IBasisFunction getBasisFunction() {
+    return basisFunctions;
   }
 }

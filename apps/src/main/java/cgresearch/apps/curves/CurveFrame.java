@@ -6,11 +6,12 @@
 package cgresearch.apps.curves;
 
 import cgresearch.JoglAppLauncher;
-import cgresearch.apps.curves.CurveModel.CurveType;
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
 import cgresearch.core.assets.ResourcesLocator;
 import cgresearch.graphics.bricks.CgApplication;
+import cgresearch.graphics.datastructures.curves.CurveModel;
+import cgresearch.graphics.datastructures.curves.CurveModel.CurveType;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CoordinateSystem;
 import cgresearch.graphics.scenegraph.CoordinateSystem.Dimension;
@@ -48,6 +49,8 @@ public class CurveFrame extends CgApplication {
     getCgRootNode().addChild(curveNode);
 
     getCgRootNode().addChild(new CoordinateSystem(Dimension.DIMENSION_2D, 0.5));
+
+    new BasisFunctionWidget(model);
   }
 
   /**

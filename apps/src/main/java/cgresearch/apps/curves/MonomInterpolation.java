@@ -17,6 +17,7 @@ import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.curves.BasisFunctionMonomial;
 import cgresearch.graphics.datastructures.curves.Curve;
+import cgresearch.graphics.datastructures.curves.CurveModel;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;

@@ -15,7 +15,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cgresearch.graphics.datastructures.curves.Curve;
+import cgresearch.graphics.datastructures.curves.CurveModel;
 
 /**
  * Widget with properties for the user interface.
@@ -49,13 +49,13 @@ public class CurvePropertiesWidget extends JPanel implements ChangeListener,
 	/**
 	 * Reference to the curve
 	 */
-	private final Curve curve;
+	private final CurveModel curveModel;
 
 	/**
 	 * Constructor.
 	 */
-	public CurvePropertiesWidget(Curve curve, String caption) {
-		this.curve = curve;
+	public CurvePropertiesWidget(CurveModel curve, String caption) {
+		this.curveModel = curve;
 		curve.addObserver(this);
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -71,8 +71,8 @@ public class CurvePropertiesWidget extends JPanel implements ChangeListener,
 	 * Compute the slider position for the current curve parameter.
 	 */
 	private int computePositionFromParameter() {
-		double position = (curve.getParameter() - curve.getParamMin())
-				/ (curve.getParamMax() - curve.getParamMin());
+		double position = (curveModel.getCurve().getParameter() - curveModel.getCurve().getParamMin())
+				/ (curveModel.getCurve().getParamMax() - curveModel.getCurve().getParamMin());
 		position = position * (SLIDER_MAX - SLIDER_MIN) + SLIDER_MIN;
 		return (int) position;
 	}
@@ -83,8 +83,8 @@ public class CurvePropertiesWidget extends JPanel implements ChangeListener,
 	private double computeParameterFromPosition() {
 		double parameter = (parameterSlider.getValue() - SLIDER_MIN)
 				/ (double) (SLIDER_MAX - SLIDER_MIN);
-		parameter = parameter * (curve.getParamMax() - curve.getParamMin())
-				+ curve.getParamMin();
+		parameter = parameter * (curveModel.getCurve().getParamMax() - curveModel.getCurve().getParamMin())
+				+ curveModel.getCurve().getParamMin();
 		return parameter;
 	}
 
@@ -98,7 +98,7 @@ public class CurvePropertiesWidget extends JPanel implements ChangeListener,
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource() == parameterSlider) {
-			curve.setParameter(computeParameterFromPosition());
+			curveModel.setT(computeParameterFromPosition());
 		}
 	}
 

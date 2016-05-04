@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import cgresearch.graphics.datastructures.curves.CurveModel;
 import cgresearch.ui.IApplicationControllerGui;
 
 public class CurveFrameGui extends IApplicationControllerGui
@@ -41,7 +42,7 @@ public class CurveFrameGui extends IApplicationControllerGui
     mainPanel.add(comboCurve);
 
     CurvePropertiesWidget widget =
-        new CurvePropertiesWidget(curveModel.getCurve(), "Curve");
+        new CurvePropertiesWidget(curveModel, "Curve");
     mainPanel.add(widget);
   }
 
