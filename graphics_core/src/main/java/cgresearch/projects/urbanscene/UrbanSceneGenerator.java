@@ -42,10 +42,10 @@ public class UrbanSceneGenerator {
    * Create a list of triangle mesh house models.
    */
   private void createHousModelList() {
-    houseModels.add(loadScetchUp("sketchup/haus01.obj"));
-    houseModels.add(loadScetchUp("sketchup/haus02.obj"));
-    houseModels.add(loadScetchUp("sketchup/haus03.obj"));
-    houseModels.add(loadScetchUp("sketchup/haus04.obj"));
+    houseModels.add(loadScetchUp("meshes/haus01.obj"));
+    houseModels.add(loadScetchUp("meshes/haus02.obj"));
+    houseModels.add(loadScetchUp("meshes/haus03.obj"));
+    houseModels.add(loadScetchUp("meshes/haus04.obj"));
   }
 
   /**

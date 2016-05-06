@@ -27,7 +27,7 @@ public class UrbanScene extends CgApplication {
    */
   public UrbanScene() {
     setupLight();
-    getCgRootNode().setAllowShadows(true);
+    //getCgRootNode().setAllowShadows(true);
     UrbanSceneGenerator generator = new UrbanSceneGenerator();
     getCgRootNode().addChild(generator.buildScene(4, 4));
     getCgRootNode().addChild(new CoordinateSystem());

@@ -1,25 +1,6 @@
 /*
+Custom extension to the Ardulink project by Philipp Jenke:
 Copyright 2013 Luciano Zu project Ardulink http://www.ardulink.org/
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-This sketch is an example to understand how Arduino can recognize ALProtocol.
-However, it can easily be reused for their own purposes or as a base for a library.
-Read carefully the comments. When you find "this is general code you can reuse"
-then it means that it is generic code that you can use to manage the ALProtocol.
-When you find "this is needed just as example for this sketch" then it means that
-you code useful for a specific purpose. In this case you have to modify it to suit
-your needs.
 */
 
 #include <Servo.h>
@@ -167,7 +148,18 @@ void loop() {
 //      stringComplete = false;
 //      return;
 
-      if ( inputString.indexOf("distance") != -1) {
+      if ( inputString.indexOf("led") != -1) {
+        int numberOfTokens = 0;
+        String* tokens = tokenize(inputString, numberOfTokens);
+        int ledPin = tokens[1].toInt();
+        String ledCommand = tokens[2];
+        pinMode(ledPin, OUTPUT);
+        if ( ledCommand.indexOf("on") != -1 ){
+          digitalWrite(ledPin, HIGH);  
+        } else {
+          digitalWrite(ledPin, LOW);    
+        }
+      } else if ( inputString.indexOf("distance") != -1) {
         int numberOfTokens = 0;
         String* tokens = tokenize(inputString, numberOfTokens);
         int triggerPin = tokens[1].toInt();
@@ -176,15 +168,12 @@ void loop() {
            initDistance(triggerPin, echoPin);
         }
         String distanceString = "distance " + String(measureDistance());
-
-        
         Serial.print(distanceString);
         Serial.write(255);
         Serial.flush();
-
-        Serial.print("debug " + String(distanceTriggerPin) + " "  + String(distanceEchoPin));
-        Serial.write(255);
-        Serial.flush();
+        //Serial.print("debug " + String(distanceTriggerPin) + " "  + String(distanceEchoPin));
+        //Serial.write(255);
+        //Serial.flush();
       } else if ( inputString.indexOf("gyro") != -1) {
         // Read gyro
         accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);

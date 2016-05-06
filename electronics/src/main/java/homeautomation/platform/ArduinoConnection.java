@@ -11,6 +11,16 @@ import org.zu.ardulink.protocol.ProtocolHandler;
 
 import cgresearch.core.logging.*;
 
+/**
+ * Requires command line VM arguments:
+ * -Djava.library.path=/Users/abo781/abo781/code/computergraphics/libs/native/
+ * osx/
+ * 
+ * Arduino Sketch: ArdulinkProtocol.ino
+ * 
+ * @author Philipp Jenke
+ *
+ */
 public class ArduinoConnection {
 
   private boolean isConnected = false;
@@ -33,7 +43,7 @@ public class ArduinoConnection {
         for (Consumer<String> messageCallback : messageCallbacks) {
           messageCallback.accept(msg);
         }
-        //Logger.getInstance().message("Message received: " + msg);
+        // Logger.getInstance().message("Message received: " + msg);
       }
     });
   }
@@ -94,7 +104,8 @@ public class ArduinoConnection {
    */
   public void sendCustomCommand(String command) {
     if (link.isConnected()) {
-      ProtocolHandler.getCurrentProtocolImplementation().sendCustomMessage(link, command);
+      ProtocolHandler.getCurrentProtocolImplementation().sendCustomMessage(link,
+          command);
       // Logger.getInstance().message("Sent command: " + command);
     }
   }
