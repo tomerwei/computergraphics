@@ -67,13 +67,6 @@ public class ViewFrustumCulling implements Observer {
         rootNode.addChild(new CgNode(frustum, "frustum"));
       }
     } 
-    else {
-      for (int j = 0; j < objects.size(); ++j) {
-        for (int k = 0; k < visibleNodes.size(); ++k) {
-          extractNodeContent(octrees.get(j), objects.get(j), visibleNodes.get(k));
-        }
-      }
-    }
   }
 
   /**
@@ -205,8 +198,13 @@ public class ViewFrustumCulling implements Observer {
     if (objects.size() > 0) {
       extractNodesOfFrustum(octreeScene, visibleNodes);
       if (visibleNodes.size() > 0) {
-        computeVisibleScenePart(rootNode);
-      } else {
+        for (int j = 0; j < objects.size(); ++j) {
+          for (int k = 0; k < visibleNodes.size(); ++k) {
+            extractNodeContent(octrees.get(j), objects.get(j), visibleNodes.get(k));
+          }
+        }
+      }
+      else {
         if (visibleNodes.size() == 0) {
           //no visible sceneOctree nodes, so all objects can be set invisible
           for (int j = 0; j < objects.size(); ++j) {
