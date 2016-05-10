@@ -39,7 +39,7 @@ public class ViewFrustum  {
   public static final int OUTSIDE = 1;
   
   // transparencies
-  public static final double FRUSTUMTRANSPARENCY = 0.5;
+  public static final double FRUSTUMTRANSPARENCY = 0.3;
   public static final double OBJECTSTRANSPARENCY = 0.5;
   
   // Camera parameters
@@ -255,15 +255,14 @@ public class ViewFrustum  {
   }
   
   /**
-   * checks if an octreeNode is inside or outside the frustum or intersects it(which would be declared as inside then)
-   * @param octreeNode
-   *          octreeNode whose position should be checked
+   * checks if a bb is inside or outside the frustum or intersects it(which would be declared as inside then)
+   * @param bb bb whose position should be checked
    * @return 0 : INSIDE, 1 : OUTSIDE
    */
-  public int isObjectInFrustum(OctreeNode<Integer> node) {
+  public int isObjectInFrustum(BoundingBox bb) {
 
-    final BoundingBox octreeNodeBb = getOctreeNodeBox(node);
-    final Vector[] cornerPoints = calcCornerPointsOfBoundingBox(octreeNodeBb);
+//    final BoundingBox octreeNodeBb = getOctreeNodeBox(node);
+    final Vector[] cornerPoints = calcCornerPointsOfBoundingBox(bb);
     int outside = 0;
     
     // because it is not perfomant enough to make meshes partly visible and toggle single triangles,
@@ -283,6 +282,34 @@ public class ViewFrustum  {
       }
       return INSIDE;
   }
+  
+  /**
+   * checks if an octreeNode is inside or outside the frustum or intersects it(which would be declared as inside then)
+   * @param oNode oNode whose position should be checked
+   * @return 0 : INSIDE, 1 : OUTSIDE
+   */
+  public int isObjectInFrustum(OctreeNode<Integer> oNode) {
+  final BoundingBox octreeNodeBb = getOctreeNodeBox(oNode);
+  final Vector[] cornerPoints = calcCornerPointsOfBoundingBox(octreeNodeBb);
+  int outside = 0;
+  
+  // because it is not perfomant enough to make meshes partly visible and toggle single triangles,
+  // there is only differentation between inside and outside
+    for(int k = 0; k < PLANES; ++k){
+      outside = 0;
+      for(int j = 0; j < CORNERS; ++j){
+        if(frustum[k].computeSignedDistance(cornerPoints[j]) < 0){
+          outside++;
+        }
+        // if all corner points of a single mesh lie outside the same plane,
+        // then the mesh must lie outside the frustum
+        if(outside == CORNERS){
+          return OUTSIDE;
+        }
+      }
+    }
+    return INSIDE;
+}
     
   /**
    * adds all (sceneOctree) nodes to a list which are visible or intersected by
@@ -290,14 +317,70 @@ public class ViewFrustum  {
    * @param node node who should be tested
    * @param nodesInFrustum Liste, der die sichtbaren Nodes hinzugefuegt werden
    */
-  public void addVisibleNode(final OctreeNode<Integer> node,
+  public void addVisibleNode(final OctreeNode<Integer> oNode,
                               final ArrayList<OctreeNode<Integer>> nodesInFrustum) {
-    final int POSITION = isObjectInFrustum(node);
+    final int POSITION = isObjectInFrustum(oNode);
     if (POSITION == INSIDE) {
-      nodesInFrustum.add(node);
+      nodesInFrustum.add(oNode);
     }
   }
   
+  /**
+   * calculates the corners of a bounding box
+   * @param bBox Bounding box whose corner points should be calculated
+   * @return array with corner points
+   */
+  private Vector[] calcCornerPointsOfBoundingBox(BoundingBox bBox) { 
+  
+    Vector[] cornerPoints = new Vector[8];
+    for (int i = 0; i < cornerPoints.length; ++i) {
+      cornerPoints[i] = VectorFactory.createVector3(0, 0, 0);
+    }
+  
+    Vector center = bBox.getCenter();
+    Vector lnl, lfl, lfr, lnr, ufr, unr, unl, ufl; // corner points of bounding box
+  
+    // low near left
+    lnl = bBox.getLowerLeft();
+    cornerPoints[0] = lnl;
+  
+    // low far left
+    double z = lnl.get(Z) + (center.get(Z) - lnl.get(Z)) * 2.0;
+    lfl = VectorFactory.createVector3(lnl.get(X), lnl.get(Y), z);
+    cornerPoints[1] = lfl;
+  
+    // low far right
+    double x = lfl.get(X) + (center.get(X) - lnl.get(X)) * 2.0;
+    lfr = VectorFactory.createVector3(x, lfl.get(Y), lfl.get(Z));
+    cornerPoints[2] = lfr;
+  
+    // low near right
+    x = bBox.getLowerLeft().get(X) + (center.get(X) - bBox.getLowerLeft().get(X)) * 2.0;
+    lnr = VectorFactory.createVector3(x, lnl.get(Y), lnl.get(Z));
+    cornerPoints[3] = lnr;
+  
+    // up far right
+    ufr = bBox.getUpperRight();
+    cornerPoints[4] = ufr;
+  
+    // up near right
+    z = ufr.get(Z) - (ufr.get(Z) - center.get(Z)) * 2.0;
+    unr = VectorFactory.createVector3(ufr.get(X), ufr.get(Y), z);
+    cornerPoints[5] = unr;
+  
+    // up near left
+    x = unr.get(X) - (ufr.get(X) - center.get(X)) * 2.0;
+    unl = VectorFactory.createVector3(x, unr.get(Y), unr.get(Z));
+    cornerPoints[6] = unl;
+  
+    // up far left
+    x = ufr.get(X) - (ufr.get(X) - center.get(X)) * 2.0;
+    ufl = VectorFactory.createVector3(x, ufr.get(Y), ufr.get(Z));
+    cornerPoints[7] = ufl;
+  
+    return cornerPoints;
+  }
+
   /**
    * calculates a bounding box for an octreeNode
    * @param obj octreeNode whose Bounding Box should be calculated
@@ -309,62 +392,6 @@ public class ViewFrustum  {
         ((OctreeNode<Integer>) obj).getLowerLeft().get(Y) + ((OctreeNode<Integer>) obj).getLength(),
         ((OctreeNode<Integer>) obj).getLowerLeft().get(Z) + ((OctreeNode<Integer>) obj).getLength());
     return new BoundingBox(((OctreeNode<Integer>) obj).getLowerLeft(), ur);
-  }
-  
-  /**
-   * calculates the corners of a bounding box
-   * @param bBox Bounding box whose corner points should be calculated
-   * @return array with corner points
-   */
-  private Vector[] calcCornerPointsOfBoundingBox(BoundingBox bBox) { 
-
-    Vector[] cornerPoints = new Vector[8];
-    for (int i = 0; i < cornerPoints.length; ++i) {
-      cornerPoints[i] = VectorFactory.createVector3(0, 0, 0);
-    }
-
-    Vector center = bBox.getCenter();
-    Vector lnl, lfl, lfr, lnr, ufr, unr, unl, ufl; // corner points of bounding box
-
-    // low near left
-    lnl = bBox.getLowerLeft();
-    cornerPoints[0] = lnl;
-
-    // low far left
-    double z = lnl.get(Z) + (center.get(Z) - lnl.get(Z)) * 2.0;
-    lfl = VectorFactory.createVector3(lnl.get(X), lnl.get(Y), z);
-    cornerPoints[1] = lfl;
-
-    // low far right
-    double x = lfl.get(X) + (center.get(X) - lnl.get(X)) * 2.0;
-    lfr = VectorFactory.createVector3(x, lfl.get(Y), lfl.get(Z));
-    cornerPoints[2] = lfr;
-
-    // low near right
-    x = bBox.getLowerLeft().get(X) + (center.get(X) - bBox.getLowerLeft().get(X)) * 2.0;
-    lnr = VectorFactory.createVector3(x, lnl.get(Y), lnl.get(Z));
-    cornerPoints[3] = lnr;
-
-    // up far right
-    ufr = bBox.getUpperRight();
-    cornerPoints[4] = ufr;
-
-    // up near right
-    z = ufr.get(Z) - (ufr.get(Z) - center.get(Z)) * 2.0;
-    unr = VectorFactory.createVector3(ufr.get(X), ufr.get(Y), z);
-    cornerPoints[5] = unr;
-
-    // up near left
-    x = unr.get(X) - (ufr.get(X) - center.get(X)) * 2.0;
-    unl = VectorFactory.createVector3(x, unr.get(Y), unr.get(Z));
-    cornerPoints[6] = unl;
-
-    // up far left
-    x = ufr.get(X) - (ufr.get(X) - center.get(X)) * 2.0;
-    ufl = VectorFactory.createVector3(x, ufr.get(Y), ufr.get(Z));
-    cornerPoints[7] = ufl;
-
-    return cornerPoints;
   }
   
   /**
