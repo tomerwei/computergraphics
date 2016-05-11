@@ -71,6 +71,9 @@ void setup() {
 
   // Servo
   tokens = new String[10];
+
+  servo.attach(2);
+  servo.write(30);
 }
 
 /**
@@ -134,6 +137,8 @@ void loop() {
 //  Serial.print("Hello");
 //      Serial.write(255);
 //      Serial.flush();
+
+
 
   // when a newline arrives:
   if (stringComplete) {

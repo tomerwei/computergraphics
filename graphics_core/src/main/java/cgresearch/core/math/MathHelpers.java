@@ -17,7 +17,7 @@ public final class MathHelpers {
   /**
    * Numerical precision.
    */
-  public static final double EPSILON = 0.0000001;
+  public static final double EPSILON = 1e-5;
   public static final int DIMENSION_2 = 2;
   public static final int DIMENSION_3 = 3;
   public static final int DIMENSION_4 = 4;
@@ -83,7 +83,8 @@ public final class MathHelpers {
    * Checks if two doubles are equal.
    */
   public static boolean equals(double a, double b) {
-    return Math.abs(a - b) < EPSILON;
+    double diff = Math.abs(a - b);
+    return diff < EPSILON;
   }
 
 }
