@@ -8,7 +8,6 @@ import cgresearch.core.math.Vector;
 
 public class Analyzer {
 
-
 	// Einkommentieren fuer Schmetterlinge
 	// private final int butVektor = 32;
 	// private final int butSkalar = 10;
