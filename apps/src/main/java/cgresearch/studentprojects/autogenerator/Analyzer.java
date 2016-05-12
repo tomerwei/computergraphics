@@ -8,8 +8,6 @@ import cgresearch.core.math.Vector;
 
 public class Analyzer {
 
-	// private final int carVektor = 18;
-	// private final int skalar = 7;
 
 	// Einkommentieren fuer Schmetterlinge
 	// private final int butVektor = 32;
