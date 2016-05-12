@@ -16,6 +16,7 @@ public class Analyzer {
 	private final int butVektor = 18;
 	private final int butSkalar = 7;
 
+	
 	private PCA pcaX = new PCA();
 	private PCA pcaY = new PCA();
 	private PCA pcaZ = new PCA();
