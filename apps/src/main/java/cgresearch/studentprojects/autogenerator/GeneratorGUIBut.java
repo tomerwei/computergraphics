@@ -1160,7 +1160,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 	public void serialize() {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(
-					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
+					"D:\\Users\\vkagadij\\_Private\\MasterArbeit\\git\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(this.data);
 			out.close();
@@ -1174,7 +1174,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		ButData d = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(
-					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
+					"D:\\Users\\vkagadij\\_Private\\MasterArbeit\\git\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			d = (ButData) in.readObject();
 			in.close();

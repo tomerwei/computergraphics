@@ -61,8 +61,10 @@ public class ButModel {
       Curve rbr = new Curve(new BasisFunctionBezier(),
           VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0),
+          VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0));
       Curve rbb = new Curve(new BasisFunctionBezier(),
+          VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0));
@@ -79,8 +81,10 @@ public class ButModel {
       Curve lbb = new Curve(new BasisFunctionBezier(),
           VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0),
+          VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0));
       Curve lbl = new Curve(new BasisFunctionBezier(),
+          VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0),
           VectorFactory.createVector3(0, 0, 0));

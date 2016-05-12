@@ -40,14 +40,14 @@ public class Car {
       Curve frontTop = new Curve(new BasisFunctionBezier(), 2);
 
       Curve gastLeft = new Curve(new BasisFunctionBezier(), 2);
-      Curve gastTop = new Curve(new BasisFunctionBezier(), 2);
+      Curve gastTop = new Curve(new BasisFunctionBezier(), 1);
       Curve gastRight = new Curve(new BasisFunctionBezier(), 2);
 
       Curve hecktTop = new Curve(new BasisFunctionBezier(), 2);
       Curve heckRight = new Curve(new BasisFunctionBezier(), 2);
 
       Curve chassisRight = new Curve(new BasisFunctionBezier(), 2);
-      Curve chassisBottom = new Curve(new BasisFunctionBezier(), 2);
+      Curve chassisBottom = new Curve(new BasisFunctionBezier(), 1);
       Curve chassisLeft = new Curve(new BasisFunctionBezier(), 2);
 
       if (points.size() == carVektor) {

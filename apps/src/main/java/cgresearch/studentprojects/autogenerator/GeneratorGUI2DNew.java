@@ -462,7 +462,7 @@ public class GeneratorGUI2DNew extends IApplicationControllerGui implements Acti
 		Data2D d = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(
-					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
+					"D:\\Users\\vkagadij\\_Private\\MasterArbeit\\git\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			d = (Data2D) in.readObject();
 			in.close();
@@ -558,7 +558,7 @@ public class GeneratorGUI2DNew extends IApplicationControllerGui implements Acti
 	}
 
 	public void applyPCA() {
-//		analyzer.applyPCA(data18);
+		analyzer.applyPCA(data18);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

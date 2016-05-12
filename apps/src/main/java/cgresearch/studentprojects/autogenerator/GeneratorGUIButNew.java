@@ -592,7 +592,7 @@ public class GeneratorGUIButNew extends IApplicationControllerGui
     ButData d = null;
     try {
       FileInputStream fileIn = new FileInputStream(
-          "c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
+          "D:\\Users\\vkagadij\\_Private\\MasterArbeit\\git\\computergraphics\\assets\\studentprojects\\autogenerator\\butterflies\\data.ser");
       ObjectInputStream in = new ObjectInputStream(fileIn);
       d = (ButData) in.readObject();
       in.close();

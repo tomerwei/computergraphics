@@ -865,9 +865,10 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void serialize() {
+		System.out.println("Serialisieren");
 		try {
 			FileOutputStream fileOut = new FileOutputStream(
-					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
+					"D:\\Users\\vkagadij\\_Private\\MasterArbeit\\git\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(this.data);
 			out.close();
@@ -878,10 +879,11 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void deserialize() {
+		System.out.println("Deserialisieren");
 		Data2D d = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(
-					"c:\\Users\\Vitos\\git\\cg\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
+					"D:\\Users\\vkagadij\\_Private\\MasterArbeit\\git\\computergraphics\\assets\\studentprojects\\autogenerator\\data.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			d = (Data2D) in.readObject();
 			in.close();
@@ -1259,7 +1261,7 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	}
 
 	public void applyPCA() {
-//		analyzer.applyPCA(data18);
+		analyzer.applyPCA(data18);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

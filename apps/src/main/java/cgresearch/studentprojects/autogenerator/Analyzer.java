@@ -10,11 +10,11 @@ public class Analyzer {
 
 	// private final int carVektor = 18;
 	// private final int skalar = 7;
-	private final int butVektor = 32;
-	private final int butSkalar = 10;
+//	private final int butVektor = 32;
+//	private final int butSkalar = 10;
 
-	// private final int butVektor = 18;
-	// private final int butSkalar = 7;
+	 private final int butVektor = 18;
+	 private final int butSkalar = 7;
 
 	private PCA pcaX = new PCA();
 	private PCA pcaY = new PCA();
@@ -34,8 +34,8 @@ public class Analyzer {
 	private int dimension;
 
 	// public void applyPCA(Data2D data) {
-	// public void applyPCA(Data2D18 data) {
-	public void applyPCA(ButData32 data) {
+	 public void applyPCA(Data2D18 data) {
+//	public void applyPCA(ButData32 data) {
 		int i;
 		dimension = data.getX().get(0).getDimension();
 
