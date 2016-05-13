@@ -48,9 +48,10 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 	private static final long serialVersionUID = 1L;
 
 	ITriangleMesh triangleMesh = new TriangleMesh();
-	Analyzer analyzer = new Analyzer();
+	Analyzer analyzer = new Analyzer(butVektor, skalar);
 	ButData data = new ButData();
-	ButData32 data32 = new ButData32();
+	// ButData32 data32 = new ButData32();
+	Daten data32 = new Daten(32);
 
 	JPanel size = new JPanel(new GridLayout(0, 1));
 	TitledBorder sizeBorder = BorderFactory.createTitledBorder("Butterfly");
@@ -706,7 +707,6 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 			yc.set(i, car.getY().get(i) - analyzer.getPcaY().getCentroid().get(i));
 		}
 
-		
 		System.out.println("Apha X");
 		for (int i = 0; i < skalar; i++) {
 
@@ -723,7 +723,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 			System.out.println(x.get(i));
 		}
-		
+
 		System.out.println("Apha Y");
 		for (int i = 0; i < skalar; i++) {
 
@@ -765,7 +765,7 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 		Vector az = new Vector(butVektor);
 
 		System.out.println("Alpha Y");
-		
+
 		for (int i = 0; i < butVektor; i++) {
 			double xx = 0;
 			double yy = 0;
@@ -776,8 +776,6 @@ public class GeneratorGUIBut extends IApplicationControllerGui implements Action
 
 			// Reduziert
 
-			
-			
 			for (int j = 0; j < skalar; j++) {
 
 				// New Auto

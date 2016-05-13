@@ -54,9 +54,10 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 	private static final long serialVersionUID = 1L;
 
 	ITriangleMesh triangleMesh = new TriangleMesh();
-	Analyzer analyzer = new Analyzer();
+	Analyzer analyzer = new Analyzer(carVektor, skalar);
 	Data2D data = new Data2D();
-	Data2D18 data18 = new Data2D18();
+	// Data2D18 data18 = new Data2D18();
+	Daten data18 = new Daten(18);
 
 	JPanel size = new JPanel(new GridLayout(0, 1));
 	TitledBorder sizeBorder = BorderFactory.createTitledBorder("Abmessungen");
@@ -1076,8 +1077,8 @@ public class GeneratorGUI2D extends IApplicationControllerGui implements ActionL
 
 				// New Auto
 
-//				 xx += analyzer.getBx().get(j).get(i) * xn.get(j);
-//				 yy += analyzer.getBy().get(j).get(i) * yn.get(j);
+				// xx += analyzer.getBx().get(j).get(i) * xn.get(j);
+				// yy += analyzer.getBy().get(j).get(i) * yn.get(j);
 
 				// Dasselbe Auto
 

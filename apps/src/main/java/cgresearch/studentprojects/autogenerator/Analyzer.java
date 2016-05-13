@@ -8,24 +8,37 @@ import cgresearch.core.math.Vector;
 
 public class Analyzer {
 
+	public Analyzer(int vektor, int skalar) {
+		this.butVektor = vektor;
+		this.butSkalar = skalar;
+		this.valueX = new Vector(butVektor);
+		this.valueY = new Vector(butVektor);
+		this.valueZ = new Vector(butVektor);
+	}
+
 	// Einkommentieren fuer Schmetterlinge
 	// private final int butVektor = 32;
 	// private final int butSkalar = 10;
 
 	// Einkommentieren fuer Farhzeuge
-	private final int butVektor = 18;
-	private final int butSkalar = 7;
+	// private final int butVektor = 18;
+	// private final int butSkalar = 7;
 
-	
+	private final int butVektor;
+	private final int butSkalar;
+
 	private PCA pcaX = new PCA();
 	private PCA pcaY = new PCA();
 	private PCA pcaZ = new PCA();
 	private List<Vector> eigenX = new ArrayList<Vector>();
 	private List<Vector> eigenY = new ArrayList<Vector>();
 	private List<Vector> eigenZ = new ArrayList<Vector>();
-	private Vector valueX = new Vector(butVektor);
-	private Vector valueY = new Vector(butVektor);
-	private Vector valueZ = new Vector(butVektor);
+	// private Vector valueX = new Vector(butVektor);
+	// private Vector valueY = new Vector(butVektor);
+	// private Vector valueZ = new Vector(butVektor);
+	private Vector valueX;
+	private Vector valueY;
+	private Vector valueZ;
 	private List<Vector> Bx = new ArrayList<Vector>();
 	private List<Vector> By = new ArrayList<Vector>();
 	private List<Vector> Bz = new ArrayList<Vector>();
@@ -35,7 +48,7 @@ public class Analyzer {
 	private int dimension;
 
 	// Einkommentieren fuer Farhzeuge
-	public void applyPCA(Data2D18 data) {
+	public void applyPCA(Daten data) {
 
 		// Einkommentieren fuer Schmetterlinge
 		// public void applyPCA(ButData32 data) {

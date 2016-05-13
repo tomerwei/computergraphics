@@ -34,9 +34,10 @@ public class GeneratorGUI2DNew extends IApplicationControllerGui implements Acti
 
 	private static final long serialVersionUID = 1L;
 
-	Analyzer analyzer = new Analyzer();
+	Analyzer analyzer = new Analyzer(carVektor, skalar);
 	Data2D data = new Data2D();
-	Data2D18 data18 = new Data2D18();
+	// Data2D18 data18 = new Data2D18();
+	Daten data18 = new Daten(18);
 
 	JPanel xkoef = new JPanel(new GridLayout(0, 1));
 	TitledBorder xkoefBorder = BorderFactory.createTitledBorder("X-Eigenkoeffizienten");
@@ -399,7 +400,7 @@ public class GeneratorGUI2DNew extends IApplicationControllerGui implements Acti
 		yn.set(4, yek5);
 		yn.set(5, yek6);
 		yn.set(6, yek7);
-		
+
 		// New Auto
 
 		Vector ax = new Vector(carVektor);
