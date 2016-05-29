@@ -1,7 +1,7 @@
 package cgresearch.rendering.jogl.misc;
 
 /**
- * Funktionalitaeten zum Berechnen des View Frustum Culling
+ * functionality for calculation of view frustum culling
  */
 
 import java.util.ArrayList;
@@ -23,15 +23,15 @@ import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.graphics.scenegraph.CgRootNode;
 
 public class ViewFrustumCulling implements Observer {
-  
-  //ratio of the width and height of near and far plane
+
+  // ratio of the width and height of near and far plane
   public static final double viewRatio = 1.0;
 
   private OctreeNode<Integer> octreeScene;
   private ArrayList<OctreeNode<Integer>> visibleNodes = new ArrayList<OctreeNode<Integer>>();
   private ArrayList<CgNode> objects = new ArrayList<CgNode>();
   private HashSet<CgNode> testedObjects = new HashSet<CgNode>();
-  
+
   private ArrayList<BoundingBox> bbs = new ArrayList<BoundingBox>();
 
   private ViewFrustum viewFrustum;
@@ -41,17 +41,21 @@ public class ViewFrustumCulling implements Observer {
 
   /**
    * Constructor
-   * @param rootNode rootNode of the scenegraph
+   * 
+   * @param rootNode
+   *          rootNode of the scenegraph
    */
   public ViewFrustumCulling(CgRootNode rootNode) {
     this.rootNode = rootNode;
   }
 
   /**
-   * intialises frustum and sets the nodes in the view frustum visible,
-   * if test mode: adds frustum triangle mesh to scenegraph, 
-   * if live mode: adds camera observer
-   * @param rootNode rootNode of the scenegraph
+   * intialises frustum and sets the nodes in the view frustum visible, if test
+   * mode: adds frustum triangle mesh to scenegraph, if live mode: adds camera
+   * observer
+   * 
+   * @param rootNode
+   *          rootNode of the scenegraph
    */
   public void computeVisibleScenePart(CgRootNode rootNode) {
     if (!initialised) {
@@ -61,22 +65,24 @@ public class ViewFrustumCulling implements Observer {
       update(null, null);
       if (rootNode.useViewFrustumCulling()) {
         Camera.getInstance().addObserver(this);
-      }
-      else{
+      } else {
         ITriangleMesh frustum = viewFrustum.getFrustumMesh(viewFrustum.getCorners());
         frustum.getMaterial().setTransparency(ViewFrustum.FRUSTUMTRANSPARENCY);
         rootNode.addChild(new CgNode(frustum, "frustum"));
       }
-    } 
+    }
   }
 
   /**
    * checks if an object lies in the frustum and needs to be toggled in
    * visibility
-   * @param bb the bb of the object that needs to be checked
-   * @param node the node of the object that needs to be checked
+   * 
+   * @param bb
+   *          the bb of the object that needs to be checked
+   * @param node
+   *          the node of the object that needs to be checked
    */
-  public void checkOctree(BoundingBox bb, CgNode node) {
+  public void checkBB(BoundingBox bb, CgNode node) {
     node.setVisible(false);
     final int result = viewFrustum.isObjectInFrustum(bb);
     if (result == ViewFrustum.INSIDE) {
@@ -86,29 +92,34 @@ public class ViewFrustumCulling implements Observer {
   }
 
   /**
-   * if visible scene nodes intersect an objectOctree, the object´s visibility is
-   * tested
-   * @param bb the bb of the object
-   * @param node the node of the object
-   * @param sceneOctree the visible sceneOctreeNode which is tested against the object´s octree
+   * if visible scene nodes intersect an objectOctree, the object´s visibility
+   * is tested
+   * 
+   * @param bb
+   *          the bb of the node
+   * @param node
+   *          the node of the object
+   * @param sceneOctree
+   *          the visible sceneOctreeNode which is tested against the object´s
+   *          octree
    */
   public void extractNodeContent(BoundingBox bb, CgNode node, OctreeNode<Integer> sceneOctree) {
     // if the node is already tested and set visible, it must not be tested
     // anymore because it may be set invisible then
     if ((!testedObjects.contains(node))) {
       if (boxesIntersect(sceneOctree.getBoundingBox(), bb)) {
-        checkOctree(bb, node);
+        checkBB(bb, node);
       } else {
         // boxes of sceneOctree and objectOctree do not intersect, so
         // the object can not be visible
         node.setVisible(false);
       }
-
     }
   }
 
   /**
    * checks if two boxes intersect
+   * 
    * @param one
    *          first bounding box
    * @param two
@@ -139,7 +150,9 @@ public class ViewFrustumCulling implements Observer {
 
   /**
    * extracts all children of a node and adds them to a list
-   * @param node node whose children should be extracted (rootNode)
+   * 
+   * @param node
+   *          node whose children should be extracted (rootNode)
    * @return list with all children
    */
   public ArrayList<CgNode> traversalNode(CgNode node) {
@@ -158,10 +171,13 @@ public class ViewFrustumCulling implements Observer {
   }
 
   /**
-   * extracts the (leaf-)nodes of the sceneOctree which are visible or intersect the
-   * frustum
-   * @param node sceneOctree
-   * @param nodesInFrustum list to which the visible or intersected nodes are added
+   * extracts the (leaf-)nodes of the sceneOctree which are fully visible or
+   * intersect the frustum
+   * 
+   * @param node
+   *          sceneOctree
+   * @param nodesInFrustum
+   *          list to which the visible or intersected nodes are added
    */
   public void extractNodesOfFrustum(OctreeNode<Integer> node, ArrayList<OctreeNode<Integer>> nodesInFrustum) {
     final int numberOfChildren = node.getNumberOfChildren();
@@ -173,6 +189,7 @@ public class ViewFrustumCulling implements Observer {
       extractNodesOfFrustum(node.getChild(i), nodesInFrustum);
     }
   }
+
   @Override
   /*
    * (non-Javadoc)
@@ -184,13 +201,14 @@ public class ViewFrustumCulling implements Observer {
   public void update(Observable arg0, Object arg1) {
     visibleNodes.clear();
     testedObjects.clear();
-    
+
     // Update camera values
-    viewFrustum.setEye(Camera.getInstance().getEye()); //TODO
+    viewFrustum.setEye(Camera.getInstance().getEye()); // TODO
     viewFrustum.setUp(Camera.getInstance().getUp().getNormalized());
-    viewFrustum.setCameraRight((Camera.getInstance().getUp()
-        .cross(Camera.getInstance().getEye().subtract(Camera.getInstance().getRef()))).getNormalized());
-    
+    viewFrustum.setCameraRight(
+        (Camera.getInstance().getUp().cross(Camera.getInstance().getEye().subtract(Camera.getInstance().getRef())))
+            .getNormalized());
+
     // Recalculate planes of frustum
     viewFrustum.calculateFrustumPlanes(Camera.getInstance().getNearClippingPlane(),
         Camera.getInstance().getFarClippingPlane(), viewRatio);
@@ -201,31 +219,23 @@ public class ViewFrustumCulling implements Observer {
       if (visibleNodes.size() > 0) {
         for (int j = 0; j < objects.size(); ++j) {
           for (int k = 0; k < visibleNodes.size(); ++k) {
-//            extractNodeContent(octrees.get(j), objects.get(j), visibleNodes.get(k));
             extractNodeContent(bbs.get(j), objects.get(j), visibleNodes.get(k));
           }
         }
-      }
-      else {
+      } else {
         if (visibleNodes.size() == 0) {
-          //no visible sceneOctree nodes, so all objects can be set invisible
+          // no visible sceneOctree nodes, so all objects can be set invisible
           for (int j = 0; j < objects.size(); ++j) {
             objects.get(j).setVisible(false);
           }
         }
       }
-//      int counter =0;
-//      for(int i = 0; i < objects.size(); ++i){
-//        if(objects.get(i).isVisible()){
-//          counter++;
-//        }
-//      }
     }
   }
 
   /**
-   * builds the octree for the scene and generates octrees for every mesh of the
-   * scene
+   * builds the octree for the scene and saves the bounding boxes for every mesh
+   * of the scene
    */
   public void rebuildOctree() {
     if (rootNode.getNumChildren() == 0) {
@@ -240,9 +250,8 @@ public class ViewFrustumCulling implements Observer {
       TriangleMeshTools.cleanup(obj);
     }
     octreeScene = createSceneOctree(objects);
-    //make sceneOctree (in-)visible
-//    rootNode.addChild(new CgNode(octreeScene, "octreeScene")); // 
-    
+    // make sceneOctree (in-)visible (only for use in test mode)
+    // rootNode.addChild(new CgNode(octreeScene, "octreeScene")); //
   }
 
   /**

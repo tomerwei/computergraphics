@@ -11,7 +11,7 @@ import cgresearch.graphics.scenegraph.CgNode;
 public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Integer> {
 
   /**
-   * Elemente des Nodes
+   * elements of the octree
    */
   private ArrayList<CgNode> elements = new ArrayList<CgNode>();
 
@@ -25,12 +25,16 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   // indices for corner points
   public static final int FBR = 5, FBL = 4, FTR = 6, FTL = 7, NBR = 1, NBL = 0, NTR = 2, NTL = 3;
 
-  public OctreeFactoryStrategyScene(ArrayList<CgNode> objects) {
-    this.elements = objects;
+  /**
+   * constructor
+   * @param elements
+   */
+  public OctreeFactoryStrategyScene(ArrayList<CgNode> elements) {
+    this.elements = elements;
   }
   
   /**
-   * gibt die BoundingBox der kompletten Szene zurueck
+   * returns the bounding box of the scene octree
    */
   @Override
   public BoundingBox getBoundingBox() {
@@ -66,7 +70,8 @@ public class OctreeFactoryStrategyScene implements IOctreeFactoryStrategy<Intege
   @Override
   public boolean elementFitsInNode(int elementIndex, OctreeNode<Integer> node) {
     BoundingBox cur = elements.get(elementIndex).getBoundingBox();
-    Vector nodeUpperRight = new Vector(node.getLowerLeft().get(X) + node.getLength(), node.getLowerLeft().get(Y) + node.getLength(), node.getLowerLeft().get(Z) + node.getLength());
+    Vector nodeUpperRight = new Vector(node.getLowerLeft().get(X) + node.getLength(),
+        node.getLowerLeft().get(Y) + node.getLength(), node.getLowerLeft().get(Z) + node.getLength());
 
     if (cur.getUpperRight().get(X) < node.getLowerLeft().get(X)) {
       return false;
