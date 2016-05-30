@@ -11,9 +11,12 @@ import cgresearch.graphics.datastructures.points.Point;
 import cgresearch.graphics.datastructures.points.PointCloud;
 import cgresearch.graphics.datastructures.points.PointNeighborsQuery;
 
+
+
 public class IcpDistanceFunction {
 
   int x = 0, y = 1, z = 2;
+  double dk = 0.0;
 
   public IcpDistanceFunction() {
 
@@ -21,14 +24,15 @@ public class IcpDistanceFunction {
 
   public IPointCloud startAlgorithm(IPointCloud Base, IPointCloud Register, int iteration) {
     Point ux, up;
-    double dk = 0.0;
 
-    int[] nearestPoints = nearestPoints(Base, Register);
+    NearestPointWithKdTree nearest = new NearestPointWithKdTree();
+
+    int[] nearestPoints = nearest.nearestPoints(Base, Register);
 
     up = centerOfMassyBase(Base);
     ux = centerOfMassyRegister(Register, nearestPoints);
-    System.out.println("up: " + up.getPosition());
-    System.out.println("ux: " + ux.getPosition());
+//    System.out.println("up: " + up.getPosition());
+//    System.out.println("ux: " + ux.getPosition());
 
     Matrix covarianceMatrix = this.getCrossCovarianceMatrix(Base, Register, up, ux, nearestPoints);
     cgresearch.core.math.Matrix q = this.getQ(covarianceMatrix);
@@ -44,23 +48,7 @@ public class IcpDistanceFunction {
 
   }
 
-  public int[] nearestPoints(IPointCloud Base, IPointCloud Register) {
-
-    int[] nearestPoints = new int[Base.getNumberOfPoints()];
-    PointNeighborsQuery nearest = new PointNeighborsQuery(Register);
-
-    for (int k = 0; k < Base.getNumberOfPoints(); k++) {
-
-      nearest.queryKnn(Base.getPoint(k).getPosition(), 1);
-
-      nearestPoints[k] = nearest.getNeigbor(0);
-      System.out.println("Platz in der RegisterCloud:" + nearestPoints[k]);
-
-      System.out.println("Punkt: " + Register.getPoint(nearestPoints[k]).getPosition());
-
-    }
-    return nearestPoints;
-  }
+  
 
   /**
    * calculate up = sum of nearest Points of Base PointCloud
@@ -162,7 +150,7 @@ public class IcpDistanceFunction {
         covariance.set(u, j, (covariance.get(u, j) - (up.getPosition().get(u) * ux.getPosition().get(j))));
       }
     }
-    System.out.println("Convariance Matrix SChritt:\n " + covariance.toString());
+//    System.out.println("Convariance Matrix SChritt:\n " + covariance.toString());
     return covariance;
 
   }
@@ -198,7 +186,7 @@ public class IcpDistanceFunction {
         q.set((1 + i), (1 + j), (covariance.get(i, j) + covariance.get(j, i) - (i == j ? q.get(0, 0) : 0)));
       }
     }
-    System.out.println("Matrix Q:\n " + q.toString());
+//    System.out.println("Matrix Q:\n " + q.toString());
     return q;
   }
 
@@ -254,7 +242,7 @@ public class IcpDistanceFunction {
 
     for (int i = 0; i < test.length; i++) {
       eigenVector.set(i, test[i]); //passen nur 3 rein
-      System.out.println("count i for eigenVector: "+eigenVector.get(i));
+//      System.out.println("count i for eigenVector: "+eigenVector.get(i));
     }
    
     return eigenVector;
@@ -296,7 +284,7 @@ public class IcpDistanceFunction {
     rotationMatrix.set(2, 2, ((eigenVector.get(q0) * eigenVector.get(q0)) + (eigenVector.get(q3) * eigenVector.get(q3))
         - (eigenVector.get(q1) * eigenVector.get(q1)) - (eigenVector.get(q2) * eigenVector.get(q2))));
 
-    System.out.println("RotationsMatrix: \n" + rotationMatrix.toString());
+//    System.out.println("RotationsMatrix: \n" + rotationMatrix.toString());
 
     return rotationMatrix;
 
@@ -330,7 +318,7 @@ public class IcpDistanceFunction {
             + rotation.get(2, 1) * upCloudRegister.getPosition().get(y)
             + rotation.get(2, 2) * upCloudRegister.getPosition().get(z))));
 
-    System.out.println("Translation: \n" + translation.toString());
+//    System.out.println("Translation: \n" + translation.toString());
 
     return translation;
   }
@@ -452,7 +440,7 @@ public class IcpDistanceFunction {
       Register.getPoint(i).getPosition().set(z, newPoints.getPoint(i).getPosition().get(z));
 
       // x_neu = R^t * ( x_alt - t)
-      System.out.println("Transponierte Rotations MAtrix :\n" + rotationMatrix.getTransposed().toString());
+//      System.out.println("Transponierte Rotations MAtrix :\n" + rotationMatrix.getTransposed().toString());
 
     }
   }

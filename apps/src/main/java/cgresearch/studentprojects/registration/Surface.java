@@ -8,6 +8,10 @@ import cgresearch.ui.IApplicationControllerGui;
 
 public class Surface extends CgApplication{
 	
+	/**
+	 * TODO: UPdate Dreate usw überarbeiten, damit das richtig funzt
+	 */
+	
 	private final CgRootNode rootNode;
 	CgNode basePointCloudNode;
 	
