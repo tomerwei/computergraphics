@@ -64,7 +64,7 @@ public final class Logger extends Observable {
 	 * Message is actually passed to the implemented loggers due to current
 	 * settings.
 	 */
-	private void printMessage(String message) {
+	private synchronized void printMessage(String message) {
 		messageCache.add(message);
 		if (messageCache.size() > 100) {
 			messageCache.removeFirst();
