@@ -1,5 +1,6 @@
 package cgresearch.studentprojects.posegen.datastructure;
 
+import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.picking.CgApplicationPickable;
@@ -24,16 +25,14 @@ public class BoneRotationPickable extends CgApplicationPickable {
 
 	@Override
 	public void itemPicked(String id) {
-		System.out.println("ID: " + id + " - Bone joint picked");
-		// TODO Auto-generated method stub
-
+		Logger.getInstance().message("ID: " + id + " - Bone joint picked");
 	}
 
 	@Override
 	public void itemMoved(String id) {
 		// TODO Auto-generated method stub
 		if (this.id.equals(id)) {
-			System.out.println("ID: " + id + " - Rotated by 1.0 degree");
+			Logger.getInstance().message("ID: " + id + " - Rotated by 1.0 degree");
 			bone.rotateUmBoneStart(1.0);
 		}
 
