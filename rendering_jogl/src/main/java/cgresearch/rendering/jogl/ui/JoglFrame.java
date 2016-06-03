@@ -111,6 +111,14 @@ public class JoglFrame extends JFrame implements IRenderFrame<JoglRenderNode>, O
   protected void takeScreenshot(String filename) {
     view.takeScreenshot(filename);
   }
+  
+  /**
+   * Getter for current JoglCanvas
+   * @return view:JoglCanvas
+   */
+  public JoglCanvas getCanvasView(){
+	  return this.view;
+  }
 
   @Override
   public void update(Observable o, Object arg) {
