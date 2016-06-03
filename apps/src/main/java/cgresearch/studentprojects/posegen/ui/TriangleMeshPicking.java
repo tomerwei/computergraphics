@@ -282,14 +282,14 @@ public class TriangleMeshPicking implements Observable, MouseListener, MouseWhee
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent event) {
-		handleSelectionClick(event.getX(), event.getY(), joglCanvas.getWidth(), joglCanvas.getHeight(),
-				Camera.getInstance().getOpeningAngle());
+	public void mouseClicked(MouseEvent e) {
+		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		handleSelectionClick(e.getX(), e.getY(), joglCanvas.getWidth(), joglCanvas.getHeight(),
+				Camera.getInstance().getOpeningAngle());
 
 	}
 
