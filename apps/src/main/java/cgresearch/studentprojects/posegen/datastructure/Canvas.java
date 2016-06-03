@@ -1,12 +1,14 @@
 package cgresearch.studentprojects.posegen.datastructure;
 
-import javax.management.RuntimeErrorException;
-
+import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
+import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
+import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
+import cgresearch.graphics.material.ResourceManager;
 
 /**
  * 
@@ -18,19 +20,22 @@ public class Canvas extends TriangleMesh {
 	// ALTERNATIV LINE SEGMENT STATT TRIANGLE MESH?!
 	public Canvas() {
 		super();
-		// IVertex vertexTopLeft = new Vertex(VectorFactory.createVector3(0.0,
-		// 0.9, 0.0));
-		// IVertex vertexBottomRight = new
-		// Vertex(VectorFactory.createVector3(0.9, 0.0, 0.0));
-		// IVertex vertexBottomLeft = new
-		// Vertex(VectorFactory.createVector3(0.0, 0.0, 0.0));
-		//
-		// int indexTopLeft = this.addVertex(vertexTopLeft);
-		// int indexBottomRight = this.addVertex(vertexBottomRight);
-		// int indexBottomLeft = this.addVertex(vertexBottomLeft);
-		// this.addTriangle(indexBottomLeft, indexBottomRight, indexTopLeft);
+		loadTexture();
+		createCanvas(-2, -1.5, 4, 3, 0.1); // 4:3
+		this.getMaterial().setTextureId("pirate"); // 640*480 / 4:3
+		this.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+		// this.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0,
+		// 0, 0));
+		// this.getMaterial().setReflectionAmbient(VectorFactory.createVector3(0.2,
+		// 0.2, 0.2));
+		// this.getMaterial().setSpecularShininess(50);
+	}
 
-		createCanvas(-0.75, -1.5, 1.5, 3.0, 0.1);
+	public void loadTexture() {
+		// C:\8Bachelor\baproject\computergraphics\assets\posegen
+		CgTexture pirateTexture = new CgTexture("posegen/piratePose.png");
+		String pirateTextureId = "pirate";
+		ResourceManager.getTextureManagerInstance().addResource(pirateTextureId, pirateTexture);
 	}
 
 	/**
@@ -57,7 +62,10 @@ public class Canvas extends TriangleMesh {
 		int indexTopLeft;
 		int indexBottomRight;
 		int indexTopRight;
-		// int triangleCounter = 0;
+
+		// double x_bonusLast = 0.0;// ((double)x-1)/amountWide;
+		// double y_bonusLast = 0.0;// ((double)y-1)/amountHeight;
+
 		for (int x = 0; x < amountWide; x++) {
 			for (int y = 0; y < amountHeight; y++) {
 				// Left side of triangles (Top and bottom)
@@ -71,19 +79,38 @@ public class Canvas extends TriangleMesh {
 				IVertex vertexTopLeft = new Vertex(VectorFactory.createVector3(posLeftX, posTopY, -0.1));
 				IVertex vertexBottomRight = new Vertex(VectorFactory.createVector3(posRightX, posBottomY, -0.1));
 				IVertex vertexTopRight = new Vertex(VectorFactory.createVector3(posRightX, posTopY, -0.1));
+
+				Vector normal = new Vector(0.0, 0.0, -1.0);
+				normal.normalize();
+				vertexBottomLeft.setNormal(normal);
+				vertexTopLeft.setNormal(normal);
+				vertexBottomRight.setNormal(normal);
+				vertexTopRight.setNormal(normal);
+
 				indexBottomLeft = this.addVertex(vertexBottomLeft);
 				indexTopLeft = this.addVertex(vertexTopLeft);
 				indexBottomRight = this.addVertex(vertexBottomRight);
 				indexTopRight = this.addVertex(vertexTopRight);
-				this.addTriangle(indexBottomLeft, indexTopRight, indexTopLeft);
-				this.addTriangle(indexBottomLeft, indexBottomRight, indexTopRight);
 
-				// this.setTriangleVisible(triangleCounter++, false);
-				// triangleCounter++;
+				double x_faktorTexCoords = ((double) x) / amountWide;
+				double y_faktorTexCoords = ((double) y) / amountHeight;
+				double x_bonusLast = ((double) x - 1) / amountWide;
+				double y_bonusLast = ((double) y - 1) / amountHeight;
+
+				int ta = this.addTextureCoordinate(new Vector(x_bonusLast, y_bonusLast, 0.0));
+				int tb = this.addTextureCoordinate(new Vector(1.0 * x_faktorTexCoords, y_bonusLast, 0.0));
+				int tc = this.addTextureCoordinate(new Vector(1.0 * x_faktorTexCoords, 1.0 * y_faktorTexCoords, 0.0));
+				int td = this.addTextureCoordinate(new Vector(x_bonusLast, 1.0 * y_faktorTexCoords, 0.0));
+
+				Triangle triangle1 = new Triangle(indexBottomLeft, indexTopRight, indexTopLeft, ta, tc, td);
+				Triangle triangle2 = new Triangle(indexBottomLeft, indexBottomRight, indexTopRight, ta, tb, tc);
+				this.addTriangle(triangle1);
+				this.addTriangle(triangle2);
 			}
 		}
-		this.material.addShaderId(Material.SHADER_WIREFRAME);
-		this.material.setTransparency(1.0);
+		// this.material.addShaderId(Material.SHADER_WIREFRAME);
+		// this.material.addShaderId(Material.SHADER_PHONG_SHADING);
+		// this.material.setTransparency(1.0);
 
 		updateRenderStructures();
 
