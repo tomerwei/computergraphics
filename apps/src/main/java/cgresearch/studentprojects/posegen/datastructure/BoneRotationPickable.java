@@ -2,17 +2,19 @@ package cgresearch.studentprojects.posegen.datastructure;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.picking.CgApplicationPickable;
 import cgresearch.graphics.picking.PickingItem;
+import cgresearch.studentprojects.posegen.editor.EditorManager;
 
 public class BoneRotationPickable extends CgApplicationPickable {
 
 	private final Bone bone;
 	private final String id;
+	private final EditorManager editorManager;
 
-	public BoneRotationPickable(Bone bone) {
+	public BoneRotationPickable(Bone bone, EditorManager editorManager) {
 		super();
+		this.editorManager = editorManager;
 		this.bone = bone;
 		Vector boneStartPosition = bone.getStartPosition();
 		PickingItem item = new PickingItem(boneStartPosition);
@@ -34,6 +36,7 @@ public class BoneRotationPickable extends CgApplicationPickable {
 		if (this.id.equals(id)) {
 			Logger.getInstance().message("ID: " + id + " - Rotated by 1.0 degree");
 			bone.rotateUmBoneStart(1.0);
+			editorManager.rotateBoneId(bone.getId());
 		}
 
 	}

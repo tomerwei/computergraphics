@@ -17,6 +17,7 @@ import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.rendering.jogl.ui.JoglFrame;
 import cgresearch.studentprojects.posegen.datastructure.Bone;
+import cgresearch.studentprojects.posegen.datastructure.BoneMeshMap;
 import cgresearch.studentprojects.posegen.datastructure.BoneNode;
 import cgresearch.studentprojects.posegen.datastructure.BoneRotationPickable;
 import cgresearch.studentprojects.posegen.datastructure.Canvas;
@@ -29,20 +30,29 @@ import cgresearch.studentprojects.posegen.ui.TriangleMeshPicking;
 public class Editor extends CgApplication {
 
 	private EditorStatus editorStatus;
+	private static EditorManager editorManager;
 	private CgNode root;
 	private SkelettNode skelett;
-	private Canvas canvas;
+	private Canvas canvas = new Canvas(); //init here to forward the ref
 	private static JoglFrame joglFrame = null; // To be set in main
+
+	private BoneMeshMap boneMeshMap;
 
 	public Editor() {
 		root = getCgRootNode();
+
+		boneMeshMap = new BoneMeshMap(canvas);
+		editorManager = new EditorManager(boneMeshMap); //Has to be called befor bone added
+		
 		skelett = generateSkelett();
 		editorStatus = new EditorStatus(skelett.getBones());
+		
 		root.addChild(skelett);
+
 	}
 
 	public void initEditorContent() {
-		canvas = new Canvas();
+//		canvas = new Canvas();
 		CanvasNode canvasNode = new CanvasNode(canvas, "Canvas1");
 
 		TriangleMeshPicking meshPicking = initTrianglePicking();
@@ -66,9 +76,9 @@ public class Editor extends CgApplication {
 
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
-				if (iterator.hasNext()) { //Select the first bone selected
+				if (iterator.hasNext()) { // Select the first bone selected
 					ITriangleMesh mesh = iterator.next();
-					if(mesh instanceof Bone){
+					if (mesh instanceof Bone) {
 						editorStatus.selectBone(((Bone) mesh));
 					}
 				}
@@ -88,8 +98,11 @@ public class Editor extends CgApplication {
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) {
 					ITriangleMesh mesh = iterator.next();
-					for(ITriangle triangle : pickedTriangles.get(mesh)){
-						triangle.setVisible(false);
+					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(),
+							pickedTriangles.get(mesh));
+					for (ITriangle triangle : pickedTriangles.get(mesh)) {
+
+//						triangle.setVisible(false);
 					}
 				}
 			}
@@ -130,7 +143,7 @@ public class Editor extends CgApplication {
 	private static BoneNode addBone(Bone parentBone, Vector offset, String boneName) {
 		Bone newBone = new Bone(parentBone, offset);
 		BoneNode newBoneNode = new BoneNode(newBone, boneName);
-		new BoneRotationPickable(newBone);
+		new BoneRotationPickable(newBone, editorManager);
 		return newBoneNode;
 	}
 

@@ -60,9 +60,11 @@ public class Canvas extends TriangleMesh {
 		int amountHeight = (int) (totalHeight / squaresize);
 
 		int indexBottomLeft;
+		int indexBottomLeft2; //Jedes face  eigene vectoren
 		int indexTopLeft;
 		int indexBottomRight;
 		int indexTopRight;
+		int indexTopRight2;
 
 		// double x_bonusLast = 0.0;// ((double)x-1)/amountWide;
 		// double y_bonusLast = 0.0;// ((double)y-1)/amountHeight;
@@ -76,10 +78,13 @@ public class Canvas extends TriangleMesh {
 				double posBottomY = (y * squaresize) + offsetY; // bottom
 				double posTopY = (y * squaresize) + squaresize + offsetY; // top
 
-				IVertex vertexBottomLeft = new Vertex(VectorFactory.createVector3(posLeftX, posBottomY, -0.1));
-				IVertex vertexTopLeft = new Vertex(VectorFactory.createVector3(posLeftX, posTopY, -0.1));
-				IVertex vertexBottomRight = new Vertex(VectorFactory.createVector3(posRightX, posBottomY, -0.1));
-				IVertex vertexTopRight = new Vertex(VectorFactory.createVector3(posRightX, posTopY, -0.1));
+				VertexMutable vertexBottomLeft = new VertexMutable(VectorFactory.createVector3(posLeftX, posBottomY, -0.1));
+				VertexMutable vertexBottomLeft2 = new VertexMutable(VectorFactory.createVector3(posLeftX, posBottomY, -0.1));
+
+				VertexMutable vertexTopLeft = new VertexMutable(VectorFactory.createVector3(posLeftX, posTopY, -0.1));
+				VertexMutable vertexBottomRight = new VertexMutable(VectorFactory.createVector3(posRightX, posBottomY, -0.1));
+				VertexMutable vertexTopRight = new VertexMutable(VectorFactory.createVector3(posRightX, posTopY, -0.1));
+				VertexMutable vertexTopRight2 = new VertexMutable(VectorFactory.createVector3(posRightX, posTopY, -0.1));
 
 				Vector normal = new Vector(0.0, 0.0, -1.0);
 				normal.normalize();
@@ -89,9 +94,11 @@ public class Canvas extends TriangleMesh {
 				vertexTopRight.setNormal(normal);
 				
 				indexBottomLeft = this.addVertex(vertexBottomLeft);
+				indexBottomLeft2 = this.addVertex(vertexBottomLeft2);
 				indexTopLeft = this.addVertex(vertexTopLeft);
 				indexBottomRight = this.addVertex(vertexBottomRight);
 				indexTopRight = this.addVertex(vertexTopRight);
+				indexTopRight2 = this.addVertex(vertexTopRight2);
 
 				double x_faktorTexCoords = ((double) x) / amountWide;
 				double y_faktorTexCoords = ((double) y) / amountHeight;
@@ -104,7 +111,7 @@ public class Canvas extends TriangleMesh {
 				int td = this.addTextureCoordinate(new Vector(x_bonusLast, 1.0 * y_faktorTexCoords, 0.0));
 
 				Triangle triangle1 = new Triangle(indexBottomLeft, indexTopRight, indexTopLeft, ta, tc, td);
-				Triangle triangle2 = new Triangle(indexBottomLeft, indexBottomRight, indexTopRight, ta, tb, tc);
+				Triangle triangle2 = new Triangle(indexBottomLeft2, indexBottomRight, indexTopRight2, ta, tb, tc);
 				this.addTriangle(triangle1);
 				this.addTriangle(triangle2);
 			}
