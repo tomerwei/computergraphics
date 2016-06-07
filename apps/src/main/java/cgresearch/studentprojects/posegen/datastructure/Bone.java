@@ -14,7 +14,7 @@ import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 //Todo bone representation als Node (line start..end) (dot start, anderer dot ende, ROTATIONsymb? gelenk)
 public class Bone extends TriangleMesh {
 	private static int currentMaxId = 0; // GlobalCounter to generate unique IDs
-	private final int id; // Geht das beim laden?!
+	private final int id; // Geht das beim laden/marshaling?!
 
 	// Triangle tri = new Triangle(v1, v2, v3, boundaryVertices);
 	// TriangleMesh mesh = new TriangleMesh();
@@ -51,24 +51,34 @@ public class Bone extends TriangleMesh {
 
 		this.endBonePosition = startBonePosition.add(endBonePositionOffset);
 
-		updateAfterChange(); //Update Mesh, picking item etc.
+		updateAfterChange(); // Update Mesh, picking item etc.
 	}
 
 	public void registerABoneAsChild(Bone bone) {
 		addChildBoneToList(bone);
 	}
-	
-	public void updateAfterChange(){
+
+	public void updateAfterChange() {
 		updateMesh();
-		
-		
-		//Remove old picking item
-		//Reset new picking item
+
+		// Remove old picking item
+		// Reset new picking item
 	}
 
+	private void setColor(Vector color){
+		this.material.setReflectionDiffuse(color); // Color
+	}
+	
+	public void setColorSelected(){
+		setColor(new Vector(1.0 / 255 * 60, 1.0 / 255 * 60, 1.0 / 255 * 155));
+	}
+	
+	public void setColorNotSelected(){
+		setColor(new Vector(1.0 / 255 * 240, 1.0 / 255 * 240, 1.0 / 255 * 120));
+	}
+	
 	private void updateMesh() {
 		this.clear();
-
 		Vector v1 = new Vector(this.startBonePosition.get(0) + 0.05, this.startBonePosition.get(1) + 0.05,
 				this.startBonePosition.get(2) - 0.05);
 
@@ -93,7 +103,10 @@ public class Bone extends TriangleMesh {
 		this.addTriangle(0, 2, 3);
 		this.addTriangle(0, 1, 3);
 		this.addTriangle(1, 2, 3);
+		
+		setColorNotSelected();
 		this.updateRenderStructures();
+		
 	}
 
 	public Vector getEndPosition() {
@@ -146,9 +159,10 @@ public class Bone extends TriangleMesh {
 		updateAfterChange();
 	}
 
-	public Vector getStartPosition(){
+	public Vector getStartPosition() {
 		return startBonePosition;
 	}
+
 	public void moveBoneEndByOffset(Vector offset) {
 		// this.startBonePosition = this.startBonePosition.add(offset);
 		this.endBonePosition = this.endBonePosition.add(offset);
@@ -166,52 +180,50 @@ public class Bone extends TriangleMesh {
 		childbonesAtEnd.add(bone);
 	}
 
-//	public void rotate(int degree) {
-//		// Was drehen?
-//		// Basis bone oder position? oder start und ende?
-//
-//		// Rotationsmatrix enthält verdrehung um die Achse des Startpunkts
-//		Matrix rotationsMatrix = new Matrix(2, 2);
-//
-//		// TODO generate rotationsMatrix
-//
-//		for (Bone childBone : childbonesAtEnd) {
-//			childBone.movedByParentBone(rotationsMatrix);
-//		}
-//	}
+	// public void rotate(int degree) {
+	// // Was drehen?
+	// // Basis bone oder position? oder start und ende?
+	//
+	// // Rotationsmatrix enthält verdrehung um die Achse des Startpunkts
+	// Matrix rotationsMatrix = new Matrix(2, 2);
+	//
+	// // TODO generate rotationsMatrix
+	//
+	// for (Bone childBone : childbonesAtEnd) {
+	// childBone.movedByParentBone(rotationsMatrix);
+	// }
+	// }
 
-	public double degToRad(double deg){
+	public double degToRad(double deg) {
 		return (deg * Math.PI / 180);
 	}
-	
+
 	/*
-	public void rotate(double winkelDeg) {
+	 * public void rotate(double winkelDeg) {
+	 * 
+	 * double winkelRad = degToRad(winkelDeg); // xStrich = double xEnd =
+	 * this.endBonePosition.get(0); double yEnd = this.endBonePosition.get(1);
+	 * double zEnd = this.endBonePosition.get(2);
+	 * 
+	 * double xStart = this.startBonePosition.get(0); double yStart =
+	 * this.startBonePosition.get(1); double zStart =
+	 * this.startBonePosition.get(2);
+	 * 
+	 * xEnd -= xStart; //Auf den startpunkt verschoben yEnd -= yStart; zEnd -=
+	 * zStart;
+	 * 
+	 * 
+	 * double xStrich = (xEnd * Math.cos(winkelRad)) - (yEnd *
+	 * Math.sin(winkelRad)); double yStrich = (yEnd * Math.cos(winkelRad)) +
+	 * (xEnd * Math.sin(winkelRad));
+	 * 
+	 * // (xEnd * Math.cos(winkel)) + yEnd * Math.sin(winkel); double zStrich =
+	 * zEnd;
+	 * 
+	 * this.endBonePosition = new Vector(xStrich, yStrich, zStrich);
+	 * updateMesh(); }
+	 */
 
-		double winkelRad = degToRad(winkelDeg);
-		// xStrich =
-		double xEnd = this.endBonePosition.get(0);
-		double yEnd = this.endBonePosition.get(1);
-		double zEnd = this.endBonePosition.get(2);
-
-		double xStart = this.startBonePosition.get(0);
-		double yStart = this.startBonePosition.get(1);
-		double zStart = this.startBonePosition.get(2);
-
-		xEnd -= xStart; //Auf den startpunkt verschoben
-		yEnd -= yStart;
-		zEnd -= zStart;
-		
-		
-		double xStrich = (xEnd * Math.cos(winkelRad)) - (yEnd * Math.sin(winkelRad));
-		double yStrich = (yEnd * Math.cos(winkelRad)) + (xEnd * Math.sin(winkelRad));
-
-		// (xEnd * Math.cos(winkel)) + yEnd * Math.sin(winkel);
-		double zStrich = zEnd;
-		
-		this.endBonePosition = new Vector(xStrich, yStrich, zStrich);
-		updateMesh();
-	}*/
-	
 	public void rotateUmBoneStart(double winkelDeg) {
 
 		double winkelRad = degToRad(winkelDeg);
@@ -223,22 +235,27 @@ public class Bone extends TriangleMesh {
 		double xStart = this.startBonePosition.get(0);
 		double yStart = this.startBonePosition.get(1);
 		double zStart = this.startBonePosition.get(2);
-		
+
 		double xStrich = xStart + Math.cos(winkelRad) * (xEnd - xStart) - Math.sin(winkelRad) * (yEnd - yStart);
 		double yStrich = yStart + Math.sin(winkelRad) * (xEnd - xStart) + Math.cos(winkelRad) * (yEnd - yStart);
 		double zStrich = zEnd;
-		
+
 		this.endBonePosition = new Vector(xStrich, yStrich, zStrich);
 		updateAfterChange();
-		
-		//Alle Childs um den drehpunkt dieses bones drehen
-		for(Bone childbone : childbonesAtEnd){
-			childbone.rotateUmDrehpunkt(winkelDeg, new Vector(xStart, yStart, zStart)); //Drehung der childs um die achse dieses Bones
+
+		// Alle Childs um den drehpunkt dieses bones drehen
+		for (Bone childbone : childbonesAtEnd) {
+			childbone.rotateUmDrehpunkt(winkelDeg, new Vector(xStart, yStart, zStart)); // Drehung
+																						// der
+																						// childs
+																						// um
+																						// die
+																						// achse
+																						// dieses
+																						// Bones
 		}
 	}
-	
-	
-	
+
 	public void rotateUmDrehpunkt(double winkelDeg, Vector drehPunkt) {
 
 		double winkelRad = degToRad(winkelDeg);
@@ -248,26 +265,27 @@ public class Bone extends TriangleMesh {
 
 		double xDrehpunkt = drehPunkt.get(0);
 		double yDrehpunkt = drehPunkt.get(1);
-		
-		double xStrich = xDrehpunkt + Math.cos(winkelRad) * (xEnd - xDrehpunkt) - Math.sin(winkelRad) * (yEnd - yDrehpunkt);
-		double yStrich = yDrehpunkt + Math.sin(winkelRad) * (xEnd - xDrehpunkt) + Math.cos(winkelRad) * (yEnd - yDrehpunkt);
+
+		double xStrich = xDrehpunkt + Math.cos(winkelRad) * (xEnd - xDrehpunkt)
+				- Math.sin(winkelRad) * (yEnd - yDrehpunkt);
+		double yStrich = yDrehpunkt + Math.sin(winkelRad) * (xEnd - xDrehpunkt)
+				+ Math.cos(winkelRad) * (yEnd - yDrehpunkt);
 		double zStrich = zEnd;
-		
+
 		this.endBonePosition = new Vector(xStrich, yStrich, zStrich);
-		
-		//Start des bones rotieren
+
+		// Start des bones rotieren
 		xEnd = this.startBonePosition.get(0);
 		yEnd = this.startBonePosition.get(1);
 		zEnd = this.startBonePosition.get(2);
 		xStrich = xDrehpunkt + Math.cos(winkelRad) * (xEnd - xDrehpunkt) - Math.sin(winkelRad) * (yEnd - yDrehpunkt);
 		yStrich = yDrehpunkt + Math.sin(winkelRad) * (xEnd - xDrehpunkt) + Math.cos(winkelRad) * (yEnd - yDrehpunkt);
-		zStrich = zEnd;		
+		zStrich = zEnd;
 		this.startBonePosition = new Vector(xStrich, yStrich, zStrich);
-		
-		//TODO startBone wieder mit dem endbone des parents gleichsetzen
+
+		// TODO startBone wieder mit dem endbone des parents gleichsetzen
 		updateAfterChange();
 	}
-	
 
 	public void movedByParentBone(Matrix rotationsMatrix) {
 		startBonePosition = parentBone.getEndPosition();

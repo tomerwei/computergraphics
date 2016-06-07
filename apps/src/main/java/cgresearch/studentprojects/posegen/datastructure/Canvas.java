@@ -29,6 +29,7 @@ public class Canvas extends TriangleMesh {
 		// this.getMaterial().setReflectionAmbient(VectorFactory.createVector3(0.2,
 		// 0.2, 0.2));
 		// this.getMaterial().setSpecularShininess(50);
+		this.getMaterial().setTransparency(0.5);
 	}
 
 	public void loadTexture() {
@@ -86,7 +87,7 @@ public class Canvas extends TriangleMesh {
 				vertexTopLeft.setNormal(normal);
 				vertexBottomRight.setNormal(normal);
 				vertexTopRight.setNormal(normal);
-
+				
 				indexBottomLeft = this.addVertex(vertexBottomLeft);
 				indexTopLeft = this.addVertex(vertexTopLeft);
 				indexBottomRight = this.addVertex(vertexBottomRight);

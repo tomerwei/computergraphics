@@ -264,6 +264,12 @@ public class TriangleMeshPicking implements Observable, MouseListener, MouseWhee
 	public void registerPickableMesh(ITriangleMesh pickableMesh) {
 		pickingItems.add(pickableMesh);
 	}
+	
+	public void registerAllPickableMesh(List<? extends ITriangleMesh> pickableMeshes){
+		for(ITriangleMesh mesh : pickableMeshes){
+			registerPickableMesh(mesh);
+		}
+	}
 
 	public void registerTriangleMeshClickedHandler(ITriangleMeshClickedHandler triangleMeshClickedHandler) {
 		clickedHandler.add(triangleMeshClickedHandler);

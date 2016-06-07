@@ -1,8 +1,10 @@
-package cgresearch.studentprojects.posegen;
+package cgresearch.studentprojects.posegen.editor;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 
 import cgresearch.AppLauncher.RenderSystem;
 import cgresearch.AppLauncher.UI;
@@ -26,26 +28,59 @@ import cgresearch.studentprojects.posegen.ui.TriangleMeshPicking;
 
 public class Editor extends CgApplication {
 
+	private EditorStatus editorStatus;
 	private CgNode root;
-
+	private SkelettNode skelett;
 	private Canvas canvas;
 	private static JoglFrame joglFrame = null; // To be set in main
 
 	public Editor() {
 		root = getCgRootNode();
-		CgNode skelett = generateSkelett();
-
+		skelett = generateSkelett();
+		editorStatus = new EditorStatus(skelett.getBones());
 		root.addChild(skelett);
 	}
 
 	public void initEditorContent() {
 		canvas = new Canvas();
 		CanvasNode canvasNode = new CanvasNode(canvas, "Canvas1");
-//		PickableMesh pickAbleMesh = new PickableMesh(canvas);
+
+		TriangleMeshPicking meshPicking = initTrianglePicking();
+		TriangleMeshPicking bonePicking = initBonePicking(skelett.getBones());
+
+		TriangleMeshInteractionTool meshInteractionTool = new TriangleMeshInteractionTool(joglFrame);
+		meshInteractionTool.addMeshPicking(meshPicking);
+		meshInteractionTool.addMeshPicking(bonePicking);
+
+		root.addChild(canvasNode);
+	}
+
+	private TriangleMeshPicking initBonePicking(List<Bone> bones) {
+		TriangleMeshPicking meshPicking = new TriangleMeshPicking();
+
+		meshPicking.registerAllPickableMesh(bones);
+
+		ITriangleMeshClickedHandler boneMeshClickedHandler = new ITriangleMeshClickedHandler() {
+			@Override
+			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles) {
+
+				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
+				Iterator<ITriangleMesh> iterator = keySet.iterator();
+				if (iterator.hasNext()) { //Select the first bone selected
+					ITriangleMesh mesh = iterator.next();
+					if(mesh instanceof Bone){
+						editorStatus.selectBone(((Bone) mesh));
+					}
+				}
+			}
+		};
+		meshPicking.registerTriangleMeshClickedHandler(boneMeshClickedHandler);
+		return meshPicking;
+	}
+
+	private TriangleMeshPicking initTrianglePicking() {
 		TriangleMeshPicking meshPicking = new TriangleMeshPicking();
 		meshPicking.registerPickableMesh(canvas);
-		TriangleMeshInteractionTool meshInteractionTool = new TriangleMeshInteractionTool(joglFrame);
-
 		ITriangleMeshClickedHandler triangleMeshClickedHandler = new ITriangleMeshClickedHandler() {
 			@Override
 			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles) {
@@ -53,10 +88,7 @@ public class Editor extends CgApplication {
 			}
 		};
 		meshPicking.registerTriangleMeshClickedHandler(triangleMeshClickedHandler);
-
-		meshInteractionTool.addMeshPicking(meshPicking);
-
-		root.addChild(canvasNode);
+		return meshPicking;
 	}
 
 	@Override
