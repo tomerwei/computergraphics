@@ -43,7 +43,6 @@ public class ToolBar extends JToolBar implements ActionListener, KeyListener {
 		buttonMap.put(actionCommand, button);
 
 		add(button);
-		System.out.println("Added button");
 	}
 
 	public void setUpButtons() {

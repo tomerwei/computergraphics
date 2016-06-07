@@ -33,7 +33,7 @@ public class Editor extends CgApplication {
 	private static EditorManager editorManager;
 	private CgNode root;
 	private SkelettNode skelett;
-	private Canvas canvas = new Canvas(); //init here to forward the ref
+	private Canvas canvas = new Canvas(); // init here to forward the ref
 	private static JoglFrame joglFrame = null; // To be set in main
 
 	private BoneMeshMap boneMeshMap;
@@ -42,17 +42,18 @@ public class Editor extends CgApplication {
 		root = getCgRootNode();
 
 		boneMeshMap = new BoneMeshMap(canvas);
-		editorManager = new EditorManager(boneMeshMap); //Has to be called befor bone added
-		
+		editorManager = new EditorManager(boneMeshMap); // Has to be called
+														// befor bone added
+
 		skelett = generateSkelett();
 		editorStatus = new EditorStatus(skelett.getBones());
-		
+
 		root.addChild(skelett);
 
 	}
 
 	public void initEditorContent() {
-//		canvas = new Canvas();
+		// canvas = new Canvas();
 		CanvasNode canvasNode = new CanvasNode(canvas, "Canvas1");
 
 		TriangleMeshPicking meshPicking = initTrianglePicking();
@@ -98,12 +99,11 @@ public class Editor extends CgApplication {
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) {
 					ITriangleMesh mesh = iterator.next();
-					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(),
-							pickedTriangles.get(mesh));
-					for (ITriangle triangle : pickedTriangles.get(mesh)) {
-
-//						triangle.setVisible(false);
-					}
+					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), pickedTriangles.get(mesh));
+					// for (ITriangle triangle : pickedTriangles.get(mesh)) {
+					//
+					// triangle.setVisible(false);
+					// }
 				}
 			}
 		};

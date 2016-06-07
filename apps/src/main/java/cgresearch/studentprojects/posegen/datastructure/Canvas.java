@@ -2,10 +2,8 @@ package cgresearch.studentprojects.posegen.datastructure;
 
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
-import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.ResourceManager;

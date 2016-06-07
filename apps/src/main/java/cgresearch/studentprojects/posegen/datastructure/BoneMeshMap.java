@@ -37,13 +37,11 @@ public class BoneMeshMap {
 		Set<ITriangle> listAsSet = new HashSet<>(list);
 		boneTriangleMap.remove(boneId);
 		boneTriangleMap.put(boneId, new LinkedList<>(listAsSet));
-
-		System.out.println("SizeListOld: " + list.size() + " SizeAfterSet'ing: " + listAsSet.size());
 	}
 
 	public SelectedMesh getLinkedTriangles(Integer boneId) {
-		
+
 		return new SelectedMesh(mesh, boneTriangleMap.get(boneId));
-		//return boneTriangleMap.get(boneId);
+		// return boneTriangleMap.get(boneId);
 	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
-import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
@@ -65,18 +64,18 @@ public class Bone extends TriangleMesh {
 		// Reset new picking item
 	}
 
-	private void setColor(Vector color){
+	private void setColor(Vector color) {
 		this.material.setReflectionDiffuse(color); // Color
 	}
-	
-	public void setColorSelected(){
+
+	public void setColorSelected() {
 		setColor(new Vector(1.0 / 255 * 60, 1.0 / 255 * 60, 1.0 / 255 * 155));
 	}
-	
-	public void setColorNotSelected(){
+
+	public void setColorNotSelected() {
 		setColor(new Vector(1.0 / 255 * 240, 1.0 / 255 * 240, 1.0 / 255 * 120));
 	}
-	
+
 	private void updateMesh() {
 		this.clear();
 		Vector v1 = new Vector(this.startBonePosition.get(0) + 0.05, this.startBonePosition.get(1) + 0.05,
@@ -103,10 +102,10 @@ public class Bone extends TriangleMesh {
 		this.addTriangle(0, 2, 3);
 		this.addTriangle(0, 1, 3);
 		this.addTriangle(1, 2, 3);
-		
+
 		setColorNotSelected();
 		this.updateRenderStructures();
-		
+
 	}
 
 	public Vector getEndPosition() {

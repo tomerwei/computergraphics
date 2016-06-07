@@ -28,7 +28,8 @@ import javafx.beans.Observable;
  * @author Lars Porep
  *
  */
-public class TriangleMeshPicking implements Observable, MouseListener, MouseWheelListener, MouseMotionListener, KeyListener {
+public class TriangleMeshPicking
+		implements Observable, MouseListener, MouseWheelListener, MouseMotionListener, KeyListener {
 
 	/**
 	 * List of pickable meshes.
@@ -89,7 +90,7 @@ public class TriangleMeshPicking implements Observable, MouseListener, MouseWhee
 	 */
 	private boolean activeCheck() {
 		if (!isActive()) {
-			Logger.getInstance().message("MeshPicking isActive == false");
+			// Logger.getInstance().message("MeshPicking isActive == false");
 			return false; // Not active
 		}
 		if (pickingItems.size() == 0) {
@@ -263,9 +264,9 @@ public class TriangleMeshPicking implements Observable, MouseListener, MouseWhee
 	public void registerPickableMesh(ITriangleMesh pickableMesh) {
 		pickingItems.add(pickableMesh);
 	}
-	
-	public void registerAllPickableMesh(List<? extends ITriangleMesh> pickableMeshes){
-		for(ITriangleMesh mesh : pickableMeshes){
+
+	public void registerAllPickableMesh(List<? extends ITriangleMesh> pickableMeshes) {
+		for (ITriangleMesh mesh : pickableMeshes) {
 			registerPickableMesh(mesh);
 		}
 	}
@@ -288,7 +289,7 @@ public class TriangleMeshPicking implements Observable, MouseListener, MouseWhee
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+
 	}
 
 	@Override
