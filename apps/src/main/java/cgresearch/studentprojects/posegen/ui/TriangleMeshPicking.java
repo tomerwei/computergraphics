@@ -130,7 +130,6 @@ public class TriangleMeshPicking implements Observable, MouseListener, MouseWhee
 			for (ITriangle triangle : getTriangles(mesh)) {
 				if (isIntersectRayTriangle(ray, triangle, mesh)) {
 					pickedTriangles.add(triangle);
-					triangle.setVisible(false);
 					mesh.updateRenderStructures();
 				}
 			}

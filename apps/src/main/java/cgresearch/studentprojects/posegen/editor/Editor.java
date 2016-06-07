@@ -84,7 +84,14 @@ public class Editor extends CgApplication {
 		ITriangleMeshClickedHandler triangleMeshClickedHandler = new ITriangleMeshClickedHandler() {
 			@Override
 			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles) {
-				System.out.println(pickedTriangles.size());
+				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
+				Iterator<ITriangleMesh> iterator = keySet.iterator();
+				while (iterator.hasNext()) {
+					ITriangleMesh mesh = iterator.next();
+					for(ITriangle triangle : pickedTriangles.get(mesh)){
+						triangle.setVisible(false);
+					}
+				}
 			}
 		};
 		meshPicking.registerTriangleMeshClickedHandler(triangleMeshClickedHandler);
