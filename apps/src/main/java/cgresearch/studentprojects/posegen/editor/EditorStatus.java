@@ -40,4 +40,7 @@ public class EditorStatus {
 		}
 	}
 
+	public Integer getCurrentSelectedBone(){
+		return currentlySelectedBoneId;
+	}
 }
