@@ -5,6 +5,8 @@
  */
 package cgresearch.graphics.datastructures.trianglemesh;
 
+import java.util.Arrays;
+
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
@@ -224,4 +226,39 @@ public class Triangle implements ITriangle {
   public void setVisible(boolean visible) {
     this.isVisible = visible;
   }
+  
+  @Override
+  public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (isVisible ? 1231 : 1237);
+	result = prime * result + ((normal == null) ? 0 : normal.hashCode());
+	result = prime * result + Arrays.hashCode(texCoordIndices);
+	result = prime * result + Arrays.hashCode(vertexIndices);
+	return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+	if (this == obj)
+		return true;
+	if (obj == null)
+		return false;
+	if (getClass() != obj.getClass())
+		return false;
+	Triangle other = (Triangle) obj;
+	if (isVisible != other.isVisible)
+		return false;
+	if (normal == null) {
+		if (other.normal != null)
+			return false;
+	} else if (!normal.equals(other.normal))
+		return false;
+	if (!Arrays.equals(texCoordIndices, other.texCoordIndices))
+		return false;
+	if (!Arrays.equals(vertexIndices, other.vertexIndices))
+		return false;
+		return true;
+  }
+  
 }
