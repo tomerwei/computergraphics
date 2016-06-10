@@ -22,6 +22,7 @@ public class Canvas extends TriangleMesh {
 		createCanvas(-2, -1.5, 4, 3, 0.1); // 4:3
 		this.getMaterial().setTextureId("pirate"); // 640*480 / 4:3
 		this.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+		// this.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		// this.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0,
 		// 0, 0));
 		// this.getMaterial().setReflectionAmbient(VectorFactory.createVector3(0.2,
@@ -35,6 +36,11 @@ public class Canvas extends TriangleMesh {
 		CgTexture pirateTexture = new CgTexture("posegen/piratePose.png");
 		String pirateTextureId = "pirate";
 		ResourceManager.getTextureManagerInstance().addResource(pirateTextureId, pirateTexture);
+	}
+
+	public void deleteDoubleVertices() {
+		// this.getNumberOfTriangles()
+		// for(this.getTriangle(index))
 	}
 
 	/**
@@ -58,17 +64,26 @@ public class Canvas extends TriangleMesh {
 		int amountHeight = (int) (totalHeight / squaresize);
 
 		int indexBottomLeft;
-		int indexBottomLeft2; //Jedes face  eigene vectoren
+		// int indexBottomLeft2; // Jedes face eigene vectoren
 		int indexTopLeft;
 		int indexBottomRight;
 		int indexTopRight;
-		int indexTopRight2;
+		// int indexTopRight2;
 
 		// double x_bonusLast = 0.0;// ((double)x-1)/amountWide;
 		// double y_bonusLast = 0.0;// ((double)y-1)/amountHeight;
 
+		// How far to look back for an allready existing vertex
+		int lookback = amountHeight * 4; // Last row, 4 vertices p. quad
+
 		for (int x = 0; x < amountWide; x++) {
-			for (int y = 0; y < amountHeight; y++) {
+			for (int y = 0; y < amountHeight; y++) { // Height has to be
+														// innerloop. Only
+														// tested if a vertex is
+														// allready there in the
+														// last: height*n ::
+														// tryToAddOrGetExisting(..,
+														// int)
 				// Left side of triangles (Top and bottom)
 				double posLeftX = (x * squaresize) + offsetX;
 				double posRightX = (x * squaresize) + squaresize + offsetX;
@@ -76,13 +91,19 @@ public class Canvas extends TriangleMesh {
 				double posBottomY = (y * squaresize) + offsetY; // bottom
 				double posTopY = (y * squaresize) + squaresize + offsetY; // top
 
-				VertexMutable vertexBottomLeft = new VertexMutable(VectorFactory.createVector3(posLeftX, posBottomY, -0.1));
-				VertexMutable vertexBottomLeft2 = new VertexMutable(VectorFactory.createVector3(posLeftX, posBottomY, -0.1));
+				VertexMutable vertexBottomLeft = new VertexMutable(
+						VectorFactory.createVector3(posLeftX, posBottomY, -0.1));
+				// VertexMutable vertexBottomLeft2 = new
+				// VertexMutable(VectorFactory.createVector3(posLeftX,
+				// posBottomY, -0.1));
 
 				VertexMutable vertexTopLeft = new VertexMutable(VectorFactory.createVector3(posLeftX, posTopY, -0.1));
-				VertexMutable vertexBottomRight = new VertexMutable(VectorFactory.createVector3(posRightX, posBottomY, -0.1));
+				VertexMutable vertexBottomRight = new VertexMutable(
+						VectorFactory.createVector3(posRightX, posBottomY, -0.1));
 				VertexMutable vertexTopRight = new VertexMutable(VectorFactory.createVector3(posRightX, posTopY, -0.1));
-				VertexMutable vertexTopRight2 = new VertexMutable(VectorFactory.createVector3(posRightX, posTopY, -0.1));
+				// VertexMutable vertexTopRight2 = new
+				// VertexMutable(VectorFactory.createVector3(posRightX, posTopY,
+				// -0.1));
 
 				Vector normal = new Vector(0.0, 0.0, -1.0);
 				normal.normalize();
@@ -90,13 +111,25 @@ public class Canvas extends TriangleMesh {
 				vertexTopLeft.setNormal(normal);
 				vertexBottomRight.setNormal(normal);
 				vertexTopRight.setNormal(normal);
-				
-				indexBottomLeft = this.addVertex(vertexBottomLeft);
-				indexBottomLeft2 = this.addVertex(vertexBottomLeft2);
-				indexTopLeft = this.addVertex(vertexTopLeft);
-				indexBottomRight = this.addVertex(vertexBottomRight);
-				indexTopRight = this.addVertex(vertexTopRight);
-				indexTopRight2 = this.addVertex(vertexTopRight2);
+
+				// indexBottomLeft = this.addVertex(vertexBottomLeft);
+				// indexBottomLeft2 = this.addVertex(vertexBottomLeft2);
+				// indexTopLeft = this.addVertex(vertexTopLeft);
+				// indexBottomRight = this.addVertex(vertexBottomRight);
+				// indexTopRight = this.addVertex(vertexTopRight);
+				// indexTopRight2 = this.addVertex(vertexTopRight2);
+
+				//
+				// Static counter ++ :: Wann ist ein neuer oder alter
+				// widerverwendet worden.;
+
+				// OPTIMIERUNG möglich: Nur die letzten n vertices testen.
+				// (Width+4?) Eine reihe
+
+				indexBottomLeft = tryToAddOrGetExisting(vertexBottomLeft, lookback);
+				indexTopLeft = tryToAddOrGetExisting(vertexTopLeft, lookback);
+				indexBottomRight = tryToAddOrGetExisting(vertexBottomRight, lookback);
+				indexTopRight = tryToAddOrGetExisting(vertexTopRight, lookback);
 
 				double x_faktorTexCoords = ((double) x) / amountWide;
 				double y_faktorTexCoords = ((double) y) / amountHeight;
@@ -109,7 +142,7 @@ public class Canvas extends TriangleMesh {
 				int td = this.addTextureCoordinate(new Vector(x_bonusLast, 1.0 * y_faktorTexCoords, 0.0));
 
 				Triangle triangle1 = new Triangle(indexBottomLeft, indexTopRight, indexTopLeft, ta, tc, td);
-				Triangle triangle2 = new Triangle(indexBottomLeft2, indexBottomRight, indexTopRight2, ta, tb, tc);
+				Triangle triangle2 = new Triangle(indexBottomLeft, indexBottomRight, indexTopRight, ta, tb, tc);
 				this.addTriangle(triangle1);
 				this.addTriangle(triangle2);
 			}
@@ -119,6 +152,39 @@ public class Canvas extends TriangleMesh {
 		// this.material.setTransparency(1.0);
 
 		updateRenderStructures();
+		System.out.println(this.getNumberOfVertices());
+	}
 
+	// private int tryToAddOrGetExisting(VertexMutable vertex) {
+	// Vector position = vertex.getPosition();
+	// int numberOfVertices = this.getNumberOfVertices();
+	// for (int i = 0; i < numberOfVertices; i++) {
+	// if (this.getVertex(i).getPosition().equals(position)) {
+	// return i;
+	// }
+	// }
+	// return this.addVertex(vertex);
+	// }
+
+	/**
+	 * Is there allready a vertex with the given coords. If there is a vertex ->
+	 * Returns the index of the vertex. Not there -> adds vertex, and returns
+	 * index
+	 * 
+	 * @param vertex
+	 * @return
+	 */
+	private int tryToAddOrGetExisting(VertexMutable vertex, int testOnlyLastN) {
+		Vector position = vertex.getPosition();
+		int numberOfVertices = this.getNumberOfVertices();
+		for (int i = numberOfVertices - 1; i > numberOfVertices - testOnlyLastN; i--) {
+			if (i < 0 || i >= numberOfVertices) {
+				break; // Out of range
+			}
+			if (this.getVertex(i).getPosition().equals(position)) {
+				return i;
+			}
+		}
+		return this.addVertex(vertex);
 	}
 }
