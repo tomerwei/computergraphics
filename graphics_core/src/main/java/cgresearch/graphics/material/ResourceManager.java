@@ -47,6 +47,8 @@ public class ResourceManager {
         new CgGlslShader("shader/vertex_shader_wireframe.glsl", "shader/fragment_shader_wireframe.glsl"));
     shaderInstance.addResource(Material.SHADER_TEXTURE,
         new CgGlslShader("shader/vertex_shader_texture.glsl", "shader/fragment_shader_texture.glsl"));
+    shaderInstance.addResource(Material.SHADER_TEXTURE_NO_LIGHT,
+            new CgGlslShader("shader/vertex_shader_texture.glsl", "shader/fragment_shader_texture_nolight.glsl"));
     shaderInstance.addResource(Material.SHADER_PHONG_SHADING,
         new CgGlslShader("shader/vertex_shader_phong_shading.glsl", "shader/fragment_shader_phong_shading.glsl"));
     shaderInstance.addResource(Material.SHADER_GOURAUD_SHADING,

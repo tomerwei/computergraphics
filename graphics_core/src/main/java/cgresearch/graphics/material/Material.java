@@ -32,6 +32,7 @@ public class Material extends Observable {
    * Ids for the default shaders.
    */
   public static final String SHADER_TEXTURE = "SHADER_TEXTURE";
+  public static final String SHADER_TEXTURE_NO_LIGHT = "SHADER_TEXTURE_NO_LIGHT";
   public static final String SHADER_ENVIRONMENT_MAPPING = "SHADER_ENVIRONMENT_MAPPING";
   public static final String SHADER_PHONG_SHADING = "SHADER_PHONG_SHADING";
   public static final String SHADER_COMIC = "SHADER_COMIC";
@@ -131,6 +132,11 @@ public class Material extends Observable {
    */
   private double transparency = 1;
 
+  /**
+   * Defines if the texture Contains an alpha channel and the renderfactory should use glBlend-Mode
+   */
+  private boolean useTextureAlphaChannel = false;
+  
   /**
    * Constructor
    */
@@ -240,6 +246,7 @@ public class Material extends Observable {
     }
     textureId = other.textureId;
     showSophisticatesMesh = other.showSophisticatesMesh;
+    useTextureAlphaChannel = other.useTextureAlphaChannel;
   }
 
   /**
@@ -379,5 +386,13 @@ public class Material extends Observable {
 
   public double getTransparency() {
     return transparency;
+  }
+  
+  public void setTextureUsesAlpha(boolean useTextureAlphaChannel){
+	  this.useTextureAlphaChannel = useTextureAlphaChannel;
+  }
+  
+  public boolean getTextureUsesAlpha(){
+	  return useTextureAlphaChannel;
   }
 }

@@ -127,6 +127,10 @@ public class RenderContentTriangleMesh implements IRenderContent {
     }
     return false;
   }
+  
+  private boolean usesTransparentTexture(){
+	  return triangleMesh.getMaterial().getTextureUsesAlpha();
+  }
 
   /**
    * Init structures.
@@ -333,6 +337,11 @@ public class RenderContentTriangleMesh implements IRenderContent {
     if (usesWireframe()) {
       gl.glDisableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX);
     }
+    if(usesTransparentTexture()){
+    	gl.glEnable(GL2.GL_BLEND);
+    	gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+    }
+	  
   }
 
   Vector light;
