@@ -81,6 +81,7 @@ public class Editor extends CgApplication {
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof Bone) {
 						editorStatus.selectBone(((Bone) mesh));
+						canvas.enableWireframe();
 					}
 				}
 			}

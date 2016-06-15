@@ -15,13 +15,25 @@ import cgresearch.graphics.material.ResourceManager;
  */
 public class Canvas extends TriangleMesh {
 
+	public void enableWireframe(){
+		this.getMaterial().setShaderId(Material.SHADER_TEXTURE_NO_LIGHT);
+		this.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
+		this.getMaterial().setTextureUsesAlpha(true);
+	}
+	
+	public void disableWireframe(){
+		this.getMaterial().setShaderId(Material.SHADER_TEXTURE_NO_LIGHT);
+		this.getMaterial().setTextureUsesAlpha(true);
+	}
 	// ALTERNATIV LINE SEGMENT STATT TRIANGLE MESH?!
 	public Canvas() {
 		super();
 		loadTexture();
 		createCanvas(-2, -1.5, 4, 3, 0.1); // 4:3
 		this.getMaterial().setTextureId("pirate"); // 640*480 / 4:3
-		this.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+		disableWireframe();
+//		this.getMaterial().setShaderId(Material.SHADER_TEXTURE);
+//		this.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 		// this.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		// this.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0,
 		// 0, 0));
@@ -36,11 +48,6 @@ public class Canvas extends TriangleMesh {
 		CgTexture pirateTexture = new CgTexture("posegen/piratePose.png");
 		String pirateTextureId = "pirate";
 		ResourceManager.getTextureManagerInstance().addResource(pirateTextureId, pirateTexture);
-	}
-
-	public void deleteDoubleVertices() {
-		// this.getNumberOfTriangles()
-		// for(this.getTriangle(index))
 	}
 
 	/**
