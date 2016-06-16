@@ -19,12 +19,12 @@ public class EditorManager {
 	
 	public void rotateBoneId(Integer boneId, double deg, Vector rotationPosition){
 		
-		SelectedMesh selectedMesh = boneMeshMap.getLinkedTriangles(boneId);
+//		SelectedMesh selectedMesh = boneMeshMap.getLinkedTriangles(boneId);
 //		List<ITriangle> triangles = 
 //		for(ITriangle triangle : triangles){
 //			triangle.getA()
 //		}
-		selectedMesh.rotateTrianglePositions(deg, rotationPosition);
+//		selectedMesh.rotateTrianglePositions(deg, rotationPosition);
 	}
 	
 }

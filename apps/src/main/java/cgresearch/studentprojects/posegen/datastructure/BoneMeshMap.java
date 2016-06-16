@@ -26,6 +26,9 @@ public class BoneMeshMap {
 	}
 
 	public void linkBoneToTriangles(Integer boneId, List<ITriangle> triangles) {
+		if(null == boneId){
+			return; //No bone selected
+		}
 		if (!boneTriangleMap.containsKey(boneId)) { // New bone
 			boneTriangleMap.put(boneId, new LinkedList<ITriangle>());
 		}
@@ -37,11 +40,12 @@ public class BoneMeshMap {
 		Set<ITriangle> listAsSet = new HashSet<>(list);
 		boneTriangleMap.remove(boneId);
 		boneTriangleMap.put(boneId, new LinkedList<>(listAsSet));
+		updateBonesSelectedMesh(boneId);
 	}
 
-	public SelectedMesh getLinkedTriangles(Integer boneId) {
-
-		return new SelectedMesh(mesh, boneTriangleMap.get(boneId));
-		// return boneTriangleMap.get(boneId);
+	private void updateBonesSelectedMesh(Integer boneId) {
+		SelectedMesh selectedMesh = new SelectedMesh(mesh, boneTriangleMap.get(boneId));
+		Bone bone = Bone.getBoneById(boneId);
+		bone.setSelectedMesh(selectedMesh);
 	}
 }

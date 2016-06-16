@@ -1,16 +1,20 @@
 package cgresearch.studentprojects.posegen.datastructure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
+import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 
 public class Bone extends TriangleMesh {
+	
+	private static HashMap<Integer, Bone> boneIdMap = new HashMap<>();
 	private static int currentMaxId = 0; // GlobalCounter to generate unique IDs
 	private final int id; // Geht das beim laden/marshaling?!
 
@@ -19,14 +23,17 @@ public class Bone extends TriangleMesh {
 
 	private Bone parentBone; // Startbone == null initen
 	private List<Bone> childbonesAtEnd;
-
+	
+	private SelectedMesh selectedMesh = null;
+	
 	public Bone(Bone parentBone, Vector endBonePositionOffset) { // Offset
 																	// basiert
 																	// auf
 																	// basisstart
 		this.id = currentMaxId;
 		currentMaxId++;
-
+		boneIdMap.put(this.id, this);
+		
 		childbonesAtEnd = new ArrayList<Bone>(); // Init empty list
 		this.parentBone = parentBone;
 
@@ -43,7 +50,16 @@ public class Bone extends TriangleMesh {
 		setColorNotSelected();
 		updateAfterChange(); // Update Mesh, picking item etc.
 	}
+	
+	public static Bone getBoneById(Integer boneId){
+		return boneIdMap.get(boneId);
+	}
 
+	public void setSelectedMesh(SelectedMesh selectedMesh){
+		this.selectedMesh = selectedMesh;
+	}
+
+	
 	public void registerABoneAsChild(Bone bone) {
 		addChildBoneToList(bone);
 	}
@@ -247,6 +263,7 @@ public class Bone extends TriangleMesh {
 	}
 
 	public void rotateUmDrehpunkt(double winkelDeg, Vector drehPunkt) {
+		this.selectedMesh.rotateTrianglePositions(winkelDeg, drehPunkt);
 		double winkelRad = degToRad(winkelDeg);
 		double xEnd = this.endBonePosition.get(0);
 		double yEnd = this.endBonePosition.get(1);
