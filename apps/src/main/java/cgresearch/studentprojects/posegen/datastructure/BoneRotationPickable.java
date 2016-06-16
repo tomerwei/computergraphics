@@ -27,16 +27,19 @@ public class BoneRotationPickable extends CgApplicationPickable {
 
 	@Override
 	public void itemPicked(String id) {
-		Logger.getInstance().message("ID: " + id + " - Bone joint picked");
+//		Logger.getInstance().message("ID: " + id + " - Bone joint picked");
 	}
 
 	@Override
 	public void itemMoved(String id) {
 		// TODO Auto-generated method stub
 		if (this.id.equals(id)) {
-			Logger.getInstance().message("ID: " + id + " - Rotated by 1.0 degree");
-			bone.rotateUmBoneStart(1.0);
-			editorManager.rotateBoneId(bone.getId());
+			double deg = 1.0;
+//			Logger.getInstance().message("ID: " + id + " - Rotated by 1.0 degree");
+//			bone.rotateUmBoneStart(deg);
+			bone.rotateUmDrehpunkt(deg, bone.getStartPosition());
+			
+			editorManager.rotateBoneId(bone.getId(), deg, bone.getStartPosition());
 		}
 
 	}

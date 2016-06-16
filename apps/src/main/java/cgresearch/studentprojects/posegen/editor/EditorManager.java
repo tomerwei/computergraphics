@@ -1,5 +1,6 @@
 package cgresearch.studentprojects.posegen.editor;
 
+import cgresearch.core.math.Vector;
 import cgresearch.studentprojects.posegen.datastructure.BoneMeshMap;
 import cgresearch.studentprojects.posegen.datastructure.SelectedMesh;
 
@@ -16,13 +17,14 @@ public class EditorManager {
 	}
 	
 	
-	public void rotateBoneId(Integer boneId){
+	public void rotateBoneId(Integer boneId, double deg, Vector rotationPosition){
+		
 		SelectedMesh selectedMesh = boneMeshMap.getLinkedTriangles(boneId);
 //		List<ITriangle> triangles = 
 //		for(ITriangle triangle : triangles){
 //			triangle.getA()
 //		}
-		selectedMesh.moveTriangles(3.0);
+		selectedMesh.moveTriangles(deg, rotationPosition);
 	}
 	
 }
