@@ -10,34 +10,24 @@ import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 
-//Todo bone representation als Node (line start..end) (dot start, anderer dot ende, ROTATIONsymb? gelenk)
 public class Bone extends TriangleMesh {
 	private static int currentMaxId = 0; // GlobalCounter to generate unique IDs
 	private final int id; // Geht das beim laden/marshaling?!
 
-	// Triangle tri = new Triangle(v1, v2, v3, boundaryVertices);
-	// TriangleMesh mesh = new TriangleMesh();
 	private Vector startBonePosition;
 	private Vector endBonePosition;
 
 	private Bone parentBone; // Startbone == null initen
 	private List<Bone> childbonesAtEnd;
 
-	// private ITriangleMesh contentMesh = null;
-
-	// public Bone(ICgNodeContent content, String name){
-	// this(name, null, new Vector(1.0, 1.0, 0.0));
-	// }
 	public Bone(Bone parentBone, Vector endBonePositionOffset) { // Offset
 																	// basiert
 																	// auf
 																	// basisstart
-		// super(content, name);
 		this.id = currentMaxId;
 		currentMaxId++;
 
 		childbonesAtEnd = new ArrayList<Bone>(); // Init empty list
-
 		this.parentBone = parentBone;
 
 		if (null == this.parentBone) {
@@ -50,6 +40,7 @@ public class Bone extends TriangleMesh {
 
 		this.endBonePosition = startBonePosition.add(endBonePositionOffset);
 
+		setColorNotSelected();
 		updateAfterChange(); // Update Mesh, picking item etc.
 	}
 
@@ -103,7 +94,7 @@ public class Bone extends TriangleMesh {
 		this.addTriangle(0, 1, 3);
 		this.addTriangle(1, 2, 3);
 
-		setColorNotSelected();
+//		setColorNotSelected();
 		this.updateRenderStructures();
 
 	}
@@ -223,7 +214,7 @@ public class Bone extends TriangleMesh {
 	 * updateMesh(); }
 	 */
 
-	public void rotateUmBoneStart(double winkelDeg) {
+	private void rotateUmBoneStart(double winkelDeg) {
 
 		double winkelRad = degToRad(winkelDeg);
 		// xStrich =
@@ -256,7 +247,6 @@ public class Bone extends TriangleMesh {
 	}
 
 	public void rotateUmDrehpunkt(double winkelDeg, Vector drehPunkt) {
-
 		double winkelRad = degToRad(winkelDeg);
 		double xEnd = this.endBonePosition.get(0);
 		double yEnd = this.endBonePosition.get(1);
@@ -279,17 +269,20 @@ public class Bone extends TriangleMesh {
 		zEnd = this.startBonePosition.get(2);
 		xStrich = xDrehpunkt + Math.cos(winkelRad) * (xEnd - xDrehpunkt) - Math.sin(winkelRad) * (yEnd - yDrehpunkt);
 		yStrich = yDrehpunkt + Math.sin(winkelRad) * (xEnd - xDrehpunkt) + Math.cos(winkelRad) * (yEnd - yDrehpunkt);
+		
 		zStrich = zEnd;
 		this.startBonePosition = new Vector(xStrich, yStrich, zStrich);
-
+		
+		for (Bone childbone : childbonesAtEnd) {
+			childbone.rotateUmDrehpunkt(winkelDeg, drehPunkt);
+		}
 		// TODO startBone wieder mit dem endbone des parents gleichsetzen
 		updateAfterChange();
 	}
 
-	public void movedByParentBone(Matrix rotationsMatrix) {
+	private void movedByParentBone(Matrix rotationsMatrix) {
 		startBonePosition = parentBone.getEndPosition();
 		endBonePosition = endBonePosition; // ROTATE MIT MATRIX
-
 		for (Bone childBone : childbonesAtEnd) {
 			childBone.movedByParentBone(rotationsMatrix);
 		}
