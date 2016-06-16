@@ -20,7 +20,7 @@ public class SelectedMesh {
 		this.selectedTriangles = selectedTriangles;
 	}
 
-	public void moveTriangles(double deg, Vector rotationPosition) {
+	public void rotateTrianglePositions(double deg, Vector rotationPosition) {
 		if (selectedTriangles == null) {
 			System.out.println("selectedTriangles == NULL");
 			return;
@@ -47,22 +47,6 @@ public class SelectedMesh {
 			VertexMutable vexA = (VertexMutable) vexAVertex;
 			VertexMutable vexB = (VertexMutable) vexBVertex;
 			VertexMutable vexC = (VertexMutable) vexCVertex;
-
-			// Überlappt Anzeige fehler weil beide gleichen Z value
-//			double x = vexA.position.get(0) + 0.01;
-//			double y = vexA.position.get(1) + 0.01;
-//			double z = vexA.position.get(2);
-//			vexA.position.set(x, y, z);
-//
-//			x = vexB.position.get(0) + 0.01;
-//			y = vexB.position.get(1) + 0.01;
-//			z = vexB.position.get(2);
-//			vexB.position.set(x, y, z);
-//
-//			x = vexC.position.get(0) + 0.01;
-//			y = vexC.position.get(1) + 0.01;
-//			z = vexC.position.get(2);
-//			vexC.position.set(x, y, z);
 			
 			verticesToRotate.add(vexA);
 			verticesToRotate.add(vexB);
