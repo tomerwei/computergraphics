@@ -140,7 +140,7 @@ public class JoglShader {
       gl.glGetProgramInfoLog(programId, size, intBuffer, byteBuffer);
       String errorMsg = "";
       for (byte b : byteBuffer.array()) {
-        errorMsg += b;
+        errorMsg += (char)b;
       }
       return errorMsg;
     }
