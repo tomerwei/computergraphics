@@ -17,19 +17,22 @@ public class Canvas extends TriangleMesh {
 
 	public void enableWireframe(){
 		this.getMaterial().setShaderId(Material.SHADER_TEXTURE_NO_LIGHT);
+//		this.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		this.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 		this.getMaterial().setTextureUsesAlpha(true);
+		this.needsUpdateRenderStructures();
 	}
 	
 	public void disableWireframe(){
 		this.getMaterial().setShaderId(Material.SHADER_TEXTURE_NO_LIGHT);
+//		enableWireframe();
 		this.getMaterial().setTextureUsesAlpha(true);
 	}
 	// ALTERNATIV LINE SEGMENT STATT TRIANGLE MESH?!
 	public Canvas() {
 		super();
 		loadTexture();
-		createCanvas(-2, -1.5, 4, 3, 0.1); // 4:3
+		createCanvas(-2, -1.5, 4, 3, 0.5); // 4:3
 		this.getMaterial().setTextureId("pirate"); // 640*480 / 4:3
 		disableWireframe();
 //		this.getMaterial().setShaderId(Material.SHADER_TEXTURE);
@@ -71,14 +74,9 @@ public class Canvas extends TriangleMesh {
 		int amountHeight = (int) (totalHeight / squaresize);
 
 		int indexBottomLeft;
-		// int indexBottomLeft2; // Jedes face eigene vectoren
 		int indexTopLeft;
 		int indexBottomRight;
 		int indexTopRight;
-		// int indexTopRight2;
-
-		// double x_bonusLast = 0.0;// ((double)x-1)/amountWide;
-		// double y_bonusLast = 0.0;// ((double)y-1)/amountHeight;
 
 		// How far to look back for an allready existing vertex
 		int lookback = amountHeight * 4; // Last row, 4 vertices p. quad
@@ -119,30 +117,16 @@ public class Canvas extends TriangleMesh {
 				vertexBottomRight.setNormal(normal);
 				vertexTopRight.setNormal(normal);
 
-				// indexBottomLeft = this.addVertex(vertexBottomLeft);
-				// indexBottomLeft2 = this.addVertex(vertexBottomLeft2);
-				// indexTopLeft = this.addVertex(vertexTopLeft);
-				// indexBottomRight = this.addVertex(vertexBottomRight);
-				// indexTopRight = this.addVertex(vertexTopRight);
-				// indexTopRight2 = this.addVertex(vertexTopRight2);
-
-				//
-				// Static counter ++ :: Wann ist ein neuer oder alter
-				// widerverwendet worden.;
-
-				// OPTIMIERUNG möglich: Nur die letzten n vertices testen.
-				// (Width+4?) Eine reihe
-
 				indexBottomLeft = tryToAddOrGetExisting(vertexBottomLeft, lookback);
 				indexTopLeft = tryToAddOrGetExisting(vertexTopLeft, lookback);
 				indexBottomRight = tryToAddOrGetExisting(vertexBottomRight, lookback);
 				indexTopRight = tryToAddOrGetExisting(vertexTopRight, lookback);
 
-				double x_faktorTexCoords = ((double) x) / amountWide;
-				double y_faktorTexCoords = ((double) y) / amountHeight;
-				double x_bonusLast = ((double) x - 1) / amountWide;
-				double y_bonusLast = ((double) y - 1) / amountHeight;
-
+				double x_faktorTexCoords = ((double) x+1) / amountWide;
+				double y_faktorTexCoords = ((double) y+1) / amountHeight;
+				double x_bonusLast = ((double) x) / amountWide;
+				double y_bonusLast = ((double) y) / amountHeight;
+				
 				int ta = this.addTextureCoordinate(new Vector(x_bonusLast, y_bonusLast, 0.0));
 				int tb = this.addTextureCoordinate(new Vector(1.0 * x_faktorTexCoords, y_bonusLast, 0.0));
 				int tc = this.addTextureCoordinate(new Vector(1.0 * x_faktorTexCoords, 1.0 * y_faktorTexCoords, 0.0));
