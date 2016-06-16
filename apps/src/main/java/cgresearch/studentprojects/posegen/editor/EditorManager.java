@@ -24,7 +24,7 @@ public class EditorManager {
 //		for(ITriangle triangle : triangles){
 //			triangle.getA()
 //		}
-		selectedMesh.moveTriangles(deg, rotationPosition);
+		selectedMesh.rotateTrianglePositions(deg, rotationPosition);
 	}
 	
 }
