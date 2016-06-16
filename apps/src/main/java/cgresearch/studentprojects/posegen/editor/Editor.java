@@ -167,7 +167,7 @@ public class Editor extends CgApplication {
 		BoneNode leftLowerLeg = addBone(leftUpperLeg.getBone(), new Vector(-0.05, -0.80, 0.0), "leftLowerLeg");
 
 		BoneNode rightWaist = addBone(null, new Vector(0.5, 0.0, 0.0), "rightWaist");
-		BoneNode rightUpperLeg = addBone(rightWaist.getBone(), new Vector(0.0, -1.0, 0.0), "rightUpperLeg");
+		BoneNode rightUpperLeg = addBone(rightWaist.getBone(), new Vector(0.15, -1.0, 0.0), "rightUpperLeg");
 		BoneNode rightLowerLeg = addBone(rightUpperLeg.getBone(), new Vector(0.05, -0.80, 0.0), "rightLowerLeg");
 
 		skelett.addChild(waistToTop);
@@ -188,14 +188,14 @@ public class Editor extends CgApplication {
 		skelett.addChild(rightUpperLeg);
 		skelett.addChild(rightLowerLeg);
 
-		rightUpperLeg.getBone().rotateUmBoneStart(45);
-		leftUpperArm.getBone().rotateUmBoneStart(-90);
-		rightLowerArm.getBone().rotateUmBoneStart(25);
-		rightUpperArm.getBone().rotateUmBoneStart(25);
+//		rightUpperLeg.getBone().rotateUmBoneStart(45);
+//		leftUpperArm.getBone().rotateUmBoneStart(-90);
+//		rightLowerArm.getBone().rotateUmBoneStart(25);
+//		rightUpperArm.getBone().rotateUmBoneStart(25);
 
-		leftLowerLeg.getBone().rotateUmBoneStart(25);
+//		leftLowerLeg.getBone().rotateUmBoneStart(25);
 
-		head.getBone().rotateUmBoneStart(-20);
+//		head.getBone().rotateUmBoneStart(-20);
 
 		return skelett;
 	}
