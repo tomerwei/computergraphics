@@ -1,5 +1,7 @@
 package cgresearch.studentprojects.posegen.editor;
 
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +22,7 @@ import cgresearch.studentprojects.posegen.datastructure.Bone;
 import cgresearch.studentprojects.posegen.datastructure.BoneMeshMap;
 import cgresearch.studentprojects.posegen.datastructure.BoneNode;
 import cgresearch.studentprojects.posegen.datastructure.BoneRotationPickable;
+import cgresearch.studentprojects.posegen.datastructure.BoneStartPositionPickup;
 import cgresearch.studentprojects.posegen.datastructure.Canvas;
 import cgresearch.studentprojects.posegen.datastructure.CanvasNode;
 import cgresearch.studentprojects.posegen.datastructure.SkelettNode;
@@ -58,10 +61,12 @@ public class Editor extends CgApplication {
 
 		TriangleMeshPicking meshPicking = initTrianglePicking();
 		TriangleMeshPicking bonePicking = initBonePicking(skelett.getBones());
+		TriangleMeshPicking boneStartPosition = initBoneStartPositionPicking(skelett.getBones());
 
 		TriangleMeshInteractionTool meshInteractionTool = new TriangleMeshInteractionTool(joglFrame);
 		meshInteractionTool.addMeshPicking(meshPicking);
 		meshInteractionTool.addMeshPicking(bonePicking);
+		meshInteractionTool.addMeshPicking(boneStartPosition);
 
 		root.addChild(canvasNode);
 	}
@@ -73,7 +78,8 @@ public class Editor extends CgApplication {
 
 		ITriangleMeshClickedHandler boneMeshClickedHandler = new ITriangleMeshClickedHandler() {
 			@Override
-			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles) {
+			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
 
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
@@ -85,8 +91,111 @@ public class Editor extends CgApplication {
 					}
 				}
 			}
+
+			@Override
+			public void trianglesDragged(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void trianglesMoved(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles, Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void trianglesMouseDown(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void trianglesMouseRelease(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
 		};
 		meshPicking.registerTriangleMeshClickedHandler(boneMeshClickedHandler);
+		return meshPicking;
+	}
+
+	private TriangleMeshPicking initBoneStartPositionPicking(List<Bone> bones) {
+		TriangleMeshPicking meshPicking = new TriangleMeshPicking();
+
+		List<BoneStartPositionPickup> boneStartPositionPickupList = new ArrayList<>();
+		Iterator<Bone> boneIterator = bones.iterator();
+		while (boneIterator.hasNext()) {
+			Bone bone = boneIterator.next();
+			BoneStartPositionPickup boneStartPositionPickup = bone.getStartPositionPickup();
+			boneStartPositionPickupList.add(boneStartPositionPickup);
+		}
+
+		meshPicking.registerAllPickableMesh(boneStartPositionPickupList);
+
+		ITriangleMeshClickedHandler boneStartPositionClickedHandler = new ITriangleMeshClickedHandler() {
+
+			@Override
+			public void trianglesDragged(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
+				Iterator<ITriangleMesh> iterator = keySet.iterator();
+				if (iterator.hasNext()) { // Select the first
+											// BoneStartPositionPickup selected
+					ITriangleMesh mesh = iterator.next();
+					if (mesh instanceof BoneStartPositionPickup) {
+						((BoneStartPositionPickup) mesh).dragged(coordsClicked);
+					}
+				}
+			}
+
+			@Override
+			public void trianglesMouseDown(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
+				Iterator<ITriangleMesh> iterator = keySet.iterator();
+				if (iterator.hasNext()) { // Select the first
+											// BoneStartPositionPickup selected
+					ITriangleMesh mesh = iterator.next();
+					if (mesh instanceof BoneStartPositionPickup) {
+						((BoneStartPositionPickup) mesh).pickedUp();
+					}
+				}
+			}
+
+			@Override
+			public void trianglesMouseRelease(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
+				Iterator<ITriangleMesh> iterator = keySet.iterator();
+				if (iterator.hasNext()) { // Select the first
+											// BoneStartPositionPickup selected
+					ITriangleMesh mesh = iterator.next();
+					if (mesh instanceof BoneStartPositionPickup) {
+						((BoneStartPositionPickup) mesh).dropped();
+					}
+				}
+			}
+
+			@Override
+			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void trianglesMoved(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles, Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+		};
+		meshPicking.registerTriangleMeshClickedHandler(boneStartPositionClickedHandler);
 		return meshPicking;
 	}
 
@@ -95,7 +204,8 @@ public class Editor extends CgApplication {
 		meshPicking.registerPickableMesh(canvas);
 		ITriangleMeshClickedHandler triangleMeshClickedHandler = new ITriangleMeshClickedHandler() {
 			@Override
-			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles) {
+			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) {
@@ -107,6 +217,34 @@ public class Editor extends CgApplication {
 					// }
 				}
 			}
+
+			@Override
+			public void trianglesDragged(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void trianglesMoved(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles, Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void trianglesMouseDown(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void trianglesMouseRelease(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
+					Vector coordsClicked) {
+				// TODO Auto-generated method stub
+
+			}
+
 		};
 		meshPicking.registerTriangleMeshClickedHandler(triangleMeshClickedHandler);
 		return meshPicking;
@@ -144,7 +282,10 @@ public class Editor extends CgApplication {
 	private static BoneNode addBone(Bone parentBone, Vector offset, String boneName) {
 		Bone newBone = new Bone(parentBone, offset);
 		BoneNode newBoneNode = new BoneNode(newBone, boneName);
-		new BoneRotationPickable(newBone, editorManager);
+		CgNode boneStartPickupNode = new CgNode(newBone.getStartPositionPickup(), "BoneStartPositionPickup");
+		newBoneNode.addChild(boneStartPickupNode);
+
+		// new BoneRotationPickable(newBone, editorManager);
 		return newBoneNode;
 	}
 
@@ -188,14 +329,14 @@ public class Editor extends CgApplication {
 		skelett.addChild(rightUpperLeg);
 		skelett.addChild(rightLowerLeg);
 
-//		rightUpperLeg.getBone().rotateUmBoneStart(45);
-//		leftUpperArm.getBone().rotateUmBoneStart(-90);
-//		rightLowerArm.getBone().rotateUmBoneStart(25);
-//		rightUpperArm.getBone().rotateUmBoneStart(25);
+		// rightUpperLeg.getBone().rotateUmBoneStart(45);
+		// leftUpperArm.getBone().rotateUmBoneStart(-90);
+		// rightLowerArm.getBone().rotateUmBoneStart(25);
+		// rightUpperArm.getBone().rotateUmBoneStart(25);
 
-//		leftLowerLeg.getBone().rotateUmBoneStart(25);
+		// leftLowerLeg.getBone().rotateUmBoneStart(25);
 
-//		head.getBone().rotateUmBoneStart(-20);
+		// head.getBone().rotateUmBoneStart(-20);
 
 		return skelett;
 	}

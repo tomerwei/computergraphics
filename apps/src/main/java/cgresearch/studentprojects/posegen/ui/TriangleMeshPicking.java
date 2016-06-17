@@ -36,6 +36,12 @@ public class TriangleMeshPicking
 	 */
 	private List<ITriangleMesh> pickingItems = new ArrayList<ITriangleMesh>();
 	private List<ITriangleMeshClickedHandler> clickedHandler = new ArrayList<>();
+
+	private final static String COMMAND_MOUSEDOWN = "COMMAND_MOUSEDOWN";
+	private final static String COMMAND_MOUSECLICK = "COMMAND_MOUSECLICK";
+	private final static String COMMAND_MOUSEDRAG = "COMMAND_MOUSEDRAG";
+	private final static String COMMAND_MOUSEMOVE = "COMMAND_MOUSEMOVE";
+	private final static String COMMAND_MOUSERELEASE = "COMMAND_MOUSERELEASE";
 	/**
 	 * This flag indicates if the picking mode is active
 	 */
@@ -155,15 +161,30 @@ public class TriangleMeshPicking
 	 * @return HashMap<ITriangleMesh, List<ITriangle>> Map with meshes and list
 	 *         of selected Triangles for each one
 	 */
-	public void handleSelectionClick(int x, int y, int width, int height, double perspectiveAngle) {
+	public void handleSelectionClick(int x, int y, int width, int height, double perspectiveAngle, String commandType,
+			MouseEvent event) {
 		if (!activeCheck()) {
 			return;
 		}
 		HashMap<ITriangleMesh, List<ITriangle>> intersections = checkForIntersections(x, y, width, height,
 				perspectiveAngle);
 
+		Ray3D ray = getRayFromClickCoordinates(x, y, width, height, perspectiveAngle);
+		Vector coordsClicked = rayHitsZZero(ray);
+
 		for (ITriangleMeshClickedHandler handler : clickedHandler) {
-			handler.trianglesClicked(intersections);
+			if (commandType == TriangleMeshPicking.COMMAND_MOUSECLICK) {
+				handler.trianglesClicked(intersections, coordsClicked);
+			} else if (commandType == TriangleMeshPicking.COMMAND_MOUSEDRAG) {
+				handler.trianglesDragged(intersections, coordsClicked);
+			} else if (commandType == TriangleMeshPicking.COMMAND_MOUSEMOVE) {
+				handler.trianglesMoved(intersections, coordsClicked);
+			} else if (commandType == TriangleMeshPicking.COMMAND_MOUSEDOWN) {
+				handler.trianglesMouseDown(intersections, coordsClicked);
+			} else if (commandType == TriangleMeshPicking.COMMAND_MOUSERELEASE) {
+				handler.trianglesMouseRelease(intersections, coordsClicked);
+			}
+
 		}
 
 	}
@@ -230,6 +251,45 @@ public class TriangleMeshPicking
 		return true;
 	}
 
+	private Vector rayHitsZZero(Ray3D ray) {
+		Vector vert0 = new Vector(0.0, 0.0, 0.0);
+		Vector vert1 = new Vector(1.0, 0.0, 0.0);
+		Vector vert2 = new Vector(0.0, 1.0, 0.0);
+
+		// Find vectors for two edges sharing vert0
+		Vector edge1 = vert1.subtract(vert0);
+		Vector edge2 = vert2.subtract(vert0);
+
+		// Begin calculating determinant -- also used to calculate U parameter
+		Vector pvec = ray.getDirection().cross(edge2);
+
+		// If determinant is near zero, ray lies in plane of triangle
+		double det = edge1.multiply(pvec);
+
+		double invDet = 1.0d / det;
+
+		// Calculate distance from vert0 to ray origin
+		Vector tvec = ray.getPoint().subtract(vert0);
+
+		// Calculate U parameter and test bounds
+		double u = tvec.multiply(pvec) * invDet;
+
+		// Prepare to test V parameter
+		Vector qvec = tvec.cross(edge1);
+
+		// Calculate V parameter and test bounds
+		double v = ray.getDirection().multiply(qvec) * invDet;
+
+		// Calculate t, ray intersects triangle
+		// Wird derzeit nicht verwendet da derzeit nur boolean zurück gegeben
+		// wird
+		double t = edge2.multiply(qvec) * invDet;
+
+		// result == tuv.set(t, u, v);
+		return new Vector(u, v, t); // X, y, camera z
+		// return new Vector(t, u, v); //t = 5 = camera
+	}
+
 	/**
 	 * Compute a ray from the clicked screen coordinates.
 	 */
@@ -287,21 +347,35 @@ public class TriangleMeshPicking
 
 	}
 
+	public Vector mouseToRelative(MouseEvent event) {
+		// returns relative Position 50% of screen clicked etc.
+		double x = event.getX();
+		double y = event.getY();
+		double width = joglCanvas.getWidth();
+		double height = joglCanvas.getHeight();
+
+		double xAxis = width / x;
+		double yAxis = height / y;
+		return new Vector(xAxis, yAxis, 0.0);
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
+		handleSelectionClick(e.getX(), e.getY(), joglCanvas.getWidth(), joglCanvas.getHeight(),
+				Camera.getInstance().getOpeningAngle(), TriangleMeshPicking.COMMAND_MOUSECLICK, e);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		handleSelectionClick(e.getX(), e.getY(), joglCanvas.getWidth(), joglCanvas.getHeight(),
-				Camera.getInstance().getOpeningAngle());
+				Camera.getInstance().getOpeningAngle(), TriangleMeshPicking.COMMAND_MOUSEDOWN, e);
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+		handleSelectionClick(e.getX(), e.getY(), joglCanvas.getWidth(), joglCanvas.getHeight(),
+				Camera.getInstance().getOpeningAngle(), TriangleMeshPicking.COMMAND_MOUSERELEASE, e);
 
 	}
 
@@ -325,13 +399,15 @@ public class TriangleMeshPicking
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		handleSelectionClick(e.getX(), e.getY(), joglCanvas.getWidth(), joglCanvas.getHeight(),
+				Camera.getInstance().getOpeningAngle(), TriangleMeshPicking.COMMAND_MOUSEDRAG, e);
+		// System.out.println("DRAGGED");
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+		handleSelectionClick(e.getX(), e.getY(), joglCanvas.getWidth(), joglCanvas.getHeight(),
+				Camera.getInstance().getOpeningAngle(), TriangleMeshPicking.COMMAND_MOUSEMOVE, e);
 
 	}
 

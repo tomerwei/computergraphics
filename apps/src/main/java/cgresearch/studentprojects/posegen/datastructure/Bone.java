@@ -7,7 +7,6 @@ import java.util.List;
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
-import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
@@ -20,11 +19,17 @@ public class Bone extends TriangleMesh {
 
 	private Vector startBonePosition;
 	private Vector endBonePosition;
-
+	
 	private Bone parentBone; // Startbone == null initen
 	private List<Bone> childbonesAtEnd;
 	
 	private SelectedMesh selectedMesh = null;
+	
+	private BoneStartPositionPickup boneStartPositionPickup;
+	
+	public BoneStartPositionPickup getStartPositionPickup(){
+		return boneStartPositionPickup;
+	}
 	
 	public Bone(Bone parentBone, Vector endBonePositionOffset) { // Offset
 																	// basiert
@@ -46,9 +51,13 @@ public class Bone extends TriangleMesh {
 		}
 
 		this.endBonePosition = startBonePosition.add(endBonePositionOffset);
-
+		initBoneStartPositionPickup();
 		setColorNotSelected();
 		updateAfterChange(); // Update Mesh, picking item etc.
+	}
+	
+	private void initBoneStartPositionPickup(){
+		boneStartPositionPickup = new BoneStartPositionPickup(startBonePosition, this);
 	}
 	
 	public static Bone getBoneById(Integer boneId){
@@ -162,6 +171,17 @@ public class Bone extends TriangleMesh {
 			childbone.moveBoneByOffset(offset);
 		}
 
+		updateAfterChange();
+	}
+	
+	public void moveBoneStartToPosition(Vector newPosition){
+		this.startBonePosition = newPosition;
+		parentBone.moveBoneEndToPosition(newPosition);
+		updateAfterChange();
+	}
+	
+	public void moveBoneEndToPosition(Vector newPosition){
+		this.endBonePosition = newPosition;
 		updateAfterChange();
 	}
 
