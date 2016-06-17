@@ -201,7 +201,14 @@ public class Bone extends TriangleMesh {
 	}
 
 	public void moveBoneEndToPosition(Vector newPosition) {
-		this.endBonePosition = newPosition;
+		if(newPosition != this.endBonePosition){ //No endless loop, if a child recalls this one
+			this.endBonePosition = newPosition;
+			for(Bone bone:childbonesAtEnd){
+				bone.moveBoneStartToPosition(newPosition);
+			}
+		}
+		
+		
 		updateAfterChange();
 	}
 
