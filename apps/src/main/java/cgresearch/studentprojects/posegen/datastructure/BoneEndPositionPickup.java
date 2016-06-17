@@ -6,7 +6,7 @@ import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;
 
-public class BoneStartPositionPickup extends IBoneMovePositionPickup{
+public class BoneEndPositionPickup extends IBoneMovePositionPickup{
 
 	private Vector position;
 	private double radius = 0.06;
@@ -14,7 +14,7 @@ public class BoneStartPositionPickup extends IBoneMovePositionPickup{
 	private boolean isActive = false;
 	private final Bone parentBone; // Link to parent bone
 
-	public BoneStartPositionPickup(Vector position, Bone parentBone) {
+	public BoneEndPositionPickup(Vector position, Bone parentBone) {
 		this.position = position;
 		this.parentBone = parentBone;
 		updateMesh();
@@ -39,9 +39,9 @@ public class BoneStartPositionPickup extends IBoneMovePositionPickup{
 	 */
 	private void updateColor() {
 		if (isActive) {
-			this.getMaterial().setReflectionDiffuse(Material.PALETTE0_COLOR0);
+			this.getMaterial().setReflectionDiffuse(Material.PALETTE0_COLOR2);
 		} else {
-			this.getMaterial().setReflectionDiffuse(Material.PALETTE0_COLOR1);
+			this.getMaterial().setReflectionDiffuse(Material.PALETTE0_COLOR3);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class BoneStartPositionPickup extends IBoneMovePositionPickup{
 			double y = newPositionAsScreenCoords.get(1);
 			position.set(0, x);
 			position.set(1, y);
-			parentBone.moveBoneStartToPosition(new Vector(x, y, 0.0));
+			parentBone.moveBoneEndToPosition(new Vector(x, y, 0.0));
 		}
 		updateMesh();
 	}

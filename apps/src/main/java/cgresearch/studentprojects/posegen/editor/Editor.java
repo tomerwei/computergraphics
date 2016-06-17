@@ -1,6 +1,5 @@
 package cgresearch.studentprojects.posegen.editor;
 
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,12 +18,13 @@ import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.rendering.jogl.ui.JoglFrame;
 import cgresearch.studentprojects.posegen.datastructure.Bone;
+import cgresearch.studentprojects.posegen.datastructure.BoneEndPositionPickup;
 import cgresearch.studentprojects.posegen.datastructure.BoneMeshMap;
 import cgresearch.studentprojects.posegen.datastructure.BoneNode;
-import cgresearch.studentprojects.posegen.datastructure.BoneRotationPickable;
 import cgresearch.studentprojects.posegen.datastructure.BoneStartPositionPickup;
 import cgresearch.studentprojects.posegen.datastructure.Canvas;
 import cgresearch.studentprojects.posegen.datastructure.CanvasNode;
+import cgresearch.studentprojects.posegen.datastructure.IBoneMovePositionPickup;
 import cgresearch.studentprojects.posegen.datastructure.SkelettNode;
 import cgresearch.studentprojects.posegen.ui.ITriangleMeshClickedHandler;
 import cgresearch.studentprojects.posegen.ui.TriangleMeshInteractionTool;
@@ -127,15 +127,21 @@ public class Editor extends CgApplication {
 	private TriangleMeshPicking initBoneStartPositionPicking(List<Bone> bones) {
 		TriangleMeshPicking meshPicking = new TriangleMeshPicking();
 
-		List<BoneStartPositionPickup> boneStartPositionPickupList = new ArrayList<>();
+		List<IBoneMovePositionPickup> bonePositionPickupList = new ArrayList<>();
 		Iterator<Bone> boneIterator = bones.iterator();
 		while (boneIterator.hasNext()) {
 			Bone bone = boneIterator.next();
 			BoneStartPositionPickup boneStartPositionPickup = bone.getStartPositionPickup();
-			boneStartPositionPickupList.add(boneStartPositionPickup);
+			bonePositionPickupList.add(boneStartPositionPickup);
+
+			BoneEndPositionPickup boneEndPositionPickup = bone.getEndPositionPickup();
+			if (null != boneEndPositionPickup) {
+				bonePositionPickupList.add(boneEndPositionPickup);
+			}
+
 		}
 
-		meshPicking.registerAllPickableMesh(boneStartPositionPickupList);
+		meshPicking.registerAllPickableMesh(bonePositionPickupList);
 
 		ITriangleMeshClickedHandler boneStartPositionClickedHandler = new ITriangleMeshClickedHandler() {
 
@@ -148,8 +154,8 @@ public class Editor extends CgApplication {
 				if (iterator.hasNext()) { // Select the first
 											// BoneStartPositionPickup selected
 					ITriangleMesh mesh = iterator.next();
-					if (mesh instanceof BoneStartPositionPickup) {
-						((BoneStartPositionPickup) mesh).dragged(coordsClicked);
+					if (mesh instanceof IBoneMovePositionPickup) {
+						((IBoneMovePositionPickup) mesh).dragged(coordsClicked);
 					}
 				}
 			}
@@ -162,8 +168,8 @@ public class Editor extends CgApplication {
 				if (iterator.hasNext()) { // Select the first
 											// BoneStartPositionPickup selected
 					ITriangleMesh mesh = iterator.next();
-					if (mesh instanceof BoneStartPositionPickup) {
-						((BoneStartPositionPickup) mesh).pickedUp();
+					if (mesh instanceof IBoneMovePositionPickup) {
+						((IBoneMovePositionPickup) mesh).pickedUp();
 					}
 				}
 			}
@@ -176,8 +182,8 @@ public class Editor extends CgApplication {
 				if (iterator.hasNext()) { // Select the first
 											// BoneStartPositionPickup selected
 					ITriangleMesh mesh = iterator.next();
-					if (mesh instanceof BoneStartPositionPickup) {
-						((BoneStartPositionPickup) mesh).dropped();
+					if (mesh instanceof IBoneMovePositionPickup) {
+						((IBoneMovePositionPickup) mesh).dropped();
 					}
 				}
 			}
@@ -284,6 +290,11 @@ public class Editor extends CgApplication {
 		BoneNode newBoneNode = new BoneNode(newBone, boneName);
 		CgNode boneStartPickupNode = new CgNode(newBone.getStartPositionPickup(), "BoneStartPositionPickup");
 		newBoneNode.addChild(boneStartPickupNode);
+		if(null != newBone.getEndPositionPickup()){
+			CgNode boneEndPickupNode = new CgNode(newBone.getEndPositionPickup(), "BoneEndPositionPickup");
+			newBoneNode.addChild(boneEndPickupNode);
+//			wird noch aufgebaut das skelett, desweegn ist noch kein child bone da und der bone weiss nicht das er kein blatt ist
+		}
 
 		// new BoneRotationPickable(newBone, editorManager);
 		return newBoneNode;

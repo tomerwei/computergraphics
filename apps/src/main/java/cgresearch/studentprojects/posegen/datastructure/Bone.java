@@ -12,25 +12,37 @@ import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 
 public class Bone extends TriangleMesh {
-	
+
 	private static HashMap<Integer, Bone> boneIdMap = new HashMap<>();
 	private static int currentMaxId = 0; // GlobalCounter to generate unique IDs
 	private final int id; // Geht das beim laden/marshaling?!
 
 	private Vector startBonePosition;
 	private Vector endBonePosition;
-	
+
 	private Bone parentBone; // Startbone == null initen
 	private List<Bone> childbonesAtEnd;
-	
+
 	private SelectedMesh selectedMesh = null;
-	
+
 	private BoneStartPositionPickup boneStartPositionPickup;
-	
-	public BoneStartPositionPickup getStartPositionPickup(){
+	private BoneEndPositionPickup boneEndPositionPickup = null;
+
+	public BoneStartPositionPickup getStartPositionPickup() {
 		return boneStartPositionPickup;
 	}
-	
+
+	/**
+	 * 
+	 * @return null if no endPosition (leave) (childBones > 0)
+	 */
+	public BoneEndPositionPickup getEndPositionPickup() {
+		if(childbonesAtEnd.size() == 0){
+			return boneEndPositionPickup;	
+		}
+		return null;
+	}
+
 	public Bone(Bone parentBone, Vector endBonePositionOffset) { // Offset
 																	// basiert
 																	// auf
@@ -38,7 +50,7 @@ public class Bone extends TriangleMesh {
 		this.id = currentMaxId;
 		currentMaxId++;
 		boneIdMap.put(this.id, this);
-		
+
 		childbonesAtEnd = new ArrayList<Bone>(); // Init empty list
 		this.parentBone = parentBone;
 
@@ -51,25 +63,31 @@ public class Bone extends TriangleMesh {
 		}
 
 		this.endBonePosition = startBonePosition.add(endBonePositionOffset);
-		initBoneStartPositionPickup();
+		initBonePositionPickup();
 		setColorNotSelected();
 		updateAfterChange(); // Update Mesh, picking item etc.
 	}
-	
-	private void initBoneStartPositionPickup(){
+
+	private void initBonePositionPickup(){
 		boneStartPositionPickup = new BoneStartPositionPickup(startBonePosition, this);
+		boneEndPositionPickup = new BoneEndPositionPickup(endBonePosition, this);
 	}
-	
-	public static Bone getBoneById(Integer boneId){
+
+	public static Bone getBoneById(Integer boneId) {
 		return boneIdMap.get(boneId);
 	}
 
-	public void setSelectedMesh(SelectedMesh selectedMesh){
+	public void setSelectedMesh(SelectedMesh selectedMesh) {
 		this.selectedMesh = selectedMesh;
 	}
 
-	
 	public void registerABoneAsChild(Bone bone) {
+//		killEndBonePositionBickupMesh
+		if(boneEndPositionPickup != null){
+			boneEndPositionPickup.clear();
+			boneEndPositionPickup = null;	
+		}
+		
 		addChildBoneToList(bone);
 	}
 
@@ -119,7 +137,7 @@ public class Bone extends TriangleMesh {
 		this.addTriangle(0, 1, 3);
 		this.addTriangle(1, 2, 3);
 
-//		setColorNotSelected();
+		// setColorNotSelected();
 		this.updateRenderStructures();
 
 	}
@@ -173,14 +191,16 @@ public class Bone extends TriangleMesh {
 
 		updateAfterChange();
 	}
-	
-	public void moveBoneStartToPosition(Vector newPosition){
+
+	public void moveBoneStartToPosition(Vector newPosition) {
 		this.startBonePosition = newPosition;
-		parentBone.moveBoneEndToPosition(newPosition);
+		if(null != parentBone){
+			parentBone.moveBoneEndToPosition(newPosition);	
+		}
 		updateAfterChange();
 	}
-	
-	public void moveBoneEndToPosition(Vector newPosition){
+
+	public void moveBoneEndToPosition(Vector newPosition) {
 		this.endBonePosition = newPosition;
 		updateAfterChange();
 	}
@@ -306,10 +326,10 @@ public class Bone extends TriangleMesh {
 		zEnd = this.startBonePosition.get(2);
 		xStrich = xDrehpunkt + Math.cos(winkelRad) * (xEnd - xDrehpunkt) - Math.sin(winkelRad) * (yEnd - yDrehpunkt);
 		yStrich = yDrehpunkt + Math.sin(winkelRad) * (xEnd - xDrehpunkt) + Math.cos(winkelRad) * (yEnd - yDrehpunkt);
-		
+
 		zStrich = zEnd;
 		this.startBonePosition = new Vector(xStrich, yStrich, zStrich);
-		
+
 		for (Bone childbone : childbonesAtEnd) {
 			childbone.rotateUmDrehpunkt(winkelDeg, drehPunkt);
 		}
