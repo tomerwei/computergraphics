@@ -39,6 +39,9 @@ public class Editor extends CgApplication {
 	private Canvas canvas = new Canvas(); // init here to forward the ref
 	private static JoglFrame joglFrame = null; // To be set in main
 
+	boolean selectSingleMode = false; //SELECT SINGLE OR ALL PICKED position movers at once
+	
+	
 	private BoneMeshMap boneMeshMap;
 
 	public Editor() {
@@ -124,6 +127,7 @@ public class Editor extends CgApplication {
 		return meshPicking;
 	}
 
+
 	private TriangleMeshPicking initBoneStartPositionPicking(List<Bone> bones) {
 		TriangleMeshPicking meshPicking = new TriangleMeshPicking();
 
@@ -142,7 +146,7 @@ public class Editor extends CgApplication {
 		}
 
 		meshPicking.registerAllPickableMesh(bonePositionPickupList);
-
+		
 		ITriangleMeshClickedHandler boneStartPositionClickedHandler = new ITriangleMeshClickedHandler() {
 
 			@Override
@@ -151,11 +155,14 @@ public class Editor extends CgApplication {
 				// TODO Auto-generated method stub
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
-				if (iterator.hasNext()) { // Select the first
+				while (iterator.hasNext()) { // Select the first
 											// BoneStartPositionPickup selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
 						((IBoneMovePositionPickup) mesh).dragged(coordsClicked);
+					}
+					if(selectSingleMode == true){
+						break;
 					}
 				}
 			}
@@ -165,11 +172,14 @@ public class Editor extends CgApplication {
 					Vector coordsClicked) {
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
-				if (iterator.hasNext()) { // Select the first
+				while (iterator.hasNext()) { // Select the first
 											// BoneStartPositionPickup selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
 						((IBoneMovePositionPickup) mesh).pickedUp();
+					}
+					if(selectSingleMode == true){
+						break;
 					}
 				}
 			}
@@ -179,11 +189,14 @@ public class Editor extends CgApplication {
 					Vector coordsClicked) {
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
-				if (iterator.hasNext()) { // Select the first
+				while (iterator.hasNext()) { // Select the first
 											// BoneStartPositionPickup selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
 						((IBoneMovePositionPickup) mesh).dropped();
+					}
+					if(selectSingleMode == true){
+						break;
 					}
 				}
 			}
