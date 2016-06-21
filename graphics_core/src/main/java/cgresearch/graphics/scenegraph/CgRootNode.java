@@ -1,5 +1,7 @@
 package cgresearch.graphics.scenegraph;
 
+import cgresearch.rendering.core.RendererOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,9 @@ public class CgRootNode extends CgNode {
    */
   public CgRootNode() {
     super(null, "root");
+
+    //Set the default renderer options.
+    rendererOptions = RendererOptions.defaultRendererOptions();
   }
 
   /**

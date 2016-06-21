@@ -17,6 +17,7 @@ import cgresearch.core.math.*;
 import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.misc.AnimationTimer;
 import cgresearch.graphics.scenegraph.*;
+import cgresearch.rendering.core.RendererOptions;
 import cgresearch.rendering.jogl.misc.PickingRenderer;
 import cgresearch.rendering.jogl.misc.ViewFrustumCulling;
 
@@ -45,7 +46,6 @@ public class JoglRenderer3D implements Observer {
   private static final int SCREEN_WIDTH = 640;
   private static final int SCREEN_HEIGHT = 480;
   private static final float OPAQUE = 1.0f;
-  private static final Vector CLEAR_COLOR = VectorFactory.createVector3(1, 1, 1);
   private static final int JOGL_NUMBER_OF_LIGHTS = 8;
 
   /**
@@ -136,6 +136,11 @@ public class JoglRenderer3D implements Observer {
   private final ViewFrustumCulling viewFrustum;
 
   /**
+   * Access to the renderer options interface.
+   */
+  private RendererOptions rendererOptions;
+
+  /**
    * Constructor.
    */
   public JoglRenderer3D(JoglRenderObjectManager renderObjectManager, CgRootNode rootNode) {
@@ -146,6 +151,7 @@ public class JoglRenderer3D implements Observer {
     rootNode.addObserver(this);
     Camera.getInstance().addObserver(this);
     glu = new GLU();
+    rendererOptions = rootNode.getRendererOptions();
   }
 
   public void init(GLAutoDrawable drawable) {
@@ -177,7 +183,7 @@ public class JoglRenderer3D implements Observer {
     gl.glEnableClientState(GLPointerFunc.GL_COLOR_ARRAY);
 
     // define the color we want to be displayed as the "clipping wall"
-    gl.glClearColor((float) (CLEAR_COLOR.get(0)), (float) (CLEAR_COLOR.get(1)), (float) (CLEAR_COLOR.get(2)), OPAQUE);
+    gl.glClearColor((float) (rendererOptions.getClearColor().get(0)), (float) (rendererOptions.getClearColor().get(1)), (float) (rendererOptions.getClearColor().get(2)), OPAQUE);
 
     // Enable lighting
     gl.glEnable(GL2.GL_LIGHTING);
