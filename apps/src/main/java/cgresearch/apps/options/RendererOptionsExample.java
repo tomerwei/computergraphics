@@ -23,7 +23,7 @@ public class RendererOptionsExample extends CgApplication {
         // can access them
         getCgRootNode().getRendererOptions().
                 setClearColor(VectorFactory.
-                        createVector3(1,0,0)); // default is (1,1,1)
+                        createVector3(0,0,0)); // default is (1,1,1)
     }
 
     public static void main(String[] args) {
