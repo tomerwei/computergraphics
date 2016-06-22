@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
@@ -13,7 +12,6 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 
 import cgresearch.core.logging.Logger;
-import cgresearch.graphics.scenegraph.IconLoader;
 
 public class ToolBar extends JToolBar implements ActionListener, KeyListener {
 
@@ -29,10 +27,7 @@ public class ToolBar extends JToolBar implements ActionListener, KeyListener {
 
 	public void addIcon(ToggleButtonIcon customMouseInteractionButton) {
 		JButton button = new JButton();
-		
-		ImageIcon iconNotActive = IconLoader.getIcon(customMouseInteractionButton.getICON_NOTACTIVE_PATH());
-		button.setIcon(iconNotActive);
-
+		button.setIcon(customMouseInteractionButton.getCurrentIcon());
 		String actionCommand = indexCounter.toString(); // Create an
 														// actionCommand for
 														// this button
@@ -61,8 +56,11 @@ public class ToolBar extends JToolBar implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String actionCommandClicked = e.getActionCommand();
-		actionCommandMap.get(actionCommandClicked).clicked();
-//		JButton clickedButton = this.buttonMap.get(actionCommandClicked);
+		ToggleButtonIcon button = actionCommandMap.get(actionCommandClicked);
+		button.clicked(); // Call before getting new icon, to update
+		buttonMap.get(actionCommandClicked).setIcon(button.getCurrentIcon());
+		this.updateUI();
+
 	}
 
 	@Override
