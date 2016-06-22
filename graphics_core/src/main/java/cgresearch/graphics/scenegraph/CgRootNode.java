@@ -2,6 +2,7 @@ package cgresearch.graphics.scenegraph;
 
 import cgresearch.rendering.core.RendererOptions;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,11 @@ public class CgRootNode extends CgNode {
    * Show frames per second
    */
   private boolean showFps = false;
+
+  /**
+   * Renderer options for the node.
+   */
+  private RendererOptions rendererOptions;
 
   /**
    * Constructor.
@@ -123,5 +129,13 @@ public class CgRootNode extends CgNode {
 
   public void setShowFps(boolean showFps) {
     this.showFps = showFps;
+  }
+
+  /**
+   * Getter.
+   * @return the renderer options object associated with this node
+   */
+  public RendererOptions getRendererOptions() {
+    return rendererOptions;
   }
 }
