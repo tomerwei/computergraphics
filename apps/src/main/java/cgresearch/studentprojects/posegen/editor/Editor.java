@@ -39,19 +39,19 @@ public class Editor extends CgApplication {
 	private Canvas canvas = new Canvas(); // init here to forward the ref
 	private static JoglFrame joglFrame = null; // To be set in main
 
-	boolean selectSingleMode = false; //SELECT SINGLE OR ALL PICKED position movers at once
-	
-	
+	boolean selectSingleMode = false; // SELECT SINGLE OR ALL PICKED position
+										// movers at once
+
 	private BoneMeshMap boneMeshMap;
 
 	public Editor() {
 		root = getCgRootNode();
 
-		boneMeshMap = new BoneMeshMap(canvas);
 		editorManager = new EditorManager(boneMeshMap); // Has to be called
 														// befor bone added
 
 		skelett = generateSkelett();
+		boneMeshMap = new BoneMeshMap(canvas, skelett.getBones());
 		editorStatus = new EditorStatus(skelett.getBones());
 
 		root.addChild(skelett);
@@ -71,6 +71,7 @@ public class Editor extends CgApplication {
 		meshInteractionTool.addMeshPicking(bonePicking);
 		meshInteractionTool.addMeshPicking(boneStartPosition);
 
+		joglFrame.getCanvasView();
 		root.addChild(canvasNode);
 	}
 
@@ -91,6 +92,9 @@ public class Editor extends CgApplication {
 					if (mesh instanceof Bone) {
 						editorStatus.selectBone(((Bone) mesh));
 						canvas.enableWireframe();
+						Bone selectedBone = ((Bone)mesh);
+						selectedBone.rotateUmDrehpunkt(3.0, selectedBone.getStartPosition());
+//						skelett.getBones().get(3).rotateUmDrehpunkt(4, new Vector(0, 0, 0));
 					}
 				}
 			}
@@ -127,7 +131,6 @@ public class Editor extends CgApplication {
 		return meshPicking;
 	}
 
-
 	private TriangleMeshPicking initBoneStartPositionPicking(List<Bone> bones) {
 		TriangleMeshPicking meshPicking = new TriangleMeshPicking();
 
@@ -146,7 +149,7 @@ public class Editor extends CgApplication {
 		}
 
 		meshPicking.registerAllPickableMesh(bonePositionPickupList);
-		
+
 		ITriangleMeshClickedHandler boneStartPositionClickedHandler = new ITriangleMeshClickedHandler() {
 
 			@Override
@@ -156,12 +159,13 @@ public class Editor extends CgApplication {
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) { // Select the first
-											// BoneStartPositionPickup selected
+												// BoneStartPositionPickup
+												// selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
 						((IBoneMovePositionPickup) mesh).dragged(coordsClicked);
 					}
-					if(selectSingleMode == true){
+					if (selectSingleMode == true) {
 						break;
 					}
 				}
@@ -173,12 +177,13 @@ public class Editor extends CgApplication {
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) { // Select the first
-											// BoneStartPositionPickup selected
+												// BoneStartPositionPickup
+												// selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
 						((IBoneMovePositionPickup) mesh).pickedUp();
 					}
-					if(selectSingleMode == true){
+					if (selectSingleMode == true) {
 						break;
 					}
 				}
@@ -190,12 +195,13 @@ public class Editor extends CgApplication {
 				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) { // Select the first
-											// BoneStartPositionPickup selected
+												// BoneStartPositionPickup
+												// selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
 						((IBoneMovePositionPickup) mesh).dropped();
 					}
-					if(selectSingleMode == true){
+					if (selectSingleMode == true) {
 						break;
 					}
 				}
@@ -240,7 +246,17 @@ public class Editor extends CgApplication {
 			@Override
 			public void trianglesDragged(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
 					Vector coordsClicked) {
-				// TODO Auto-generated method stub
+				// TODO UNTESTED
+				Set<ITriangleMesh> keySet = pickedTriangles.keySet();
+				Iterator<ITriangleMesh> iterator = keySet.iterator();
+				while (iterator.hasNext()) {
+					ITriangleMesh mesh = iterator.next();
+					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), pickedTriangles.get(mesh));
+					// for (ITriangle triangle : pickedTriangles.get(mesh)) {
+					//
+					// triangle.setVisible(false);
+					// }
+				}
 
 			}
 
@@ -303,10 +319,11 @@ public class Editor extends CgApplication {
 		BoneNode newBoneNode = new BoneNode(newBone, boneName);
 		CgNode boneStartPickupNode = new CgNode(newBone.getStartPositionPickup(), "BoneStartPositionPickup");
 		newBoneNode.addChild(boneStartPickupNode);
-		if(null != newBone.getEndPositionPickup()){
+		if (null != newBone.getEndPositionPickup()) {
 			CgNode boneEndPickupNode = new CgNode(newBone.getEndPositionPickup(), "BoneEndPositionPickup");
 			newBoneNode.addChild(boneEndPickupNode);
-//			wird noch aufgebaut das skelett, desweegn ist noch kein child bone da und der bone weiss nicht das er kein blatt ist
+			// wird noch aufgebaut das skelett, desweegn ist noch kein child
+			// bone da und der bone weiss nicht das er kein blatt ist
 		}
 
 		// new BoneRotationPickable(newBone, editorManager);

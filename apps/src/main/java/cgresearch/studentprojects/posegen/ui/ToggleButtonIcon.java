@@ -41,7 +41,6 @@ public class ToggleButtonIcon {
 
 	public ImageIcon getCurrentIcon() {
 		if (isActive) {
-			System.out.println(ICON_ACTIVE_PATH);
 			return iconActive;
 			
 		} else {
