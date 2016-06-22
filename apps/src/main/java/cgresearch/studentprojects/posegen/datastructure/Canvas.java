@@ -32,7 +32,7 @@ public class Canvas extends TriangleMesh {
 	public Canvas() {
 		super();
 		loadTexture();
-		createCanvas(-2, -1.5, 4, 3, 0.5); // 4:3
+		createCanvas(-2, -1.5, 4, 3, 0.1); // 4:3
 		this.getMaterial().setTextureId("pirate"); // 640*480 / 4:3
 		disableWireframe();
 //		this.getMaterial().setShaderId(Material.SHADER_TEXTURE);

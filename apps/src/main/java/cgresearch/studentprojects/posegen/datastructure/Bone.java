@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Matrix;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
@@ -37,8 +38,8 @@ public class Bone extends TriangleMesh {
 	 * @return null if no endPosition (leave) (childBones > 0)
 	 */
 	public BoneEndPositionPickup getEndPositionPickup() {
-		if(childbonesAtEnd.size() == 0){
-			return boneEndPositionPickup;	
+		if (childbonesAtEnd.size() == 0) {
+			return boneEndPositionPickup;
 		}
 		return null;
 	}
@@ -68,7 +69,7 @@ public class Bone extends TriangleMesh {
 		updateAfterChange(); // Update Mesh, picking item etc.
 	}
 
-	private void initBonePositionPickup(){
+	private void initBonePositionPickup() {
 		boneStartPositionPickup = new BoneStartPositionPickup(startBonePosition, this);
 		boneEndPositionPickup = new BoneEndPositionPickup(endBonePosition, this);
 	}
@@ -82,12 +83,12 @@ public class Bone extends TriangleMesh {
 	}
 
 	public void registerABoneAsChild(Bone bone) {
-//		killEndBonePositionBickupMesh
-		if(boneEndPositionPickup != null){
+		// killEndBonePositionBickupMesh
+		if (boneEndPositionPickup != null) {
 			boneEndPositionPickup.clear();
-			boneEndPositionPickup = null;	
+			boneEndPositionPickup = null;
 		}
-		
+
 		addChildBoneToList(bone);
 	}
 
@@ -194,21 +195,21 @@ public class Bone extends TriangleMesh {
 
 	public void moveBoneStartToPosition(Vector newPosition) {
 		this.startBonePosition = newPosition;
-		if(null != parentBone){
-			parentBone.moveBoneEndToPosition(newPosition);	
+		if (null != parentBone) {
+			parentBone.moveBoneEndToPosition(newPosition);
 		}
 		updateAfterChange();
 	}
 
 	public void moveBoneEndToPosition(Vector newPosition) {
-		if(newPosition != this.endBonePosition){ //No endless loop, if a child recalls this one
+		if (newPosition != this.endBonePosition) { // No endless loop, if a
+													// child recalls this one
 			this.endBonePosition = newPosition;
-			for(Bone bone:childbonesAtEnd){
+			for (Bone bone : childbonesAtEnd) {
 				bone.moveBoneStartToPosition(newPosition);
 			}
 		}
-		
-		
+
 		updateAfterChange();
 	}
 
@@ -337,8 +338,15 @@ public class Bone extends TriangleMesh {
 		zStrich = zEnd;
 		this.startBonePosition = new Vector(xStrich, yStrich, zStrich);
 
-		for (Bone childbone : childbonesAtEnd) {
-			childbone.rotateUmDrehpunkt(winkelDeg, drehPunkt);
+		if (childbonesAtEnd.size() != 0) {
+			for (Bone childbone : childbonesAtEnd) {
+				if (null == childbone) {
+					Logger.getInstance().error("This bone has a 'null' child");
+				} else {
+					childbone.rotateUmDrehpunkt(winkelDeg, drehPunkt);
+				}
+
+			}
 		}
 		// TODO startBone wieder mit dem endbone des parents gleichsetzen
 		updateAfterChange();
