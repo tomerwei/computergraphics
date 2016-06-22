@@ -2,7 +2,6 @@ package cgresearch.graphics.scenegraph;
 
 import cgresearch.rendering.core.RendererOptions;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
