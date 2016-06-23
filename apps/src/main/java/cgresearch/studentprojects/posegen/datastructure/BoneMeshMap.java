@@ -20,17 +20,19 @@ import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 public class BoneMeshMap {
 
 	private ITriangleMesh mesh = null;
-
+	private List<Bone> bones = null;
 	private HashMap<Integer, List<ITriangle>> boneTriangleMap = new HashMap<>();
 
 	public BoneMeshMap(ITriangleMesh mesh, List<Bone> bones) {
 		this.mesh = mesh;
-		for (Bone bone : bones) {
+		this.bones = bones;
+		
+		for (Bone bone : this.bones) {
 			updateBonesSelectedMesh(bone.getId()); // Init. falls nichts an dem
 													// bonehängt hat er sonst
 													// keine selected mesh map
 		}
-		autoLinkTrianglesToBones(bones);
+		autoLinkTrianglesToBones();
 	}
 
 	public void linkBoneToTriangles(Integer boneId, List<ITriangle> triangles) {
@@ -95,7 +97,7 @@ public class BoneMeshMap {
 		bone.setSelectedMesh(selectedMesh);
 	}
 
-	public void autoLinkTrianglesToBones(List<Bone> bones) {
+	public void autoLinkTrianglesToBones() {
 		// https://groups.google.com/forum/#!topic/de.sci.mathematik/Wrl62qeQAiE
 
 		ITriangle triangle;
@@ -128,6 +130,11 @@ public class BoneMeshMap {
 	}
 
 	private final Vector NULL_VECTOR_3DIM = new Vector(0, 0, 0);
+	// Temporary Vars.
+	private Vector line;
+	private Vector lineToPoint;
+	private Vector lineEnd;
+	private Vector lineEndToPoint;
 
 	/**
 	 * Calculate closest distance from one point to a segment (2 points) If
@@ -145,11 +152,9 @@ public class BoneMeshMap {
 	 */
 	private double distancePointToSegment(Vector point, Vector startSegment, Vector endSegment) {
 		// Segment. Starts and Ends in the same point -> Distance == distance
-		// point and segment-point
 		if (startSegment.subtract(endSegment).equals(NULL_VECTOR_3DIM)) {
 			return point.subtract(startSegment).getNorm(); // Length of a-b
 		}
-
 		// https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 		/*
 		 * es reicht aber aus, wenn man zusätzlich noch die Länge AB der Strecke
@@ -158,36 +163,17 @@ public class BoneMeshMap {
 		 * stumpf (>90 <180grad) ist. Im ersten Fall ist PA, im zweiten PB der
 		 * kürzeste Abstand, ansonsten ist es der Abstand P-Gerade(AB).
 		 */
-		Ray3D gerade = geradeAusPunkten(startSegment, endSegment);
-
-		Vector direction = gerade.getDirection();
-		double directionNorm = direction.getNorm();
-		// d(PunktA, (line[B, directionU]) = (B-A) cross directionU durch norm u
-		Vector b = gerade.getPoint();
-		Vector ba = b.subtract(point);
-		double factor = 1.0 / directionNorm; // Geteilt durch geraden länge
-		Vector distance = ba.cross(direction).multiply(factor);
-		double distanceToGerade = distance.getNorm();
 
 		// TESTEN WO ES AM NÄCHSTEN AN DER STRECKE IST,NICHT NUR AN DER GERADEN
+		line = startSegment.subtract(endSegment); // Vektor von start zum end.
+		lineToPoint = startSegment.subtract(point); // vom start zum punkt.
+		lineEnd = endSegment.subtract(startSegment); // vom ende zum start
+		lineEndToPoint = endSegment.subtract(point); // vom start zum ende
 
-		Vector line = startSegment.subtract(endSegment); // Vektor von start zum
-															// end.
-		Vector lineToPoint = startSegment.subtract(point); // Vektor vom start
-															// zum punkt.
-
-		Vector lineEnd = endSegment.subtract(startSegment); // Vektor vom ende
-															// zum start
-		Vector lineEndToPoint = endSegment.subtract(point); // Vektor vom start
-															// zum ende
-
-		double winkelStart = getWinkel(line, lineToPoint); // Wenn größer 90Grad
-															// -> closest ist
-															// start
-		double winkelEnde = getWinkel(lineEnd, lineEndToPoint);// Wenn größer
-																// 90Grad ->
-																// closest ist
-																// end
+		// Wenn größer 90Grad-> closest ist start
+		double winkelStart = getWinkel(line, lineToPoint);
+		// Wenn größer 90Grad -> closest ist end
+		double winkelEnde = getWinkel(lineEnd, lineEndToPoint);
 		if (winkelStart > 90.0 && winkelStart < 180.0) {
 			// Start ist am nächsten. Der winkel ist über 90Grad somit wurde nur
 			// der nächste nachbar auf der geraden ausserhalb der strecke
@@ -199,15 +185,38 @@ public class BoneMeshMap {
 			return endSegment.subtract(point).getNorm();
 		}
 
-		// if(winkelEnde > 180 || winkelStart > 180){
-		// System.out.println(">180");
-		// }
+		// If not returned yet. The closest position ist on the line
+		return closestDistanceFromPointToEndlessLine(point, startSegment, endSegment);
+	}
 
+	/**
+	 * Calculate the closest distance from a position towards a line. Line is
+	 * described as any two points on that line
+	 * 
+	 * @param point
+	 *            The position from where the line should be reached.
+	 * @param startSegment
+	 *            Point one on the Line
+	 * @param endSegment
+	 *            A second point forming the line
+	 * @return
+	 */
+	private double closestDistanceFromPointToEndlessLine(Vector point, Vector startSegment, Vector endSegment) {
+		// Generate a line out of two points.
+		Ray3D gerade = geradeAusPunkten(startSegment, endSegment);
+		Vector direction = gerade.getDirection();
+		double directionNorm = direction.getNorm();
+		// d(PunktA, (line[B, directionU]) = (B-A) cross directionU durch norm u
+		Vector b = gerade.getPoint();
+		Vector ba = b.subtract(point);
+		double factor = 1.0 / directionNorm; // Geteilt durch geraden länge
+		Vector distance = ba.cross(direction).multiply(factor);
+		double distanceToGerade = distance.getNorm();
 		return distanceToGerade;
 	}
 
 	/**
-	 * Der winkel zwischen zwei richtungsvektoren
+	 * Der winkel zwischen zwei richtungsvektoren in Degrees
 	 * 
 	 * @param a
 	 * @param b
@@ -218,9 +227,6 @@ public class BoneMeshMap {
 		double nenner = a.getNorm() * b.getNorm();
 		// nenner += 0.0001;
 		double returnvalue = zaehler / nenner;
-		// System.out.println(returnvalue + " [Zaehler: " + zaehler + " Nenner:
-		// " + nenner + "][A:" + a + " B:" + b + "]");
-
 		returnvalue = Math.acos(returnvalue);
 		returnvalue = Math.toDegrees(returnvalue);
 

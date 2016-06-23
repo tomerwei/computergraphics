@@ -15,35 +15,28 @@ import cgresearch.graphics.material.ResourceManager;
  */
 public class Canvas extends TriangleMesh {
 
-	public void enableWireframe(){
+	public void enableWireframe() {
 		this.getMaterial().setShaderId(Material.SHADER_TEXTURE_NO_LIGHT);
-//		this.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
+		// this.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
 		this.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
 		this.getMaterial().setTextureUsesAlpha(true);
 		this.needsUpdateRenderStructures();
 	}
-	
-	public void disableWireframe(){
+
+	public void disableWireframe() {
 		this.getMaterial().setShaderId(Material.SHADER_TEXTURE_NO_LIGHT);
-//		enableWireframe();
+		// enableWireframe();
 		this.getMaterial().setTextureUsesAlpha(true);
 	}
+
 	// ALTERNATIV LINE SEGMENT STATT TRIANGLE MESH?!
 	public Canvas() {
 		super();
 		loadTexture();
-		createCanvas(-2, -1.5, 4, 3, 0.05); // 4:3
+		createCanvas(-2, -1.5, 4, 3, 0.04); // 4:3
 		this.getMaterial().setTextureId("pirate"); // 640*480 / 4:3
 		disableWireframe();
-//		this.getMaterial().setShaderId(Material.SHADER_TEXTURE);
-//		this.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
-		// this.getMaterial().setShaderId(Material.SHADER_WIREFRAME);
-		// this.getMaterial().setReflectionSpecular(VectorFactory.createVector3(0,
-		// 0, 0));
-		// this.getMaterial().setReflectionAmbient(VectorFactory.createVector3(0.2,
-		// 0.2, 0.2));
-		// this.getMaterial().setSpecularShininess(50);
-		this.getMaterial().setTransparency(0.5);
+		// this.getMaterial().setTransparency(0.5);
 	}
 
 	public void loadTexture() {
@@ -122,11 +115,11 @@ public class Canvas extends TriangleMesh {
 				indexBottomRight = tryToAddOrGetExisting(vertexBottomRight, lookback);
 				indexTopRight = tryToAddOrGetExisting(vertexTopRight, lookback);
 
-				double x_faktorTexCoords = ((double) x+1) / amountWide;
-				double y_faktorTexCoords = ((double) y+1) / amountHeight;
+				double x_faktorTexCoords = ((double) x + 1) / amountWide;
+				double y_faktorTexCoords = ((double) y + 1) / amountHeight;
 				double x_bonusLast = ((double) x) / amountWide;
 				double y_bonusLast = ((double) y) / amountHeight;
-				
+
 				int ta = this.addTextureCoordinate(new Vector(x_bonusLast, y_bonusLast, 0.0));
 				int tb = this.addTextureCoordinate(new Vector(1.0 * x_faktorTexCoords, y_bonusLast, 0.0));
 				int tc = this.addTextureCoordinate(new Vector(1.0 * x_faktorTexCoords, 1.0 * y_faktorTexCoords, 0.0));
