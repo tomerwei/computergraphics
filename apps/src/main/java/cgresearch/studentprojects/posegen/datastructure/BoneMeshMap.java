@@ -1,6 +1,5 @@
 package cgresearch.studentprojects.posegen.datastructure;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,7 +30,6 @@ public class BoneMeshMap {
 													// bonehängt hat er sonst
 													// keine selected mesh map
 		}
-
 		autoLinkTrianglesToBones(bones);
 	}
 
@@ -50,7 +48,45 @@ public class BoneMeshMap {
 		Set<ITriangle> listAsSet = new HashSet<>(list);
 		boneTriangleMap.remove(boneId);
 		boneTriangleMap.put(boneId, new LinkedList<>(listAsSet));
+
 		updateBonesSelectedMesh(boneId);
+	}
+
+	private List<ITriangle> entryList; // Temp var, to save time and not init
+
+	/**
+	 * Add a bone to a triangle. Without updating updateBonesSelectedMesh(id)!
+	 * ATTENTION: You need to call finalizeAutoRigg(List<Bone> bones) after all
+	 * bones were added
+	 * 
+	 * @param boneId
+	 *            id of the bone to link to
+	 * @param triangle
+	 *            triangle to link to the bone
+	 */
+	private void linkOneBoneToTriangle(Integer boneId, ITriangle triangle) {
+		if (null == boneId) {
+			return; // No bone selected
+		}
+		if (!boneTriangleMap.containsKey(boneId)) { // New bone
+			boneTriangleMap.put(boneId, new LinkedList<ITriangle>());
+		}
+
+		entryList = boneTriangleMap.get(boneId);
+		entryList.add(triangle);
+	}
+
+	/**
+	 * Has to be called after linkOneBoneToTriangle(..) use
+	 * 
+	 * @param bones
+	 *            bones. To get all ids
+	 */
+	private void finalizeAutoRigg(List<Bone> bones) {
+		for (Bone bone : bones) {
+			updateBonesSelectedMesh(bone.getId());
+		}
+
 	}
 
 	private void updateBonesSelectedMesh(Integer boneId) {
@@ -62,31 +98,15 @@ public class BoneMeshMap {
 	public void autoLinkTrianglesToBones(List<Bone> bones) {
 		// https://groups.google.com/forum/#!topic/de.sci.mathematik/Wrl62qeQAiE
 
-		// TODO derzeit gerade und nicht bone-strecke. Noch testen ob das an
-		// einer seite näher ist.
-
-		// Vector point = new Vector(0.0, 0.0, 0.0);
-		// Vector start = new Vector(2.0, 2.0, 0.0);
-		// Vector end = new Vector(2.0, 2.0, 0.0);
-		// double distance = distancePointToSegment(point, start, end);
-		// System.out.println("BoneMeshMap.autoLinkTrianglesToBones Distance =:
-		// " + distance);
-
+		ITriangle triangle;
 		// For each triangle, test all bones;
 		for (int i = mesh.getNumberOfTriangles() - 1; i > 0; i--) {
-			ITriangle triangle = mesh.getTriangle(i);
-			List<ITriangle> trianglesList = new ArrayList<>(); // GENERATE LIST
-																// overkill,
-																// einfach nur
-																// adder methode
-																// für 1 elem
-																// schreiben
-			trianglesList.add(triangle);
+			triangle = mesh.getTriangle(i);
 			Bone closestBone = getClosestBone(triangle, bones);
-
-			linkBoneToTriangles(closestBone.getId(), trianglesList);
+			linkOneBoneToTriangle(closestBone.getId(), triangle);
 		}
 
+		finalizeAutoRigg(bones);
 	}
 
 	private Bone getClosestBone(ITriangle triangle, List<Bone> bones) {
@@ -114,8 +134,9 @@ public class BoneMeshMap {
 	 * segments starts and ends in the same position.(Just a point). The
 	 * distance to that point is returned
 	 * 
-	 * First calculates the distance to the line. Then calculates if the line has been hit outside the segment
-	 * Thus one end of the segment ist closer and the distance to that point is returned.
+	 * First calculates the distance to the line. Then calculates if the line
+	 * has been hit outside the segment Thus one end of the segment ist closer
+	 * and the distance to that point is returned.
 	 * 
 	 * @param point
 	 * @param startSegment
@@ -128,19 +149,14 @@ public class BoneMeshMap {
 		if (startSegment.subtract(endSegment).equals(NULL_VECTOR_3DIM)) {
 			return point.subtract(startSegment).getNorm(); // Length of a-b
 		}
-		
-		
-		
-		
-		
 
 		// https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 		/*
-		 es reicht aber aus, wenn man zusätzlich noch die Länge AB der Strecke
-		kennt. (Die Strecke sei AB, der Punkt P.) Dann kann man nämlich testen,
-		ob der Winkel bei A (PB²>PA²+AB²) oder bei B (PA²>PB²+AB²) stumpf (>90 <180grad) ist.
-		Im ersten Fall ist PA, im zweiten PB der kürzeste Abstand, ansonsten ist
-		es der Abstand P-Gerade(AB).
+		 * es reicht aber aus, wenn man zusätzlich noch die Länge AB der Strecke
+		 * kennt. (Die Strecke sei AB, der Punkt P.) Dann kann man nämlich
+		 * testen, ob der Winkel bei A (PB²>PA²+AB²) oder bei B (PA²>PB²+AB²)
+		 * stumpf (>90 <180grad) ist. Im ersten Fall ist PA, im zweiten PB der
+		 * kürzeste Abstand, ansonsten ist es der Abstand P-Gerade(AB).
 		 */
 		Ray3D gerade = geradeAusPunkten(startSegment, endSegment);
 
@@ -152,60 +168,68 @@ public class BoneMeshMap {
 		double factor = 1.0 / directionNorm; // Geteilt durch geraden länge
 		Vector distance = ba.cross(direction).multiply(factor);
 		double distanceToGerade = distance.getNorm();
-		
-		//TESTEN WO ES AM NÄCHSTEN AN DER STRECKE IST,NICHT NUR AN DER GERADEN
-		
-		Vector line = startSegment.subtract(endSegment); //Vektor von start zum end.
-		Vector lineToPoint = startSegment.subtract(point); //Vektor vom start zum punkt. 
-		
-		Vector lineEnd = endSegment.subtract(startSegment); //Vektor vom ende zum start
-		Vector lineEndToPoint = endSegment.subtract(point); //Vektor vom start zum ende
-		
-		double winkelStart = getWinkel(line, lineToPoint); //Wenn größer 90Grad -> closest ist start
-		double winkelEnde = getWinkel(lineEnd, lineEndToPoint);//Wenn größer 90Grad -> closest ist end
-		winkelStart = Math.acos(winkelStart);
-		winkelEnde = Math.acos(winkelEnde);
-		winkelStart = Math.toDegrees(winkelStart);
-		winkelEnde = Math.toDegrees(winkelEnde);
-		if(winkelStart > 90.0 && winkelStart < 180.0){
-			//Start ist am nächsten. Der winkel ist über 90Grad somit wurde nur der nächste nachbar auf der geraden ausserhalb der strecke gefunden
-			double geradendistance = distance.getNorm();
-			double startdistance = startSegment.subtract(point).getNorm();
-			if(startdistance < geradendistance){
-				System.out.println("This shouldnt happen " + startdistance + "  " + geradendistance);
-			}
+
+		// TESTEN WO ES AM NÄCHSTEN AN DER STRECKE IST,NICHT NUR AN DER GERADEN
+
+		Vector line = startSegment.subtract(endSegment); // Vektor von start zum
+															// end.
+		Vector lineToPoint = startSegment.subtract(point); // Vektor vom start
+															// zum punkt.
+
+		Vector lineEnd = endSegment.subtract(startSegment); // Vektor vom ende
+															// zum start
+		Vector lineEndToPoint = endSegment.subtract(point); // Vektor vom start
+															// zum ende
+
+		double winkelStart = getWinkel(line, lineToPoint); // Wenn größer 90Grad
+															// -> closest ist
+															// start
+		double winkelEnde = getWinkel(lineEnd, lineEndToPoint);// Wenn größer
+																// 90Grad ->
+																// closest ist
+																// end
+		if (winkelStart > 90.0 && winkelStart < 180.0) {
+			// Start ist am nächsten. Der winkel ist über 90Grad somit wurde nur
+			// der nächste nachbar auf der geraden ausserhalb der strecke
+			// gefunden
 			return startSegment.subtract(point).getNorm();
 		}
-		if(winkelEnde > 90.0 && winkelEnde < 180.0){
-			//Ende ist am nächsten
-			double geradendistance = distance.getNorm();
-			double enddistance = endSegment.subtract(point).getNorm();
-			if(enddistance < geradendistance){
-			}
+		if (winkelEnde > 90.0 && winkelEnde < 180.0) {
+			// Ende ist am nächsten
 			return endSegment.subtract(point).getNorm();
 		}
-		
+
+		// if(winkelEnde > 180 || winkelStart > 180){
+		// System.out.println(">180");
+		// }
+
 		return distanceToGerade;
 	}
 
 	/**
 	 * Der winkel zwischen zwei richtungsvektoren
+	 * 
 	 * @param a
 	 * @param b
 	 * @return
 	 */
-	private double getWinkel(Vector a, Vector b){
+	private double getWinkel(Vector a, Vector b) {
 		double zaehler = a.multiply(b);
 		double nenner = a.getNorm() * b.getNorm();
-		nenner += 0.0001;
-		double returnvalue =zaehler/nenner;
-//		System.out.println(returnvalue + " [Zaehler: " + zaehler + " Nenner: " + nenner + "][A:" + a + " B:" + b + "]");
-		
+		// nenner += 0.0001;
+		double returnvalue = zaehler / nenner;
+		// System.out.println(returnvalue + " [Zaehler: " + zaehler + " Nenner:
+		// " + nenner + "][A:" + a + " B:" + b + "]");
+
+		returnvalue = Math.acos(returnvalue);
+		returnvalue = Math.toDegrees(returnvalue);
+
 		return returnvalue;
 	}
-	
+
 	/**
 	 * Ermittel die Gerade aus zwei Punkten. Returned punkt mit richtungsvektor
+	 * 
 	 * @param a
 	 * @param b
 	 * @return
