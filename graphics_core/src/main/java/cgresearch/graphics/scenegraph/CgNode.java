@@ -12,7 +12,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cgresearch.core.math.BoundingBox;
-import cgresearch.rendering.core.RendererOptions;
 
 /**
  * Representation of a generic node in the scene graph
@@ -56,11 +55,6 @@ public class CgNode extends Observable implements Observer {
    * Visibility of the node.
    */
   private boolean visible = true;
-
-  /**
-   * Renderer options for the node.
-   */
-  protected RendererOptions rendererOptions;
 
   /**
    * Default constructor
@@ -278,13 +272,5 @@ public class CgNode extends Observable implements Observer {
 
   public void setContent(ICgNodeContent content) {
     this.content = content;
-  }
-
-  /**
-   * Getter.
-   * @return the renderer options object associated with this node
-     */
-  public RendererOptions getRendererOptions() {
-    return rendererOptions;
   }
 }

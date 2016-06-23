@@ -40,6 +40,11 @@ public class CgRootNode extends CgNode {
   private boolean showFps = false;
 
   /**
+   * Renderer options for the node.
+   */
+  private RendererOptions rendererOptions;
+
+  /**
    * Constructor.
    */
   public CgRootNode() {
@@ -123,5 +128,13 @@ public class CgRootNode extends CgNode {
 
   public void setShowFps(boolean showFps) {
     this.showFps = showFps;
+  }
+
+  /**
+   * Getter.
+   * @return the renderer options object associated with this node
+   */
+  public RendererOptions getRendererOptions() {
+    return rendererOptions;
   }
 }
