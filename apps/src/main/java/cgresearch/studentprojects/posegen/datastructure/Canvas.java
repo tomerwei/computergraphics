@@ -33,7 +33,7 @@ public class Canvas extends TriangleMesh {
 	public Canvas() {
 		super();
 		loadTexture();
-		createCanvas(-2, -1.5, 4, 3, 0.04); // 4:3
+		createCanvas(-2, -1.5, 4, 3, 0.05); // 4:3
 		this.getMaterial().setTextureId("pirate"); // 640*480 / 4:3
 		disableWireframe();
 		// this.getMaterial().setTransparency(0.5);
@@ -115,6 +115,38 @@ public class Canvas extends TriangleMesh {
 				indexBottomRight = tryToAddOrGetExisting(vertexBottomRight, lookback);
 				indexTopRight = tryToAddOrGetExisting(vertexTopRight, lookback);
 
+				// System.out.println("BL:" + indexBottomLeft + " @ " +
+				// vertexBottomLeft.getPosition());
+				// System.out.println("TL:" + indexTopLeft+ " @ " +
+				// vertexTopLeft.getPosition());
+				// System.out.println("BR:" + indexBottomRight+ " @ " +
+				// vertexBottomRight.getPosition());
+				// System.out.println("TR:" + indexTopRight+ " @ " +
+				// vertexTopRight.getPosition());
+				// System.out.println("###");
+				// UPDATE Link to the correct Vertices. If one was allready
+				// added
+				// ########################
+				// SET Neighbor vertices.
+				vertexBottomLeft = (VertexMutable) this.getVertex(indexBottomLeft);
+				vertexTopLeft = (VertexMutable) this.getVertex(indexTopLeft);
+				vertexBottomRight = (VertexMutable) this.getVertex(indexBottomRight);
+				vertexTopRight = (VertexMutable) this.getVertex(indexTopRight);
+
+				vertexTopLeft.setNeighborRight(vertexTopRight);
+				vertexTopLeft.setNeighborBottom(vertexBottomLeft);
+
+				vertexTopRight.setNeighborLeft(vertexTopLeft);
+				vertexTopRight.setNeighborBottom(vertexBottomRight);
+
+				vertexBottomRight.setNeighborTop(vertexTopRight);
+				vertexBottomRight.setNeighborLeft(vertexBottomLeft);
+
+				vertexBottomLeft.setNeighborTop(vertexTopLeft);
+				vertexBottomLeft.setNeighborRight(vertexBottomRight);
+
+				// ########################
+
 				double x_faktorTexCoords = ((double) x + 1) / amountWide;
 				double y_faktorTexCoords = ((double) y + 1) / amountHeight;
 				double x_bonusLast = ((double) x) / amountWide;
@@ -134,6 +166,13 @@ public class Canvas extends TriangleMesh {
 		// this.material.addShaderId(Material.SHADER_WIREFRAME);
 		// this.material.addShaderId(Material.SHADER_PHONG_SHADING);
 		// this.material.setTransparency(1.0);
+
+		// Set Neighbor vertices
+		for (int x = 0; x < amountWide; x++) {
+			for (int y = 0; y < amountHeight; y++) {
+
+			}
+		}
 
 		updateRenderStructures();
 		System.out.println(this.getNumberOfVertices());

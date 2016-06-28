@@ -6,10 +6,8 @@ import java.util.List;
 
 import cgresearch.core.logging.Logger;
 import cgresearch.core.math.Vector;
-import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
-import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 
 public class SelectedMesh {
 
@@ -35,9 +33,9 @@ public class SelectedMesh {
 
 		List<VertexMutable> verticesToRotate = new ArrayList<>();
 		for (IVertex vexAVertex : selectedVertices) {
-//			IVertex vexAVertex = mesh 
-//			IVertex vexBVertex = mesh.getVertex(triangle.getB());
-//			IVertex vexCVertex = mesh.getVertex(triangle.getC());
+			// IVertex vexAVertex = mesh
+			// IVertex vexBVertex = mesh.getVertex(triangle.getB());
+			// IVertex vexCVertex = mesh.getVertex(triangle.getC());
 
 			if (!(vexAVertex instanceof VertexMutable)) {
 				Logger.getInstance()
@@ -45,37 +43,41 @@ public class SelectedMesh {
 				return;
 			}
 			VertexMutable vexA = (VertexMutable) vexAVertex;
-			
+
 			verticesToRotate.add(vexA);
-			
+
 			mesh.updateRenderStructures();
 		}
-		
+
 		rotateAllVerticesOnce(deg, rotationPosition, verticesToRotate);
 	}
-	
+
 	/**
-	 * Rotates all vertices, but only once each, if list contains a Vertex multiple times
-	 * @param winkelDeg Deg in rad 
-	 * @param drehPunkt rotation point
-	 * @param vertices list of vertices.
+	 * Rotates all vertices, but only once each, if list contains a Vertex
+	 * multiple times
+	 * 
+	 * @param winkelDeg
+	 *            Deg in rad
+	 * @param drehPunkt
+	 *            rotation point
+	 * @param vertices
+	 *            list of vertices.
 	 */
-	public void rotateAllVerticesOnce(double rad, Vector drehPunkt, List<VertexMutable> vertices){
+	public void rotateAllVerticesOnce(double rad, Vector drehPunkt, List<VertexMutable> vertices) {
 		List<VertexMutable> noDuplicates = new ArrayList<VertexMutable>(new LinkedHashSet<VertexMutable>(vertices));
-		for(VertexMutable vex : noDuplicates){
+		for (VertexMutable vex : noDuplicates) {
 			rotateUmDrehpunkt(rad, drehPunkt, vex);
 		}
 	}
-	
+
 	public double degToRad(double deg) {
 		return (deg * Math.PI / 180);
 	}
-	
+
 	private void rotateUmDrehpunkt(double winkelDeg, Vector drehPunkt, VertexMutable vex) {
 
-		
 		double winkelRad = degToRad(winkelDeg);
-//		winkelRad = degToRad(winkelRad);
+		// winkelRad = degToRad(winkelRad);
 		double xEnd = vex.getPosition().get(0);
 		double yEnd = vex.getPosition().get(1);
 		double zEnd = vex.getPosition().get(2);
@@ -88,8 +90,11 @@ public class SelectedMesh {
 		double yStrich = yDrehpunkt + Math.sin(winkelRad) * (xEnd - xDrehpunkt)
 				+ Math.cos(winkelRad) * (yEnd - yDrehpunkt);
 		double zStrich = zEnd;
-		
-		vex.setPosition(new Vector(xStrich, yStrich, zStrich));
+
+		// Vector realNewCords =
+		//If overlapping with neighbor vertices. Just pushed up to neighbor vertex
+		vex.trySetPosition(new Vector(xStrich, yStrich, zStrich));
+
 	}
 
 }
