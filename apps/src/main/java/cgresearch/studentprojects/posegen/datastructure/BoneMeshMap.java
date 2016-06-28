@@ -10,6 +10,7 @@ import cgresearch.core.math.Ray3D;
 import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 
 /**
  * Mapping Bones > Mesh (Triangles)
@@ -21,7 +22,7 @@ public class BoneMeshMap {
 
 	private ITriangleMesh mesh = null;
 	private List<Bone> bones = null;
-	private HashMap<Integer, List<ITriangle>> boneTriangleMap;// = new HashMap<>();
+	private HashMap<Integer, List<IVertex>> boneVertexMap;// = new HashMap<>();
 
 	public BoneMeshMap(ITriangleMesh mesh, List<Bone> bones) {
 		this.mesh = mesh;
@@ -36,26 +37,26 @@ public class BoneMeshMap {
 		autoLinkTrianglesToBones();
 	}
 
-	public void linkBoneToTriangles(Integer boneId, List<ITriangle> triangles) {
+	public void linkBoneToTriangles(Integer boneId, List<IVertex> vertices) {
 		if (null == boneId) {
 			return; // No bone selected
 		}
-		if (!boneTriangleMap.containsKey(boneId)) { // New bone
-			boneTriangleMap.put(boneId, new LinkedList<ITriangle>());
+		if (!boneVertexMap.containsKey(boneId)) { // New bone
+			boneVertexMap.put(boneId, new LinkedList<IVertex>());
 		}
 
-		List<ITriangle> list = boneTriangleMap.get(boneId);
-		list.addAll(triangles);
+		List<IVertex> list = boneVertexMap.get(boneId);
+		list.addAll(vertices);
 
 		// Remove duplicates
-		Set<ITriangle> listAsSet = new HashSet<>(list);
-		boneTriangleMap.remove(boneId);
-		boneTriangleMap.put(boneId, new LinkedList<>(listAsSet));
+		Set<IVertex> listAsSet = new HashSet<>(list);
+		boneVertexMap.remove(boneId);
+		boneVertexMap.put(boneId, new LinkedList<>(listAsSet));
 
 		updateBonesSelectedMesh(boneId);
 	}
 
-	private List<ITriangle> entryList; // Temp var, to save time and not init
+	private List<IVertex> entryList; // Temp var, to save time and not init
 
 	/**
 	 * Add a bone to a triangle. Without updating updateBonesSelectedMesh(id)!
@@ -67,16 +68,16 @@ public class BoneMeshMap {
 	 * @param triangle
 	 *            triangle to link to the bone
 	 */
-	private void linkOneBoneToTriangle(Integer boneId, ITriangle triangle) {
+	private void linkOneBoneToVertex(Integer boneId, IVertex vertex) {
 		if (null == boneId) {
 			return; // No bone selected
 		}
-		if (!boneTriangleMap.containsKey(boneId)) { // New bone
-			boneTriangleMap.put(boneId, new LinkedList<ITriangle>());
+		if (!boneVertexMap.containsKey(boneId)) { // New bone
+			boneVertexMap.put(boneId, new LinkedList<IVertex>());
 		}
 
-		entryList = boneTriangleMap.get(boneId);
-		entryList.add(triangle);
+		entryList = boneVertexMap.get(boneId);
+		entryList.add(vertex);
 	}
 
 	/**
@@ -93,34 +94,34 @@ public class BoneMeshMap {
 	}
 
 	private void updateBonesSelectedMesh(Integer boneId) {
-		SelectedMesh selectedMesh = new SelectedMesh(mesh, boneTriangleMap.get(boneId));
+		SelectedMesh selectedMesh = new SelectedMesh(mesh, boneVertexMap.get(boneId));
 		Bone bone = Bone.getBoneById(boneId);
 		bone.setSelectedMesh(selectedMesh);
 	}
 
 	public void autoLinkTrianglesToBones() {
-		boneTriangleMap = new HashMap<>();
+		boneVertexMap = new HashMap<>();
 		// https://groups.google.com/forum/#!topic/de.sci.mathematik/Wrl62qeQAiE
 
-		ITriangle triangle;
+		IVertex vertex;
 		// For each triangle, test all bones;
-		for (int i = mesh.getNumberOfTriangles() - 1; i > 0; i--) {
-			triangle = mesh.getTriangle(i);
-			Bone closestBone = getClosestBone(triangle, bones);
-			linkOneBoneToTriangle(closestBone.getId(), triangle);
+		
+		for (int i = mesh.getNumberOfVertices() - 1; i > 0; i--) {
+			vertex = mesh.getVertex(i);
+			Bone closestBone = getClosestBone(vertex, bones);
+			linkOneBoneToVertex(closestBone.getId(), vertex);
 		}
 
 		finalizeAutoRigg(bones);
 	}
 
-	private Bone getClosestBone(ITriangle triangle, List<Bone> bones) {
+	private Bone getClosestBone(IVertex vertex, List<Bone> bones) {
 		Double currentMin = Double.MAX_VALUE;
 		Bone currentClosestBone = null;
 
 		for (Bone bone : bones) {
-			int indexTrianglePosition = triangle.get(0);
-			Vector facePosition = this.mesh.getVertex(indexTrianglePosition).getPosition();
-			double distance = distancePointToSegment(facePosition, bone.getStartPosition(), bone.getEndPosition());
+			Vector vertexPosition = vertex.getPosition();
+			double distance = distancePointToSegment(vertexPosition, bone.getStartPosition(), bone.getEndPosition());
 
 			if (distance < currentMin) {
 				currentMin = distance;

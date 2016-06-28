@@ -3,6 +3,7 @@ package cgresearch.studentprojects.posegen.editor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
@@ -15,6 +16,7 @@ import cgresearch.core.math.Vector;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 import cgresearch.graphics.scenegraph.CgNode;
 import cgresearch.rendering.jogl.ui.JoglFrame;
 import cgresearch.studentprojects.posegen.datastructure.Bone;
@@ -91,7 +93,7 @@ public class Editor extends CgApplication {
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof Bone) {
 						editorStatus.selectBone(((Bone) mesh));
-						canvas.enableWireframe();
+						// canvas.enableWireframe();
 						Bone selectedBone = ((Bone) mesh);
 						selectedBone.rotateUmDrehpunkt(3.0, selectedBone.getStartPosition());
 						// skelett.getBones().get(3).rotateUmDrehpunkt(4, new
@@ -237,11 +239,15 @@ public class Editor extends CgApplication {
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) {
 					ITriangleMesh mesh = iterator.next();
-					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), pickedTriangles.get(mesh));
-					// for (ITriangle triangle : pickedTriangles.get(mesh)) {
-					//
-					// triangle.setVisible(false);
-					// }
+					List<IVertex> verticesToLink = new ArrayList<>();
+					for (ITriangle triangle : pickedTriangles.get(mesh)) {
+						verticesToLink.add(mesh.getVertex(triangle.getA()));
+						verticesToLink.add(mesh.getVertex(triangle.getB()));
+						verticesToLink.add(mesh.getVertex(triangle.getC()));
+
+					}
+					List<IVertex> noDuplicates = new ArrayList<IVertex>(new LinkedHashSet<IVertex>(verticesToLink));
+					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), noDuplicates);
 				}
 			}
 
@@ -253,11 +259,20 @@ public class Editor extends CgApplication {
 				Iterator<ITriangleMesh> iterator = keySet.iterator();
 				while (iterator.hasNext()) {
 					ITriangleMesh mesh = iterator.next();
-					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), pickedTriangles.get(mesh));
-					// for (ITriangle triangle : pickedTriangles.get(mesh)) {
-					//
-					// triangle.setVisible(false);
-					// }
+					List<IVertex> verticesToLink = new ArrayList<>();
+					for (ITriangle triangle : pickedTriangles.get(mesh)) {
+						verticesToLink.add(mesh.getVertex(triangle.getA()));
+						verticesToLink.add(mesh.getVertex(triangle.getB()));
+						verticesToLink.add(mesh.getVertex(triangle.getC()));
+
+					}
+					List<IVertex> noDuplicates = new ArrayList<IVertex>(new LinkedHashSet<IVertex>(verticesToLink));
+					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), noDuplicates);
+
+					// old triangle based
+					// ITriangleMesh mesh = iterator.next();
+					// boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(),
+					// pickedTriangles.get(mesh).get(0));
 				}
 
 			}

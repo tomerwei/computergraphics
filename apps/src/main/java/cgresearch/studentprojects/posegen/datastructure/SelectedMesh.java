@@ -9,23 +9,24 @@ import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
+import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 
 public class SelectedMesh {
 
 	private ITriangleMesh mesh;
-	private List<ITriangle> selectedTriangles;
+	private List<IVertex> selectedVertices;
 
-	public SelectedMesh(ITriangleMesh mesh, List<ITriangle> selectedTriangles) {
+	public SelectedMesh(ITriangleMesh mesh, List<IVertex> selectedVertices) {
 		this.mesh = mesh;
-		this.selectedTriangles = selectedTriangles;
+		this.selectedVertices = selectedVertices;
 	}
 
 	public void rotateTrianglePositions(double deg, Vector rotationPosition) {
-		if (selectedTriangles == null) {
+		if (selectedVertices == null) {
 			System.out.println("selectedTriangles == NULL");
 			return;
 		}
-		if (selectedTriangles.size() == 0) {
+		if (selectedVertices.size() == 0) {
 			System.out.println("Size=0");
 		}
 		if (mesh == null) {
@@ -33,24 +34,19 @@ public class SelectedMesh {
 		}
 
 		List<VertexMutable> verticesToRotate = new ArrayList<>();
-		for (ITriangle triangle : selectedTriangles) {
-			IVertex vexAVertex = mesh.getVertex(triangle.getA());
-			IVertex vexBVertex = mesh.getVertex(triangle.getB());
-			IVertex vexCVertex = mesh.getVertex(triangle.getC());
+		for (IVertex vexAVertex : selectedVertices) {
+//			IVertex vexAVertex = mesh 
+//			IVertex vexBVertex = mesh.getVertex(triangle.getB());
+//			IVertex vexCVertex = mesh.getVertex(triangle.getC());
 
-			if (!(vexAVertex instanceof VertexMutable) || !(vexBVertex instanceof VertexMutable)
-					|| !(vexCVertex instanceof VertexMutable)) {
+			if (!(vexAVertex instanceof VertexMutable)) {
 				Logger.getInstance()
 						.error("Tried to manipulate a Vertex not of Type 'VertexMutable' inside SelectedMesh");
 				return;
 			}
 			VertexMutable vexA = (VertexMutable) vexAVertex;
-			VertexMutable vexB = (VertexMutable) vexBVertex;
-			VertexMutable vexC = (VertexMutable) vexCVertex;
 			
 			verticesToRotate.add(vexA);
-			verticesToRotate.add(vexB);
-			verticesToRotate.add(vexC);
 			
 			mesh.updateRenderStructures();
 		}
