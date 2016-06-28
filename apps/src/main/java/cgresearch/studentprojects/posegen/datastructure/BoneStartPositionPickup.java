@@ -2,11 +2,10 @@ package cgresearch.studentprojects.posegen.datastructure;
 
 import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
-import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMeshFactory;
 import cgresearch.graphics.material.Material;
 
-public class BoneStartPositionPickup extends IBoneMovePositionPickup{
+public class BoneStartPositionPickup extends IBoneMovePositionPickup {
 
 	private Vector position;
 	private double radius = 0.06;
@@ -15,7 +14,8 @@ public class BoneStartPositionPickup extends IBoneMovePositionPickup{
 	private final Bone parentBone; // Link to parent bone
 
 	public BoneStartPositionPickup(Vector position, Bone parentBone) {
-		this.position = position;
+		this.position = new Vector(3);
+		this.position.copy(position);
 		this.parentBone = parentBone;
 		updateMesh();
 	}

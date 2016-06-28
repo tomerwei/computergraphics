@@ -92,9 +92,10 @@ public class Editor extends CgApplication {
 					if (mesh instanceof Bone) {
 						editorStatus.selectBone(((Bone) mesh));
 						canvas.enableWireframe();
-						Bone selectedBone = ((Bone)mesh);
+						Bone selectedBone = ((Bone) mesh);
 						selectedBone.rotateUmDrehpunkt(3.0, selectedBone.getStartPosition());
-//						skelett.getBones().get(3).rotateUmDrehpunkt(4, new Vector(0, 0, 0));
+						// skelett.getBones().get(3).rotateUmDrehpunkt(4, new
+						// Vector(0, 0, 0));
 					}
 				}
 			}
@@ -210,7 +211,8 @@ public class Editor extends CgApplication {
 			@Override
 			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
 					Vector coordsClicked) {
-				// TODO Auto-generated method stub
+				System.out.println("AutoLinked");
+				boneMeshMap.autoLinkTrianglesToBones();
 
 			}
 
@@ -351,6 +353,8 @@ public class Editor extends CgApplication {
 		BoneNode rightWaist = addBone(null, new Vector(0.5, 0.0, 0.0), "rightWaist");
 		BoneNode rightUpperLeg = addBone(rightWaist.getBone(), new Vector(0.15, -1.0, 0.0), "rightUpperLeg");
 		BoneNode rightLowerLeg = addBone(rightUpperLeg.getBone(), new Vector(0.05, -0.80, 0.0), "rightLowerLeg");
+		// BoneNode rightLowerLowerLeg = addBone(rightLowerLeg.getBone(), new
+		// Vector(0.05, -0.80, 0.0), "rightLowerLowerLeg");
 
 		skelett.addChild(waistToTop);
 		skelett.addChild(shoulderToLeft);
@@ -369,6 +373,7 @@ public class Editor extends CgApplication {
 		skelett.addChild(rightWaist);
 		skelett.addChild(rightUpperLeg);
 		skelett.addChild(rightLowerLeg);
+		// skelett.addChild(rightLowerLowerLeg);
 
 		// rightUpperLeg.getBone().rotateUmBoneStart(45);
 		// leftUpperArm.getBone().rotateUmBoneStart(-90);

@@ -21,17 +21,18 @@ public class BoneMeshMap {
 
 	private ITriangleMesh mesh = null;
 	private List<Bone> bones = null;
-	private HashMap<Integer, List<ITriangle>> boneTriangleMap = new HashMap<>();
+	private HashMap<Integer, List<ITriangle>> boneTriangleMap;// = new HashMap<>();
 
 	public BoneMeshMap(ITriangleMesh mesh, List<Bone> bones) {
 		this.mesh = mesh;
 		this.bones = bones;
 		
-		for (Bone bone : this.bones) {
-			updateBonesSelectedMesh(bone.getId()); // Init. falls nichts an dem
-													// bonehängt hat er sonst
-													// keine selected mesh map
-		}
+//		for (Bone bone : this.bones) {
+//			updateBonesSelectedMesh(bone.getId()); // Init. falls nichts an dem
+//													// bonehängt hat er sonst
+//													// keine selected mesh map
+//		}
+		
 		autoLinkTrianglesToBones();
 	}
 
@@ -98,6 +99,7 @@ public class BoneMeshMap {
 	}
 
 	public void autoLinkTrianglesToBones() {
+		boneTriangleMap = new HashMap<>();
 		// https://groups.google.com/forum/#!topic/de.sci.mathematik/Wrl62qeQAiE
 
 		ITriangle triangle;

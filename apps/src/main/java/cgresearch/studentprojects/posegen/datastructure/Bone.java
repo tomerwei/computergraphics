@@ -70,8 +70,8 @@ public class Bone extends TriangleMesh {
 	}
 
 	private void initBonePositionPickup() {
-		boneStartPositionPickup = new BoneStartPositionPickup(startBonePosition, this);
-		boneEndPositionPickup = new BoneEndPositionPickup(endBonePosition, this);
+		boneStartPositionPickup = new BoneStartPositionPickup(new Vector(startBonePosition), this);
+		boneEndPositionPickup = new BoneEndPositionPickup(new Vector(endBonePosition), this);
 	}
 
 	public static Bone getBoneById(Integer boneId) {
@@ -144,7 +144,8 @@ public class Bone extends TriangleMesh {
 	}
 
 	public Vector getEndPosition() {
-		return endBonePosition;
+		// return endBonePosition;
+		return new Vector(endBonePosition);
 	}
 
 	public int getId() {
@@ -182,7 +183,7 @@ public class Bone extends TriangleMesh {
 	// // child bones move um vector
 	// }
 
-	public void moveBoneByOffset(Vector offset) {
+	private void moveBoneByOffset(Vector offset) {
 		this.startBonePosition = this.startBonePosition.add(offset);
 		this.endBonePosition = this.endBonePosition.add(offset);
 
@@ -194,7 +195,7 @@ public class Bone extends TriangleMesh {
 	}
 
 	public void moveBoneStartToPosition(Vector newPosition) {
-		this.startBonePosition = newPosition;
+		this.startBonePosition.copy(newPosition);
 		if (null != parentBone) {
 			parentBone.moveBoneEndToPosition(newPosition);
 		}
@@ -202,12 +203,17 @@ public class Bone extends TriangleMesh {
 	}
 
 	public void moveBoneEndToPosition(Vector newPosition) {
-		if (newPosition != this.endBonePosition) { // No endless loop, if a
-													// child recalls this one
-			this.endBonePosition = newPosition;
+		if (!(newPosition.equals(this.endBonePosition))) { // No endless loop,
+			// if a child recalls this one
+
+			this.endBonePosition.copy(newPosition);
 			for (Bone bone : childbonesAtEnd) {
 				bone.moveBoneStartToPosition(newPosition);
+
 			}
+		} else {
+			// System.out.println(this.endBonePosition);
+			// System.out.println(newPosition);
 		}
 
 		updateAfterChange();
@@ -217,7 +223,7 @@ public class Bone extends TriangleMesh {
 		return startBonePosition;
 	}
 
-	public void moveBoneEndByOffset(Vector offset) {
+	private void moveBoneEndByOffset(Vector offset) {
 		// this.startBonePosition = this.startBonePosition.add(offset);
 		this.endBonePosition = this.endBonePosition.add(offset);
 
@@ -311,7 +317,8 @@ public class Bone extends TriangleMesh {
 	}
 
 	public void rotateUmDrehpunkt(double winkelDeg, Vector drehPunkt) {
-		this.selectedMesh.rotateTrianglePositions(winkelDeg, drehPunkt);
+		this.selectedMesh.rotateTrianglePositions(winkelDeg, drehPunkt); // Hier
+																			// ?
 		double winkelRad = degToRad(winkelDeg);
 		double xEnd = this.endBonePosition.get(0);
 		double yEnd = this.endBonePosition.get(1);
@@ -360,6 +367,10 @@ public class Bone extends TriangleMesh {
 		}
 
 	}
+
+	// public void setEndPosition(Vector position) {
+	// this.endBonePosition.copy(position);
+	// }
 
 	// public void moveAbsolute(Vector movement) {
 	// this.startBonePosition = this.startBonePosition.add(movement);
