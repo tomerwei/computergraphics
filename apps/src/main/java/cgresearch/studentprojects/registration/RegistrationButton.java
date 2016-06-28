@@ -22,7 +22,11 @@ import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.datastructures.points.PointNeighborsQuery;
 import cgresearch.graphics.datastructures.points.TriangleMeshSampler;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.Triangle;
+import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
+import cgresearch.graphics.datastructures.trianglemesh.Vertex;
 import cgresearch.graphics.fileio.ObjFileReader;
+import cgresearch.graphics.fileio.ObjFileWriter;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgRootNode;
 import cgresearch.core.logging.Logger;
@@ -88,11 +92,11 @@ public class RegistrationButton extends IApplicationControllerGui {
 		tfChangeNumber.setColumns(10);
 		tfChangeNumber.setBounds(310, 76, 60, 20);
 		MainPanel.add(tfChangeNumber);
-		
+
 		/**
 		 * Change Number of Points at the Model Surface
 		 */
-		
+
 		JButton btChangeGo = new JButton("Go");
 		btChangeGo.setBounds(375, 76, 110, 20);
 		btChangeGo.addActionListener(new ActionListener() {
@@ -101,7 +105,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 				basePointCloud = TriangleMeshSampler.sample(cubeMeshModel, numberOfPointsModel);
 				surfaceBase.deleteNode(basePointCloud);
 				surfaceBase.create(basePointCloud);
-//				basePointCloud.updateRenderStructures();
+				//				basePointCloud.updateRenderStructures();
 				lbNumberPoints.setText("Number of Points: " + numberOfPointsModel);
 			}
 
@@ -111,7 +115,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 		/**
 		 * Load Model Surface
 		 */
-		
+
 		JButton btModel = new JButton("Load Model");
 		btModel.setBounds(10, 30, 110, 20);
 		btModel.addActionListener(new ActionListener() {
@@ -128,7 +132,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 					basePointCloud.getPoint(i).getColor().copy(Material.PALETTE1_COLOR3);
 				}
 				surfaceBase.create(basePointCloud);
-//				RegistrationFrame regFrame = new RegistrationFrame();
+				//				RegistrationFrame regFrame = new RegistrationFrame();
 
 				lbModelName.setText("Model: " + ModelPath.toString());
 				lbNumberPoints.setText("Number of Points: " + numberOfPointsModel);
@@ -161,11 +165,11 @@ public class RegistrationButton extends IApplicationControllerGui {
 		tfChangeNumberData.setColumns(10);
 		tfChangeNumberData.setBounds(310, 168, 60, 20);
 		MainPanel.add(tfChangeNumberData);
-		
+
 		/**
 		 * Change Number of Points at the Model Surface
 		 */
-		
+
 		JButton btChangeGoData = new JButton("Go");
 		btChangeGoData.setBounds(375, 168, 110, 20);
 		btChangeGoData.addActionListener(new ActionListener() {
@@ -174,7 +178,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 				registerPointCloud = TriangleMeshSampler.sample(cubeMeshData, numberOfPointsData);
 				surfaceData.deleteNode(registerPointCloud);
 				surfaceData.create(registerPointCloud);
-//				registerPointCloud.updateRenderStructures();
+				//				registerPointCloud.updateRenderStructures();
 				lbNumberPointsData.setText("Number of Points: " + numberOfPointsData);
 			}
 
@@ -184,12 +188,12 @@ public class RegistrationButton extends IApplicationControllerGui {
 		/**
 		 * Load Data Surface
 		 */
-		
+
 		JButton btData = new JButton("Load Data");
 		btData.setBounds(10, 122, 110, 20);
 		btData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				OpenFile open = new OpenFile();
 				DataPath = open.Open();
 				ObjFileReader reader = new ObjFileReader();
@@ -205,36 +209,36 @@ public class RegistrationButton extends IApplicationControllerGui {
 			}
 		});
 		MainPanel.add(btData);
-		
+
 		/**
 		 * Change the translation and rotation of the Data surface
 		 */
-		
+
 		JButton btRandomPos = new JButton("random Pose");
 		btRandomPos.setBounds(150, 122, 110, 20);
 		btRandomPos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				double transRnd[] = new double[3];
-				
+
 				for(int i = 0; i< 3; i++){
 					transRnd[i] = (double) (Math.random()*(0-(-1))+(-1)); // Wert muss getestet werden, ob wirklich 2 geht oder shcon zu weit ist
 					System.out.println("Translation Random: "+transRnd[i]);
-					
+
 				}
 				//normal transRnd[0],transRnd[1], transRnd[2] in create vector klammer
-				Vector translation = VectorFactory.createVector3(0.3,0.3,0.3);
+				Vector translation = VectorFactory.createVector3(-0.1,-0.1,-0.1);
 				int rndRotate = 20;
 				double rotationAngle = rndRotate * Math.PI / 180;
 				System.out.println("random rotate: "+rndRotate);
 				System.out.println("Rotation Angel: "+rotationAngle);
-				
-			    TriangleMeshTransformation.transform(cubeMeshData, MatrixFactory.createRotationMatrix(VectorFactory.createVector3(1, 1, 1).getNormalized(), rotationAngle));
-			    TriangleMeshTransformation.translate(cubeMeshData, translation);
-			    registerPointCloud = TriangleMeshSampler.sample(cubeMeshData, numberOfPointsData);
-//				surfaceData.update(registerPointCloud);
-			    surfaceData.deleteNode(registerPointCloud);
+
+				TriangleMeshTransformation.transform(cubeMeshData, MatrixFactory.createRotationMatrix(VectorFactory.createVector3(1, 1, 1).getNormalized(), rotationAngle));
+				TriangleMeshTransformation.translate(cubeMeshData, translation);
+				registerPointCloud = TriangleMeshSampler.sample(cubeMeshData, numberOfPointsData);
+				//				surfaceData.update(registerPointCloud);
+				surfaceData.deleteNode(registerPointCloud);
 				surfaceData.create(registerPointCloud);
-//			    registerPointCloud.updateRenderStructures();
+				//			    registerPointCloud.updateRenderStructures();
 				lbNumberPointsData.setText("Number of Points: " + numberOfPointsData);
 			}
 
@@ -249,11 +253,11 @@ public class RegistrationButton extends IApplicationControllerGui {
 		tfNoisyValue.setColumns(10);
 		tfNoisyValue.setBounds(125, 206, 60, 20);
 		MainPanel.add(tfNoisyValue);
-		
+
 		/**
 		 * noisy the Data surface
 		 */
-		
+
 		JButton btNoise = new JButton("Noise");
 		btNoise.setBounds(10, 206, 110, 20);
 		btNoise.addActionListener(new ActionListener() {
@@ -261,15 +265,15 @@ public class RegistrationButton extends IApplicationControllerGui {
 				double degree = 0.01;
 				Noise noise = new Noise();
 				noise.addNoise(registerPointCloud, degree);
-//				surfaceData.deleteNode(registerPointCloud);
-//				surfaceData.create(registerPointCloud);
-//				registerPointCloud.updateRenderStructures();
+				//				surfaceData.deleteNode(registerPointCloud);
+				//				surfaceData.create(registerPointCloud);
+				//				registerPointCloud.updateRenderStructures();
 				surfaceData.update();
-				
+
 			}
 		});
 		MainPanel.add(btNoise);
-		
+
 		/**
 		 * TODO Klasse Surface überarbeiten. Mit Update und Create usw.
 		 */
@@ -278,11 +282,11 @@ public class RegistrationButton extends IApplicationControllerGui {
 		tfNumberOfOutliers.setColumns(10);
 		tfNumberOfOutliers.setBounds(125, 231, 60, 20);
 		MainPanel.add(tfNumberOfOutliers);
-		
+
 		/**
 		 * generate outliers at the Data surface
 		 */
-		
+
 		JButton btOutliers = new JButton("Outliers");
 		btOutliers.setBounds(10, 231, 110, 20);
 		btOutliers.addActionListener(new ActionListener() {
@@ -293,18 +297,18 @@ public class RegistrationButton extends IApplicationControllerGui {
 				for(int k = 0; k < outliers; k++){
 					for(int i = 0; i< 3; i++){
 						rndPoint[i] = (double) (Math.random()*(2-(-1))+(-1)); // Wert muss getestet werden, ob wirklich 2 geht oder shcon zu weit ist		
-						
+
 					}
 					Vector vec = new Vector(rndPoint[x], rndPoint[y], rndPoint[z]);			
 					Point point = new Point(vec);
 					System.out.println("outliers: "+point.getPosition());
 					registerPointCloud.addPoint(point);
-					
+
 				}
-//				surfaceData.deleteNode(registerPointCloud);
-//				surfaceData.create(registerPointCloud);
+				//				surfaceData.deleteNode(registerPointCloud);
+				//				surfaceData.create(registerPointCloud);
 				registerPointCloud.updateRenderStructures();
-				
+
 
 			}
 		});
@@ -314,12 +318,12 @@ public class RegistrationButton extends IApplicationControllerGui {
 		tfpercentOfOverlapping.setColumns(10);
 		tfpercentOfOverlapping.setBounds(125, 256, 60, 20);
 		MainPanel.add(tfpercentOfOverlapping);
-		
+
 		/**
 		 * Generate a overlapping in % of the Data surface to the Model surface
 		 * works only with the same obj file
 		 */
-		
+
 		JButton btPartialOverlapping = new JButton("Overlapping");
 		btPartialOverlapping.setBounds(10, 256, 110, 20);
 		btPartialOverlapping.addActionListener(new ActionListener() {
@@ -328,164 +332,170 @@ public class RegistrationButton extends IApplicationControllerGui {
 				IPointCloud newPointCloudRegister = new PointCloud();
 				IPointCloud newPointCloud = new PointCloud();
 				IPointCloud newPointCloudBase = new PointCloud();
-				
-				
+
+
 				double baseMaxX = basePointCloud.getPoint(0).getPosition().get(0);
 				double baseMinX = basePointCloud.getPoint(0).getPosition().get(0);;
 				double baseDistance = 0;
-				double registerMaxX = basePointCloud.getPoint(0).getPosition().get(0);
-				double registerMinX = basePointCloud.getPoint(0).getPosition().get(0);;
+				//				double registerMaxX = basePointCloud.getPoint(0).getPosition().get(0);
+				//				double registerMinX = basePointCloud.getPoint(0).getPosition().get(0);
+				double registerMaxX = registerPointCloud.getPoint(0).getPosition().get(0);
+				double registerMinX = registerPointCloud.getPoint(0).getPosition().get(0);
 				double resgisterDistance = 0;
+				double borderForPoints = 0;
+				double singleStep = 0;
 				int numberOfPoints = 0;
 				double nearestPointAtTheCenter = 0;
 				Point nearestPoint = null;
-				
-				for(int i =0; i < basePointCloud.getNumberOfPoints(); i++){
-					
-					if(basePointCloud.getPoint(i).getPosition().get(0)> baseMaxX){
-						baseMaxX = basePointCloud.getPoint(i).getPosition().get(0);
-					}else if(basePointCloud.getPoint(i).getPosition().get(0)< baseMinX){
-						baseMinX = basePointCloud.getPoint(i).getPosition().get(0);
-					}
-					
-				}
-				
-				baseDistance =  (baseMaxX - baseMinX)/2;
-				double newMax = baseMaxX - baseDistance;
-				System.out.println("Distance: " +baseDistance);
-				System.out.println("new Distance: " +newMax);
-				
-				for(int k =0; k < basePointCloud.getNumberOfPoints(); k++){
-//					System.out.println("aktueller Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
-					if(basePointCloud.getPoint(k).getPosition().get(0) > newMax){
-						newPointCloudBase.addPoint(basePointCloud.getPoint(k));
-//						System.out.println("Neuer Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
-						
-					}
-					
-				}
-				
-				
-				
-				basePointCloud.clear();
-				
-				for(int i= 0; i < newPointCloudBase.getNumberOfPoints(); i++){
-					basePointCloud.addPoint(newPointCloudBase.getPoint(i));
-					
-				}
-				basePointCloud.updateRenderStructures();
-				System.out.println("Anzahl der Punkte im Modell "+basePointCloud.getNumberOfPoints());
-				
+
+				//				for(int i =0; i < basePointCloud.getNumberOfPoints(); i++){
+				//					
+				//					if(basePointCloud.getPoint(i).getPosition().get(0)> baseMaxX){
+				//						baseMaxX = basePointCloud.getPoint(i).getPosition().get(0);
+				//					}else if(basePointCloud.getPoint(i).getPosition().get(0)< baseMinX){
+				//						baseMinX = basePointCloud.getPoint(i).getPosition().get(0);
+				//					}
+				//					
+				//				}
+				//				
+				//				baseDistance =  (baseMaxX - baseMinX)/2;
+				//				double newMax = baseMaxX - baseDistance;
+				//				System.out.println("Distance: " +baseDistance);
+				//				System.out.println("new Distance: " +newMax);
+				//				
+				//				for(int k =0; k < basePointCloud.getNumberOfPoints(); k++){
+				////					System.out.println("aktueller Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
+				//					if(basePointCloud.getPoint(k).getPosition().get(0) > newMax){
+				//						newPointCloudBase.addPoint(basePointCloud.getPoint(k));
+				////						System.out.println("Neuer Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
+				//						
+				//					}
+				//					
+				//				}
+				//				
+				//				
+				//				
+				//				basePointCloud.clear();
+				//				
+				//				for(int i= 0; i < newPointCloudBase.getNumberOfPoints(); i++){
+				//					basePointCloud.addPoint(newPointCloudBase.getPoint(i));
+				//					
+				//				}
+				//				basePointCloud.updateRenderStructures();
+				//				System.out.println("Anzahl der Punkte im Modell "+basePointCloud.getNumberOfPoints());
+
 				/*
 				 * REigster Teil
 				 * 
 				 */
-				
-				numberOfPoints = (basePointCloud.getNumberOfPoints() * percent) / 100;
-				
-				System.out.println("Anzahl der Prozentpunkte: "+numberOfPoints);
-				
+
+
 				for(int i =0; i < registerPointCloud.getNumberOfPoints(); i++){
-					
+
 					if(registerPointCloud.getPoint(i).getPosition().get(0)> registerMaxX){
 						registerMaxX = registerPointCloud.getPoint(i).getPosition().get(0);
 					}else if(registerPointCloud.getPoint(i).getPosition().get(0)< registerMinX){
 						registerMinX = registerPointCloud.getPoint(i).getPosition().get(0);
-						
-					}
-					
-				}
-				
-				resgisterDistance =  (registerMaxX - registerMinX)/2;
-				double newMaxRegister = registerMaxX - resgisterDistance;
-				System.out.println("Distance: " +resgisterDistance);
-				System.out.println("new Distance: " +newMaxRegister);
-				nearestPointAtTheCenter = registerMinX;
-				for(int k =0; k < registerPointCloud.getNumberOfPoints(); k++){
-//					System.out.println("aktueller Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
-					if(registerPointCloud.getPoint(k).getPosition().get(0) < newMaxRegister){
-						newPointCloudRegister.addPoint(registerPointCloud.getPoint(k));
-						if(registerPointCloud.getPoint(k).getPosition().get(0) > nearestPointAtTheCenter){
-							nearestPointAtTheCenter = registerPointCloud.getPoint(k).getPosition().get(0);
-							nearestPoint = registerPointCloud.getPoint(k);
-							
-						}
-							
-						
-					//						System.out.println("Neuer Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
-						
-					}else{
-						newPointCloud.addPoint(registerPointCloud.getPoint(k));
-					}
-					
-				}
-				System.out.println("dichtester Punkt an der Mitte: "+nearestPoint.getPosition());
-				int[] nearestPoints = nearestPoints(nearestPoint, newPointCloud, numberOfPoints);
 
-				
-				
-				registerPointCloud.clear();
-				
-				for(int l = 0; l < nearestPoints.length; l++ ){
-//					System.out.println("Punkte die von Modell ind Register übergeben werden: "+basePointCloud.getPoint(nearestPoints[l]).getPosition());
-					registerPointCloud.addPoint(newPointCloud.getPoint(nearestPoints[l]));
+					}
+
 				}
-				
-				
+
+				System.out.println("registerMaxX : "+registerMaxX);
+				System.out.println("registerMinX : "+registerMinX);
+				resgisterDistance =  (registerMaxX - registerMinX);
+				System.out.println("REgisterdistance : "+resgisterDistance);
+				singleStep = resgisterDistance /100;
+				borderForPoints = registerMinX;
+				for(int p =0; p < percent; p++){
+					borderForPoints = borderForPoints + singleStep;
+				}
+
+
+				for(int k = 0; k < registerPointCloud.getNumberOfPoints(); k++){
+					if(registerPointCloud.getPoint(k).getPosition().get(0) < borderForPoints){
+						newPointCloudRegister.addPoint(registerPointCloud.getPoint(k));
+
+					}
+				}
+				System.out.println("Anzahl Punkte in der neuen RegiserPointCloud: "+registerPointCloud.getNumberOfPoints());
+				registerPointCloud.clear();
 				for(int i= 0; i < newPointCloudRegister.getNumberOfPoints(); i++){
 					registerPointCloud.addPoint(newPointCloudRegister.getPoint(i));
-					
+
 				}
-				
+
 				registerPointCloud.updateRenderStructures();
-				System.out.println("Anzahl der Punkte im Register mit überlapp "+registerPointCloud.getNumberOfPoints());
-				
-				
-//				int numberOfPoints = (registerPointCloud.getNumberOfPoints() * percent) / 100;
-//				int numberOfPointsBase = (basePointCloud.getNumberOfPoints() * percent) / 100;
-//				
-//				
-//				int[] nearestPoints = nearestPoints(registerPointCloud,numberOfPoints);
-//				int[] nearestPointsBase = nearestPoints(basePointCloud,numberOfPointsBase);
-//				
-//				System.out.println("Register position 0: "+registerPointCloud.getPoint(0).getPosition());
-//				System.out.println("base position 0: "+basePointCloud.getPoint(0).getPosition());
-//				
-//
-//				
-////				System.out.println("Anzahl Punkte nach nereast Berechnung:"+nearestPoints.length );
-//				
-//				for(int i= 0; i < numberOfPoints; i++){
-////					System.out.println("Number of Points: "+i);
-//					newPointCloud.addPoint(registerPointCloud.getPoint(nearestPoints[i]));
-//					
-//				}
-//				int k = nearestPointsBase.length;
-//				for(int i= basePointCloud.getNumberOfPoints(); i > numberOfPointsBase; i--){
-////					System.out.println("Number of Points: "+i);
-//					newPointCloudBase.addPoint(basePointCloud.getPoint(nearestPointsBase[k]));
-//					k--;
-//				}
-//				
-//				registerPointCloud.clear();
-//				basePointCloud.clear();
-//				for(int i= 0; i < newPointCloud.getNumberOfPoints(); i++){
-//					registerPointCloud.addPoint(newPointCloud.getPoint(i));
-//					
-//				}
-//				registerPointCloud.updateRenderStructures();
-//				
-//				for(int i= 0; i < newPointCloudBase.getNumberOfPoints(); i++){
-//					basePointCloud.addPoint(newPointCloudBase.getPoint(i));
-//					
-//				}
-//				basePointCloud.updateRenderStructures();
-				
+
+
+
+				//				numberOfPoints = (basePointCloud.getNumberOfPoints() * percent) / 100;
+				//				
+				//				System.out.println("Anzahl der Prozentpunkte: "+numberOfPoints);
+				//				
+				//				for(int i =0; i < registerPointCloud.getNumberOfPoints(); i++){
+				//					
+				//					if(registerPointCloud.getPoint(i).getPosition().get(0)> registerMaxX){
+				//						registerMaxX = registerPointCloud.getPoint(i).getPosition().get(0);
+				//					}else if(registerPointCloud.getPoint(i).getPosition().get(0)< registerMinX){
+				//						registerMinX = registerPointCloud.getPoint(i).getPosition().get(0);
+				//						
+				//					}
+				//					
+				//				}
+				//				
+				//				resgisterDistance =  (registerMaxX - registerMinX)/2;
+				//				double newMaxRegister = registerMaxX - resgisterDistance;
+				//				System.out.println("Distance: " +resgisterDistance);
+				//				System.out.println("new Distance: " +newMaxRegister);
+				//				nearestPointAtTheCenter = registerMinX;
+				//				for(int k =0; k < registerPointCloud.getNumberOfPoints(); k++){
+				////					System.out.println("aktueller Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
+				//					if(registerPointCloud.getPoint(k).getPosition().get(0) < newMaxRegister){
+				//						newPointCloudRegister.addPoint(registerPointCloud.getPoint(k));
+				//						if(registerPointCloud.getPoint(k).getPosition().get(0) > nearestPointAtTheCenter){
+				//							nearestPointAtTheCenter = registerPointCloud.getPoint(k).getPosition().get(0);
+				//							nearestPoint = registerPointCloud.getPoint(k);
+				//							
+				//						}
+				//							
+				//						
+				//					//						System.out.println("Neuer Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
+				//						
+				//					}else{
+				//						newPointCloud.addPoint(registerPointCloud.getPoint(k));
+				//					}
+				//					
+				//				}
+				//				
+				//				System.out.println("dichtester Punkt an der Mitte: "+nearestPoint.getPosition());
+				//				int[] nearestPoints = nearestPoints(nearestPoint, newPointCloud, numberOfPoints);
+				//
+				//				
+				//				
+				//				registerPointCloud.clear();
+				//				
+				//				for(int l = 0; l < nearestPoints.length; l++ ){
+				////					System.out.println("Punkte die von Modell ind Register übergeben werden: "+basePointCloud.getPoint(nearestPoints[l]).getPosition());
+				//					registerPointCloud.addPoint(newPointCloud.getPoint(nearestPoints[l]));
+				//				}
+				//				
+				//				System.out.println("Anzahl der Punkte im RegisterModell "+newPointCloudRegister.getNumberOfPoints());
+				//				for(int i= 0; i < newPointCloudRegister.getNumberOfPoints(); i++){
+				//					registerPointCloud.addPoint(newPointCloudRegister.getPoint(i));
+				//					
+				//				}
+				//				
+				//				registerPointCloud.updateRenderStructures();
+				//				System.out.println("Anzahl der Punkte im Register mit überlapp "+registerPointCloud.getNumberOfPoints());
+				//				
+
+
 
 			}
 		});
 		MainPanel.add(btPartialOverlapping);
-		
+
 		JSeparator sep2 = new JSeparator();
 		sep2.setBounds(10, 281, 1000, 1);
 		MainPanel.add(sep2);
@@ -534,69 +544,97 @@ public class RegistrationButton extends IApplicationControllerGui {
 		// TODO Auto-generated method stub
 		return "Registration";
 	}
-	
+
 	public int[] nearestPoints(Point p, IPointCloud PointCloud, int NumerOfPoints){
 		int NumberOfNeighbours = NumerOfPoints;
 		int[] nearestPoints = new int[NumberOfNeighbours];
-	    PointNeighborsQuery nearest = new PointNeighborsQuery(PointCloud);
+		PointNeighborsQuery nearest = new PointNeighborsQuery(PointCloud);
 
-	    for (int k = 0; k < PointCloud.getNumberOfPoints(); k++) {
+		for (int k = 0; k < PointCloud.getNumberOfPoints(); k++) {
 
-	      nearest.queryKnn(p.getPosition(), NumberOfNeighbours);
+			nearest.queryKnn(p.getPosition(), NumberOfNeighbours);
 
-	     
 
-	      
+
+
 		}
-	   System.out.println("Anzahl an Nachbarn:"+nearest.getNumberOfNeighbors()); 
-	   
-	   
-	    for(int i = 0; i < nearest.getNumberOfNeighbors(); i++){
-	    nearestPoints[i] = nearest.getNeigbor(i);
-//	      System.out.println("Platz in der RegisterCloud:" + nearestPoints[i]);
-//	      System.out.println("Anazhl Punkte die übergeben werden sollen: " + nearestPoints.length);
-	}
-	    return nearestPoints;
-		
+		System.out.println("Anzahl an Nachbarn:"+nearest.getNumberOfNeighbors()); 
+
+
+		for(int i = 0; i < nearest.getNumberOfNeighbors(); i++){
+			nearestPoints[i] = nearest.getNeigbor(i);
+			//	      System.out.println("Platz in der RegisterCloud:" + nearestPoints[i]);
+			//	      System.out.println("Anazhl Punkte die übergeben werden sollen: " + nearestPoints.length);
+		}
+		return nearestPoints;
+
 	}
 
 	private void startRegistration(IPointCloud base, IPointCloud register, int iteration) {
 
 		Logger.getInstance().message("| Iteration Steps \t| q \t| dk \t |");
 		IcpDistanceFunction icp = new IcpDistanceFunction();
-		
+
 		double dkOld = 2;
 		double dkNew = 0.0;
 		double dk = 0.0;
 		double slts = 10000;
+		double mseNew = 0.0;
+		double mse = 0.0;
+		double mseOld = 0.0;
 		for (int i = 1; i <= iteration; i++) {
-			if(dk < 0)
+			if(mse < 0)
 				break;		
 			if(trimmed == true){
 				trimmedICP trIcp = new trimmedICP(register, slts);
-				register = trIcp.startAlgorithm(base,true , 0);
+
+				//				double alpha = 0.4;
+				//				while(alpha < 1){
+
+				register = trIcp.startAlgorithm(base,true , 0.9);
+				//					mseNew = trIcp.MSE;
+				//					mse = Math.abs((mseOld - mseNew));
+				//					mseOld = mseNew;
+				//					System.out.println("mse: "+mse+ " = "+mseOld+ " - "+mseNew );
+				//					alpha = alpha + 0.05;
+				dkNew = trIcp.dk;
+				System.out.println("dk in der main: "+trIcp.dk);
+				dk = dkOld - dkNew;
+				System.out.println("dk: "+dk+ " = "+dkOld+ " - "+dkNew );
+				dkOld = dkNew;
+				//				}
+				//				;
 			}else{
-			register = icp.startAlgorithm(base, register, i);
-			dkNew = icp.dk;
-			dk = dkOld - dkNew;
-			System.out.println("dk: "+dk+ " = "+dkOld+ " + "+dkNew );
-			dkOld = dkNew;
+				//			register = icp.startAlgorithm(base, register, i);
+				dkNew = icp.dk;
+				dk = dkOld - dkNew;
+				System.out.println("dk: "+dk+ " = "+dkOld+ " - "+dkNew );
+				dkOld = dkNew;
 			}
-			
-			
+
+
 			// for(int k = 0 ;k < Register.getNumberOfPoints(); k++ ){
 			// System.out.println(" verï¿½nderte Register: "+
 			// Register.getPoint(k).getPosition());
 			// }
-			
+
 			registerPointCloud.updateRenderStructures();
 
-//			surfaceData.deleteNode(registerPointCloud);
-//			surfaceData.create(registerPointCloud);
+			//			surfaceData.deleteNode(registerPointCloud);
+			//			surfaceData.create(registerPointCloud);
 
-		}
+		}		
 	}
-
+	//	private void saveFile(){
+	//		ObjFileWriter writer = new ObjFileWriter();
+	//		ITriangleMesh mesh = new TriangleMesh();
+	//		int a = mesh.addVertex(new Vertex(registerPointCloud.getPoint(0).getPosition()));
+	//		int b = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(0,1,0));
+	//		int c = mesh.addVertex(new Vertex(VectorMatrixFactory.newIVector3(0,0,1));
+	//		mesh.addTriangle(new Triangle(a,b,c));
+	//		writer.writeToFile("test",mesh );
+	//		
+	//	}
 
 
 }

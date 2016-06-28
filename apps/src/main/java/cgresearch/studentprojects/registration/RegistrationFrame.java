@@ -16,30 +16,30 @@ public class RegistrationFrame extends CgApplication {
 
 
 
-  /**
-   * Constructor
-   */
-  public RegistrationFrame() {
+	/**
+	 * Constructor
+	 */
+	public RegistrationFrame() {
 
 
-    // New version: Jaeckel
+		// New version: Jaeckel
 
-  }
-  
-
-  public static void main(String[] args) {
-
-    ResourcesLocator.getInstance().parseIniFile("resources.ini");
-    RegistrationFrame app = new RegistrationFrame();
-    JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
-
-    appLauncher.create(app);
-    appLauncher.setRenderSystem(RenderSystem.JOGL);
-    appLauncher.setUiSystem(UI.JOGL_SWING);
-
-    appLauncher.addCustomUi(new RegistrationButton(app.getCgRootNode()));
+	}
 
 
-  }
+	public static void main(String[] args) {
+
+		ResourcesLocator.getInstance().parseIniFile("resources.ini");
+		RegistrationFrame app = new RegistrationFrame();
+		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+
+		appLauncher.create(app);
+		appLauncher.setRenderSystem(RenderSystem.JOGL);
+		appLauncher.setUiSystem(UI.JOGL_SWING);
+
+		appLauncher.addCustomUi(new RegistrationButton(app.getCgRootNode()));
+
+
+	}
 
 }
