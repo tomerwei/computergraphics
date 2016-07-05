@@ -2,24 +2,29 @@ package smarthomevis.groundplan;
 
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.scenegraph.CgNode;
-import smarthomevis.groundplan.config.Converter;
+import smarthomevis.groundplan.config.GPDataImporter;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPConfigXMLReader;
 import smarthomevis.groundplan.data.GPDataType;
 
 public class GroundPlan extends CgApplication implements IGroundPlan
 {
+	/**
+	 * Import Methode
+	 * 
+	 * @param planName
+	 * @return
+	 */
 	public GPDataType analyzePlan(String planName)
 	{
 	GPConfigXMLReader reader = new GPConfigXMLReader();
 	GPConfig config = reader.readConfig("dxf/" + planName + ".xml");
 	System.out.println(config.toString());
 	
-	Converter converter = new Converter();
+	GPDataImporter converter = new GPDataImporter();
 	GPDataType renderData = converter.importData("dxf/" + planName + ".dxf",
 		config);
 		
-	renderData.setGPConfig(config);
 	new GPAnalyzer().analyzeAndProcessData(renderData);
 	return renderData;
 	}
@@ -30,11 +35,10 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 	GPConfigXMLReader reader = new GPConfigXMLReader();
 	GPConfig config = reader.readConfig("dxf/" + gpName + ".xml");
 	
-	Converter converter = new Converter();
+	GPDataImporter converter = new GPDataImporter();
 	GPDataType renderData = converter.importData("dxf/" + gpName + ".dxf",
 		config);
 		
-	renderData.setGPConfig(config);
 	
 	return construct3DMeshFromData(renderData);
 	}

@@ -36,10 +36,10 @@ public class Test {
 	}
 
 	private void testSolidRendering(GroundPlan app) {
-		// app.analyzeAndRenderSolids("4H-HORA Projekt1");
+		app.analyzeAndRenderSolids("4H-HORA Projekt1");
 		// app.analyzeAndRenderSolids("Grundriss_Haus_02");
 		// app.analyzeAndRenderSolids("TestRaum");
-		app.analyzeAndRenderSolids("TestRaum2");
+		// app.analyzeAndRenderSolids("TestRaum2");
 		// app.analyzeAndRenderSolids("lueckenTest");
 	}
 
