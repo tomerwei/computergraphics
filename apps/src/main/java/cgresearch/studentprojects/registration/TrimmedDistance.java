@@ -13,11 +13,13 @@ public class TrimmedDistance {
 
 	final double distance;
 
-	final int index;
+	final int indexForBase;
+	final int indexForRegister;
 
-	public TrimmedDistance(double distance, int index) {
+	public TrimmedDistance(double distance, int indexForBase, int indexForRegister) {
 		this.distance = distance;
-		this.index = index;
+		this.indexForBase = indexForBase;
+		this.indexForRegister = indexForRegister;
 	}
 
 
@@ -26,15 +28,19 @@ public class TrimmedDistance {
 		return this.distance;
 	}
 
-	public int getIndex() {
-		return this.index;
+	public int getIndexForBase() {
+		return this.indexForBase;
+	}
+	
+	public int getIndexForRegister() {
+		return this.indexForRegister;
 	}
 
 
 
 	@Override
 	public String toString() {
-		return getIndex() + " ; " + getDistance() +"\n";
+		return getIndexForBase() + " ; " + indexForRegister + " ; " + getDistance() +"\n";
 	}
 
 }

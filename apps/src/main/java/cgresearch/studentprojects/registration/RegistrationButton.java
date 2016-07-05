@@ -54,6 +54,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 	Surface surfaceBase;
 	Surface surfaceData;
 	boolean trimmed = true;
+	double percent = 0;
 
 
 	int numberOfPointsModel = 3000;
@@ -226,8 +227,8 @@ public class RegistrationButton extends IApplicationControllerGui {
 
 				}
 				//normal transRnd[0],transRnd[1], transRnd[2] in create vector klammer
-				Vector translation = VectorFactory.createVector3(-0.1,-0.1,-0.1);
-				int rndRotate = 20;
+				Vector translation = VectorFactory.createVector3(-0.05,-0.05,-0.05);
+				int rndRotate = 0;
 				double rotationAngle = rndRotate * Math.PI / 180;
 				System.out.println("random rotate: "+rndRotate);
 				System.out.println("Rotation Angel: "+rotationAngle);
@@ -328,7 +329,7 @@ public class RegistrationButton extends IApplicationControllerGui {
 		btPartialOverlapping.setBounds(10, 256, 110, 20);
 		btPartialOverlapping.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int percent = Integer.parseInt(tfpercentOfOverlapping.getText());
+				percent = Integer.parseInt(tfpercentOfOverlapping.getText());
 				IPointCloud newPointCloudRegister = new PointCloud();
 				IPointCloud newPointCloud = new PointCloud();
 				IPointCloud newPointCloudBase = new PointCloud();
@@ -347,49 +348,50 @@ public class RegistrationButton extends IApplicationControllerGui {
 				int numberOfPoints = 0;
 				double nearestPointAtTheCenter = 0;
 				Point nearestPoint = null;
+				double registerMiddle = 0;
 
-				//				for(int i =0; i < basePointCloud.getNumberOfPoints(); i++){
-				//					
-				//					if(basePointCloud.getPoint(i).getPosition().get(0)> baseMaxX){
-				//						baseMaxX = basePointCloud.getPoint(i).getPosition().get(0);
-				//					}else if(basePointCloud.getPoint(i).getPosition().get(0)< baseMinX){
-				//						baseMinX = basePointCloud.getPoint(i).getPosition().get(0);
-				//					}
-				//					
-				//				}
-				//				
-				//				baseDistance =  (baseMaxX - baseMinX)/2;
-				//				double newMax = baseMaxX - baseDistance;
-				//				System.out.println("Distance: " +baseDistance);
-				//				System.out.println("new Distance: " +newMax);
-				//				
-				//				for(int k =0; k < basePointCloud.getNumberOfPoints(); k++){
-				////					System.out.println("aktueller Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
-				//					if(basePointCloud.getPoint(k).getPosition().get(0) > newMax){
-				//						newPointCloudBase.addPoint(basePointCloud.getPoint(k));
-				////						System.out.println("Neuer Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
-				//						
-				//					}
-				//					
-				//				}
-				//				
-				//				
-				//				
-				//				basePointCloud.clear();
-				//				
-				//				for(int i= 0; i < newPointCloudBase.getNumberOfPoints(); i++){
-				//					basePointCloud.addPoint(newPointCloudBase.getPoint(i));
-				//					
-				//				}
-				//				basePointCloud.updateRenderStructures();
-				//				System.out.println("Anzahl der Punkte im Modell "+basePointCloud.getNumberOfPoints());
+								for(int i =0; i < basePointCloud.getNumberOfPoints(); i++){
+									
+									if(basePointCloud.getPoint(i).getPosition().get(0)> baseMaxX){
+										baseMaxX = basePointCloud.getPoint(i).getPosition().get(0);
+									}else if(basePointCloud.getPoint(i).getPosition().get(0)< baseMinX){
+										baseMinX = basePointCloud.getPoint(i).getPosition().get(0);
+									}
+									
+								}
+								
+								baseDistance =  (baseMaxX - baseMinX)/2;
+								double newMax = baseMaxX - baseDistance;
+								System.out.println("Distance: " +baseDistance);
+								System.out.println("new Distance: " +newMax);
+								
+								for(int k =0; k < basePointCloud.getNumberOfPoints(); k++){
+				//					System.out.println("aktueller Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
+									if(basePointCloud.getPoint(k).getPosition().get(0) > newMax){
+										newPointCloudBase.addPoint(basePointCloud.getPoint(k));
+				//						System.out.println("Neuer Punkt: "+basePointCloud.getPoint(k).getPosition().get(0));
+										
+									}
+									
+								}
+								
+								
+								
+								basePointCloud.clear();
+								
+								for(int i= 0; i < newPointCloudBase.getNumberOfPoints(); i++){
+									basePointCloud.addPoint(newPointCloudBase.getPoint(i));
+									
+								}
+								basePointCloud.updateRenderStructures();
+								System.out.println("Anzahl der Punkte im Modell "+basePointCloud.getNumberOfPoints());
 
 				/*
 				 * REigster Teil
 				 * 
 				 */
 
-
+				//find x max und x min
 				for(int i =0; i < registerPointCloud.getNumberOfPoints(); i++){
 
 					if(registerPointCloud.getPoint(i).getPosition().get(0)> registerMaxX){
@@ -401,16 +403,25 @@ public class RegistrationButton extends IApplicationControllerGui {
 
 				}
 
-				System.out.println("registerMaxX : "+registerMaxX);
-				System.out.println("registerMinX : "+registerMinX);
+
+				//find max Distance and the middle
 				resgisterDistance =  (registerMaxX - registerMinX);
-				System.out.println("REgisterdistance : "+resgisterDistance);
-				singleStep = resgisterDistance /100;
-				borderForPoints = registerMinX;
+
+				if(registerMinX < 0){
+					registerMiddle = registerMaxX + registerMinX;
+				}
+				else{
+					registerMiddle = registerMaxX - registerMinX;
+				}
+				
+		
+				
+				singleStep = (resgisterDistance/2) /100;
+
+				borderForPoints = registerMiddle;
 				for(int p =0; p < percent; p++){
 					borderForPoints = borderForPoints + singleStep;
 				}
-
 
 				for(int k = 0; k < registerPointCloud.getNumberOfPoints(); k++){
 					if(registerPointCloud.getPoint(k).getPosition().get(0) < borderForPoints){
@@ -418,12 +429,14 @@ public class RegistrationButton extends IApplicationControllerGui {
 
 					}
 				}
-				System.out.println("Anzahl Punkte in der neuen RegiserPointCloud: "+registerPointCloud.getNumberOfPoints());
+//				System.out.println("Anzahl Punkte in der neuen RegiserPointCloud: "+registerPointCloud.getNumberOfPoints());
 				registerPointCloud.clear();
 				for(int i= 0; i < newPointCloudRegister.getNumberOfPoints(); i++){
 					registerPointCloud.addPoint(newPointCloudRegister.getPoint(i));
 
 				}
+				System.out.println("base Point Cloud Größe: "+basePointCloud.getNumberOfPoints());
+				System.out.println("Register Point Cloud Größe: "+registerPointCloud.getNumberOfPoints());
 
 				registerPointCloud.updateRenderStructures();
 
@@ -545,30 +558,30 @@ public class RegistrationButton extends IApplicationControllerGui {
 		return "Registration";
 	}
 
-	public int[] nearestPoints(Point p, IPointCloud PointCloud, int NumerOfPoints){
-		int NumberOfNeighbours = NumerOfPoints;
-		int[] nearestPoints = new int[NumberOfNeighbours];
-		PointNeighborsQuery nearest = new PointNeighborsQuery(PointCloud);
-
-		for (int k = 0; k < PointCloud.getNumberOfPoints(); k++) {
-
-			nearest.queryKnn(p.getPosition(), NumberOfNeighbours);
-
-
-
-
-		}
-		System.out.println("Anzahl an Nachbarn:"+nearest.getNumberOfNeighbors()); 
-
-
-		for(int i = 0; i < nearest.getNumberOfNeighbors(); i++){
-			nearestPoints[i] = nearest.getNeigbor(i);
-			//	      System.out.println("Platz in der RegisterCloud:" + nearestPoints[i]);
-			//	      System.out.println("Anazhl Punkte die übergeben werden sollen: " + nearestPoints.length);
-		}
-		return nearestPoints;
-
-	}
+//	public int[] nearestPoints(Point p, IPointCloud PointCloud, int NumerOfPoints){
+//		int NumberOfNeighbours = NumerOfPoints;
+//		int[] nearestPoints = new int[NumberOfNeighbours];
+//		PointNeighborsQuery nearest = new PointNeighborsQuery(PointCloud);
+//
+//		for (int k = 0; k < PointCloud.getNumberOfPoints(); k++) {
+//
+//			nearest.queryKnn(p.getPosition(), NumberOfNeighbours);
+//
+//
+//
+//
+//		}
+//		System.out.println("Anzahl an Nachbarn:"+nearest.getNumberOfNeighbors()); 
+//
+//
+//		for(int i = 0; i < nearest.getNumberOfNeighbors(); i++){
+//			nearestPoints[i] = nearest.getNeigbor(i);
+//			//	      System.out.println("Platz in der RegisterCloud:" + nearestPoints[i]);
+//			//	      System.out.println("Anazhl Punkte die übergeben werden sollen: " + nearestPoints.length);
+//		}
+//		return nearestPoints;
+//
+//	}
 
 	private void startRegistration(IPointCloud base, IPointCloud register, int iteration) {
 
@@ -590,8 +603,9 @@ public class RegistrationButton extends IApplicationControllerGui {
 
 				//				double alpha = 0.4;
 				//				while(alpha < 1){
+				System.out.println("prozent :"+percent/100);
 
-				register = trIcp.startAlgorithm(base,true , 0.9);
+				register = trIcp.startAlgorithm(base,true , percent/100);
 				//					mseNew = trIcp.MSE;
 				//					mse = Math.abs((mseOld - mseNew));
 				//					mseOld = mseNew;
@@ -605,7 +619,9 @@ public class RegistrationButton extends IApplicationControllerGui {
 				//				}
 				//				;
 			}else{
-				//			register = icp.startAlgorithm(base, register, i);
+				trimmedICP trIcp = new trimmedICP(register, slts);
+				register = trIcp.startAlgorithm(base,false , percent/100);
+//				register = icp.startAlgorithm(base, register, i);
 				dkNew = icp.dk;
 				dk = dkOld - dkNew;
 				System.out.println("dk: "+dk+ " = "+dkOld+ " - "+dkNew );

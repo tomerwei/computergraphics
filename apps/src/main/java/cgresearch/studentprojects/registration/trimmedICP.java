@@ -21,6 +21,8 @@ public class trimmedICP {
 	double npo = 0;
 	double MSE = 0;
 	double dk = 0;
+	double sLTSTest = 0;
+	double percent = 0;
 
 	public trimmedICP(IPointCloud register, double slts){
 		this.sLTS = slts;
@@ -31,21 +33,24 @@ public class trimmedICP {
 
 		double tolerance = 0.01;
 		double psi[][] = new double[60][4];
-
+		this.percent = percent;
 
 		//for/while und if anweisung für Stoppkonditionen und Slts = s´lts setzen
 		//Stoppkonditionen: max Niter, e ist klein genug  die änderung von e ist klein genug
 
-		NearestPointWithKdTree nearest = new NearestPointWithKdTree();
-		int[] nearestPoints = nearest.nearestPoints(base, register);
-		System.out.println("Größe dichteste Punkte: "+nearestPoints.length);
+		
+//		System.out.println("Arraygröße dichteste Punkte: "+nearestPoints.length);
 		//	    for(int i =0; i < nearestPoints.length; i++){
 		////	    System.out.println("nearestPoints: "+nearestPoints[i]);
 		//	    }
 
 		if(findPercent == true){//automatic percentage overlap
-			this.computeIndividualDistance(nearestPoints, base, register);
+			this.computeIndividualDistance(base, register);
+			System.out.println("Größe der Liste mit den dichtesten Punkten: "+list.size());
 			this.sortListInAscendingOrder();
+//			for(int i = 0; i < list.size(); i++){
+//				System.out.println("Liste geordnet Distance: "+list.get(i).getDistance()+", Point of Base: "+ base.getPoint(list.get(i).indexForBase).getPosition()+ ", Points register: "+ register.getPoint(list.get(i).indexForRegister).getPosition());
+//			}
 
 			while((beta - alpha) > tolerance){
 
@@ -61,7 +66,7 @@ public class trimmedICP {
 			psi = testSearch();
 			for(int i =0 ; i < 60; i++){
 				//					   
-				System.out.println("xi: "+psi[i][0]+ " psi: "+psi[i][1]+ " sts: "+psi[i][2]+ " npo: "+psi[i][3]);
+				System.out.println("xi: "+psi[i][0]+ " psi: "+psi[i][1]+ " MSE: "+psi[i][2]+ " slts: "+psi[i][3]+ " Npo: "+psi[i][4]);
 				//				   xi = xi + 0.05;
 			}
 			//			   register = this.computeTranslation(base, register);
@@ -70,16 +75,16 @@ public class trimmedICP {
 			//			   xi = psi;
 
 			//			   System.out.println("xi = psi : "+xi);
-			register = computeTranslation(base, register);
-
+//			register = computeTranslation(base, register);
+			computeTranslation(base, register);
 
 			//		   }
 
 		}else{//manually percentage overlap
 			//		   alpha = percent;
-			//		   this.computeIndividualDistance(nearestPoints, base, register);
-			//		   this.sortListInAscendingOrder();
-			//		   register = computeTranslation(base, register);
+					   this.computeIndividualDistance(base, register);
+//					   this.sortListInAscendingOrder();
+//					   register = computeTranslation(base, register);
 			//		   System.out.println(" falsche SChleife");
 		}
 
@@ -100,40 +105,85 @@ public class trimmedICP {
 	 * @param register
 	 */
 
-	private void computeIndividualDistance(int[] nearestPoints, IPointCloud base, IPointCloud register){
-
-		list  = new ArrayList<TrimmedDistance>(register.getNumberOfPoints());
-
+	private void computeIndividualDistance(IPointCloud base, IPointCloud register){
+		NearestPointWithKdTree nearest = new NearestPointWithKdTree(base);
+		int nearestPoints = 0;
+		list  = new ArrayList<TrimmedDistance>();
 		double x,y,z = 0;
 		double temp ;
 		boolean exist = false;
+		
+		for(int i =0 ; i < register.getNumberOfPoints(); i++){
+			nearestPoints = nearest.nearestPoints(register.getPoint(i));
+			
 
-
-		for(int i=0; i < base.getNumberOfPoints(); i++){
-			//			System.out.println("Größe der Liste: "+ list.size());
 			for(int k=0; k < list.size(); k++){
-				if((nearestPoints[i]) == list.get(k).getIndex()){
+				if((nearestPoints) == list.get(k).getIndexForBase()){
 					//					System.out.println(" Punkt aus der Liste entfernen: "+list.get(k));
 					exist = true;
 					break;
 
 				}
 			}
-
 			if(exist == false){
-				x = ((base.getPoint(i).getPosition().get(0)) - register.getPoint(nearestPoints[i]).getPosition().get(0));
-				y = ((base.getPoint(i).getPosition().get(1)) - register.getPoint(nearestPoints[i]).getPosition().get(1));
-				z = ((base.getPoint(i).getPosition().get(2)) - register.getPoint(nearestPoints[i]).getPosition().get(2));
+				
+				x = ((base.getPoint(nearestPoints).getPosition().get(0)) - register.getPoint(i).getPosition().get(0));
+				y = ((base.getPoint(nearestPoints).getPosition().get(1)) - register.getPoint(i).getPosition().get(1));
+				z = ((base.getPoint(nearestPoints).getPosition().get(2)) - register.getPoint(i).getPosition().get(2));
 
 				temp = x*x + y*y + z*z;
 				//				System.out.println(" Adde Punkte mit dem Index: "+nearestPoints[i]);
 
-				list.add(new TrimmedDistance(Math.sqrt(temp),nearestPoints[i]));
+				list.add(new TrimmedDistance((Math.sqrt(temp)),nearestPoints, i));
+				
 
 			}else{
 				exist = false;
 			}
+			
 		}
+		
+		
+//		boolean exist = false;
+//		
+//		for(int k = 0; k <base.getNumberOfPoints(); k++){
+//			System.out.println("Punkte in base: "+ base.getPoint(k).getPosition());
+//		}
+//		for(int p = 0;p <base.getNumberOfPoints(); p++){
+//			System.out.println("Punkte in register: "+ register.getPoint(p).getPosition());
+//		}
+//		for(int o = 0; o <base.getNumberOfPoints(); o++){
+//			System.out.println("Punkte in nearest Points: "+ nearestPoints[o]);
+//
+//		}
+//		
+//		
+//		for(int i=0; i < base.getNumberOfPoints(); i++){
+//						
+//						
+//			for(int k=0; k < list.size(); k++){
+//				if((nearestPoints[i]) == list.get(k).getIndex()){
+//					//					System.out.println(" Punkt aus der Liste entfernen: "+list.get(k));
+//					exist = true;
+//					break;
+//
+//				}
+//			}
+//
+//			if(exist == false){
+//				x = ((base.getPoint(i).getPosition().get(0)) - register.getPoint(nearestPoints[i]).getPosition().get(0));
+//				y = ((base.getPoint(i).getPosition().get(1)) - register.getPoint(nearestPoints[i]).getPosition().get(1));
+//				z = ((base.getPoint(i).getPosition().get(2)) - register.getPoint(nearestPoints[i]).getPosition().get(2));
+//
+//				temp = x*x + y*y + z*z;
+//				//				System.out.println(" Adde Punkte mit dem Index: "+nearestPoints[i]);
+//
+//				list.add(new TrimmedDistance(Math.sqrt(temp),nearestPoints[i]));
+//
+//			}else{
+//				exist = false;
+//			}
+//		}
 	}
 	
 	/**
@@ -155,11 +205,11 @@ public class trimmedICP {
 			}
 		});
 
-		System.out.println("Göße Liste: "+list.size());
-		//		 for(int i = 0; i < list.size(); i++){
-		//			 
-		//			 System.out.println("Liste geordnet: "+list.get(i).getDistance());
-		//		 }
+//		System.out.println("Göße Liste: "+list.size());
+//				 for(int i = 0; i < list.size(); i++){
+//					 
+//					 
+//				 }
 
 
 
@@ -179,7 +229,7 @@ public class trimmedICP {
 		k = (int) npo;
 		//		System.out.println("k: "+k);
 		for(int i = 0; i < k; i++){
-			sltsNew = sltsNew + (list.get(i).getDistance() * list.get(i).getDistance());
+			sltsNew = sltsNew + list.get(i).getDistance();//(list.get(i).getDistance() * list.get(i).getDistance());
 		}
 		return sltsNew;
 	}
@@ -205,7 +255,9 @@ public class trimmedICP {
 		//		System.out.println("testNpo: "+testNpo);
 		//		sLTS = this.computeNewSts(testNpo);
 		//		System.out.println("slts: "+sLTS);
-		computeMse(npo);
+//		computeMse(npo);
+		sLTS = this.computeNewSts(npo);
+		MSE = (sLTS / npo);
 		//		System.out.println("MSE in der ComputePsi: "+MSE);
 
 		psi = MSE / Math.pow(xi, lamda);
@@ -236,7 +288,7 @@ public class trimmedICP {
 	 */
 
 	private double[][] testSearch(){
-		double[][] psiAll = new double[60][4];
+		double[][] psiAll = new double[60][5];
 		int i = 0;
 		double xi = 0.4;
 		while(xi < 1){
@@ -245,12 +297,13 @@ public class trimmedICP {
 			npo = Math.round(npo*1)/1.0;
 			//			System.out.println("npo: "+npo);
 
-			sLTS = this.computeNewSts(npo);
+//			sLTS = this.computeNewSts(npo);
 
 			psiAll[i][0] = xi;
 			psiAll[i][1] = computePsi(xi, npo);
-			psiAll[i][2] = sLTS; 
-			psiAll[i][3] = npo;
+			psiAll[i][2] = MSE;
+			psiAll[i][3] = sLTS; 
+			psiAll[i][4] = npo;
 
 			xi = xi + 0.01;
 			xi = Math.round(xi*100)/100.0;
@@ -273,19 +326,28 @@ public class trimmedICP {
 
 	private IPointCloud computeTranslation(IPointCloud base, IPointCloud register){
 
-
-
-		IPointCloud newRegister = new PointCloud();
-		double pointsForTranslationCalculate = 0;
-		System.out.println("alpha : "+alpha);
-		pointsForTranslationCalculate = calculateNpo(alpha);
-		for(int i = 0; i < pointsForTranslationCalculate; i++){
-			//			System.out.println("newRegister: "+list.get(i).getIndex());
-			newRegister.addPoint(register.getPoint(list.get(i).getIndex()));
+		ArrayList<TrimmedDistance> newSortedPoints = new ArrayList();
+//		double percent = 0.9 * list.size();
+		percent = Math.round(percent*1)/1.0;
+		
+		for(int i = 0; i < percent; i++){
+			newSortedPoints.add(list.get(i));
 		}
+		
+
+//		IPointCloud newRegister = new PointCloud();
+//		double pointsForTranslationCalculate = 0;
+//		System.out.println("alpha : "+alpha);
+//		pointsForTranslationCalculate = calculateNpo(alpha);
+//		for(int i = 0; i < pointsForTranslationCalculate; i++){
+//			//			System.out.println("newRegister: "+list.get(i).getIndex());
+//			newRegister.addPoint(register.getPoint(list.get(i).getIndex()));
+//		}
+		
+		
 
 		IcpDistanceFunction icp = new IcpDistanceFunction();
-		register = icp.startAlgorithm(base, register, newRegister, 1);
+		register = icp.startAlgorithm(base, register, newSortedPoints, 1);
 		dk = icp.dk;
 		return register;
 
@@ -300,14 +362,14 @@ public class trimmedICP {
 	 */
 
 	private double calculateNpo(double xi){
-
-		npo =  xi * list.size();
+		double npoTest = 0;
+		npoTest =  xi * list.size();
 		//		System.out.println("npo ohne runden: "+npo);
-		npo = Math.round(npo*1)/1.0;
+		npoTest = Math.round(npoTest*1)/1.0;
 		//		System.out.println("npo: "+npo);
-		sLTS = this.computeNewSts(npo);
-		computeMse(npo);
-		return npo;
+		sLTSTest = this.computeNewSts(npoTest);
+		computeMse(npoTest);
+		return npoTest;
 	}
 
 	/**
