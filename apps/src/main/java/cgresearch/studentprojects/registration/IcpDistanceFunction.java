@@ -74,9 +74,9 @@ public class IcpDistanceFunction {
 			// System.out.println("i centerofmass "+ i);
 		}
 
-		newPoint.set(x, (newPoint.get(x) / ipc.getNumberOfPoints()));
-		newPoint.set(y, (newPoint.get(y) / ipc.getNumberOfPoints()));
-		newPoint.set(z, (newPoint.get(z) / ipc.getNumberOfPoints()));
+		newPoint.set(x, (newPoint.get(x) / pointsSorted.size()));
+		newPoint.set(y, (newPoint.get(y) / pointsSorted.size()));
+		newPoint.set(z, (newPoint.get(z) /pointsSorted.size()));
 		return new Point(newPoint);
 
 	}
