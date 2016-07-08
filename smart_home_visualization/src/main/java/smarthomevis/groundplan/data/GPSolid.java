@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import cgresearch.core.math.Vector;
+
 public class GPSolid implements Serializable
 {
 
@@ -58,7 +60,22 @@ public class GPSolid implements Serializable
 	{
 		return this.linesOfSolid;
 	}
-	
+
+	public List<Vector> getBaseLinesVectorList()
+	{
+		List<Vector> vectorList = new ArrayList<>();
+
+		for (int i = 0; i < this.basePair.length; i++)
+		{
+			GPLine l = this.basePair[i];
+
+			vectorList.add(l.getStart());
+			vectorList.add(l.getEnd());
+		}
+
+		return vectorList;
+	}
+
 	public String toString()
 	{
 		StringBuffer buffy = new StringBuffer();

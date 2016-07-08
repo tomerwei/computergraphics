@@ -14,11 +14,14 @@
 			200
 		</door_top_height>
 		<groundplan_scaling_scalar>
-			0.6
+			1.4
 		</groundplan_scaling_scalar>
 		<angle_tolerance>
 			0.0001
 		</angle_tolerance>
+		<point_tolerance>
+			0.5
+		</point_tolerance>
 		<distance_interval>
 			1
 		</distance_interval>

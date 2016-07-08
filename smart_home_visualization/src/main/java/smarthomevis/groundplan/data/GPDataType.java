@@ -24,6 +24,8 @@ public class GPDataType implements Serializable
 	private Map<String, GPLine> lines = null;
 	// Ordnet die GPLine-Objekte anhand ihres eindeutigen Namens einem Layer zu
 	private Map<String, List<String>> layers = null;
+	// Enthaelt die Haeufigkeiten von Abstaenden zwischen parallelen Linien
+	private Map<Double, Integer> distanceMap = new HashMap<>();
 	// Ordnet die gefundenen Linienpaaren den entsprechenden Layers zu
 	private Map<String, List<String[]>> linePairsPerLayer = null;
 	// Speicherung der gebildeten Solids
@@ -116,6 +118,10 @@ public class GPDataType implements Serializable
 		return result;
 	}
 
+	public Map<Double, Integer> getDistanceMap() {
+		return distanceMap;
+	}
+
 	public Map<String, List<GPLine[]>> getGPLinePairsPerLayerMap()
 	{
 		Map<String, List<GPLine[]>> gplinePairsPerLayer = new HashMap<>();
@@ -154,6 +160,10 @@ public class GPDataType implements Serializable
 	public void setGPConfig(GPConfig config)
 	{
 		this.config = config;
+	}
+
+	public void setDistanceMap(Map<Double, Integer> distanceMap) {
+		this.distanceMap = distanceMap;
 	}
 
 	public void addLine(String id, GPLine line)

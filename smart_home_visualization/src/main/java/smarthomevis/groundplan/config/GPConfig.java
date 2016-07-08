@@ -22,6 +22,7 @@ public class GPConfig implements Serializable
 	public static final String WINDOW_BOTTOM_HEIGHT = "window_bottom_height";
 	public static final String GROUNDPLAN_SCALING_FACTOR = "groundplan_scaling_scalar";
 	public static final String ANGLE_TOLERANCE = "angle_tolerance";
+	public static final String POINT_TOLERANCE = "point_tolerance";
 	public static final String DISTANCE_INTERVAL = "distance_interval";
 	public static final String LOWER_WALLTHICKNESS_LIMIT = "lower_wallthickness_limit";
 	public static final String UPPER_WALLTHICKNESS_LIMIT = "upper_wallthickness_limit";

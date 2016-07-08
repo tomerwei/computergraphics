@@ -19,6 +19,9 @@
 		<angle_tolerance>
 			0.0001
 		</angle_tolerance>
+		<point_tolerance>
+			0.05
+		</point_tolerance>
 		<distance_interval>
 			5
 		</distance_interval>

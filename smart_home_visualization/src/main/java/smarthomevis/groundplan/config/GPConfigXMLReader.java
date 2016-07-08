@@ -72,6 +72,7 @@ public class GPConfigXMLReader
 	addValueToConfig(element, GPConfig.DOOR_TOP_HEIGHT);
 	addValueToConfig(element, GPConfig.GROUNDPLAN_SCALING_FACTOR);
 	addValueToConfig(element, GPConfig.ANGLE_TOLERANCE);
+	addValueToConfig(element, GPConfig.POINT_TOLERANCE);
 	addValueToConfig(element, GPConfig.DISTANCE_INTERVAL);
 	addValueToConfig(element, GPConfig.LOWER_WALLTHICKNESS_LIMIT);
 	addValueToConfig(element, GPConfig.UPPER_WALLTHICKNESS_LIMIT);
