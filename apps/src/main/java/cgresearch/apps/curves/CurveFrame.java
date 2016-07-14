@@ -36,7 +36,7 @@ public class CurveFrame extends CgApplication {
     gui = new CurveFrameGui(model);
 
     // Generate curve
-    model.generateCurve(CurveType.BEZIER);
+    model.generateCurve(CurveType.HERMITE);
 
     // Move control points
     new CurveControlPointInteraction(model.getCurve());

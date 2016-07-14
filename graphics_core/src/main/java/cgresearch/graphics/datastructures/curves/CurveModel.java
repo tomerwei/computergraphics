@@ -21,11 +21,7 @@ public class CurveModel extends Observable {
    * Generate generic curve model
    */
   public CurveModel() {
-    this(new Curve(new BasisFunctionBezier(),
-        VectorFactory.createVector3(-0.5, -0.5, 0.5),
-        VectorFactory.createVector3(-0.25, 0.5, -0.5),
-        VectorFactory.createVector3(0.25, -0.5, 0.5),
-        VectorFactory.createVector3(0.5, 0.5, 0.5)));
+    this(new Curve(new BasisFunctionBezier(), 3));
     generateCurve(CurveType.BEZIER);
   }
 
@@ -41,18 +37,34 @@ public class CurveModel extends Observable {
    */
   public void generateCurve(CurveType type) {
     switch (type) {
-      case BEZIER:
-        curve.setBasisFunctions(new BasisFunctionBezier());
-        break;
-      case LAGRANGE:
-        curve.setBasisFunctions(new BasisFunctionLagrange());
-        break;
-      case HERMITE:
-        curve.setBasisFunctions(new BasisFunctionHermite());
-        break;
-      case MONOM:
-        curve.setBasisFunctions(new BasisFunctionMonomial());
-        break;
+    case BEZIER:
+      curve.setBasisFunctions(new BasisFunctionBezier());
+      curve.setControlPoints(VectorFactory.createVector3(-0.5, -0.5, 0.5),
+          VectorFactory.createVector3(-0.25, 0.5, -0.5),
+          VectorFactory.createVector3(0.25, -0.5, 0.5),
+          VectorFactory.createVector3(0.5, 0.5, 0.5));
+      break;
+    case LAGRANGE:
+      curve.setBasisFunctions(new BasisFunctionLagrange());
+      curve.setControlPoints(VectorFactory.createVector3(-0.5, -0.5, 0.5),
+          VectorFactory.createVector3(-0.25, 0.5, -0.5),
+          VectorFactory.createVector3(0.25, -0.5, 0.5),
+          VectorFactory.createVector3(0.5, 0.5, 0.5));
+      break;
+    case HERMITE:
+      curve.setBasisFunctions(new BasisFunctionHermite());
+      curve.setControlPoints(VectorFactory.createVector3(-0.5, -0.5, 0.5),
+          VectorFactory.createVector3(-0.5, 1, -1),
+          VectorFactory.createVector3(0.5, -1, 1),
+          VectorFactory.createVector3(0.5, 0.5, 0.5));
+      break;
+    case MONOM:
+      curve.setBasisFunctions(new BasisFunctionMonomial());
+      curve.setControlPoints(VectorFactory.createVector3(-0.5, -0.5, 0.5),
+          VectorFactory.createVector3(-0.25, 0.5, -0.5),
+          VectorFactory.createVector3(0.25, -0.5, 0.5),
+          VectorFactory.createVector3(0.5, 0.5, 0.5));
+      break;
     }
     setChanged();
     notifyObservers();

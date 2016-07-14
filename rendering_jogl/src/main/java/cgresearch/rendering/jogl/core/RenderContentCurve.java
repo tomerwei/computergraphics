@@ -16,7 +16,9 @@ import cgresearch.core.math.MatrixFactory;
 import cgresearch.core.math.Vector;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
+import cgresearch.graphics.datastructures.curves.BasisFunctionHermite;
 import cgresearch.graphics.datastructures.curves.Curve;
+import cgresearch.graphics.datastructures.primitives.Arrow;
 import cgresearch.graphics.datastructures.primitives.Line3D;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.Triangle;
@@ -47,6 +49,13 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
 
   private ITriangleMesh curveMesh;
   private ITriangleMesh controlPointsmesh;
+
+  private int resolution = 50;
+  private int circleResolution = 10;
+  private double radius = 0.01;
+  private double sphereRadius = 0.02f;
+  private double lineRadius = 0.01f;
+  private double arrowRadius = 0.6;
 
   /**
    * Constructor
@@ -107,22 +116,58 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
    * Create the mesh which represents the control polygon and points.
    */
   private ITriangleMesh createControlPointsMesh() {
+    if (getCurve().getBasisFunction() instanceof BasisFunctionHermite) {
+      return createControlPointsMeshHermite();
+    } else {
+      return createControlPointsMeshRegular();
+    }
+  }
+
+  private ITriangleMesh createControlPointsMeshRegular() {
     // Control points
     ITriangleMesh mesh = new TriangleMesh();
     mesh.getMaterial()
         .setReflectionDiffuse(VectorFactory.createVector3(0.6, 0.6, 0.9));
     for (int i = 0; i <= getCurve().getDegree(); i++) {
       mesh.unite(TriangleMeshFactory.createSphere(getCurve().getControlPoint(i),
-          0.03f, 10));
+          sphereRadius, 10));
     }
 
     // Control polygon
     for (int i = 1; i <= getCurve().getDegree(); i++) {
       Line3D line = new Line3D(getCurve().getControlPoint(i - 1),
           getCurve().getControlPoint(i));
-      mesh.unite(TriangleMeshFactory.createLine3D(line, 10, 0.01f));
+      mesh.unite(TriangleMeshFactory.createLine3D(line, 10, lineRadius));
 
     }
+
+    mesh.computeTriangleNormals();
+    mesh.computeVertexNormals();
+
+    mesh.getMaterial().setReflectionDiffuse(Material.PALETTE2_COLOR0);
+    mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
+    return mesh;
+  }
+
+  /**
+   * Create the mesh which represents the control polygon and points.
+   */
+  private ITriangleMesh createControlPointsMeshHermite() {
+    assert (getCurve() != null && getCurve().getDegree() == 3);
+
+    // Control points
+    ITriangleMesh mesh = new TriangleMesh();
+    mesh.getMaterial()
+        .setReflectionDiffuse(VectorFactory.createVector3(0.6, 0.6, 0.9));
+
+    Vector p0 = getCurve().getControlPoint(0);
+    Vector p1 = getCurve().getControlPoint(3);
+    mesh.unite(TriangleMeshFactory.createSphere(p0, sphereRadius, 10));
+    mesh.unite(TriangleMeshFactory.createSphere(p1, sphereRadius, 10));
+    Vector m0 = getCurve().getControlPoint(1);
+    Vector m1 = getCurve().getControlPoint(2);
+    mesh.unite(TriangleMeshFactory.createArrow(new Arrow(p0, p0.add(m0)), 0.3));
+    mesh.unite(TriangleMeshFactory.createArrow(new Arrow(p1, p1.add(m1)), 0.3));
 
     mesh.computeTriangleNormals();
     mesh.computeVertexNormals();
@@ -140,11 +185,11 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
 
     // Eval-position
     mesh.unite(TriangleMeshFactory
-        .createSphere(VectorFactory.createVector3(0, 0, 0), 0.1f, 10));
+        .createSphere(VectorFactory.createVector3(0, 0, 0), sphereRadius, 10));
 
     // Derivative arrow
     ITriangleMesh arrowMesh = TriangleMeshFactory.createArrow();
-    TriangleMeshTransformation.scale(arrowMesh, 0.6);
+    TriangleMeshTransformation.scale(arrowMesh, arrowRadius);
     mesh.unite(arrowMesh);
 
     mesh.computeTriangleNormals();
@@ -160,9 +205,6 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
    * Create a triangle mesh to represent the curve.
    */
   private ITriangleMesh createCurveMesh() {
-    int resolution = 50;
-    int circleResolution = 10;
-    double radius = 0.02;
 
     ITriangleMesh mesh = new TriangleMesh();
 
@@ -170,8 +212,8 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
       double t = (double) i / (double) (resolution - 1);
       Vector center = getCurve().eval(t);
       Vector tangent = getCurve().derivative(t);
-      Matrix frame =
-          MatrixFactory.createCoordinateFrameX(tangent).getTransposed();
+      Matrix frame = MatrixFactory.createCoordinateFrameX(tangent)
+          .getTransposed();
 
       Vector y = VectorFactory.createVector3(frame.get(1, 0), frame.get(1, 1),
           frame.get(1, 2));
@@ -180,8 +222,8 @@ public class RenderContentCurve extends JoglRenderContent implements Observer {
       Vector dx = y.multiply(radius);
       Vector dy = z.multiply(radius);
       for (int j = 0; j < circleResolution; j++) {
-        double alpha =
-            (double) j * 2.0 * Math.PI / (double) (circleResolution + 1);
+        double alpha = (double) j * 2.0 * Math.PI
+            / (double) (circleResolution + 1);
         Vector p = center.add(
             dx.multiply(Math.cos(alpha)).add(dy.multiply(Math.sin(alpha))));
         mesh.addVertex(new Vertex(p));

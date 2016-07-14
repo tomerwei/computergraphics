@@ -37,7 +37,7 @@ public class ComicFrame extends CgApplication {
     List<ITriangleMesh> meshes = reader.readFile(objFilename);
     for (int i = 0; i < meshes.size(); i++) {
       ITriangleMesh mesh = meshes.get(i);
-      mesh.getMaterial().addShaderId(Material.SHADER_COMIC);
+      mesh.getMaterial().setShaderId(Material.SHADER_COMIC);
       mesh.getMaterial().addShaderId(Material.SHADER_SILHOUETTE);
       mesh.getMaterial().setReflectionDiffuse(Material.PALETTE1_COLOR4);
       CgNode earthNode = new CgNode(mesh, "comic shader", true);
