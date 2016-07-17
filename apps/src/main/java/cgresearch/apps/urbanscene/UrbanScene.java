@@ -27,7 +27,7 @@ public class UrbanScene extends CgApplication {
    */
   public UrbanScene() {
     setupLight();
-    //getCgRootNode().setAllowShadows(true);
+    getCgRootNode().setAllowShadows(true);
     UrbanSceneGenerator generator = new UrbanSceneGenerator();
     getCgRootNode().addChild(generator.buildScene(4, 4));
     getCgRootNode().addChild(new CoordinateSystem());
@@ -40,7 +40,7 @@ public class UrbanScene extends CgApplication {
     getCgRootNode().clearLights();
     LightSource light1 = new LightSource(Type.POINT);
     light1.setPosition(VectorFactory.createVector3(3, 10, 3));
-    //getCgRootNode().addLight(light1);
+    getCgRootNode().addLight(light1);
     
     LightSource light2 = new LightSource(Type.POINT);
     light2.setPosition(VectorFactory.createVector3(10, 10, 3));

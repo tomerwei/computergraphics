@@ -44,7 +44,7 @@ public class SubdivisionGui extends IApplicationControllerGui implements ActionL
   private JComboBox<String> comboSelect3Ddataset;
 
   private enum Mesh {
-    HALF_SPHERE, CUBE, ICOSAHEDRON, WOLF, MONKEY
+    HALF_SPHERE, CUBE, ICOSAHEDRON, WOLF, MONKEY, GLIDER
   }
 
   /**
@@ -173,6 +173,12 @@ public class SubdivisionGui extends IApplicationControllerGui implements ActionL
         break;
       case MONKEY:
         meshes = reader.readFile("meshes/monkey.obj");
+        mesh.copyFrom(meshes.get(0));
+        mesh.copyFrom(NodeMerger.merge(mesh, 1e-5));
+        mesh.fitToUnitBox();
+        break;
+      case GLIDER:
+        meshes = reader.readFile("sketchup/glider.obj");
         mesh.copyFrom(meshes.get(0));
         mesh.copyFrom(NodeMerger.merge(mesh, 1e-5));
         mesh.fitToUnitBox();

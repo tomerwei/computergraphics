@@ -22,10 +22,10 @@ public class HomeAutomation {
   public static void main(String[] args) {
     // String configJsonFilename =
     // "/Users/abo781/abo781/code/homeautomation/configs/rcboat.json";
-    String configJsonFilename = "/Users/abo781/abo781/code/homeautomation/configs/raspiserver_mac.json";
+    //String configJsonFilename = "/Users/abo781/abo781/code/homeautomation/configs/raspiserver_mac.json";
     // String configJsonFilename =
     // "/Users/abo781/abo781/code/homeautomation/configs/electrical_switch_test.json";
-    // String configJsonFilename ="configs/raspiserver_raspberry.json";
+    String configJsonFilename ="configs/raspiserver_raspberry.json";
     // String configJsonFilename = "configs/visclient_local.json";
     // String configJsonFilename = "configs/sensortest_mac.json";
     // String configJsonFilename = "configs/sensortest_raspberry.json";

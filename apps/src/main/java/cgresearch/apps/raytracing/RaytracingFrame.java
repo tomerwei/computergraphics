@@ -15,6 +15,8 @@ import cgresearch.graphics.datastructures.primitives.Plane;
 import cgresearch.graphics.datastructures.primitives.Sphere;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.graphics.scenegraph.LightSource;
+import cgresearch.graphics.scenegraph.LightSource.Type;
 
 /**
  * Test the raytracer.
@@ -25,6 +27,10 @@ public class RaytracingFrame extends CgApplication {
    * Constructor.
    */
   public RaytracingFrame() {
+    getCgRootNode().clearLights();
+    LightSource light = new LightSource(Type.POINT);
+    light.setPosition(VectorFactory.createVector3(5, 5, 5));
+    getCgRootNode().addLight(light);
 
     Sphere sphere1 = new Sphere(VectorFactory.createVector3(1, 0, 1), 0.5);
     sphere1.getMaterial().setReflectionDiffuse(VectorFactory.createVector3(1, 0, 0));

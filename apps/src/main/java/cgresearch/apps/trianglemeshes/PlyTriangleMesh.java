@@ -29,7 +29,7 @@ public class PlyTriangleMesh extends CgApplication {
    * Constructor.
    */
   public PlyTriangleMesh() {
-    String objFilename = "meshes/huge_bunny.ply";
+    String objFilename = "meshes/armadillo.ply";
     PlyFileReader reader = new PlyFileReader();
     ITriangleMesh mesh = reader.readFile(objFilename);
     if (mesh == null) {

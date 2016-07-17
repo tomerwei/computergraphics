@@ -16,18 +16,22 @@ import cgresearch.core.logging.Logger;
 import cgresearch.core.logging.Logger.VerboseMode;
 import cgresearch.core.math.VectorFactory;
 import cgresearch.graphics.algorithms.NodeMerger;
+import cgresearch.graphics.algorithms.Subdivision3D;
 import cgresearch.graphics.algorithms.TriangleMeshTransformation;
 import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.primitives.Plane;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.TriangleMesh;
 import cgresearch.graphics.fileio.ObjFileReader;
+import cgresearch.graphics.fileio.ObjFileWriter;
 import cgresearch.graphics.fileio.StlFileReader;
 import cgresearch.graphics.material.CgTexture;
 import cgresearch.graphics.material.Material;
 import cgresearch.graphics.material.Material.Normals;
 import cgresearch.graphics.material.ResourceManager;
 import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.graphics.scenegraph.CoordinateSystem;
+import cgresearch.graphics.scenegraph.CoordinateSystem.Dimension;
 import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.graphics.scenegraph.LightSource.Type;
 
@@ -44,17 +48,20 @@ public class ObjTriangleMesh extends CgApplication {
    */
   public ObjTriangleMesh() {
     // 3D Object
-    loadFenja();
+    // loadFenja();
     // loadLotrCubeWithTextureAtlas();
     // loadScetchUp();
     // loadPlaneWithBunny();
     // loadMedivalHouse();
     // loadHulk();
     // loadNofretete();
+
+    createSubdividedGlider();
+
     Logger.getInstance().setVerboseMode(VerboseMode.DEBUG);
 
     // Coordinate system
-    // getCgRootNode().addChild(new CoordinateSystem());
+    getCgRootNode().addChild(new CoordinateSystem(Dimension.DIMENSION_2D, 1));
 
     // Lights
     getCgRootNode().clearLights();
@@ -72,6 +79,26 @@ public class ObjTriangleMesh extends CgApplication {
     light2.setColor(VectorFactory.createVector3(1, 1, 1));
     // light2.setSpotOpeningAngle(20);
     getCgRootNode().addLight(light2);
+  }
+
+  private void createSubdividedGlider() {
+    ObjFileReader reader = new ObjFileReader();
+    List<ITriangleMesh> meshes = reader.readFile("sketchup/glider.obj");
+    ITriangleMesh mesh = new TriangleMesh();
+    mesh.copyFrom(meshes.get(0));
+    mesh.copyFrom(NodeMerger.merge(mesh, 1e-5));
+    mesh.fitToUnitBox();
+
+    Subdivision3D subdivision = new Subdivision3D(mesh);
+    subdivision.subdivide();
+    subdivision.subdivide();
+    
+    ObjFileWriter writer = new ObjFileWriter();
+    writer.writeToFile("/Users/abo781/abo781/code/computergraphics/assets/meshes/glider.obj", mesh);
+    
+    mesh.getMaterial().setRenderMode(Normals.PER_FACET);
+
+    getCgRootNode().addChild(new CgNode(mesh, "mesh"));
   }
 
   private void loadNofretete() {
@@ -209,7 +236,7 @@ public class ObjTriangleMesh extends CgApplication {
   }
 
   public void loadFenja() {
-    String objFilename = "meshes/monkey.obj";
+    String objFilename = "meshes/bunny.obj";
     ObjFileReader reader = new ObjFileReader();
     List<ITriangleMesh> meshes = reader.readFile(objFilename);
     if (meshes == null) {
@@ -224,10 +251,10 @@ public class ObjTriangleMesh extends CgApplication {
       // mesh.getMaterial().setTextureId(texId);
       mesh.fitToUnitBox();
       mesh.getMaterial().setShaderId(Material.SHADER_PHONG_SHADING);
-      mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
+      // mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
       mesh.getMaterial().setReflectionDiffuse(
           VectorFactory.createVector(Material.PALETTE2_COLOR2));
-      //NodeMerger.merge(mesh, 1e-5);
+      // NodeMerger.merge(mesh, 1e-5);
       mesh.computeTriangleNormals();
       mesh.computeVertexNormals();
       mesh.getMaterial().setRenderMode(Normals.PER_VERTEX);
