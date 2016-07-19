@@ -90,7 +90,7 @@ public class BoneMeshMap {
 	 *            bones. To get all ids
 	 */
 	private void finalizeAutoRigg(List<Bone> bones) {
-		recalculateAllWeights();
+		//recalculateAllWeights();
 
 		for (Bone bone : bones) {
 			updateBonesSelectedMesh(bone.getId());
@@ -160,19 +160,59 @@ public class BoneMeshMap {
 
 		IVertex vertex;
 		// For each triangle, test all bones;
-		Double distance;
+		
+		Double distance; //Temp vars
+		Double gaussValue; //Temp vars
+		 //Weight map. All weights for one vertex.
+		HashMap<Integer, Double> boneIdWeightMap = new HashMap<>(); //Temp vars
+		
 		for (int i = mesh.getNumberOfVertices() - 1; i > 0; i--) {
 			vertex = mesh.getVertex(i);
 			for (Bone bone : bones) {
+				//HIER ALLE BONES zu einem Vertex
+				
 				distance = getDistanceToBone(bone, vertex);
-				linkOneBoneToVertex(bone.getId(), vertex, gaussValue(distance));
+				gaussValue = gaussValue(distance);
+				boneIdWeightMap.put(bone.getId(), gaussValue); //Save weight value for each bone
+//				linkOneBoneToVertex(bone.getId(), vertex, gaussValue);
 			}
-
+			boneIdWeightMap = recalculateWeight(boneIdWeightMap);
+			linkAllBonesToOneVertex(vertex, boneIdWeightMap);
+			
+			//Gesamt summe zusammen:
+			//Calc real values
 		}
 
 		finalizeAutoRigg(bones);
 	}
+	
+	private void linkAllBonesToOneVertex(IVertex vertex, HashMap<Integer, Double> boneIdWeightMap){
+		for(Integer boneId : boneIdWeightMap.keySet()){
+			linkOneBoneToVertex(boneId, vertex, boneIdWeightMap.get(boneId));	
+		}
+	}
 
+	/**
+	 * !Destructive Recalculates the weight of the provided map.
+	 * All weights add up to 1.0 after recalculation
+	 * @param boneIdWeightMap
+	 * @return
+	 */
+	private HashMap<Integer, Double> recalculateWeight(HashMap<Integer, Double> boneIdWeightMap){
+		Double weightSum = 0.0;
+		// Get the total Weight sum
+		for (Integer boneId : boneIdWeightMap.keySet()) {
+			weightSum += boneIdWeightMap.get(boneId);
+		}
+		// Recalculate all weights to make them add up to 1.0;
+		for (Integer boneId : boneIdWeightMap.keySet()) {
+			Double weight = boneIdWeightMap.get(boneId);
+			Double newWeight = weight / weightSum * 1.0;
+			boneIdWeightMap.put(boneId, newWeight);
+		}
+		return boneIdWeightMap;
+	}
+	
 	private double sigma = 1.0;// 0.001; //Greater == More vertices to
 								// influence, (but less strong)
 	private double my = 0.0; // Verschiebung
