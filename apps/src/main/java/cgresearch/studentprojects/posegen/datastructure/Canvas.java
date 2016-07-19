@@ -25,7 +25,7 @@ public class Canvas extends TriangleMesh {
 
 	public void disableWireframe() {
 		this.getMaterial().setShaderId(Material.SHADER_TEXTURE_NO_LIGHT);
-		 enableWireframe();
+//		 enableWireframe();
 		this.getMaterial().setTextureUsesAlpha(true);
 	}
 

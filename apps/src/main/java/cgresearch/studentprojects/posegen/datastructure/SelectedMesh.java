@@ -84,10 +84,10 @@ public class SelectedMesh {
 	private void rotateUmDrehpunkt(Double winkelDeg, Vector drehPunkt, ValuePair<VertexMutable,Double> vexPair) {
 		VertexMutable vex = vexPair.getValue1();
 		winkelDeg = winkelDeg * vexPair.getValue2(); //Weight factor
-		if(winkelDeg.equals(0.0)){
-			return;
-		}
-		System.out.println("WinkelDeg: " + winkelDeg);
+//		if(winkelDeg.equals(0.0) || winkelDeg.isNaN()){
+//			return;
+//		}
+//		System.out.println("WinkelDeg: " + winkelDeg);
 		double winkelRad = degToRad(winkelDeg);
 		// winkelRad = degToRad(winkelRad);
 		double xEnd = vex.getPosition().get(0);

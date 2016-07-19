@@ -2,14 +2,11 @@ package cgresearch.studentprojects.posegen.datastructure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import cgresearch.core.math.Ray3D;
 import cgresearch.core.math.Vector;
-import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 
@@ -94,18 +91,13 @@ public class BoneMeshMap {
 	 */
 	private void finalizeAutoRigg(List<Bone> bones) {
 		recalculateAllWeights();
-		
-		
+
 		for (Bone bone : bones) {
 			updateBonesSelectedMesh(bone.getId());
 		}
-
-		
 	}
 
 	private void recalculateAllWeights() {
-		// private HashMap<Integer, List<ValuePair<IVertex, Double>>>
-		// boneVertexMap;
 		HashMap<IVertex, List<ValuePair<Integer, Double>>> vertexWeights = new HashMap<>();
 
 		for (Integer boneId : boneVertexMap.keySet()) {
@@ -120,40 +112,38 @@ public class BoneMeshMap {
 		}
 
 		for (IVertex vertex : vertexWeights.keySet()) {
-			List<ValuePair<Integer, Double>> valuePair = vertexWeights.get(vertex);
-			recalculateWeights(vertex, valuePair);
+			List<ValuePair<Integer, Double>> listValuePairs = vertexWeights.get(vertex);
+			recalculateWeights(vertex, listValuePairs);
 		}
-		// System.out.println("Gesamtweight: " + vertexWeights.get(vertex));
 	}
 
 	private void recalculateWeights(IVertex vertex, List<ValuePair<Integer, Double>> listWeights) {
 		Double weightSum = 0.0;
-
 		// Get the total Weight sum
 		for (ValuePair<Integer, Double> boneWeight : listWeights) {
-			// Integer boneId = boneWeight.getValue1();
-			Double weight = boneWeight.getValue2();
-			weightSum += weight;
+			weightSum += boneWeight.getValue2();
 		}
-
+		Double weight;
 		// Recalculate all weights to make them add up to 1.0;
 		for (ValuePair<Integer, Double> boneWeight : listWeights) {
 			Integer boneId = boneWeight.getValue1();
-			Double weight = boneWeight.getValue2();
+			weight = boneWeight.getValue2();
 			Double newWeight = weight / weightSum * 1.0;
 			setBoneWeightForVertex(boneId, vertex, newWeight);
 		}
 	}
 
+	private List<ValuePair<IVertex, Double>> valPairList; // TEMP VAR for
+															// performance
+
 	private void setBoneWeightForVertex(Integer BoneId, IVertex vertex, Double newWeight) {
-		List<ValuePair<IVertex, Double>> valPairList = boneVertexMap.get(BoneId);
-		for (ValuePair<IVertex, Double> valPair : valPairList) { // Iterate all
-																	// vertices
-																	// from this
-																	// bone
-			if (vertex.equals(valPair.getValue1())) { // If this is the vertex
-														// to update
+		valPairList = boneVertexMap.get(BoneId);
+		// Iterate all vertices from this bone
+		for (ValuePair<IVertex, Double> valPair : valPairList) {
+			// If this is the vertex to update
+			if (vertex.equals(valPair.getValue1())) {
 				valPair.setValue2(newWeight); // Update it.
+				return; // Dont need to look further
 			}
 		}
 	}
@@ -183,10 +173,11 @@ public class BoneMeshMap {
 		finalizeAutoRigg(bones);
 	}
 
-	private double sigma = 0.50;// 0.001;
+	private double sigma = 1.0;// 0.001; //Greater == More vertices to
+								// influence, (but less strong)
 	private double my = 0.0; // Verschiebung
-	private double inputFaktor = 5.0; // Entfernung vervielfachen
-	private double epsilon = 0.01; // Abschneiden minimaler ergebnisse ab x
+	private double inputFaktor = 14.0; // Entfernung vervielfachen
+	private double epsilon = 0.00001; // Abschneiden minimaler ergebnisse ab x
 
 	private double gaussValue(double entfernung) {
 		double x = entfernung * inputFaktor;
