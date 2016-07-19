@@ -247,7 +247,9 @@ public class Editor extends CgApplication {
 
 					}
 					List<IVertex> noDuplicates = new ArrayList<IVertex>(new LinkedHashSet<IVertex>(verticesToLink));
-					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), noDuplicates);
+					// ORIG
+					// boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(),
+					// noDuplicates);
 				}
 			}
 
@@ -267,7 +269,10 @@ public class Editor extends CgApplication {
 
 					}
 					List<IVertex> noDuplicates = new ArrayList<IVertex>(new LinkedHashSet<IVertex>(verticesToLink));
-					boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(), noDuplicates);
+
+					// ORIG
+					// boneMeshMap.linkBoneToTriangles(editorStatus.getCurrentSelectedBone(),
+					// noDuplicates);
 
 					// old triangle based
 					// ITriangleMesh mesh = iterator.next();

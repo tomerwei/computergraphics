@@ -1,5 +1,6 @@
 package cgresearch.studentprojects.posegen.datastructure;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,41 +23,44 @@ public class BoneMeshMap {
 
 	private ITriangleMesh mesh = null;
 	private List<Bone> bones = null;
-	private HashMap<Integer, List<IVertex>> boneVertexMap;// = new HashMap<>();
+	private HashMap<Integer, List<ValuePair<IVertex, Double>>> boneVertexMap;// =
+																				// new
+																				// HashMap<>();
 
 	public BoneMeshMap(ITriangleMesh mesh, List<Bone> bones) {
 		this.mesh = mesh;
 		this.bones = bones;
-		
-//		for (Bone bone : this.bones) {
-//			updateBonesSelectedMesh(bone.getId()); // Init. falls nichts an dem
-//													// bonehängt hat er sonst
-//													// keine selected mesh map
-//		}
-		
+
+		// for (Bone bone : this.bones) {
+		// updateBonesSelectedMesh(bone.getId()); // Init. falls nichts an dem
+		// // bonehängt hat er sonst
+		// // keine selected mesh map
+		// }
+
 		autoLinkTrianglesToBones();
 	}
 
-	public void linkBoneToTriangles(Integer boneId, List<IVertex> vertices) {
-		if (null == boneId) {
-			return; // No bone selected
-		}
-		if (!boneVertexMap.containsKey(boneId)) { // New bone
-			boneVertexMap.put(boneId, new LinkedList<IVertex>());
-		}
+	// private void linkBoneToTriangles(Integer boneId, List<IVertex> vertices,
+	// Double weight) {
+	// if (null == boneId) {
+	// return; // No bone selected
+	// }
+	// if (!boneVertexMap.containsKey(boneId)) { // New bone
+	// boneVertexMap.put(boneId, new LinkedList<ValuePair<IVertex, Double>>());
+	// }
+	//
+	// List<ValuePair<IVertex, Double>> list = boneVertexMap.get(boneId);
+	// list.addAll(vertices);
+	//
+	// // Remove duplicates
+	// Set<IVertex> listAsSet = new HashSet<>(list);
+	// boneVertexMap.remove(boneId);
+	// boneVertexMap.put(boneId, new LinkedList<>(listAsSet));
+	//
+	// updateBonesSelectedMesh(boneId);
+	// }
 
-		List<IVertex> list = boneVertexMap.get(boneId);
-		list.addAll(vertices);
-
-		// Remove duplicates
-		Set<IVertex> listAsSet = new HashSet<>(list);
-		boneVertexMap.remove(boneId);
-		boneVertexMap.put(boneId, new LinkedList<>(listAsSet));
-
-		updateBonesSelectedMesh(boneId);
-	}
-
-	private List<IVertex> entryList; // Temp var, to save time and not init
+	// private List<IVertex> entryList; // Temp var, to save time and not init
 
 	/**
 	 * Add a bone to a triangle. Without updating updateBonesSelectedMesh(id)!
@@ -67,17 +71,19 @@ public class BoneMeshMap {
 	 *            id of the bone to link to
 	 * @param triangle
 	 *            triangle to link to the bone
+	 * @param factor
+	 *            factor how strong is it connected. (0..1)
 	 */
-	private void linkOneBoneToVertex(Integer boneId, IVertex vertex) {
+	private void linkOneBoneToVertex(Integer boneId, IVertex vertex, Double weight) {
 		if (null == boneId) {
 			return; // No bone selected
 		}
 		if (!boneVertexMap.containsKey(boneId)) { // New bone
-			boneVertexMap.put(boneId, new LinkedList<IVertex>());
+			boneVertexMap.put(boneId, new LinkedList<ValuePair<IVertex, Double>>());
 		}
 
-		entryList = boneVertexMap.get(boneId);
-		entryList.add(vertex);
+		List<ValuePair<IVertex, Double>> entryList = boneVertexMap.get(boneId);
+		entryList.add(new ValuePair<IVertex, Double>(vertex, weight));
 	}
 
 	/**
@@ -87,10 +93,69 @@ public class BoneMeshMap {
 	 *            bones. To get all ids
 	 */
 	private void finalizeAutoRigg(List<Bone> bones) {
+		recalculateAllWeights();
+		
+		
 		for (Bone bone : bones) {
 			updateBonesSelectedMesh(bone.getId());
 		}
 
+		
+	}
+
+	private void recalculateAllWeights() {
+		// private HashMap<Integer, List<ValuePair<IVertex, Double>>>
+		// boneVertexMap;
+		HashMap<IVertex, List<ValuePair<Integer, Double>>> vertexWeights = new HashMap<>();
+
+		for (Integer boneId : boneVertexMap.keySet()) {
+			for (ValuePair<IVertex, Double> valPair : boneVertexMap.get(boneId)) {
+				IVertex vex = valPair.getValue1();
+				Double weight = valPair.getValue2();
+				if (!vertexWeights.containsKey(vex)) { // Noch kein wert
+					vertexWeights.put(vex, new ArrayList<>());
+				}
+				vertexWeights.get(vex).add(new ValuePair<Integer, Double>(boneId, weight));
+			}
+		}
+
+		for (IVertex vertex : vertexWeights.keySet()) {
+			List<ValuePair<Integer, Double>> valuePair = vertexWeights.get(vertex);
+			recalculateWeights(vertex, valuePair);
+		}
+		// System.out.println("Gesamtweight: " + vertexWeights.get(vertex));
+	}
+
+	private void recalculateWeights(IVertex vertex, List<ValuePair<Integer, Double>> listWeights) {
+		Double weightSum = 0.0;
+
+		// Get the total Weight sum
+		for (ValuePair<Integer, Double> boneWeight : listWeights) {
+			// Integer boneId = boneWeight.getValue1();
+			Double weight = boneWeight.getValue2();
+			weightSum += weight;
+		}
+
+		// Recalculate all weights to make them add up to 1.0;
+		for (ValuePair<Integer, Double> boneWeight : listWeights) {
+			Integer boneId = boneWeight.getValue1();
+			Double weight = boneWeight.getValue2();
+			Double newWeight = weight / weightSum * 1.0;
+			setBoneWeightForVertex(boneId, vertex, newWeight);
+		}
+	}
+
+	private void setBoneWeightForVertex(Integer BoneId, IVertex vertex, Double newWeight) {
+		List<ValuePair<IVertex, Double>> valPairList = boneVertexMap.get(BoneId);
+		for (ValuePair<IVertex, Double> valPair : valPairList) { // Iterate all
+																	// vertices
+																	// from this
+																	// bone
+			if (vertex.equals(valPair.getValue1())) { // If this is the vertex
+														// to update
+				valPair.setValue2(newWeight); // Update it.
+			}
+		}
 	}
 
 	private void updateBonesSelectedMesh(Integer boneId) {
@@ -105,31 +170,59 @@ public class BoneMeshMap {
 
 		IVertex vertex;
 		// For each triangle, test all bones;
-		
+		Double distance;
 		for (int i = mesh.getNumberOfVertices() - 1; i > 0; i--) {
 			vertex = mesh.getVertex(i);
-			Bone closestBone = getClosestBone(vertex, bones);
-			linkOneBoneToVertex(closestBone.getId(), vertex);
+			for (Bone bone : bones) {
+				distance = getDistanceToBone(bone, vertex);
+				linkOneBoneToVertex(bone.getId(), vertex, gaussValue(distance));
+			}
+
 		}
 
 		finalizeAutoRigg(bones);
 	}
 
-	private Bone getClosestBone(IVertex vertex, List<Bone> bones) {
-		Double currentMin = Double.MAX_VALUE;
-		Bone currentClosestBone = null;
+	private double sigma = 0.50;// 0.001;
+	private double my = 0.0; // Verschiebung
+	private double inputFaktor = 5.0; // Entfernung vervielfachen
+	private double epsilon = 0.01; // Abschneiden minimaler ergebnisse ab x
 
-		for (Bone bone : bones) {
-			Vector vertexPosition = vertex.getPosition();
-			double distance = distancePointToSegment(vertexPosition, bone.getStartPosition(), bone.getEndPosition());
+	private double gaussValue(double entfernung) {
+		double x = entfernung * inputFaktor;
+		double res = 1.0 / (sigma * Math.sqrt(2 * Math.PI));
+		double xMySigma = -Math.pow((x - my / sigma), 2.0) / 2.0;
+		double resExpo = Math.exp(xMySigma);
+		double result = res * resExpo;
 
-			if (distance < currentMin) {
-				currentMin = distance;
-				currentClosestBone = bone;
-			}
+		if (result < epsilon) {
+			return 0.0;
+		} else {
+			return result;
 		}
+		// return 1.0 / (sigma * Math.sqrt(2.0 * Math.PI)) *
+		// Math.exp(-Math.pow(x-my / sigma, 2.0) / 2.0);
+	}
 
-		return currentClosestBone;
+	/*
+	 * Working, but disabled private Bone getClosestBone(IVertex vertex,
+	 * List<Bone> bones) { Double currentMin = Double.MAX_VALUE; Bone
+	 * currentClosestBone = null;
+	 * 
+	 * for (Bone bone : bones) { Vector vertexPosition = vertex.getPosition();
+	 * double distance = distancePointToSegment(vertexPosition,
+	 * bone.getStartPosition(), bone.getEndPosition());
+	 * 
+	 * if (distance < currentMin) { currentMin = distance; currentClosestBone =
+	 * bone; } }
+	 * 
+	 * return currentClosestBone; }
+	 */
+
+	private Double getDistanceToBone(Bone bone, IVertex vertex) {
+		Vector vertexPosition = vertex.getPosition();
+		Double distance = distancePointToSegment(vertexPosition, bone.getStartPosition(), bone.getEndPosition());
+		return distance;
 	}
 
 	private final Vector NULL_VECTOR_3DIM = new Vector(0, 0, 0);

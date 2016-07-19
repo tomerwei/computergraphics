@@ -1,5 +1,6 @@
 package cgresearch.studentprojects.posegen.datastructure;
 
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,12 +10,15 @@ import cgresearch.core.math.Vector;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
 
+/*
+ * SELECTED MESH == ? BoneMeshMap nur andere methoden?
+ */
 public class SelectedMesh {
 
 	private ITriangleMesh mesh;
-	private List<IVertex> selectedVertices;
+	private List<ValuePair<IVertex,Double>> selectedVertices;
 
-	public SelectedMesh(ITriangleMesh mesh, List<IVertex> selectedVertices) {
+	public SelectedMesh(ITriangleMesh mesh, List<ValuePair<IVertex,Double>> selectedVertices) {
 		this.mesh = mesh;
 		this.selectedVertices = selectedVertices;
 	}
@@ -30,13 +34,15 @@ public class SelectedMesh {
 		if (mesh == null) {
 			System.out.println("MESH  == NULL");
 		}
-
-		List<VertexMutable> verticesToRotate = new ArrayList<>();
-		for (IVertex vexAVertex : selectedVertices) {
+		
+		ValuePair<VertexMutable,Double> valueMutablePair;
+		List<ValuePair<VertexMutable,Double>> verticesToRotate = new ArrayList<>();
+		for (ValuePair<IVertex,Double> valuePair : selectedVertices) {
 			// IVertex vexAVertex = mesh
 			// IVertex vexBVertex = mesh.getVertex(triangle.getB());
 			// IVertex vexCVertex = mesh.getVertex(triangle.getC());
 
+			IVertex vexAVertex = valuePair.getValue1(); 
 			if (!(vexAVertex instanceof VertexMutable)) {
 				Logger.getInstance()
 						.error("Tried to manipulate a Vertex not of Type 'VertexMutable' inside SelectedMesh");
@@ -44,7 +50,8 @@ public class SelectedMesh {
 			}
 			VertexMutable vexA = (VertexMutable) vexAVertex;
 
-			verticesToRotate.add(vexA);
+			valueMutablePair = new ValuePair<VertexMutable, Double>(vexA, valuePair.getValue2());
+			verticesToRotate.add(valueMutablePair);
 
 			mesh.updateRenderStructures();
 		}
@@ -63,10 +70,10 @@ public class SelectedMesh {
 	 * @param vertices
 	 *            list of vertices.
 	 */
-	public void rotateAllVerticesOnce(double rad, Vector drehPunkt, List<VertexMutable> vertices) {
-		List<VertexMutable> noDuplicates = new ArrayList<VertexMutable>(new LinkedHashSet<VertexMutable>(vertices));
-		for (VertexMutable vex : noDuplicates) {
-			rotateUmDrehpunkt(rad, drehPunkt, vex);
+	public void rotateAllVerticesOnce(double rad, Vector drehPunkt, List<ValuePair<VertexMutable,Double>> vertices) {
+		List<ValuePair<VertexMutable,Double>> noDuplicates = new ArrayList<ValuePair<VertexMutable,Double>>(new LinkedHashSet<ValuePair<VertexMutable,Double>>(vertices));
+		for (ValuePair<VertexMutable,Double> vexPair : noDuplicates) {
+			rotateUmDrehpunkt(rad, drehPunkt, vexPair);
 		}
 	}
 
@@ -74,8 +81,13 @@ public class SelectedMesh {
 		return (deg * Math.PI / 180);
 	}
 
-	private void rotateUmDrehpunkt(double winkelDeg, Vector drehPunkt, VertexMutable vex) {
-
+	private void rotateUmDrehpunkt(Double winkelDeg, Vector drehPunkt, ValuePair<VertexMutable,Double> vexPair) {
+		VertexMutable vex = vexPair.getValue1();
+		winkelDeg = winkelDeg * vexPair.getValue2(); //Weight factor
+		if(winkelDeg.equals(0.0)){
+			return;
+		}
+		System.out.println("WinkelDeg: " + winkelDeg);
 		double winkelRad = degToRad(winkelDeg);
 		// winkelRad = degToRad(winkelRad);
 		double xEnd = vex.getPosition().get(0);
