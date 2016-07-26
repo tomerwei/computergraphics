@@ -42,13 +42,13 @@ public class IcpDistanceFunction {
 		Matrix covarianceMatrix = this.getCrossCovarianceMatrix(base, register, up, ux);//onlyForComputeTheTransformation
 		cgresearch.core.math.Matrix q = this.getQ(covarianceMatrix);
 		Vector eigenVector = getMaxEigenVector(q);
+//		System.out.println("eigenVector: "+eigenVector.toString());
 		Matrix rotationMatrix = getRotationMatrix(eigenVector);
 		Vector translationVector = translationVector(rotationMatrix, up, ux);
 
 		computeNewPointCloud(register, rotationMatrix, translationVector);
-		dk = computeDk(rotationMatrix, translationVector, base, register);//nearestPoints
-		Logger.getInstance()
-		.message("| " + iteration + " \t| " + eigenVector.toString() + "" + translationVector + " \t| " + dk + " \t |");
+//		dk = computeDk(rotationMatrix, translationVector, base, register);//nearestPoints
+		Logger.getInstance().message("| " + iteration + " \t| " + eigenVector.toString() + "" + translationVector + " \t| " + dk + " \t |");
 
 		return register;
 
@@ -64,9 +64,11 @@ public class IcpDistanceFunction {
 	 */
 
 	public Point centerOfMassyBase(IPointCloud ipc) {
+		
+//		System.out.println("centerOfMassyBase");
 
 		Vector newPoint = VectorFactory.createVector3(0, 0, 0);
-
+		
 		for (int i = 0; i < pointsSorted.size(); i++) {
 			newPoint.set(x, (newPoint.get(x) + ipc.getPoint(pointsSorted.get(i).getIndexForBase()).getPosition().get(x)));
 			newPoint.set(y, (newPoint.get(y) + ipc.getPoint(pointsSorted.get(i).getIndexForBase()).getPosition().get(y)));
@@ -89,13 +91,13 @@ public class IcpDistanceFunction {
 	 * @return
 	 */
 	public Point centerOfMassyRegister(IPointCloud ipc) {
-
+//		System.out.println("centerOfMassyRegister");
 		Vector newPoint = VectorFactory.createVector3(0, 0, 0);
 		for (int i = 0; i < pointsSorted.size(); i++) {
-			System.out.println("newPoint "+newPoint);
-			System.out.println("ipc Anzahl "+ipc.getNumberOfPoints());
-			System.out.println("pointsSorted Anzahl "+pointsSorted.size());
-			
+//			System.out.println("newPoint "+newPoint);
+//			System.out.println("ipc Anzahl "+ipc.getNumberOfPoints());
+//			System.out.println("pointsSorted Anzahl "+pointsSorted.size());
+//			
 			newPoint.set(x, (newPoint.get(x) + ipc.getPoint(pointsSorted.get(i).getIndexForRegister()).getPosition().get(x)));
 			newPoint.set(y, (newPoint.get(y) + ipc.getPoint(pointsSorted.get(i).getIndexForRegister()).getPosition().get(y)));
 			newPoint.set(z, (newPoint.get(z) + ipc.getPoint(pointsSorted.get(i).getIndexForRegister()).getPosition().get(z)));
@@ -121,16 +123,20 @@ public class IcpDistanceFunction {
 	 */
 
 	private Matrix getCrossCovarianceMatrix(IPointCloud base, IPointCloud register, Point up, Point ux) {//, int[] next
-
+//		System.out.println("getCrossCovarianceMatrix");
 		// if(Base.getNumberOfPoints()!= Register.getNumberOfPoints())
 		// return null;
 
 		Matrix covariance = MatrixFactory.createMatrix(3, 3);
-
+//		System.out.println("pointsSorted.size() "+pointsSorted.size());
 		for (int i = 0; i < pointsSorted.size(); i++) {
-
+//			System.out.println("for schleife covariance  i ");
 			for (int k = 0; k < 3; k++) {
+//				System.out.println("for schleife covariance  k ");
 				for (int j = 0; j < 3; j++) {
+//					System.out.println("for schleife covariance  j ");
+//					System.out.println("base get covariance: "+ base.getPoint(pointsSorted.get(i).getIndexForBase()).getPosition().get(k));
+//					System.out.println("register get covariance: "+ register.getPoint( pointsSorted.get(i).getIndexForRegister()).getPosition().get(j));
 
 					covariance.set(k, j, (covariance.get(k, j)
 							+ (base.getPoint(pointsSorted.get(i).getIndexForBase()).getPosition().get(k) * register.getPoint( pointsSorted.get(i).getIndexForRegister()).getPosition().get(j)))); //nicht sicher ob anstatt  pointsSorted nicht doch []next für nearestPoints hin muss
@@ -167,7 +173,7 @@ public class IcpDistanceFunction {
 				covariance.set(u, j, (covariance.get(u, j) - (up.getPosition().get(u) * ux.getPosition().get(j))));
 			}
 		}
-		//    System.out.println("Convariance Matrix SChritt:\n " + covariance.toString());
+//		    System.out.println("Convariance Matrix SChritt:\n " + covariance.toString());
 		return covariance;
 
 	}
@@ -180,7 +186,7 @@ public class IcpDistanceFunction {
 	 */
 
 	private Matrix getQ(Matrix covariance) {
-
+//		System.out.println("getQ");
 		Matrix q = new cgresearch.core.math.Matrix(4, 4);
 		q.set(0, 0, getTrace(covariance));
 
@@ -203,7 +209,7 @@ public class IcpDistanceFunction {
 				q.set((1 + i), (1 + j), (covariance.get(i, j) + covariance.get(j, i) - (i == j ? q.get(0, 0) : 0)));
 			}
 		}
-		//    System.out.println("Matrix Q:\n " + q.toString());
+//		    System.out.println("Matrix Q:\n " + q.toString());
 		return q;
 	}
 
@@ -215,6 +221,7 @@ public class IcpDistanceFunction {
 	 */
 
 	private double getTrace(Matrix covariance) {
+//		System.out.println("getTrace");
 		double trace = 0;
 		for (int i = 0; i < 3; i++) {
 			trace += covariance.get(i, i);
@@ -231,14 +238,15 @@ public class IcpDistanceFunction {
 	 */
 
 	private Vector getMaxEigenVector(Matrix q) {
-
+//		System.out.println("getMaxEigenVector");
 		double[][] temp = new double[4][4];
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				temp[i][j] = q.get(i, j);
 			}
 		}
-
+		
+		
 		Jama.Matrix m = new Jama.Matrix(temp);
 		EigenvalueDecomposition evd = new EigenvalueDecomposition(m);
 
@@ -248,7 +256,7 @@ public class IcpDistanceFunction {
 		Vector eigenVector = new Vector(4);
 
 		for (int i = 0; i < eigenValues.length; i++) {
-
+			
 			if (eigenValues[i] > max) {
 				max = eigenValues[i];
 				index = i;
@@ -259,7 +267,7 @@ public class IcpDistanceFunction {
 
 		for (int i = 0; i < test.length; i++) {
 			eigenVector.set(i, test[i]); //passen nur 3 rein
-			//      System.out.println("count i for eigenVector: "+eigenVector.get(i));
+//			      System.out.println("count i for eigenVector: "+eigenVector.get(i));
 		}
 
 		return eigenVector;
@@ -274,7 +282,7 @@ public class IcpDistanceFunction {
 	 */
 
 	private Matrix getRotationMatrix(Vector eigenVector) {
-
+//		System.out.println("getRotationMatrix");
 		Matrix rotationMatrix = new Matrix(3, 3);
 		int q0 = 0, q1 = 1, q2 = 2, q3 = 3;
 
@@ -317,7 +325,7 @@ public class IcpDistanceFunction {
 	 */
 
 	private Vector translationVector(Matrix rotation, Point upCloudRegister, Point uxCloudClosest) {
-
+//		System.out.println("translationVector");
 		Vector translation = new Vector(3);
 
 		translation.set(x,
@@ -352,6 +360,7 @@ public class IcpDistanceFunction {
 	 */
 
 	private double computeDk(Matrix rotation, Vector translation, IPointCloud Base, IPointCloud Register) {
+//		System.out.println("computeDk");
 		// Vector rotationBase = new Vector();
 		// Point bla = new Point();
 		double dk = 0;
@@ -410,7 +419,7 @@ public class IcpDistanceFunction {
 		}
 
 		dk = error / Register.getNumberOfPoints();
-		System.out.println("Ich bin der computeDK!!! und dk ist: "+dk);
+//		System.out.println("Ich bin der computeDK!!! und dk ist: "+dk);
 		return dk;
 
 	}
@@ -423,6 +432,7 @@ public class IcpDistanceFunction {
 	 */
 
 	private void computeNewPointCloud(IPointCloud Register, Matrix rotationMatrix, Vector translationVector) {
+//		System.out.println("computeNewPointCloud");
 		IPointCloud newPoints = new PointCloud();
 		double x1, y1, z1;
 

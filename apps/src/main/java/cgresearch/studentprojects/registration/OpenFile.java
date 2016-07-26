@@ -24,13 +24,14 @@ public class OpenFile {
     	String path = ResourcesLocator.getInstance().getPathToResource("meshes");
     	JFileChooser chooser = new JFileChooser(path);
     	  	 
-    	chooser.addChoosableFileFilter(filter);
+//    	chooser.addChoosableFileFilter(filter);
     	int temp = chooser.showOpenDialog(null);
     	if(temp == JFileChooser.APPROVE_OPTION)
     	{   
-    	    file = chooser.getSelectedFile().getAbsolutePath();  
-    	    int index = file.indexOf("assets\\");
-    	    file = file.substring(index+7);
+    	    file = chooser.getSelectedFile().getAbsolutePath(); 
+    	    System.out.println("filen path: "+file);
+//    	    int index = file.indexOf("assets\\");
+//    	    file = file.substring(index+7);
     	    
     	}else{
     		   Logger.getInstance().error("File not found");
