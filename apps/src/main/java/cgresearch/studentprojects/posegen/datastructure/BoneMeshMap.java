@@ -199,6 +199,10 @@ public class BoneMeshMap {
 	 * @return
 	 */
 	private HashMap<Integer, Double> recalculateWeight(HashMap<Integer, Double> boneIdWeightMap){
+		
+		//Without gaussian weights
+		//boneIdWeightMap = preserveJustMax(boneIdWeightMap); //Just take max value
+		
 		Double weightSum = 0.0;
 		// Get the total Weight sum
 		for (Integer boneId : boneIdWeightMap.keySet()) {
@@ -213,7 +217,30 @@ public class BoneMeshMap {
 		return boneIdWeightMap;
 	}
 	
-	private double sigma = 1.0;// 0.001; //Greater == More vertices to
+	
+	/**
+	 * To test output without weightings. Just binary binding. 1 vertex to one bone
+	 * @param map
+	 * @return
+	 */
+	private HashMap<Integer, Double> preserveJustMax(HashMap<Integer, Double> map){
+		Double maxValue = 0.0;
+		Integer maxId=null;
+		for(Integer id : map.keySet()){
+			Double val = map.get(id);
+			if(maxValue <= val){
+				maxValue = val;
+				maxId =  id;
+			}
+			
+			
+		}
+		HashMap<Integer, Double> returnValue = new HashMap<>();
+		returnValue.put(maxId, maxValue);
+		return returnValue;
+	}
+	
+	private double sigma = 0.70;// 0.001; //Greater == More vertices to
 								// influence, (but less strong)
 	private double my = 0.0; // Verschiebung
 	private double inputFaktor = 14.0; // Entfernung vervielfachen
