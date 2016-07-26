@@ -17,12 +17,12 @@ import cgresearch.graphics.bricks.CgApplication;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangle;
 import cgresearch.graphics.datastructures.trianglemesh.ITriangleMesh;
 import cgresearch.graphics.datastructures.trianglemesh.IVertex;
-import cgresearch.graphics.scenegraph.CgNode;
+import cgresearch.graphics.scenegraph.CgRootNode;
+import cgresearch.graphics.scenegraph.LightSource;
 import cgresearch.rendering.jogl.ui.JoglFrame;
 import cgresearch.studentprojects.posegen.datastructure.Bone;
 import cgresearch.studentprojects.posegen.datastructure.BoneEndPositionPickup;
 import cgresearch.studentprojects.posegen.datastructure.BoneMeshMap;
-import cgresearch.studentprojects.posegen.datastructure.BoneNode;
 import cgresearch.studentprojects.posegen.datastructure.BoneStartPositionPickup;
 import cgresearch.studentprojects.posegen.datastructure.Canvas;
 import cgresearch.studentprojects.posegen.datastructure.CanvasNode;
@@ -36,14 +36,16 @@ public class Editor extends CgApplication {
 
 	private EditorStatus editorStatus;
 	private static EditorManager editorManager;
-	private CgNode root;
+	private CgRootNode root;
 	private SkelettNode skelett;
 	private Canvas canvas = new Canvas(); // init here to forward the ref
 	private static JoglFrame joglFrame = null; // To be set in main
 
 	boolean selectSingleMode = false; // SELECT SINGLE OR ALL PICKED position
 										// movers at once
-
+	private boolean boneMeshMapNeedsUpdate = true; // A bone has been moved.
+													// autoLink needs to be
+													// called
 	private BoneMeshMap boneMeshMap;
 
 	public Editor() {
@@ -55,6 +57,22 @@ public class Editor extends CgApplication {
 		skelett = generateSkelett();
 		boneMeshMap = new BoneMeshMap(canvas, skelett.getBones());
 		editorStatus = new EditorStatus(skelett.getBones());
+
+		LightSource light1 = new LightSource(LightSource.Type.POINT).setPosition(new Vector(-1.0, 5, 0.5));
+		LightSource light2 = new LightSource(LightSource.Type.POINT).setPosition(new Vector(-1.0, 5, 0.5));
+		LightSource light3 = new LightSource(LightSource.Type.POINT).setPosition(new Vector(1.0, 5, -0.5));
+		LightSource light4 = new LightSource(LightSource.Type.POINT).setPosition(new Vector(1.0, 5, -0.5));
+		LightSource light5 = new LightSource(LightSource.Type.POINT).setPosition(new Vector(1.0, -5, -0.5));
+		light1.setColor(new Vector(1, 1, 1));
+		light2.setColor(new Vector(1, 1, 1));
+		light3.setColor(new Vector(1, 1, 1));
+		light4.setColor(new Vector(1, 1, 1));
+		light5.setColor(new Vector(1, 1, 1));
+		root.addLight(light1);
+		root.addLight(light2);
+		root.addLight(light3);
+		root.addLight(light4);
+		root.addLight(light5);
 
 		root.addChild(skelett);
 
@@ -77,6 +95,19 @@ public class Editor extends CgApplication {
 		root.addChild(canvasNode);
 	}
 
+	/**
+	 * Tests if the mesh needs to be autolinked and links it if needed.
+	 */
+	private void autoLinkBonesToMeshIfDirty() {
+
+		if (boneMeshMapNeedsUpdate) {
+			System.out.println("AutoLinked");
+			boneMeshMap.autoLinkTrianglesToBones();
+			boneMeshMapNeedsUpdate = false;
+		}
+
+	}
+
 	private TriangleMeshPicking initBonePicking(List<Bone> bones) {
 		TriangleMeshPicking meshPicking = new TriangleMeshPicking();
 
@@ -95,7 +126,8 @@ public class Editor extends CgApplication {
 						editorStatus.selectBone(((Bone) mesh));
 						// canvas.enableWireframe();
 						Bone selectedBone = ((Bone) mesh);
-						selectedBone.rotateUmDrehpunkt(3.0, selectedBone.getStartPosition());
+						autoLinkBonesToMeshIfDirty();
+						selectedBone.rotateUmDrehpunkt(-3.0, selectedBone.getStartPosition());
 						// skelett.getBones().get(3).rotateUmDrehpunkt(4, new
 						// Vector(0, 0, 0));
 					}
@@ -166,7 +198,9 @@ public class Editor extends CgApplication {
 												// selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
+						boneMeshMapNeedsUpdate = true;
 						((IBoneMovePositionPickup) mesh).dragged(coordsClicked);
+
 					}
 					if (selectSingleMode == true) {
 						break;
@@ -184,6 +218,7 @@ public class Editor extends CgApplication {
 												// selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
+						boneMeshMapNeedsUpdate = true;
 						((IBoneMovePositionPickup) mesh).pickedUp();
 					}
 					if (selectSingleMode == true) {
@@ -202,6 +237,7 @@ public class Editor extends CgApplication {
 												// selected
 					ITriangleMesh mesh = iterator.next();
 					if (mesh instanceof IBoneMovePositionPickup) {
+						boneMeshMapNeedsUpdate = true;
 						((IBoneMovePositionPickup) mesh).dropped();
 					}
 					if (selectSingleMode == true) {
@@ -213,8 +249,8 @@ public class Editor extends CgApplication {
 			@Override
 			public void trianglesClicked(HashMap<ITriangleMesh, List<ITriangle>> pickedTriangles,
 					Vector coordsClicked) {
-				System.out.println("AutoLinked");
-				boneMeshMap.autoLinkTrianglesToBones();
+				// System.out.println("AutoLinked");
+				// boneMeshMap.autoLinkTrianglesToBones();
 
 			}
 
@@ -323,76 +359,13 @@ public class Editor extends CgApplication {
 
 		joglFrame = appLauncher.getJoglFrame();
 		app.initEditorContent(); // Has to be called after renderSystem is set
-	}
 
-	/**
-	 * 
-	 * @param parentBone
-	 *            Parent bone to attach this new bone to
-	 * @param offset
-	 *            Offset from the base (parentBone), towards the end of this new
-	 *            one
-	 * @param boneName
-	 *            Name of the bone
-	 * @return The newly created BoneNode.
-	 */
-	private static BoneNode addBone(Bone parentBone, Vector offset, String boneName) {
-		Bone newBone = new Bone(parentBone, offset);
-		BoneNode newBoneNode = new BoneNode(newBone, boneName);
-		CgNode boneStartPickupNode = new CgNode(newBone.getStartPositionPickup(), "BoneStartPositionPickup");
-		newBoneNode.addChild(boneStartPickupNode);
-		if (null != newBone.getEndPositionPickup()) {
-			CgNode boneEndPickupNode = new CgNode(newBone.getEndPositionPickup(), "BoneEndPositionPickup");
-			newBoneNode.addChild(boneEndPickupNode);
-			// wird noch aufgebaut das skelett, desweegn ist noch kein child
-			// bone da und der bone weiss nicht das er kein blatt ist
-		}
-
-		// new BoneRotationPickable(newBone, editorManager);
-		return newBoneNode;
 	}
 
 	private SkelettNode generateSkelett() {
 
 		SkelettNode skelett = new SkelettNode(null, "Skelett1");
 
-		BoneNode waistToTop = addBone(null, new Vector(0.0, 1.0, 0.0), "waistToTop");
-		BoneNode shoulderToLeft = addBone(waistToTop.getBone(), new Vector(-0.5, 0.0, 0.0), "shoulderToLeft");
-		BoneNode shoulderToRight = addBone(waistToTop.getBone(), new Vector(0.5, 0.0, 0.0), "shoulderToRight");
-		BoneNode leftUpperArm = addBone(shoulderToLeft.getBone(), new Vector(-0.2, -0.6, 0.0), "leftUpperArm");
-		BoneNode leftLowerArm = addBone(leftUpperArm.getBone(), new Vector(-0.05, -0.4, 0.0), "leftLowerArm");
-		BoneNode rightUpperArm = addBone(shoulderToRight.getBone(), new Vector(0.2, -0.6, 0.0), "rightUpperArm");
-		BoneNode rightLowerArm = addBone(rightUpperArm.getBone(), new Vector(0.05, -0.4, 0.0), "rightLowerArm");
-		BoneNode neck = addBone(waistToTop.getBone(), new Vector(0.0, 0.35, 0.0), "neck");
-		BoneNode head = addBone(neck.getBone(), new Vector(0.0, 0.45, 0.0), "head");
-
-		BoneNode leftWaist = addBone(null, new Vector(-0.5, 0.0, 0.0), "leftWaist");
-		BoneNode leftUpperLeg = addBone(leftWaist.getBone(), new Vector(-0.15, -1.0, 0.0), "leftUpperLeg");
-		BoneNode leftLowerLeg = addBone(leftUpperLeg.getBone(), new Vector(-0.05, -0.80, 0.0), "leftLowerLeg");
-
-		BoneNode rightWaist = addBone(null, new Vector(0.5, 0.0, 0.0), "rightWaist");
-		BoneNode rightUpperLeg = addBone(rightWaist.getBone(), new Vector(0.15, -1.0, 0.0), "rightUpperLeg");
-		BoneNode rightLowerLeg = addBone(rightUpperLeg.getBone(), new Vector(0.05, -0.80, 0.0), "rightLowerLeg");
-		// BoneNode rightLowerLowerLeg = addBone(rightLowerLeg.getBone(), new
-		// Vector(0.05, -0.80, 0.0), "rightLowerLowerLeg");
-
-		skelett.addChild(waistToTop);
-		skelett.addChild(shoulderToLeft);
-		skelett.addChild(shoulderToRight);
-		skelett.addChild(leftUpperArm);
-		skelett.addChild(leftLowerArm);
-		skelett.addChild(rightUpperArm);
-		skelett.addChild(rightLowerArm);
-		skelett.addChild(neck);
-		skelett.addChild(head);
-
-		skelett.addChild(leftWaist);
-		skelett.addChild(leftUpperLeg);
-		skelett.addChild(leftLowerLeg);
-
-		skelett.addChild(rightWaist);
-		skelett.addChild(rightUpperLeg);
-		skelett.addChild(rightLowerLeg);
 		// skelett.addChild(rightLowerLowerLeg);
 
 		// rightUpperLeg.getBone().rotateUmBoneStart(45);
