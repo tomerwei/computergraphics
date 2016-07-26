@@ -105,8 +105,8 @@ public class SelectedMesh {
 
 		// Vector realNewCords =
 		//If overlapping with neighbor vertices. Just pushed up to neighbor vertex
-		vex.trySetPosition(new Vector(xStrich, yStrich, zStrich));
-
+//		vex.trySetPosition(new Vector(xStrich, yStrich, zStrich));
+		vex.position = new Vector(xStrich, yStrich, zStrich);
 	}
 
 }
