@@ -76,6 +76,41 @@ public class GPSolid implements Serializable
 		return vectorList;
 	}
 
+	public int hashCodeVectorSum()
+	{
+		int hash = 1;
+		
+		double v_x_Sum = 1.0;
+		double v_y_Sum = 1.0;
+		double v_z_Sum = 1.0;
+
+		for (Vector v : getBaseLinesVectorList())
+			{
+			v_x_Sum = v_x_Sum + new Double(v.get(0)).intValue();
+			v_y_Sum = v_y_Sum + new Double(v.get(1)).intValue();
+			v_z_Sum = v_z_Sum + new Double(v.get(2)).intValue();
+			}
+
+		hash = hash * 17 + Double.hashCode(v_x_Sum);
+		hash = hash * 31 + Double.hashCode(v_y_Sum);
+		hash = hash * 13 + Double.hashCode(v_z_Sum);
+
+		return hash;
+	}
+
+	public boolean equalsInVectors(Object o)
+	{
+		if (!(o instanceof GPSolid))
+			return false;
+
+		GPSolid other = (GPSolid) o;
+
+		if (this.hashCodeVectorSum() != other.hashCodeVectorSum())
+			return false;
+
+		return true;
+	}
+
 	public String toString()
 	{
 		StringBuffer buffy = new StringBuffer();

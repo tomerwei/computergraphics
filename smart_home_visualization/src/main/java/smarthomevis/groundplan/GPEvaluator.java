@@ -41,14 +41,23 @@ public class GPEvaluator
 		// for (GPLine l : unpairedLines)
 		// System.out.println("> " + l.getName());
 
+		/*
+		 * SingleLine Pair Handling
+		 */
 		List<GPLine[]> singleLinePairs = getPairsWithLinesOnlyOnce(data);
 
 		buildSolidsFromSingleLinePairs(data, unpairedLines, singleLinePairs);
 
+		/*
+		 * MultiLine Pairs Handling
+		 */
 		List<List<GPLine>> multipleLinePairs = getPairsWithLinesMoreThanOnce(data);
 
 		buildSolidsFromMultiLinePairs(data, unpairedLines, multipleLinePairs);
 
+		/*
+		 * Komplex Gap Handling
+		 */
 		Map<Integer, Map<List<Vector>, GPSolid[]>> solidsSortedAfterCorners = sortSolidsAfterAlignedCorners();
 
 		analyzeMatchedCornersAndBuildMissingSolids(solidsSortedAfterCorners);
@@ -56,7 +65,51 @@ public class GPEvaluator
 		// for (GPSolid s : data.getAllSolids())
 		// System.out.println(s.toString());
 
+		// List<GPSolid> doppelgaenger = compareAllSolidsForDoubles();
+		//
+		// removeDoppelgaengerSolidsFromData(doppelgaenger);
+		//
+		// ersetzeSolidsInDataMitDoppelgaengern(doppelgaenger);
+
 		return data;
+	}
+
+	@SuppressWarnings("unused")
+	private void removeDoppelgaengerSolidsFromData(List<GPSolid> doppelgaenger)
+	{
+		data.getAllSolids().removeAll(doppelgaenger);
+	}
+
+	@SuppressWarnings("unused")
+	private void ersetzeSolidsInDataMitDoppelgaengern(List<GPSolid> doppelgaenger)
+	{
+		data.getAllSolids().clear();
+		for (GPSolid solid : doppelgaenger)
+			data.addSolid(solid);
+	}
+
+	@SuppressWarnings("unused")
+	private List<GPSolid> compareAllSolidsForDoubles()
+	{
+		List<GPSolid> solidList = data.getAllSolids();
+		List<GPSolid> doppelgaenger = new ArrayList<>();
+
+		for (int i = 0; i < solidList.size() - 1; i++)
+		{
+			GPSolid s = solidList.get(i);
+
+			for (int j = i + 1; j < solidList.size(); j++)
+			{
+				GPSolid o = solidList.get(j);
+
+				if (s.equalsInVectors(o))
+				{
+					System.out.println("=-=-=-=-> Identische Solids: " + s.toString() + " & " + o.toString());
+					doppelgaenger.add(o);
+				}
+			}
+		}
+		return doppelgaenger;
 	}
 
 	private List<Double> chooseCorrectDistances(Set<Double> distanceSet, GPConfig config)
@@ -335,12 +388,12 @@ public class GPEvaluator
 			// Abstandsvektor der parallelen Linien
 			Vector distanceVector = null;
 
+			Vector normdirVec_multiline = GPUtility
+					.normalizeVector(GPUtility.substractOtherVector(multiLine.getEnd(), multiLine.getStart()));
+
 			for (int i = 1; i < list.size(); i++)
 			{
 				GPLine currentLine = list.get(i);
-
-				Vector normdirVec_multiline = GPUtility
-						.normalizeVector(GPUtility.substractOtherVector(multiLine.getEnd(), multiLine.getStart()));
 
 				Vector cStartOnMultiline = projectPointOnLine(currentLine.getStart(), multiLine.getStart(),
 						normdirVec_multiline);
@@ -354,13 +407,14 @@ public class GPEvaluator
 				if (!distanceVectorStart.equals(distanceVectorEnd))
 					System.out.println("ABWEICHUNG!\nStart: " + distanceVectorStart.toString(2) + "End:"
 							+ distanceVectorEnd.toString(2));
-				else
-					System.out.println("Distanzvektoren identisch!");
 
 				distanceVector = distanceVectorStart;
 
 				projectedPoints.add(cStartOnMultiline);
 				projectedPoints.add(cEndOnMultiline);
+
+				System.out.println("++++\nAdding Vectors " + GPUtility.getShortVectorString(cStartOnMultiline) + " and "
+						+ GPUtility.getShortVectorString(cEndOnMultiline) + " to PROJECTED POINTS\n+++");
 
 				GPLine projection = new GPLine("proj_" + currentLine.getName(), cStartOnMultiline, cEndOnMultiline);
 				projection.setLineType(multiLine.getLineType());
@@ -409,7 +463,7 @@ public class GPEvaluator
 
 		BigDecimal denominator = BigDecimal.valueOf(GPUtility.punktproduktVon(normDirVecLine, normDirVecLine));
 
-		BigDecimal fraction = numerator.divide(denominator);
+		BigDecimal fraction = numerator.divide(denominator, 5, RoundingMode.HALF_DOWN);
 
 		Vector p = normDirVecLine.multiply(fraction.doubleValue());
 
@@ -479,7 +533,7 @@ public class GPEvaluator
 		if (nearlyEqualStart != null)
 		{
 			projectedPoints.remove(nearlyEqualStart);
-			System.out.println("Multiline Startpoint removed: " + nearlyEqualStart.toString(2));
+			System.out.println("X===> Multiline Startpoint removed: " + nearlyEqualStart.toString(2));
 		}
 
 		Vector multiLineEnd = multiLine.getEnd();
@@ -488,7 +542,7 @@ public class GPEvaluator
 		if (nearlyEqualEnd != null)
 		{
 			projectedPoints.remove(nearlyEqualEnd);
-			System.out.println("Multiline Endpoint removed: " + nearlyEqualEnd.toString(2));
+			System.out.println("X===> Multiline Endpoint removed: " + nearlyEqualEnd.toString(2));
 		}
 
 		List<Vector> relevantVectors = new ArrayList<>();
@@ -544,6 +598,9 @@ public class GPEvaluator
 		else
 		{
 			List<Vector> sortedVectors = new ArrayList<>();
+
+			// verwendete Lueckenvektoren einsammeln
+			List<Vector> usedGapVectors = new ArrayList<>();
 			for (Entry<Double, Vector> e : sortedProjectedPoints.entrySet())
 			{
 				if (relevantVectors.contains(e.getValue()))
@@ -585,8 +642,10 @@ public class GPEvaluator
 
 						if (l != null)
 						{
-							System.out.println("COMPARING [" + v.toString(2) + "|" + w.toString(2) + "] == ["
-									+ l.getStart().toString(2) + "|" + l.getEnd().toString(2) + "]");
+							// System.out.println("COMPARING [" + v.toString(2)
+							// + "|" + w.toString(2) + "] == ["
+							// + l.getStart().toString(2) + "|" +
+							// l.getEnd().toString(2) + "]");
 							if ((v.equals(l.getStart()) || v.equals(l.getEnd()))
 									&& (w.equals(l.getStart()) || w.equals(l.getEnd())))
 							{
@@ -618,10 +677,14 @@ public class GPEvaluator
 
 						System.out.println("ADDING MULTIGAP SOLID " + solid.toString());
 						data.addSolid(solid);
+
+						usedGapVectors.add(v);
+						usedGapVectors.add(w);
 					}
 
 				}
 			}
+
 		}
 	}
 
@@ -648,11 +711,11 @@ public class GPEvaluator
 				lambda_y = calculateLambda(point.get(1), multiLine.getStart().get(1), dirVecMultiLine.get(1));
 			}
 
-			if (lambda_x != null)
-				System.out.println("Lambda X: " + lambda_x);
-			if (lambda_y != null)
-				System.out.println("Lambda Y: " + lambda_y);
-
+			// if (lambda_x != null)
+			// System.out.println("Lambda X: " + lambda_x);
+			// if (lambda_y != null)
+			// System.out.println("Lambda Y: " + lambda_y);
+			//
 			if (lambda_x != null && lambda_y == null)
 				pointsWithSkalar.put(lambda_x, point);
 			else if (lambda_x == null && lambda_y != null)
@@ -661,19 +724,21 @@ public class GPEvaluator
 			{
 				if (lambda_x == lambda_y)
 					pointsWithSkalar.put(lambda_x, point);
-				else
-				{
-					System.out.println("Skalare Ergebnisse sind nicht eindeutig; Vector liegt nicht auf Multiline");
-				}
+				// else
+				// {
+				// System.out.println("Skalare Ergebnisse sind nicht eindeutig;
+				// Vector liegt nicht auf Multiline");
+				// }
 			}
 		}
 
-		System.out.println("SKALARS: ");
-		for (Entry<Double, Vector> e : pointsWithSkalar.entrySet())
-		{
-			String vectorString = e.getValue().toString(2);
-			System.out.println(vectorString.substring(2, vectorString.length() - 2) + ": " + e.getKey());
-		}
+		// System.out.println("SKALARS: ");
+		// for (Entry<Double, Vector> e : pointsWithSkalar.entrySet())
+		// {
+		// String vectorString = e.getValue().toString(2);
+		// System.out.println(vectorString.substring(2, vectorString.length() -
+		// 2) + ": " + e.getKey());
+		// }
 
 		return pointsWithSkalar;
 	}
@@ -846,10 +911,10 @@ public class GPEvaluator
 				if (entry.getKey().contains(v))
 					repetitionOfCorner++;
 			}
-			
-			if(repetitionOfCorner == 0)
+
+			if (repetitionOfCorner == 0)
 				System.out.println("HEUREKA!! ICH hab SIE GEFUNDEN!" + v.toString(2));
-			
+
 			// TODO relevante Vectoren in Solids umwandeln
 		}
 

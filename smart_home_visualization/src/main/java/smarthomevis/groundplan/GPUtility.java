@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -179,4 +180,13 @@ public class GPUtility {
 		}
 
 	}
+	
+	public static String getShortVectorString(Vector v)
+	{
+	DecimalFormat format = new DecimalFormat("#.##");
+	return format.format(v.get(0)) + ":" + format.format(v.get(1)) + ":"
+		+ format.format(v.get(2));
+	}
+	
+
 }
