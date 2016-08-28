@@ -14,7 +14,7 @@
 			200
 		</door_top_height>
 		<groundplan_scaling_scalar>
-			1.4
+			5.0
 		</groundplan_scaling_scalar>
 		<angle_tolerance>
 			0.0001
@@ -23,16 +23,16 @@
 			0.5
 		</point_tolerance>
 		<distance_interval>
-			1
+			1.0
 		</distance_interval>
 		<lower_wallthickness_limit>
-			10
+			5
 		</lower_wallthickness_limit>
 		<upper_wallthickness_limit>
 			50
 		</upper_wallthickness_limit>
 		<wall_count_threshold>
-			8
+			30
 		</wall_count_threshold>
 	</config>
 	<layer name="Waende" type="WALL">

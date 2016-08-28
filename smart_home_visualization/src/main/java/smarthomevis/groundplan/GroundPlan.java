@@ -3,11 +3,17 @@ package smarthomevis.groundplan;
 import java.util.List;
 import java.util.Map;
 
+import cgresearch.AppLauncher.RenderSystem;
+import cgresearch.AppLauncher.UI;
+import cgresearch.JoglAppLauncher;
+import cgresearch.core.assets.ResourcesLocator;
+import cgresearch.core.logging.Logger;
 import cgresearch.graphics.bricks.CgApplication;
+import cgresearch.graphics.camera.Camera;
 import cgresearch.graphics.scenegraph.CgNode;
-import smarthomevis.groundplan.config.GPDataImporter;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.config.GPConfigXMLReader;
+import smarthomevis.groundplan.config.GPDataImporter;
 import smarthomevis.groundplan.data.GPDataType;
 
 public class GroundPlan extends CgApplication implements IGroundPlan {
@@ -79,6 +85,34 @@ public class GroundPlan extends CgApplication implements IGroundPlan {
 
 		CgNode node = renderer.render3DMeshViewFromSolids();
 		getCgRootNode().addChild(node);
+	}
+	
+	public static void main(String[] args)
+	{
+		ResourcesLocator.getInstance().parseIniFile("resources.ini");
+		JoglAppLauncher appLauncher = JoglAppLauncher.getInstance();
+		GroundPlan app = new GroundPlan();
+		appLauncher.create(app);
+		appLauncher.setRenderSystem(RenderSystem.JOGL);
+		appLauncher.setUiSystem(UI.JOGL_SWING);
+
+		if(args.length > 0)
+			{
+				if(args.length > 1)
+					Logger.getInstance().error("Too many arguments");
+				else
+					{
+						String groundplan = args[0];
+						Logger.getInstance().message("Analyzing groundplan "+groundplan+"...");
+						app.analyzeAndRenderSolids(groundplan);
+						Camera.getInstance().setCenterViewRequired();
+					}
+			}
+		else
+			{
+				app.analyzeAndRenderSolids("4H-HORA Projekt1");
+				Camera.getInstance().setCenterViewRequired();
+			}
 	}
 
 	public GroundPlan() {

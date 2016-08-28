@@ -58,17 +58,18 @@ public class GPEvaluator
 		/*
 		 * Komplex Gap Handling
 		 */
-		Map<Integer, Map<List<Vector>, GPSolid[]>> solidsSortedAfterCorners = sortSolidsAfterAlignedCorners();
-
-		analyzeMatchedCornersAndBuildMissingSolids(solidsSortedAfterCorners);
+		// Map<Integer, Map<List<Vector>, GPSolid[]>> solidsSortedAfterCorners =
+		// sortSolidsAfterAlignedCorners();
+		//
+		// analyzeMatchedCornersAndBuildMissingSolids(solidsSortedAfterCorners);
 
 		// for (GPSolid s : data.getAllSolids())
 		// System.out.println(s.toString());
 
 		// List<GPSolid> doppelgaenger = compareAllSolidsForDoubles();
-		//
+
 		// removeDoppelgaengerSolidsFromData(doppelgaenger);
-		//
+
 		// ersetzeSolidsInDataMitDoppelgaengern(doppelgaenger);
 
 		return data;
@@ -85,7 +86,7 @@ public class GPEvaluator
 	{
 		data.getAllSolids().clear();
 		for (GPSolid solid : doppelgaenger)
-			data.addSolid(solid);
+		data.addSolid(solid);
 	}
 
 	@SuppressWarnings("unused")
@@ -118,7 +119,7 @@ public class GPEvaluator
 		for (Double distance : distanceSet)
 		{
 			if (distance >= config.getValue(GPConfig.LOWER_WALLTHICKNESS_LIMIT)
-					&& distance <= config.getValue(GPConfig.UPPER_WALLTHICKNESS_LIMIT))
+				&& distance <= config.getValue(GPConfig.UPPER_WALLTHICKNESS_LIMIT))
 			{
 				System.out.println("Distance " + distance + " is in range");
 				int count = this.data.getDistanceMap().get(distance);
@@ -142,7 +143,7 @@ public class GPEvaluator
 			for (String[] s : pairsToDistanceMap.get(d))
 			{
 				System.out.println(s[0] + "[" + this.data.getLayerOfLine(s[0]) + "] - " + s[1] + "["
-						+ this.data.getLayerOfLine(s[1]) + "]");
+					+ this.data.getLayerOfLine(s[1]) + "]");
 			}
 		}
 	}
@@ -168,8 +169,8 @@ public class GPEvaluator
 					increaseLineInPairCount(line1);
 				}
 				else
-					System.err.println("Inconsistency found: Pair of Lines is not from same Layer " + line0 + "["
-							+ layerName0 + "] - " + line1 + "[" + layerName1 + "]");
+				System.err.println("Inconsistency found: Pair of Lines is not from same Layer " + line0 + "["
+					+ layerName0 + "] - " + line1 + "[" + layerName1 + "]");
 
 			}
 		}
@@ -245,7 +246,7 @@ public class GPEvaluator
 	}
 
 	private void buildSolidsFromSingleLinePairs(GPDataType data, List<GPLine> unpairedLines,
-			List<GPLine[]> singleLinePairs)
+		List<GPLine[]> singleLinePairs)
 	{
 		for (GPLine[] lineArray : singleLinePairs)
 		{
@@ -356,7 +357,7 @@ public class GPEvaluator
 				for (GPLine line : pairList)
 				{
 					if (!line.equals(multiLine))
-						multiplePairsLines.add(line);
+					multiplePairsLines.add(line);
 				}
 
 			}
@@ -364,7 +365,7 @@ public class GPEvaluator
 	}
 
 	private void buildSolidsFromMultiLinePairs(GPDataType data, List<GPLine> unpairedLines,
-			List<List<GPLine>> multipleLinePairs)
+		List<List<GPLine>> multipleLinePairs)
 	{
 		for (List<GPLine> list : multipleLinePairs)
 		{
@@ -389,24 +390,24 @@ public class GPEvaluator
 			Vector distanceVector = null;
 
 			Vector normdirVec_multiline = GPUtility
-					.normalizeVector(GPUtility.substractOtherVector(multiLine.getEnd(), multiLine.getStart()));
+				.normalizeVector(GPUtility.substractOtherVector(multiLine.getEnd(), multiLine.getStart()));
 
 			for (int i = 1; i < list.size(); i++)
 			{
 				GPLine currentLine = list.get(i);
 
 				Vector cStartOnMultiline = projectPointOnLine(currentLine.getStart(), multiLine.getStart(),
-						normdirVec_multiline);
+					normdirVec_multiline);
 				Vector cEndOnMultiline = projectPointOnLine(currentLine.getEnd(), multiLine.getStart(),
-						normdirVec_multiline);
+					normdirVec_multiline);
 
 				// Abstand zwischen den Linien bestimmen
 				Vector distanceVectorStart = GPUtility.substractOtherVector(currentLine.getStart(), cStartOnMultiline);
 				Vector distanceVectorEnd = GPUtility.substractOtherVector(currentLine.getEnd(), cEndOnMultiline);
 
 				if (!distanceVectorStart.equals(distanceVectorEnd))
-					System.out.println("ABWEICHUNG!\nStart: " + distanceVectorStart.toString(2) + "End:"
-							+ distanceVectorEnd.toString(2));
+				System.out.println(
+					"ABWEICHUNG!\nStart: " + distanceVectorStart.toString(2) + "End:" + distanceVectorEnd.toString(2));
 
 				distanceVector = distanceVectorStart;
 
@@ -414,7 +415,7 @@ public class GPEvaluator
 				projectedPoints.add(cEndOnMultiline);
 
 				System.out.println("++++\nAdding Vectors " + GPUtility.getShortVectorString(cStartOnMultiline) + " and "
-						+ GPUtility.getShortVectorString(cEndOnMultiline) + " to PROJECTED POINTS\n+++");
+					+ GPUtility.getShortVectorString(cEndOnMultiline) + " to PROJECTED POINTS\n+++");
 
 				GPLine projection = new GPLine("proj_" + currentLine.getName(), cStartOnMultiline, cEndOnMultiline);
 				projection.setLineType(multiLine.getLineType());
@@ -424,7 +425,8 @@ public class GPEvaluator
 				solid.addLine(currentLine);
 				solid.addLine(projection);
 
-				GPLine[] lineArray = new GPLine[] { currentLine, projection };
+				GPLine[] lineArray = new GPLine[]
+				{ currentLine, projection };
 
 				solid.setBasePair(lineArray);
 
@@ -447,7 +449,7 @@ public class GPEvaluator
 			 * ergaenzen
 			 */
 			analyseProjectedPointsAndMultiLineForGaps(data, multiLine, projectedPoints, distanceVector,
-					multiLineSolids);
+				multiLineSolids);
 		}
 	}
 
@@ -483,30 +485,30 @@ public class GPEvaluator
 			if (l.getStart().equals(start))
 			{
 				if (onefound)
-					result = true;
+				result = true;
 				else
-					onefound = true;
+				onefound = true;
 			}
 			if (l.getStart().equals(end))
 			{
 				if (onefound)
-					result = true;
+				result = true;
 				else
-					onefound = true;
+				onefound = true;
 			}
 			if (l.getEnd().equals(start))
 			{
 				if (onefound)
-					result = true;
+				result = true;
 				else
-					onefound = true;
+				onefound = true;
 			}
 			if (l.getEnd().equals(end))
 			{
 				if (onefound)
-					result = true;
+				result = true;
 				else
-					onefound = true;
+				onefound = true;
 			}
 		}
 
@@ -514,7 +516,7 @@ public class GPEvaluator
 	}
 
 	private void analyseProjectedPointsAndMultiLineForGaps(GPDataType data, GPLine multiLine,
-			List<Vector> projectedPoints, Vector distanceVector, List<GPSolid> multiLineSolids)
+		List<Vector> projectedPoints, Vector distanceVector, List<GPSolid> multiLineSolids)
 	{
 		System.out.println("MULTILINE: " + multiLine.toString());
 
@@ -522,31 +524,38 @@ public class GPEvaluator
 
 		System.out.println("PROJECTED POINTS: " + projectedPoints.size());
 		for (Vector v : projectedPoints)
-			System.out.println(v.toString(2));
+		System.out.println(GPUtility.getShortVectorString(v));
 
-		SortedMap<Double, Vector> sortedProjectedPoints = sortProjectedPointsOnMultiline(projectedPoints, multiLine);
+		// natuerlich sortierte Map der Vektoren mit ihren Skalarwerten entlang
+		// der Multiline
+		TreeMap<Double, Vector> sortedProjectedPoints = sortProjectedPointsOnMultiline(projectedPoints, multiLine);
 
-		// Start- und Endpunkte von MultiLine entfernen
+		// ggf. Start- und Endpunkte von MultiLine aus projectedPoints entfernen
 		Vector multiLineStart = multiLine.getStart();
 
+		boolean multiLineStartEqualsPP = false;
 		Vector nearlyEqualStart = getEqualWithToleranceVector(multiLineStart, projectedPoints, TOLERANCE);
 		if (nearlyEqualStart != null)
 		{
 			projectedPoints.remove(nearlyEqualStart);
+			multiLineStartEqualsPP = true;
 			System.out.println("X===> Multiline Startpoint removed: " + nearlyEqualStart.toString(2));
 		}
 
 		Vector multiLineEnd = multiLine.getEnd();
 
+		boolean multiLineEndEqualsPP = false;
 		Vector nearlyEqualEnd = getEqualWithToleranceVector(multiLineEnd, projectedPoints, TOLERANCE);
 		if (nearlyEqualEnd != null)
 		{
 			projectedPoints.remove(nearlyEqualEnd);
+			multiLineEndEqualsPP = true;
 			System.out.println("X===> Multiline Endpoint removed: " + nearlyEqualEnd.toString(2));
 		}
 
+		// Sammlung der Vektoren mit Relevanz fuer das Lueckenproblem
+		// (doppelte raus weil keine Luecke dazwischen)
 		List<Vector> relevantVectors = new ArrayList<>();
-		// doppelte entfernen
 		for (int i = 0; i < projectedPoints.size(); i++)
 		{
 			boolean existsOnlyOnce = true;
@@ -559,139 +568,272 @@ public class GPEvaluator
 				}
 				else
 				{
-					if (current.equals(projectedPoints.get(j)))
+					// Koordinatenvergleich mit Toleranz wegen moeglicher,
+					// ungenauer Platzierung von Linienenden
+					if (compareVectorsWithTolerance(current, projectedPoints.get(j), TOLERANCE))
 					{
 						existsOnlyOnce = false;
-						System.out.println(
-								"EQUAL POINTS: " + current.toString(2) + " == " + projectedPoints.get(j).toString(2));
 					}
 				}
 			}
 
+			// wenn nur einmal vorhanden, dann relevant fuer Lueckenproblem
 			if (existsOnlyOnce)
 			{
 				relevantVectors.add(current);
-				System.out.println("UNIQUE POINT: " + current.toString(2));
+				System.out.println("UNIQUE POINT: " + GPUtility.getShortVectorString(current));
 			}
 		}
 
+		if (relevantVectors.size() < projectedPoints.size())
+		System.out.println("Removed " + (projectedPoints.size() - relevantVectors.size()) + " equal Points");
+
+		// Indexsortierung der Projektionen anhand der skalaren Werte
+		Map<Vector, Integer> indexedProjectedPoints = buildIndexedMapOfProjectedPoints(sortedProjectedPoints);
+
+		// einfaches Lueckenproblem; nur zwei freie Vektoren
 		if (relevantVectors.size() == 2)
 		{
 			Vector startPoint = relevantVectors.get(0);
 			Vector endPoint = relevantVectors.get(1);
-			System.out.println("Filling GAP between " + startPoint.toString(2) + " and " + endPoint.toString(2));
 
-			GPLine gapLine = new GPLine(multiLine.getName() + "_gapLine", startPoint, endPoint);
+			// Vektornachbarschaft entlang der Multiline pruefen
+			int vIndex = indexedProjectedPoints.get(startPoint);
+			int wIndex = indexedProjectedPoints.get(endPoint);
 
-			GPLine gapProjection = new GPLine(gapLine.getName() + "_projection", startPoint.add(distanceVector),
-					endPoint.add(distanceVector));
+			int indexDistance = vIndex - wIndex;
+			if (indexDistance == -1 || indexDistance == 1)
+			{
+				// pruefen, ob Solid bereits gebildet
+				boolean solidExists = checkIfSolidAlreadyExists(multiLineSolids, null, startPoint, endPoint);
+				if (!solidExists)
+				{
+					// Vektoren sind benachbart; neuen Solid konstruieren
+					System.out.println("Filling GAP between " + GPUtility.getShortVectorString(startPoint) + " and "
+						+ GPUtility.getShortVectorString(endPoint));
 
-			GPSolid solid = new GPSolid();
-			solid.addLine(gapLine);
-			solid.addLine(gapProjection);
+					GPLine gapLine = new GPLine(multiLine.getName() + "_gapLine", startPoint, endPoint);
 
-			solid.setBasePair(new GPLine[] { gapLine, gapProjection });
+					GPLine gapProjection = new GPLine(gapLine.getName() + "_projection", startPoint.add(distanceVector),
+						endPoint.add(distanceVector));
 
-			System.out.println("ADDING SINGLE GAP SOLID " + solid.toString());
-			data.addSolid(solid);
+					GPSolid solid = new GPSolid();
+					solid.addLine(gapLine);
+					solid.addLine(gapProjection);
+
+					solid.setBasePair(new GPLine[]
+					{ gapLine, gapProjection });
+
+					System.out.println("ADDING SINGLE GAP SOLID " + solid.toString());
+					data.addSolid(solid);
+				}
+			}
 		}
-		else
+		// komplexes Lueckenproblem; mehr als einer Luecke
+		else if (relevantVectors.size() > 2)
 		{
 			List<Vector> sortedVectors = new ArrayList<>();
 
 			// verwendete Lueckenvektoren einsammeln
-			List<Vector> usedGapVectors = new ArrayList<>();
+			List<Vector> usedVectors = new ArrayList<>();
+
+			// Vektoren in sortierter Reihenfolge
 			for (Entry<Double, Vector> e : sortedProjectedPoints.entrySet())
 			{
 				if (relevantVectors.contains(e.getValue()))
-					sortedVectors.add(e.getValue());
+				sortedVectors.add(e.getValue());
 			}
 
-			Map<Vector, Integer> indexedProjectedPoints = buildIndexedMapOfProjectedPoints(sortedProjectedPoints);
 			System.out.println("==========\nrelevantVectors: " + relevantVectors.size());
 			for (int i = 0; i < sortedVectors.size() - 1; i++)
 			{
 
 				Vector v = sortedVectors.get(i);
 				int vIndex = indexedProjectedPoints.get(v);
-				String vectorString = v.toString(2);
-				System.out.println(
-						"CURRENT (INDEX=" + vIndex + ") => " + vectorString.substring(2, vectorString.length() - 2));
+				System.out.println("CURRENT (INDEX=" + vIndex + ") => " + GPUtility.getShortVectorString(v));
 
 				Vector w = sortedVectors.get(i + 1);
 				int wIndex = indexedProjectedPoints.get(w);
-				String wectorString = w.toString(2);
-				System.out.println(
-						"NEXT (INDEX=" + wIndex + ") => " + wectorString.substring(2, wectorString.length() - 2));
+				System.out.println("NEXT (INDEX=" + wIndex + ") => " + GPUtility.getShortVectorString(w));
 
+				// Wenn Vektoren Nachbarn entlang der Multiline sind
 				if (wIndex - vIndex == 1)
 				{
 					System.out.println("## Neighbours found! ##");
-					boolean solidExists = false;
-					for (GPSolid s : multiLineSolids)
-					{
-						GPLine l = null;
-						System.out.println("Comparing to BasePair:");
-						System.out.println(s.getBasePair()[0].getName() + "\n" + s.getBasePair()[1].getName());
-						// TODO unchecked access...
-						// (NullPointerException)
-						if (s.getBasePair()[0].getName().substring(0, 5).equals("proj_"))
-							l = s.getBasePair()[0];
-						else if (s.getBasePair()[1].getName().substring(0, 5).equals("proj_"))
-							l = s.getBasePair()[1];
 
-						if (l != null)
-						{
-							// System.out.println("COMPARING [" + v.toString(2)
-							// + "|" + w.toString(2) + "] == ["
-							// + l.getStart().toString(2) + "|" +
-							// l.getEnd().toString(2) + "]");
-							if ((v.equals(l.getStart()) || v.equals(l.getEnd()))
-									&& (w.equals(l.getStart()) || w.equals(l.getEnd())))
-							{
-								solidExists = true;
-
-								// Solid gefunden, keine weiteren Vergleiche
-								// notwendig
-								break;
-							}
-						}
-					}
+					// Pruefen, ob solid bereits gebildet
+					boolean solidExists = checkIfSolidAlreadyExists(multiLineSolids, usedVectors, v, w);
 
 					if (!solidExists)
 					{
-						// Luecke gefunden!
-
-						System.out.println("$$$ Filling GAP between " + v.toString(2) + " and " + w.toString(2));
+						// Luecke gefunden! Solid konstruieren
+						System.out.println("$$$ Filling GAP between " + GPUtility.getShortVectorString(v) + " and "
+							+ GPUtility.getShortVectorString(w));
 
 						GPLine gapLine = new GPLine(multiLine.getName() + "_gapLine_" + vIndex + "-" + wIndex, v, w);
 
 						GPLine gapProjection = new GPLine(gapLine.getName() + "_projection_" + vIndex + "-" + wIndex,
-								v.add(distanceVector), w.add(distanceVector));
+							v.add(distanceVector), w.add(distanceVector));
 
 						GPSolid solid = new GPSolid();
 						solid.addLine(gapLine);
 						solid.addLine(gapProjection);
 
-						solid.setBasePair(new GPLine[] { gapLine, gapProjection });
+						solid.setBasePair(new GPLine[]
+						{ gapLine, gapProjection });
 
 						System.out.println("ADDING MULTIGAP SOLID " + solid.toString());
 						data.addSolid(solid);
+						multiLineSolids.add(solid);
 
-						usedGapVectors.add(v);
-						usedGapVectors.add(w);
+						usedVectors.add(v);
+						usedVectors.add(w);
 					}
 
 				}
 			}
 
+			// pruefen, ob alle sortierten Vektoren verarbeitet worden sind
+			sortedVectors.removeAll(usedVectors);
+			if (sortedVectors.size() > 0)
+			{
+				System.out.println("FREE VECTORS LEFT");
+				for (Vector v : sortedVectors)
+				{
+					// ggf freie Vektoren zu passendem Solid sortieren
+					addFreeVectorsToSolid(v, multiLineSolids, sortedProjectedPoints, multiLine, TOLERANCE);
+				}
+			}
+		}
+
+		// wenn Multiline Vektoren nicht identisch zu Projektionsvektoren, dann ueberstand;
+		// -> passende Solids finden und eine Ecke mit Ueberstand ersetzen
+		if (!multiLineStartEqualsPP)
+		{
+			compareAndReplaceMatchingSolidVectorWithCandidate(multiLineStart,
+				sortedProjectedPoints.firstEntry().getValue(), multiLineSolids, TOLERANCE);
+		}
+		if (!multiLineEndEqualsPP)
+		{
+			compareAndReplaceMatchingSolidVectorWithCandidate(multiLineEnd,
+				sortedProjectedPoints.lastEntry().getValue(), multiLineSolids, TOLERANCE);
 		}
 	}
 
-	private SortedMap<Double, Vector> sortProjectedPointsOnMultiline(List<Vector> projectedPoints, GPLine multiLine)
+	private boolean checkIfSolidAlreadyExists(List<GPSolid> multiLineSolids, List<Vector> usedVectors, Vector v,
+		Vector w)
+	{
+		boolean solidExists = false;
+		for (GPSolid s : multiLineSolids)
+		{
+			GPLine l = null;
+			System.out.println("Comparing to BasePair:");
+			System.out.println(s.getBasePair()[0].getName() + "\n" + s.getBasePair()[1].getName());
+
+			if (s.getBasePair()[0].getName().substring(0, 5).equals("proj_"))
+			l = s.getBasePair()[0];
+			else if (s.getBasePair()[1].getName().substring(0, 5).equals("proj_"))
+			l = s.getBasePair()[1];
+
+			if (l != null)
+			{
+
+				if ((v.equals(l.getStart()) || v.equals(l.getEnd()))
+					&& (w.equals(l.getStart()) || w.equals(l.getEnd())))
+				{
+					solidExists = true;
+					System.out.println("## Neighbours already in Solid! ##");
+					// Solid gefunden, keine weiteren Vergleiche
+					// notwendig
+					if (usedVectors != null)
+					{
+						usedVectors.add(v);
+						usedVectors.add(w);
+					}
+					break;
+				}
+			}
+		}
+		return solidExists;
+	}
+
+	private void addFreeVectorsToSolid(Vector candidate, List<GPSolid> multiLineSolids,
+		TreeMap<Double, Vector> sortedProjectedPoints, GPLine multiLine, double TOLERANCE)
+	{
+		System.out.println("_ INSERTING FREE VECTOR CANDIDATE " + GPUtility.getShortVectorString(candidate));
+
+		if (compareVectorsWithTolerance(candidate, sortedProjectedPoints.firstEntry().getValue(), TOLERANCE))
+		{
+			System.out.println("|-> VECTOR IS LOWER END OF PROJECTIONS");
+			Vector relevantProjectedVector = sortedProjectedPoints.firstEntry().getValue();
+
+			compareAndReplaceMatchingSolidVectorWithCandidate(multiLine.getStart(), relevantProjectedVector,
+				multiLineSolids, TOLERANCE);
+		}
+		else if (compareVectorsWithTolerance(candidate, sortedProjectedPoints.lastEntry().getValue(), TOLERANCE))
+		{
+			System.out.println("|-> VECTOR IS UPPER END OF PROJECTIONS");
+			Vector relevantProjectedVector = sortedProjectedPoints.lastEntry().getValue();
+
+			compareAndReplaceMatchingSolidVectorWithCandidate(multiLine.getEnd(), relevantProjectedVector,
+				multiLineSolids, TOLERANCE);
+		}
+	}
+
+	private void compareAndReplaceMatchingSolidVectorWithCandidate(Vector candidate, Vector relevantProjectedVector,
+		List<GPSolid> multiLineSolids, double TOLERANCE)
+	{
+		for (GPSolid s : multiLineSolids)
+		{
+			GPLine line = null;
+			if (s.getBasePair()[0].getName().substring(0, 5).equals("proj_"))
+			{
+				line = s.getBasePair()[0];
+				if (compareVectorsWithTolerance(relevantProjectedVector, line.getStart(), TOLERANCE))
+				{
+					GPLine newLine = new GPLine(line.getName(), candidate, line.getEnd());
+					newLine.setLineType(line.getLineType());
+					s.getBasePair()[0] = newLine;
+					s.getLineMap().remove(line.getName());
+					s.getLineMap().put(newLine.getName(), newLine);
+				}
+				else if (compareVectorsWithTolerance(relevantProjectedVector, line.getEnd(), TOLERANCE))
+				{
+					GPLine newLine = new GPLine(line.getName(), line.getStart(), candidate);
+					newLine.setLineType(line.getLineType());
+					s.getBasePair()[0] = newLine;
+					s.getLineMap().remove(line.getName());
+					s.getLineMap().put(newLine.getName(), newLine);
+				}
+			}
+			else if (s.getBasePair()[1].getName().substring(0, 5).equals("proj_"))
+			{
+				line = s.getBasePair()[1];
+				if (compareVectorsWithTolerance(relevantProjectedVector, line.getStart(), TOLERANCE))
+				{
+					GPLine newLine = new GPLine(line.getName(), candidate, line.getEnd());
+					newLine.setLineType(line.getLineType());
+					s.getBasePair()[1] = newLine;
+					s.getLineMap().remove(line.getName());
+					s.getLineMap().put(newLine.getName(), newLine);
+				}
+				else if (compareVectorsWithTolerance(relevantProjectedVector, line.getEnd(), TOLERANCE))
+				{
+					GPLine newLine = new GPLine(line.getName(), line.getStart(), candidate);
+					newLine.setLineType(line.getLineType());
+					s.getBasePair()[1] = newLine;
+					s.getLineMap().remove(line.getName());
+					s.getLineMap().put(newLine.getName(), newLine);
+				}
+
+			}
+		}
+	}
+
+	private TreeMap<Double, Vector> sortProjectedPointsOnMultiline(List<Vector> projectedPoints, GPLine multiLine)
 	{
 
-		SortedMap<Double, Vector> pointsWithSkalar = new TreeMap<>();
+		TreeMap<Double, Vector> pointsWithSkalar = new TreeMap<>();
 
 		Vector dirVecMultiLine = GPUtility.substractOtherVector(multiLine.getEnd(), multiLine.getStart());
 
@@ -711,41 +853,23 @@ public class GPEvaluator
 				lambda_y = calculateLambda(point.get(1), multiLine.getStart().get(1), dirVecMultiLine.get(1));
 			}
 
-			// if (lambda_x != null)
-			// System.out.println("Lambda X: " + lambda_x);
-			// if (lambda_y != null)
-			// System.out.println("Lambda Y: " + lambda_y);
-			//
 			if (lambda_x != null && lambda_y == null)
-				pointsWithSkalar.put(lambda_x, point);
+			pointsWithSkalar.put(lambda_x, point);
 			else if (lambda_x == null && lambda_y != null)
-				pointsWithSkalar.put(lambda_y, point);
+			pointsWithSkalar.put(lambda_y, point);
 			else if (lambda_x != null && lambda_y != null)
 			{
 				if (lambda_x == lambda_y)
-					pointsWithSkalar.put(lambda_x, point);
-				// else
-				// {
-				// System.out.println("Skalare Ergebnisse sind nicht eindeutig;
-				// Vector liegt nicht auf Multiline");
-				// }
+				pointsWithSkalar.put(lambda_x, point);
 			}
 		}
-
-		// System.out.println("SKALARS: ");
-		// for (Entry<Double, Vector> e : pointsWithSkalar.entrySet())
-		// {
-		// String vectorString = e.getValue().toString(2);
-		// System.out.println(vectorString.substring(2, vectorString.length() -
-		// 2) + ": " + e.getKey());
-		// }
 
 		return pointsWithSkalar;
 	}
 
 	private double calculateLambda(double p, double s, double r)
 	{
-		System.out.println("(" + p + " - " + s + ") / " + r + ")");
+		// System.out.println("(" + p + " - " + s + ") / " + r + ")");
 
 		BigDecimal bd_P = BigDecimal.valueOf(p);
 		BigDecimal bd_S = BigDecimal.valueOf(s);
@@ -760,7 +884,7 @@ public class GPEvaluator
 		for (Vector vector : projectedPoints)
 		{
 			if (compareVectorsWithTolerance(current, vector, tolerance))
-				return vector;
+			return vector;
 		}
 		return null;
 	}
@@ -781,7 +905,7 @@ public class GPEvaluator
 				// dann nicht nahezu identisch
 				double diff = aCoords[i] - bCoords[i];
 				if (diff > tolerance || diff < 0 - tolerance)
-					return false;
+				return false;
 			}
 		}
 		return true;
@@ -801,6 +925,7 @@ public class GPEvaluator
 		return indexedProjectedPoints;
 	}
 
+	@SuppressWarnings("unused")
 	private Map<Integer, Map<List<Vector>, GPSolid[]>> sortSolidsAfterAlignedCorners()
 	{
 		// TODO import value from xml config
@@ -838,8 +963,8 @@ public class GPEvaluator
 							if (compareVectorsWithTolerance(v, vCopy, TOLERANCE))
 							{
 								cornerHits++;
-								System.out.println("Shared Corner #" + cornerHits + ": " + s.toString() + " + "
-										+ sCopy.toString());
+								System.out.println(
+									"Shared Corner #" + cornerHits + ": " + s.toString() + " + " + sCopy.toString());
 								matchedCorners.add(v);
 							}
 						}
@@ -847,7 +972,7 @@ public class GPEvaluator
 					if (cornerHits > 0)
 					{
 						System.out.println("--> ADDING SOLIDS TO LIST [" + cornerHits + "]: " + s.toString() + " + "
-								+ sCopy.toString());
+							+ sCopy.toString());
 						GPSolid[] sArray = new GPSolid[2];
 						sArray[0] = s;
 						sArray[1] = sCopy;
@@ -857,7 +982,7 @@ public class GPEvaluator
 							sortedSolidsMap.get(cornerHits).put(matchedCorners, sArray);
 						}
 						else
-							System.out.println("!!!!!!!! TOO MANY SHARED CORNERS: " + cornerHits + "!!!!!!!!!");
+						System.out.println("!!!!!!!! TOO MANY SHARED CORNERS: " + cornerHits + "!!!!!!!!!");
 					}
 
 				}
@@ -876,8 +1001,9 @@ public class GPEvaluator
 		return sortedSolidsMap;
 	}
 
+	@SuppressWarnings("unused")
 	private void analyzeMatchedCornersAndBuildMissingSolids(
-			Map<Integer, Map<List<Vector>, GPSolid[]>> solidsSortedAfterCorners)
+		Map<Integer, Map<List<Vector>, GPSolid[]>> solidsSortedAfterCorners)
 	{
 		Map<List<Vector>, GPSolid[]> singleMatchedCornerSolidsMap = solidsSortedAfterCorners.get(1);
 		Map<List<Vector>, GPSolid[]> doubleMatchedCornerSolidsMap = solidsSortedAfterCorners.get(2);
@@ -901,7 +1027,7 @@ public class GPEvaluator
 				int now = repetitionsOfSolids.get(solid);
 				repetitionsOfSolids.put(solid, now + 1);
 				for (Vector v : e.getKey())
-					matchedCornersOfSolids.get(solid).add(v);
+				matchedCornersOfSolids.get(solid).add(v);
 			}
 
 			Vector v = e.getKey().get(0);
@@ -909,11 +1035,11 @@ public class GPEvaluator
 			for (Entry<List<Vector>, GPSolid[]> entry : doubleMatchedCornerSolidsMap.entrySet())
 			{
 				if (entry.getKey().contains(v))
-					repetitionOfCorner++;
+				repetitionOfCorner++;
 			}
 
 			if (repetitionOfCorner == 0)
-				System.out.println("HEUREKA!! ICH hab SIE GEFUNDEN!" + v.toString(2));
+			System.out.println("HEUREKA!! ICH hab SIE GEFUNDEN!" + v.toString(2));
 
 			// TODO relevante Vectoren in Solids umwandeln
 		}

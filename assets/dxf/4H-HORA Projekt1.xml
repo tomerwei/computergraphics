@@ -2,34 +2,34 @@
  <groundplan name="4H-HORA Projext1">
 	<config>
 		<wall_top_height>
-			2.4
+			240
 		</wall_top_height>
 		<window_bottom_height>
-			1.0
+			100
 		</window_bottom_height>
 		<window_top_height>
-			2.1
+			210
 		</window_top_height>
 		<door_top_height>
-			2.0
+			200
 		</door_top_height>
 		<groundplan_scaling_scalar>
-			0.006
+			6.557
 		</groundplan_scaling_scalar>
 		<angle_tolerance>
 			1.0
 		</angle_tolerance>
 		<point_tolerance>
-			0.05
+			0.5
 		</point_tolerance>
 		<distance_interval>
-			0.05
+			5.0
 		</distance_interval>
 		<lower_wallthickness_limit>
-			0.1
+			10
 		</lower_wallthickness_limit>
 		<upper_wallthickness_limit>
-			0.5
+			50
 		</upper_wallthickness_limit>
 		<wall_count_threshold>
 			4

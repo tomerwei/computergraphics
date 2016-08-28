@@ -21,8 +21,8 @@ import cgresearch.graphics.scenegraph.CgRootNode;
 import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.data.GPDataType;
 import smarthomevis.groundplan.data.GPLine;
-import smarthomevis.groundplan.data.GPSolid;
 import smarthomevis.groundplan.data.GPLine.LineType;
+import smarthomevis.groundplan.data.GPSolid;
 
 /**
  * Diese Klasse ist fuer das Rendering verschiedener Darstellungen von
@@ -56,7 +56,7 @@ public class GPRenderer
 
 		List<GPSolid> solidList = data.getAllSolids();
 		
-		printSolids(solidList);
+		// printSolids(solidList);
 
 		for (GPSolid s : solidList)
 		{
@@ -68,6 +68,7 @@ public class GPRenderer
 		return rootNode;
 	}
 
+	@SuppressWarnings("unused")
 	private void printSolids(List<GPSolid> solidList)
 	{
 		for(GPSolid s : solidList)
@@ -109,6 +110,7 @@ public class GPRenderer
 		mesh.getMaterial().setRenderMode(Normals.PER_FACET);
 		mesh.computeTriangleNormals();
 		mesh.computeVertexNormals();
+		
 		return new CgNode(mesh, solid.toString());
 	}
 
@@ -337,7 +339,7 @@ public class GPRenderer
 		mesh.addTriangle(doorStartIndex, doorEndIndex, wallTopStartIndex);
 		mesh.addTriangle(wallTopStartIndex, wallTopEndIndex, doorEndIndex);
 		// mesh.addTriangle(wallTopStartIndex, doorEndIndex, wallTopEndIndex);
-
+		
 		return mesh;
 	}
 
