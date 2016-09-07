@@ -17,9 +17,19 @@ import cgresearch.core.math.Vector;
 import smarthomevis.groundplan.data.GPLine;
 import smarthomevis.groundplan.data.GPSolid;
 
-public class GPUtility {
+/**
+ * Diese Klasse enthaelt eine Reihe von Hilfsmethoden sowohl fuer
+ * Vektoroperationen als auch fuer Ausgabe- und Formatierungsaufgaben.
+ * 
+ * @author Leonard Opitz
+ * 
+ */
 
-	public static Vector multiply(Vector v, double factor) {
+public class GPUtility
+{
+
+	public static Vector multiply(Vector v, double factor)
+	{
 		BigDecimal bdFactor = BigDecimal.valueOf(factor);
 
 		BigDecimal xOrd = BigDecimal.valueOf(v.get(0));
@@ -33,7 +43,8 @@ public class GPUtility {
 		return new Vector(resultX.doubleValue(), resultY.doubleValue(), resultZ.doubleValue());
 	}
 
-	public static Vector kreuzproduktVon(Vector a, Vector b) {
+	public static Vector kreuzproduktVon(Vector a, Vector b)
+	{
 		BigDecimal aX = BigDecimal.valueOf(a.get(0));
 		BigDecimal aY = BigDecimal.valueOf(a.get(1));
 		BigDecimal aZ = BigDecimal.valueOf(a.get(2));
@@ -49,7 +60,8 @@ public class GPUtility {
 		return new Vector(r_x, r_y, r_z);
 	}
 
-	public static double punktproduktVon(Vector a, Vector b) {
+	public static double punktproduktVon(Vector a, Vector b)
+	{
 		BigDecimal aX = BigDecimal.valueOf(a.get(0));
 		BigDecimal aY = BigDecimal.valueOf(a.get(1));
 		BigDecimal aZ = BigDecimal.valueOf(a.get(2));
@@ -66,23 +78,28 @@ public class GPUtility {
 		return result.doubleValue();
 	}
 
-	public static List<GPLine> cloneGPLineList(List<GPLine> lineList) {
+	public static List<GPLine> cloneGPLineList(List<GPLine> lineList)
+	{
 		List<GPLine> cloneList = new ArrayList<>();
-		for (GPLine l : lineList) {
+		for (GPLine l : lineList)
+		{
 			cloneList.add(l);
 		}
 		return cloneList;
 	}
 
-	public static List<GPSolid> cloneGPSolidList(List<GPSolid> lineList) {
+	public static List<GPSolid> cloneGPSolidList(List<GPSolid> lineList)
+	{
 		List<GPSolid> cloneList = new ArrayList<>();
-		for (GPSolid l : lineList) {
+		for (GPSolid l : lineList)
+		{
 			cloneList.add(l);
 		}
 		return cloneList;
 	}
 
-	public static Vector normalizeVector(Vector vector) {
+	public static Vector normalizeVector(Vector vector)
+	{
 		BigDecimal length = BigDecimal.valueOf(calcVectorLength(vector));
 		// System.out.println("Length: " + length);
 		BigDecimal vX = BigDecimal.valueOf(vector.get(0));
@@ -101,11 +118,13 @@ public class GPUtility {
 		return new Vector(x.doubleValue(), y.doubleValue(), z.doubleValue());
 	}
 
-	public static double calcVectorLength(Vector vector) {
+	public static double calcVectorLength(Vector vector)
+	{
 		return Math.sqrt(Math.pow(vector.get(0), 2.0) + Math.pow(vector.get(1), 2.0) + Math.pow(vector.get(2), 2.0));
 	}
 
-	public static Vector substractOtherVector(Vector vector, Vector other) {
+	public static Vector substractOtherVector(Vector vector, Vector other)
+	{
 		BigDecimal vX = BigDecimal.valueOf(vector.get(0));
 		BigDecimal vY = BigDecimal.valueOf(vector.get(1));
 		BigDecimal vZ = BigDecimal.valueOf(vector.get(2));
@@ -114,14 +133,16 @@ public class GPUtility {
 		BigDecimal oZ = BigDecimal.valueOf(other.get(2));
 
 		return new Vector((vX.subtract(oX)).doubleValue(), (vY.subtract(oY)).doubleValue(),
-				(vZ.subtract(oZ).doubleValue()));
+			(vZ.subtract(oZ).doubleValue()));
 	}
 
-	public static double roundDown3(double d) {
+	public static double roundDown3(double d)
+	{
 		return (long) (d * 1e3) / 1e3;
 	}
 
-	public static double angleBetweenVectors(Vector vector, Vector other) {
+	public static double angleBetweenVectors(Vector vector, Vector other)
+	{
 		BigDecimal tmp_a = BigDecimal.valueOf(punktproduktVon(vector, other));
 
 		// System.out.println("Punktprodukt von " + vector.toString(2) + " � "
@@ -146,47 +167,53 @@ public class GPUtility {
 		return bogenmassZuGrad(winkelBogenmass);
 	}
 
-	private static double bogenmassZuGrad(double value) {
+	private static double bogenmassZuGrad(double value)
+	{
 		BigDecimal threesixty = BigDecimal.valueOf(360.0);
 
 		BigDecimal twoTimesPi = BigDecimal.valueOf(2).multiply(BigDecimal.valueOf(Math.PI));
 
 		BigDecimal result = threesixty.divide(twoTimesPi, 5, RoundingMode.HALF_DOWN)
-				.multiply(BigDecimal.valueOf(value));
+			.multiply(BigDecimal.valueOf(value));
 
 		return result.doubleValue();
 	}
 
-	public static void printDistanceMap(Map<Double, Integer> distanceMap) {
+	public static void printDistanceMap(Map<Double, Integer> distanceMap)
+	{
 		System.out.println("=========== DISTANCES ===========");
 		System.out.println("Distance\tCount");
-		for (Entry<Double, Integer> e : distanceMap.entrySet()) {
+		for (Entry<Double, Integer> e : distanceMap.entrySet())
+		{
 			System.out.println(e.getKey() + "\t\t" + e.getValue());
 		}
 	}
 
-	public static void saveDistanceMapToCSVFile(Map<Double, Integer> distanceMap) {
+	public static void saveDistanceMapToCSVFile(Map<Double, Integer> distanceMap)
+	{
 		Charset utf8 = StandardCharsets.UTF_8;
 		List<String> lines = new ArrayList<>();
 		lines.add("Abstand\tMenge\t");
-		for (Entry<Double, Integer> e : distanceMap.entrySet()) {
+		for (Entry<Double, Integer> e : distanceMap.entrySet())
+		{
 			lines.add(e.getKey() + "\t" + e.getValue() + "\t");
 		}
 
-		try {
+		try
+		{
 			Files.write(Paths.get("distances.csv"), lines, utf8);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	public static String getShortVectorString(Vector v)
 	{
-	DecimalFormat format = new DecimalFormat("#.##");
-	return format.format(v.get(0)) + ":" + format.format(v.get(1)) + ":"
-		+ format.format(v.get(2));
+		DecimalFormat format = new DecimalFormat("#.##");
+		return format.format(v.get(0)) + ":" + format.format(v.get(1)) + ":" + format.format(v.get(2));
 	}
-	
 
 }

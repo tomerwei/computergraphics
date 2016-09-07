@@ -16,15 +16,24 @@ import smarthomevis.groundplan.config.GPConfigXMLReader;
 import smarthomevis.groundplan.config.GPDataImporter;
 import smarthomevis.groundplan.data.GPDataType;
 
+/**
+ * Diese Klasse ist der Einstiegspunkt der smarthomevis.groundplan Anwendung.
+ * Sie enthaelt die main Methode und implementiert die in IGroundPlan.java
+ * definierten Interface Methoden.
+ * 
+ * @author Leonard Opitz
+ * 
+ */
+
 public class GroundPlan extends CgApplication implements IGroundPlan
 {
 	/**
 	 * Liest die DXF Datei sowie die XML Konfiguration ein und fuehrt die
 	 * Analyse und Bewertung der importierten Daten durch.
 	 * 
-	 * @param planName 
-	 *            der Name der darzustellenden dxf Datei und der dazu
-	 *            gehoerenden Konfigurationsdatei ohne die Dateiendungen
+	 * @param planName
+	 *          der Name der darzustellenden dxf Datei und der dazu gehoerenden
+	 *          Konfigurationsdatei ohne die Dateiendungen
 	 * @return ein GPDataType Objekt das die Verarbeitungsergebnisse enthaelt
 	 */
 	private GPDataType analyzePlan(String planName)
@@ -58,8 +67,7 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 	{
 		getCgRootNode().addChild(convertDXFPlanToCgNode(planName));
 	}
-	
-	
+
 	/*
 	 * 
 	 * Haupteinstiegspunkt des Systems bei eigenstaendiger Ausfuehrung
@@ -76,7 +84,7 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 		if (args.length > 0)
 		{
 			if (args.length > 1)
-				Logger.getInstance().error("Too many arguments");
+			Logger.getInstance().error("Too many arguments");
 			else
 			{
 				String groundplan = args[0];
@@ -103,28 +111,28 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 	 * 
 	 * 
 	 */
-	
+
 	public CgNode construct3DMeshFromData(GPDataType data)
 	{
 		GPRenderer renderer = new GPRenderer(data);
-		
+
 		return renderer.render3DMeshViewFromGPDataType();
 	}
-	
+
 	public CgNode construct3DGridFromData(GPDataType data)
 	{
 		GPRenderer renderer = new GPRenderer(data);
-		
+
 		return renderer.render3DGridViewFromGPDataType();
 	}
-	
+
 	public void analyzeAndMeshRenderPlan(String planName)
 	{
 		GPDataType data = analyzePlan(planName);
 		CgNode node = construct3DMeshFromData(data);
 		getCgRootNode().addChild(node);
 	}
-	
+
 	public void analyzeAndGridRenderPlan(String planName)
 	{
 		GPDataType data = analyzePlan(planName);
@@ -132,4 +140,3 @@ public class GroundPlan extends CgApplication implements IGroundPlan
 		getCgRootNode().addChild(node);
 	}
 }
-

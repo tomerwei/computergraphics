@@ -50,14 +50,21 @@ public class GPRenderer
 	 * 
 	 */
 
+	/**
+	 * Erstellt eine Darstellung in Form einer CgNode auf Basis der im
+	 * Konstruktor uebergebenen GPSolid Objekten.
+	 * 
+	 * @return
+	 */
 	public CgNode render3DMeshViewFromSolids()
 	{
 		CgNode rootNode = new CgRootNode();
 
 		List<GPSolid> solidList = data.getAllSolids();
-		
+
 		// printSolids(solidList);
 
+		// alle Solids nacheinander abarbeiten
 		for (GPSolid s : solidList)
 		{
 			System.out.println("Rendering " + s.toString());
@@ -71,10 +78,10 @@ public class GPRenderer
 	@SuppressWarnings("unused")
 	private void printSolids(List<GPSolid> solidList)
 	{
-		for(GPSolid s : solidList)
-			{
-				System.out.println(s.toString());
-			}
+		for (GPSolid s : solidList)
+		{
+			System.out.println(s.toString());
+		}
 	}
 
 	private CgNode renderLinesOfSolid(GPSolid solid)
@@ -83,6 +90,7 @@ public class GPRenderer
 
 		for (GPLine l : solid.getLineList())
 		{
+			// die linien abhaengig vom Typ darstellen
 			switch (l.getLineType())
 			{
 			case WALL:
@@ -100,8 +108,8 @@ public class GPRenderer
 			}
 		}
 
+		// die horizontalen Flaechen des Solids hinzufuegen
 		renderHorizontalSurfaces(mesh, solid.getBasePair());
-
 
 		mesh.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 		// mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);
@@ -109,7 +117,7 @@ public class GPRenderer
 		mesh.getMaterial().setRenderMode(Normals.PER_FACET);
 		mesh.computeTriangleNormals();
 		mesh.computeVertexNormals();
-		
+
 		return new CgNode(mesh, solid.toString());
 	}
 
@@ -131,36 +139,42 @@ public class GPRenderer
 		if (normDirVecA.equals(normDirVecB))
 		sameDir = true;
 
-		// wenn es keine Tuer ist, normale floor hoehe
+		// wenn es keine Tuer ist, normale floor hoehe darstellen
 		if (basePair[0].getLineType() != LineType.DOOR)
 		buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir, 0.0);
+		// sonst nach oben versetzt darstellen
 		else
-			{
-				Double doorTopHeight = gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT);
-				buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir, doorTopHeight);
-			}
+		{
+			Double doorTopHeight = gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT);
+			buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir, doorTopHeight);
+		}
 
+		// die Wandoberseiten darstellen
 		Double wallTopHeight = gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT);
 
 		buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir, wallTopHeight);
 
+		// wenn es sich um Fenster handelt die Fensterinnenflaechen darstellen
 		if (basePair[0].getLineType() == LineType.WINDOW)
 		{
 			Double windowBottomHeight = gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT);
-			buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir,  windowBottomHeight);
+			buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir, windowBottomHeight);
 			Double windowTopHeight = gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT);
-			buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir,  windowTopHeight);
+			buildSurfaces(mesh, floor_startA, floor_endA, floor_startB, floor_endB, sameDir, windowTopHeight);
 		}
 	}
 
 	private void buildSurfaces(ITriangleMesh mesh, Vector a, Vector b, Vector c, Vector d, boolean sameDir,
 		double height)
 	{
+		// die Vertices dem Polygonnetz hinzufuegen und auf die Hoehenachse die
+		// gewuenschte Hoehe addieren
 		int index0 = mesh.addVertex(new Vertex(new Vector(a.get(0), a.get(1), a.get(2) + height)));
 		int index1 = mesh.addVertex(new Vertex(new Vector(b.get(0), b.get(1), b.get(2) + height)));
 		int index2 = mesh.addVertex(new Vertex(new Vector(c.get(0), c.get(1), c.get(2) + height)));
 		int index3 = mesh.addVertex(new Vertex(new Vector(d.get(0), d.get(1), d.get(2) + height)));
 
+		// Polygonaufbau abhaengig von der Richtung der Linien
 		if (sameDir)
 		{
 			mesh.addTriangle(index0, index2, index1);
@@ -173,7 +187,118 @@ public class GPRenderer
 		}
 	}
 
+	private ITriangleMesh render3DMeshWall(ITriangleMesh mesh, GPLine l)
+	{
+		// vertikale Wandflaechen aufbauen
+		GPConfig gpConfig = this.data.getGPConfig();
+
+		Vector start = l.getStart();
+		Vector end = l.getEnd();
+
+		// Vektoren in die Hoehe duplizieren
+		Vector wallTopStart = new Vector(start.get(0), start.get(1),
+			start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
+
+		Vector wallTopEnd = new Vector(end.get(0), end.get(1),
+			end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
+
+		// Vertices einfuegen
+		int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
+		int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
+		int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
+		int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
+
+		// Polygone erstellen
+		mesh.addTriangle(wallBottomStartIndex, wallBottomEndIndex, wallTopStartIndex);
+		mesh.addTriangle(wallTopStartIndex, wallBottomEndIndex, wallTopEndIndex);
+
+		return mesh;
+	}
+
+	private ITriangleMesh render3DMeshWindow(ITriangleMesh mesh, GPLine l)
+	{
+		GPConfig gpConfig = this.data.getGPConfig();
+
+		// Die oberen und unteren Ortsvektoren der Wand erzeugen
+		Vector start = l.getStart();
+		Vector end = l.getEnd();
+
+		Vector wallTopStart = new Vector(start.get(0), start.get(1),
+			start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
+
+		Vector wallTopEnd = new Vector(end.get(0), end.get(1),
+			end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
+
+		int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
+		int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
+		int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
+		int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
+
+		// Die oberen und unteren Ortsvektoren des Fensters erzeugen
+		Vector bottomWindowStart = new Vector(start.get(0), start.get(1),
+			start.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
+		Vector bottomWindowEnd = new Vector(end.get(0), end.get(1),
+			end.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
+
+		Vector topWindowStart = new Vector(start.get(0), start.get(1),
+			start.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
+		Vector topWindowEnd = new Vector(end.get(0), end.get(1),
+			end.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
+
+		int windowBottomStartIndex = mesh.addVertex(new Vertex(bottomWindowStart));
+		int windowBottomEndIndex = mesh.addVertex(new Vertex(bottomWindowEnd));
+		int windowTopStartIndex = mesh.addVertex(new Vertex(topWindowStart));
+		int windowTopEndIndex = mesh.addVertex(new Vertex(topWindowEnd));
+
+		// die Dreiecke zur Darstellung des unteren Wand-Elements
+		mesh.addTriangle(wallBottomStartIndex, wallBottomEndIndex, windowBottomStartIndex);
+		mesh.addTriangle(windowBottomStartIndex, windowBottomEndIndex, wallBottomEndIndex);
+
+		// die Dreiecke zur Darstellung des oberen Wand-Elements
+		mesh.addTriangle(windowTopStartIndex, windowTopEndIndex, wallTopStartIndex);
+		mesh.addTriangle(wallTopStartIndex, wallTopEndIndex, windowTopEndIndex);
+
+		return mesh;
+	}
+
+	private ITriangleMesh render3DMeshDoor(ITriangleMesh mesh, GPLine l)
+	{
+		GPConfig gpConfig = this.data.getGPConfig();
+
+		Vector start = l.getStart();
+		Vector end = l.getEnd();
+
+		// Die oberen Ortsvektoren der Wand erzeugen
+		Vector wallTopStart = new Vector(start.get(0), start.get(1),
+			start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
+		Vector wallTopEnd = new Vector(end.get(0), end.get(1),
+			end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
+
+		// Die Ortsvektoren der Tuer erzeugen
+		Vector doorStart = new Vector(start.get(0), start.get(1),
+			start.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
+		Vector doorEnd = new Vector(end.get(0), end.get(1), end.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
+
+		int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
+		int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
+		int doorStartIndex = mesh.addVertex(new Vertex(doorStart));
+		int doorEndIndex = mesh.addVertex(new Vertex(doorEnd));
+
+		// Zwei Dreiecke zum Darstellen des Wandelements oberhalb der Tuer
+		// erzeugen
+		mesh.addTriangle(doorStartIndex, doorEndIndex, wallTopStartIndex);
+		mesh.addTriangle(wallTopStartIndex, wallTopEndIndex, doorEndIndex);
+		// mesh.addTriangle(wallTopStartIndex, doorEndIndex, wallTopEndIndex);
+
+		return mesh;
+	}
+
 	/*
+	 * ============ TESTMETHODEN ============
+	 * 
+	 * nachfolgend nur Testimplementationen
+	 * 
+	 * 
 	 * 
 	 * 
 	 * ============== 3D Mesh ===============
@@ -232,117 +357,9 @@ public class GPRenderer
 		return new CgNode(mesh, layerName);
 	}
 
-	private ITriangleMesh render3DMeshWall(ITriangleMesh mesh, GPLine l)
-	{
-		GPConfig gpConfig = this.data.getGPConfig();
-
-		Vector start = l.getStart();
-//		System.out.println("StartPoint: " + start.toString());
-		Vector end = l.getEnd();
-//		System.out.println("EndPoint: " + end.toString());
-
-		Vector wallTopStart = new Vector(start.get(0), start.get(1),
-			start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-
-		Vector wallTopEnd = new Vector(end.get(0), end.get(1),
-			end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-
-		int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
-		int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
-		int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
-		int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
-
-		mesh.addTriangle(wallBottomStartIndex, wallBottomEndIndex, wallTopStartIndex);
-		// mesh.addTriangle(wallTopStartIndex, wallTopEndIndex,
-		// wallBottomEndIndex);
-		mesh.addTriangle(wallTopStartIndex, wallBottomEndIndex, wallTopEndIndex);
-
-		return mesh;
-	}
-
-	private ITriangleMesh render3DMeshWindow(ITriangleMesh mesh, GPLine l)
-	{
-		GPConfig gpConfig = this.data.getGPConfig();
-
-		// Die oberen und unteren Ortsvektoren der Wand erzeugen
-		Vector start = l.getStart();
-		Vector end = l.getEnd();
-
-		Vector wallTopStart = new Vector(start.get(0), start.get(1),
-			start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-
-		Vector wallTopEnd = new Vector(end.get(0), end.get(1),
-			end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-
-		int wallBottomStartIndex = mesh.addVertex(new Vertex(start));
-		int wallBottomEndIndex = mesh.addVertex(new Vertex(end));
-		int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
-		int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
-
-		// Die oberen und unteren Ortsvektoren des Fensters erzeugen
-		Vector bottomWindowStart = new Vector(start.get(0), start.get(1),
-			start.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
-		Vector bottomWindowEnd = new Vector(end.get(0), end.get(1),
-			end.get(2) + gpConfig.getValue(GPConfig.WINDOW_BOTTOM_HEIGHT));
-
-		Vector topWindowStart = new Vector(start.get(0), start.get(1),
-			start.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
-		Vector topWindowEnd = new Vector(end.get(0), end.get(1),
-			end.get(2) + gpConfig.getValue(GPConfig.WINDOW_TOP_HEIGHT));
-
-		int windowBottomStartIndex = mesh.addVertex(new Vertex(bottomWindowStart));
-		int windowBottomEndIndex = mesh.addVertex(new Vertex(bottomWindowEnd));
-		int windowTopStartIndex = mesh.addVertex(new Vertex(topWindowStart));
-		int windowTopEndIndex = mesh.addVertex(new Vertex(topWindowEnd));
-
-		// die Dreiecke zur Darstellung des unteren Wand-Elements
-		mesh.addTriangle(wallBottomStartIndex, wallBottomEndIndex, windowBottomStartIndex);
-		mesh.addTriangle(windowBottomStartIndex, windowBottomEndIndex, wallBottomEndIndex);
-		// mesh.addTriangle(windowBottomStartIndex, wallBottomEndIndex,
-		// windowBottomEndIndex);
-
-		// die Dreiecke zur Darstellung des oberen Wand-Elements
-		mesh.addTriangle(windowTopStartIndex, windowTopEndIndex, wallTopStartIndex);
-		mesh.addTriangle(wallTopStartIndex, wallTopEndIndex, windowTopEndIndex);
-		// mesh.addTriangle(wallTopStartIndex, windowTopEndIndex,
-		// wallTopEndIndex);
-
-		return mesh;
-	}
-
-	private ITriangleMesh render3DMeshDoor(ITriangleMesh mesh, GPLine l)
-	{
-		GPConfig gpConfig = this.data.getGPConfig();
-
-		Vector start = l.getStart();
-		Vector end = l.getEnd();
-
-		// Die oberen Ortsvektoren der Wand erzeugen
-		Vector wallTopStart = new Vector(start.get(0), start.get(1),
-			start.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-		Vector wallTopEnd = new Vector(end.get(0), end.get(1),
-			end.get(2) + gpConfig.getValue(GPConfig.WALL_TOP_HEIGHT));
-
-		// Die Ortsvektoren der Tuer erzeugen
-		Vector doorStart = new Vector(start.get(0), start.get(1),
-			start.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
-		Vector doorEnd = new Vector(end.get(0), end.get(1), end.get(2) + gpConfig.getValue(GPConfig.DOOR_TOP_HEIGHT));
-
-		int wallTopStartIndex = mesh.addVertex(new Vertex(wallTopStart));
-		int wallTopEndIndex = mesh.addVertex(new Vertex(wallTopEnd));
-		int doorStartIndex = mesh.addVertex(new Vertex(doorStart));
-		int doorEndIndex = mesh.addVertex(new Vertex(doorEnd));
-
-		// Zwei Dreiecke zum Darstellen des Wandelements oberhalb der Tuer
-		// erzeugen
-		mesh.addTriangle(doorStartIndex, doorEndIndex, wallTopStartIndex);
-		mesh.addTriangle(wallTopStartIndex, wallTopEndIndex, doorEndIndex);
-		// mesh.addTriangle(wallTopStartIndex, doorEndIndex, wallTopEndIndex);
-		
-		return mesh;
-	}
-
 	/*
+	 * 
+	 * 
 	 * 
 	 * 
 	 * ============== 3D Grid ===============

@@ -15,6 +15,13 @@ import smarthomevis.groundplan.config.GPConfig;
 import smarthomevis.groundplan.data.GPDataType;
 import smarthomevis.groundplan.data.GPLine;
 
+/**
+ * Diese Klasse ist fuer die Analyse zustaendig und gruppiert benachbarte,
+ * parallele Linien anhand ihrer Distanzen.
+ * 
+ * @author Leonard Opitz
+ */
+
 public class GPAnalyzer
 {
 
@@ -26,7 +33,7 @@ public class GPAnalyzer
 	 * Liniepaarungen in einer HashMap.
 	 * 
 	 * @param data
-	 *            die zu analysierenden Vektordaten
+	 *          die zu analysierenden Vektordaten
 	 * @return eine HashMap, die jeder Distanz die Paarungen paralleler Linien
 	 *         mit dieser Distanz zuweist
 	 */
@@ -65,7 +72,7 @@ public class GPAnalyzer
 				// mit bestehenden map-Schluesseln vergleichen und line unter
 				// normDirVector einsortieren
 				Vector listDirVector = testVectorFitsAngleOfDirVector(normDirVector, directionMap.keySet(),
-						angle_tolerance);
+					angle_tolerance);
 
 				if (listDirVector != null)
 				{
@@ -81,7 +88,7 @@ public class GPAnalyzer
 		}
 
 		for (Entry<Vector, List<GPLine>> e : directionMap.entrySet())
-			System.out.println("\nMap of " + e.getKey().toString() + " contains " + e.getValue().size() + " lines");
+		System.out.println("\nMap of " + e.getKey().toString() + " contains " + e.getValue().size() + " lines");
 
 		return countAllDistances(type, directionMap);
 	}
@@ -95,7 +102,7 @@ public class GPAnalyzer
 			double angleOfNormDirVector = GPUtility.angleBetweenVectors(normDirVector, vector);
 
 			if ((angleOfNormDirVector < tolerance)
-					|| (180.0 <= angleOfNormDirVector && angleOfNormDirVector <= 180.0 + tolerance))
+				|| (180.0 <= angleOfNormDirVector && angleOfNormDirVector <= 180.0 + tolerance))
 			{
 				return vector;
 			}
@@ -132,11 +139,11 @@ public class GPAnalyzer
 					// parallele Linien von verschiedenen Ebenen sollen nicht
 					// beruecksichtigt werden
 					if (line.getLineType() == other.getLineType())
-						parallelOverlap = calculateParallelOverlapOf(line, other);
+					parallelOverlap = calculateParallelOverlapOf(line, other);
 
 					double dist = 0.0;
 					if (parallelOverlap > 0.0)
-						dist = distanceBetween(line, other);
+					dist = distanceBetween(line, other);
 
 					if (dist > 0.0)
 					{
@@ -150,14 +157,13 @@ public class GPAnalyzer
 							expandDistanceMapToDistanceKey(distanceKey, distanceInterval);
 						}
 
-
 						// counter fuer diese Distanz um eins erhoehen
 						increaseDistanceCounter(distanceKey);
 
 						// die Namensreferenz des gefundenen Linienpaares unter
 						// der Distanzreferenz ablegen
 						saveLinePairWithDistance(distanceAndLinesReferenceMap, line.getName(), other.getName(),
-								distanceKey);
+							distanceKey);
 					}
 				}
 			}
@@ -176,13 +182,13 @@ public class GPAnalyzer
 		for (Entry<Double, Integer> e : distanceMap.entrySet())
 		{
 			if (e.getValue() > 5)
-				System.out.println("Distance [" + e.getKey() + "] has <" + e.getValue() + "> entries");
+			System.out.println("Distance [" + e.getKey() + "] has <" + e.getValue() + "> entries");
 		}
 
 	}
 
 	private void saveLinePairWithDistance(Map<Double, List<String[]>> distanceAndLinesReferenceMap, String lineName,
-			String otherName, double distanceKey)
+		String otherName, double distanceKey)
 	{
 		// Key ggf. vorinitialisieren
 		if (!distanceAndLinesReferenceMap.containsKey(distanceKey))
@@ -190,7 +196,8 @@ public class GPAnalyzer
 			distanceAndLinesReferenceMap.put(distanceKey, new ArrayList<>());
 		}
 
-		String[] pair = { lineName, otherName };
+		String[] pair =
+		{ lineName, otherName };
 		distanceAndLinesReferenceMap.get(distanceKey).add(pair);
 	}
 
@@ -244,7 +251,7 @@ public class GPAnalyzer
 		for (Entry<Double, Integer> e : distanceMap.entrySet())
 		{
 			if (e.getKey() > currentHighest)
-				currentHighest = e.getKey();
+			currentHighest = e.getKey();
 		}
 		return currentHighest;
 	}
@@ -273,17 +280,17 @@ public class GPAnalyzer
 		Vector dirVec_line = GPUtility.substractOtherVector(line.getEnd(), line.getStart());
 
 		double beta = (dirVec_line.get(0) * dirVec_line.get(0)) + (dirVec_line.get(1) * dirVec_line.get(1))
-				+ (dirVec_line.get(2) * dirVec_line.get(2));
+			+ (dirVec_line.get(2) * dirVec_line.get(2));
 
 		Vector pVec_0 = GPUtility.substractOtherVector(other.getStart(), line.getStart());
 
 		double lambda_other_0 = (pVec_0.get(0) * dirVec_line.get(0)) + (pVec_0.get(1) * dirVec_line.get(1))
-				+ (pVec_0.get(2) * dirVec_line.get(2));
+			+ (pVec_0.get(2) * dirVec_line.get(2));
 
 		Vector pVec_1 = GPUtility.substractOtherVector(other.getEnd(), line.getStart());
 
 		double lambda_other_1 = (pVec_1.get(0) * dirVec_line.get(0)) + (pVec_1.get(1) * dirVec_line.get(1))
-				+ (pVec_1.get(2) * dirVec_line.get(2));
+			+ (pVec_1.get(2) * dirVec_line.get(2));
 
 		// berechnetes Intervall untersuchen
 		Double lowerLimit = null;
@@ -305,28 +312,28 @@ public class GPAnalyzer
 
 		// Untergrenze bestimmen
 		if (lambda_other_0 <= 0.0)
-			lowerLimit = 0.0;
+		lowerLimit = 0.0;
 		else
 		{
 			if (lambda_other_0 > beta)
-				isEmptyInterval = true;
+			isEmptyInterval = true;
 			else
-				lowerLimit = lambda_other_0;
+			lowerLimit = lambda_other_0;
 		}
 
 		// Obergrenze bestimmen
 		if (lambda_other_1 >= beta)
-			upperLimit = beta;
+		upperLimit = beta;
 		else
 		{
 			if (lambda_other_1 < 0.0)
-				isEmptyInterval = true;
+			isEmptyInterval = true;
 			else
-				upperLimit = lambda_other_1;
+			upperLimit = lambda_other_1;
 		}
 
 		if (isEmptyInterval || lowerLimit == null || upperLimit == null)
-			return 0.0;
+		return 0.0;
 
 		// System.out.println("[" + lowerLimit + ";" + upperLimit + "]");
 
