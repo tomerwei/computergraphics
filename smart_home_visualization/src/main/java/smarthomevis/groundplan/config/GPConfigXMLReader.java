@@ -123,7 +123,6 @@ public class GPConfigXMLReader
 		in.close();
 		
 		}
-	// FIXME replace syserr with exception logging
 	catch (ParserConfigurationException e)
 		{
 		System.err.println("Could not create a DocumentBuilder");

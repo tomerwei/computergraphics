@@ -102,7 +102,6 @@ public class GPRenderer
 
 		renderHorizontalSurfaces(mesh, solid.getBasePair());
 
-		// TODO add surface for above and below wall/window/door
 
 		mesh.getMaterial().setShaderId(Material.SHADER_GOURAUD_SHADING);
 		// mesh.getMaterial().addShaderId(Material.SHADER_WIREFRAME);

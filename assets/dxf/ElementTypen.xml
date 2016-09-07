@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
- <groundplan name="4H-HORA Projext1">
+<?xml version="1.0" encoding="UTF-8"?>
+ <groundplan name="ElementTypen">
 	<config>
 		<wall_top_height>
 			240
@@ -13,30 +13,29 @@
 		<door_top_height>
 			200
 		</door_top_height>
-<!-- 11,2m real : 196,15mm grafik = 5.70991-->
 		<groundplan_scaling_scalar>
-			5.71
+			2.56
 		</groundplan_scaling_scalar>
 		<angle_tolerance>
-			1.0
+			0.0001
 		</angle_tolerance>
 		<point_tolerance>
-			0.5
+			0.05
 		</point_tolerance>
 		<distance_interval>
-			1.0
+			5
 		</distance_interval>
 		<lower_wallthickness_limit>
-			14.0
+			10
 		</lower_wallthickness_limit>
 		<upper_wallthickness_limit>
-			21
+			50
 		</upper_wallthickness_limit>
 		<wall_count_threshold>
 			4
 		</wall_count_threshold>
 	</config>
-	<layer name="VOM$SYSTEM$VORDEFINIERT" type="WALL">
+	<layer name="WALLS" type="WALL">
 	
 	</layer>
 	<layer name="WINDOWS" type="WINDOW">
@@ -48,11 +47,3 @@
 </groundplan>	
 	
 	
-	
-	<!--
-	<wall id="">
-		<surface id=""/>
-		<surface id=""/>
-	</wall>
-	-->
-		
